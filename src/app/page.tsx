@@ -10,7 +10,7 @@ export default function Home() {
       <div className='text-center text-white'>
         <Image
           className='mx-auto max-w-full'
-          src='Logo-Virgin.png'
+          src='/Logo-Virgin.png'
           alt='Coming Soon'
           width={300}
           height={300}
