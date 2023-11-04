@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Display a message
+echo "[Husky] pre-push"
+
+# Run linting
+echo "Run linting"
+pnpm lint &&
+
+# Build the project
+echo "Build the project"
+pnpm build

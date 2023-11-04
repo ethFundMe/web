@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Display a message
+echo "[Husky] pre-commit"
+
+# Install dependencies (optional but good practice)
+echo "Install dependencies"
+pnpm install &&
+
+# Run linting and auto-fix any issues
+echo "Run linting and auto-fix any issues"
+pnpm lint:fix &&
+
+# Format code using Prettier
+echo "Format code using Prettier"
+pnpm prettier:format &&
+
+# Stage all changes
+echo "Stage all changes"
+git add -A .
