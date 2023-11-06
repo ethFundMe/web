@@ -1,12 +1,49 @@
+'use client';
+
 import { NAVBARROUTES } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBars, FaSearch } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaBars } from 'react-icons/fa';
 import { Container } from './Container';
+import WalletConnect from './WalletConnect';
 
-export const Navbar = () => {
+type NavbarProps = {
+  initialTransparent?: boolean;
+  fixedToTop?: boolean;
+};
+
+const Navbar = ({
+  initialTransparent = false,
+  fixedToTop = true,
+}: NavbarProps) => {
+  const [floatingNav, setFloatingNav] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setFloatingNav(true);
+        return;
+      }
+      setFloatingNav(false);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className='h-20 py-2 md:h-24 md:py-4'>
+    <nav
+      className={cn(
+        'h-20 py-2 transition-all duration-500 ease-in-out md:h-24 md:py-4',
+        initialTransparent ? 'bg-transparent' : 'bg-white',
+        fixedToTop && floatingNav
+          ? 'fixed top-0 z-40 w-full bg-white text-black md:h-20 md:py-2'
+          : 'static bg-transparent'
+      )}
+    >
       <Container className='flex h-full items-center justify-between gap-4 py-3'>
         <Link href='/' className='h-full'>
           <Image
@@ -17,18 +54,6 @@ export const Navbar = () => {
             alt='logo'
           />
         </Link>
-
-        <form className='hidden h-full w-full max-w-xs items-center overflow-hidden rounded-md border border-primary sm:flex '>
-          <input
-            type='text'
-            className='flex-1 bg-transparent px-3 py-2 outline-0'
-            placeholder='Search for campaigns'
-          />
-
-          <button className='h-full bg-primary px-2 text-white hover:bg-opacity-80 md:px-4'>
-            <FaSearch />
-          </button>
-        </form>
 
         <ul className='hidden items-center gap-5 md:flex'>
           {NAVBARROUTES.map((route) => (
@@ -41,6 +66,8 @@ export const Navbar = () => {
               </Link>
             </li>
           ))}
+
+          <WalletConnect />
         </ul>
 
         <button className='block md:hidden'>
@@ -50,3 +77,5 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+export default Navbar;
