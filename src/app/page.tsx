@@ -7,8 +7,6 @@ export default function Home() {
       <HomepageHeader />
 
       <CampaignCategorySection />
-
-      <div className='py-96'></div>
     </div>
   );
 }
