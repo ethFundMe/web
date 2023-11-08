@@ -1,4 +1,6 @@
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { ButtonStyle } from './Button';
 import { Container } from './Container';
 import Navbar from './Navbar';
 
@@ -10,18 +12,24 @@ export const HomepageHeader = () => {
       <Container className='flex h-full min-h-[calc(100vh-5rem)] items-center justify-center md:min-h-[calc(100vh-6rem)]'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
-            <h1 className={' font-bold leading-tight md:text-7xl'}>
-              You Can Make <br /> A Difference
+            <h1 className='text-5xl font-bold leading-tight md:text-7xl'>
+              Welcome to EthFundMe!
             </h1>
 
-            <p className='text-lg md:text-2xl'>
-              Together We Fund, Together We Grow
+            <p className='mx-auto max-w-xs text-center text-lg sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
+              Support projects and causes you care about with the power of
+              blockchain.
             </p>
           </div>
 
           <Link
             href='/'
-            className='mx-auto block w-fit rounded-md bg-primary px-4 py-2 font-medium hover:bg-opacity-90 md:px-5 md:py-4'
+            className={cn(
+              ButtonStyle.base,
+              ButtonStyle.size.md,
+              ButtonStyle.variant.primary,
+              'mx-auto w-fit'
+            )}
           >
             Donate Now
           </Link>
