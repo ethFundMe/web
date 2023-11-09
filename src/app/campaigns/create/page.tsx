@@ -1,5 +1,5 @@
 import { Container } from '@/components/Container';
-import CreateCampaignForm from '@/components/Forms/CreateCampaignForm';
+import CreateCampaignForm from '@/components/forms/CreateCampaignForm';
 import { TextSizeStyles } from '@/lib/styles';
 
 export default function CreateCampaignPage() {
