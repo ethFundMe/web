@@ -91,3 +91,8 @@
 body {
   font-family: 'Mona Sans', sans-serif;
 }
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
