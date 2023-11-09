@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../Button';
-import { InputGroup } from '../FormElements/InputGroup';
-import { TextAreaInputGroup } from '../FormElements/TextArea';
+import { InputGroup } from '../formElements/InputGroup';
+import { TextAreaInputGroup } from '../formElements/TextArea';
 import { CreateCampaignFormFields } from './types';
 
 export default function CreateCampaignForm() {
