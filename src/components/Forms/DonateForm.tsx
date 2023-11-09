@@ -11,7 +11,7 @@ type DonateFormValues = {
   amount: number;
 };
 
-function DonateForm({ campaignID, amount }: DonateFormProps) {
+export default function DonateForm({ campaignID, amount }: DonateFormProps) {
   const {
     handleSubmit,
     register,
@@ -60,5 +60,3 @@ function DonateForm({ campaignID, amount }: DonateFormProps) {
     </form>
   );
 }
-
-export default DonateForm;

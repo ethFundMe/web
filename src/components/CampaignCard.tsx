@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
 import ShareCampaignLink from './ShareCampaignLink';
 import DonateForm from './forms/DonateForm';
