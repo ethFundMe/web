@@ -13,3 +13,23 @@ export type ButtonProps = React.ComponentProps<'button'> & {
   wide?: boolean;
   variant?: ButtonVariant;
 };
+
+export type CampaignCategoryType =
+  | 'family'
+  | 'accident'
+  | 'natural disaster'
+  | 'humanitarian'
+  | 'emergency'
+  | 'animals'
+  | 'medical';
+
+export type CampaignCategory = {
+  image: string;
+  type: CampaignCategoryType;
+  description: string;
+};
+
+export type CampaignCategoryCardProps = {
+  category: CampaignCategory;
+  handleOnClick: () => void;
+};
