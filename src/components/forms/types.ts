@@ -1,7 +1,9 @@
 export type CreateCampaignFormFields = {
   title: string;
   description: string;
-  goal: string;
+  goal: number;
+  fees: number;
+  campaignType: 'personal' | 'others';
 };
 
 export type DonateFormProps = {

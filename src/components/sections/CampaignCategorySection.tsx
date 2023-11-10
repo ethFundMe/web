@@ -54,7 +54,7 @@ export const CampaignCategorySection = () => {
             </div>
           </div>
 
-          <div className='w-full overflow-x-scroll sm:col-span-2'>
+          <div className='scrollbar-hidden w-full overflow-x-scroll sm:col-span-2'>
             <div className='flex w-full grid-cols-2 gap-4 sm:grid'>
               {CAMPAIGNCATEGORIES.map((_, idx) => (
                 <CampaignCategoryCard

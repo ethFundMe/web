@@ -7,14 +7,17 @@ import { TextAreaInputGroupProps } from './types';
 export const TextAreaInputGroup = forwardRef<
   HTMLTextAreaElement,
   TextAreaInputGroupProps
->(({ className, id, children, ...props }, ref) => {
+>(({ className, error, id, children, label, ...props }, ref) => {
   return (
     <div>
-      {/* {label && (
-          <label htmlFor={id} className={cn('mb-1 block')}>
-            {label}
-          </label>
-        )} */}
+      {label && (
+        <label
+          htmlFor={id}
+          className={cn('mb-1 block w-fit cursor-pointer font-semibold')}
+        >
+          {label}
+        </label>
+      )}
 
       <textarea
         ref={ref}
@@ -27,6 +30,8 @@ export const TextAreaInputGroup = forwardRef<
       >
         {children}
       </textarea>
+
+      {error && <p className='text-sm text-red-500'>{error}</p>}
     </div>
   );
 });

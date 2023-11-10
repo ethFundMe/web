@@ -1,5 +1,6 @@
 import { HomepageHeader } from '@/components/HomepageHeader';
 import { CampaignCategorySection } from '@/components/sections/CampaignCategorySection';
+import { CampaignTypeSection } from '@/components/sections/CampaignTypeSection';
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <HomepageHeader />
 
       <CampaignCategorySection />
+      <CampaignTypeSection />
     </div>
   );
 }
