@@ -1,4 +1,5 @@
 import ModalProvider from '@/components/ModalProvider';
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -20,6 +21,7 @@ export default function RootLayout({
         <ModalProvider />
         <Toaster />
         {children}
+        <Analytics />
       </body>
     </html>
   );
