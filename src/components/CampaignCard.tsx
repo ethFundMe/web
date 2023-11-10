@@ -3,13 +3,16 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+import { useModalStore } from '@/store/modalStore';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
+import ShareCampaignLink from './ShareCampaignLink';
+import DonateForm from './forms/DonateForm';
 
 export const CampaignCard = () => {
   const router = useRouter();
+  const { openModal } = useModalStore();
 
   return (
     <div
@@ -66,7 +69,13 @@ export const CampaignCard = () => {
       </div>
 
       <div className='cta grid grid-cols-2 gap-4'>
-        <button className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90'>
+        <button
+          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90'
+          onClick={(e) => {
+            e.stopPropagation();
+            openModal(<DonateForm campaignID={'efm-fam-001'} />);
+          }}
+        >
           Donate
           <FaMoneyBillWave />
         </button>
@@ -74,6 +83,11 @@ export const CampaignCard = () => {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            openModal(
+              <ShareCampaignLink
+                link={'https://ethfund.me/campagins/efm-fam-01'}
+              />
+            );
           }}
           className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primaryDark px-4 py-2 text-white hover:bg-opacity-90'
         >

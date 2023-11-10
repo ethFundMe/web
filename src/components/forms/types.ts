@@ -3,3 +3,8 @@ export type CreateCampaignFormFields = {
   description: string;
   goal: string;
 };
+
+export type DonateFormProps = {
+  campaignID?: string;
+  amount?: number;
+};
