@@ -26,7 +26,7 @@ export const CampaignCategorySection = () => {
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-5 sm:grid-cols-5'>
+        <div className='grid grid-cols-1 items-center gap-5 sm:grid-cols-5'>
           <div className='group relative h-96 overflow-hidden rounded-2xl bg-slate-200 sm:col-span-3 sm:h-96'>
             <Image
               src={selectedcategory.image}
@@ -35,7 +35,7 @@ export const CampaignCategorySection = () => {
               className='object-cover'
             />
 
-            <div className='text absolute inset-0 bottom-0 left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 bg-black bg-opacity-80 opacity-0 transition-all duration-300 ease-in group-hover:scale-100 group-hover:opacity-100'>
+            <div className='text absolute inset-0 bottom-0 left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-80 opacity-0 transition-all duration-200 ease-in group-hover:opacity-100'>
               <div className='flex h-full flex-col items-center justify-center p-2 text-center text-white'>
                 <p className='max-w-sm text-lg lg:max-w-lg lg:text-xl'>
                   {selectedcategory.description}

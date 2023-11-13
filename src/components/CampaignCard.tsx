@@ -29,7 +29,7 @@ export const CampaignCard = () => {
         />
       </div>
 
-      <DonationObjectiveIndicator currentAmount={20} seekingAmount={22} />
+      <DonationObjectiveIndicator currentAmount={20} seekingAmount={20} />
 
       <div className='flex flex-col-reverse justify-between gap-2'>
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>

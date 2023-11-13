@@ -20,20 +20,22 @@ export default function ModalProvider() {
 
   const variants: Variants = {
     animate: {
-      scale: [0, 1],
       opacity: [0, 1],
       transition: { type: 'spring', damping: 13 },
     },
-    exit: { scale: 0, opacity: 0, transition: { when: 'afterChildren' } },
+    exit: { opacity: 0, transition: { when: 'afterChildren' } },
   };
 
   const innerVariants: Variants = {
     animate: {
-      scale: [0, 1],
+      scale: [0.5, 1],
       opacity: [0, 1],
       transition: { type: 'spring', damping: 13 },
     },
-    exit: { scale: 0, opacity: 0, transition: { when: 'afterChildren' } },
+    exit: {
+      opacity: 0,
+      scale: 0.5,
+    },
   };
 
   return (
