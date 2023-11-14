@@ -1,5 +1,5 @@
 import { CampaignCategory } from '@/components/types';
-import { DonationStep, NavbarRoute } from './types';
+import { CampaignType, DonationStep, NavbarRoute } from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
   { title: 'Campaigns', link: '/campaigns' },
@@ -85,5 +85,22 @@ export const DONATIONSTEPS: DonationStep[] = [
     title: 'Authorize payment',
     description:
       'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+  },
+];
+
+export const CAMPAIGNTYPES: CampaignType[] = [
+  {
+    image: '/images/Personal finance-bro.svg',
+    title: 'Yourself',
+    description:
+      'Share your dreams, challenges, aspirations and hurdles with personal campaigns and rally community support for your journey.',
+    link: '/campaigns/create?campaign-type=personal',
+  },
+  {
+    image: '/images/Creative team-pana.svg',
+    title: 'Others',
+    description:
+      'Support others on their journey with campaigns for friends, family, or strangers facing challenges,  directly impacting the lives of others.',
+    link: '/campaigns/create?campaign-type=others',
   },
 ];

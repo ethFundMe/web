@@ -5,7 +5,7 @@ import { forwardRef, useState } from 'react';
 import { InputGroupProps } from './types';
 
 export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
-  ({ className, id, error, ...props }, ref) => {
+  ({ className, id, label, error, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
 
     const focusStyles = {
@@ -14,11 +14,14 @@ export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
 
     return (
       <div>
-        {/* {label && (
-          <label htmlFor={id} className={cn('mb-1 block')}>
+        {label && (
+          <label
+            htmlFor={id}
+            className={cn('mb-1 block w-fit cursor-pointer font-semibold')}
+          >
             {label}
           </label>
-        )} */}
+        )}
 
         <div
           className={cn(

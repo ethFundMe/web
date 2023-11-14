@@ -1,9 +1,10 @@
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
+import DonateXShareButtons from '@/components/DonateXShareButtons';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
+import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 export default function CampaignPage() {
@@ -36,7 +37,10 @@ export default function CampaignPage() {
             </div>
 
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
-              <div className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200 sm:w-fit'>
+              <Link
+                href='/campaigns/organizers/1'
+                className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200 sm:w-fit'
+              >
                 <Image
                   src='/images/Logo-Virgin.png'
                   className='flex-shrink-0 rounded-full bg-white'
@@ -49,7 +53,7 @@ export default function CampaignPage() {
                   <p className={TextSizeStyles.caption}>Campaign Organizer</p>
                   <p className='font-semibold'>CLET For Africa Foundation</p>
                 </div>
-              </div>
+              </Link>
 
               <div>
                 <p className={TextSizeStyles.caption}>Organized On:</p>
@@ -106,17 +110,7 @@ export default function CampaignPage() {
               </div>
             </div>
 
-            <div className='cta grid grid-cols-1 gap-4 sm:grid-cols-2'>
-              <button className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'>
-                Donate Now
-                <FaMoneyBillWave />
-              </button>
-
-              <button className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primaryDark px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'>
-                Share Campaign
-                <FaShare />
-              </button>
-            </div>
+            <DonateXShareButtons />
           </div>
         </div>
 

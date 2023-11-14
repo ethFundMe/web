@@ -1,9 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Button } from '../Button';
 import { InputGroup } from '../formElements/InputGroup';
+import { SelectInputGroup } from '../formElements/SelectInputGroup';
 import { TextAreaInputGroup } from '../formElements/TextArea';
 import { CreateCampaignFormFields } from './types';
 
@@ -13,15 +15,24 @@ export default function CreateCampaignForm() {
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
   } = useForm<CreateCampaignFormFields>();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const getCampaignType = () => {
+    const _ = searchParams.get('campaign-type');
+    return _ === 'personal' || _ === 'others' ? _ : '';
+  };
+  const campaignType = getCampaignType();
 
   const onSubmit: SubmitHandler<CreateCampaignFormFields> = (formData) => {
     // save to db
     if (
       window.confirm(`Saved "${formData.title}" to db \nSee all campaigns?`)
     ) {
+      toast.success('Campaign successfully created');
       router.push('/campaigns');
     }
 
@@ -30,13 +41,13 @@ export default function CreateCampaignForm() {
 
   return (
     <form
-      className='mx-auto mt-5 max-w-lg space-y-8 rounded-md border border-neutral-300 p-5'
+      className='mx-auto mt-5 grid max-w-lg grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className='space-y-2'>
+      <div className='col-span-2 space-y-2'>
         <InputGroup
           id='title'
-          label='Title'
+          label='Campaign title'
           {...register('title', { required: 'Title is required' })}
           placeholder='Enter your campaign title'
         />
@@ -46,23 +57,26 @@ export default function CreateCampaignForm() {
         )}
       </div>
 
-      <div className='space-y-2'>
-        <TextAreaInputGroup
-          placeholder='Enter a description for your campaign'
-          {...register('description', { required: 'Description is required' })}
-          rows={7}
-        />
-
-        {errors.description && (
-          <p className='text-sm text-red-500'>{errors.description.message}</p>
-        )}
+      <div className='col-span-1 space-y-2'>
+        <SelectInputGroup
+          id='campaignType'
+          label='Campaign type'
+          defaultValue={campaignType}
+          {...register('campaignType', { required: 'Choose campaign type' })}
+        >
+          <option disabled>-- Select campaign type --</option>
+          <option value='personal'>Personal</option>
+          <option value='others'>Others</option>
+        </SelectInputGroup>
       </div>
 
-      <div className='space-y-2'>
+      <div className='col-span-1 space-y-2'>
         <InputGroup
           id='goal'
           type='number'
           label='Goal (ETH)'
+          step={0.0001}
+          min={0.0001}
           placeholder='Enter your goal (ETH)'
           {...register('goal', {
             required: 'Goal is required',
@@ -75,14 +89,47 @@ export default function CreateCampaignForm() {
               message: 'Enter an amount less than 1000000 ETH',
             },
           })}
+          error={errors.goal?.message}
         />
-
-        {errors.goal && (
-          <p className='text-sm text-red-500'>{errors.goal.message}</p>
-        )}
       </div>
 
-      <Button size='md' wide>
+      {watch('campaignType') === 'others' && (
+        <div className='col-span-2 space-y-2'>
+          <InputGroup
+            id='fees'
+            type='number'
+            label='Campaign creator fee (ETH)'
+            step={0.0001}
+            min={0.0001}
+            placeholder='Your creator fee (ETH)'
+            {...register('fees', {
+              required: 'Creator fee is required',
+              min: {
+                value: 0.0001,
+                message: 'Amount cannot be less than 0.0001 ETH',
+              },
+              max: {
+                value: 1000000,
+                message: 'Enter an amount less than 1000000 ETH',
+              },
+            })}
+            error={errors.goal?.message}
+          />
+        </div>
+      )}
+
+      <div className='col-span-2 space-y-2'>
+        <TextAreaInputGroup
+          label='Campaign description'
+          id='description'
+          placeholder='Enter a description for your campaign'
+          {...register('description', { required: 'Description is required' })}
+          rows={5}
+          error={errors.description?.message}
+        />
+      </div>
+
+      <Button size='md' className='col-span-2' wide>
         Create
       </Button>
     </form>
