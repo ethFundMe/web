@@ -7,6 +7,7 @@ export const Button = ({
   size = 'md',
   variant = 'primary',
   wide,
+  disabled,
   ...props
 }: ButtonProps) => {
   return (
@@ -16,6 +17,7 @@ export const Button = ({
         ButtonStyle.size[size],
         wide && ButtonStyle.wide,
         ButtonStyle.variant[variant],
+        disabled && 'cursor-not-allowed',
         className
       )}
       {...props}
