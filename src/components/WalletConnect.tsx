@@ -55,11 +55,15 @@ const ModalContent = () => {
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
 
-  // const ConnectorIcons = {
-  //   MetaMask: '/images/MetaMask_Fox.svg.webp',
-  //   'Coinbase Wallet': '/images/coinbase-logo.webp',
-  //   WalletConnect: '/images/wallet-connect-logo.png',
-  // };
+  function getConnectorIcon(connectorName: string): string {
+    if (connectorName === 'MetaMask') return '/images/MetaMask_Fox.svg.webp';
+    if (connectorName === 'Coinbase Wallet')
+      return '/images/coinbase-logo.webp';
+    if (connectorName === 'WalletConnect')
+      return '/images/wallet-connect-logo.png';
+
+    return '/images/wallet-connect-logo.png';
+  }
 
   useEffect(() => {
     error && toast.error(error.message);
@@ -74,7 +78,7 @@ const ModalContent = () => {
           <>
             <WalletOption
               disabled={!connector.ready || isLoading}
-              icon={'/images/coinbase-logo.webp'}
+              icon={getConnectorIcon(connector.name)}
               isLoading={isLoading && connector.id === pendingConnector?.id}
               title={connector.name}
               handleConnect={() => connect({ connector })}
