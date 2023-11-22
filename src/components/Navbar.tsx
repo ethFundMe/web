@@ -7,8 +7,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
+import { ConnectWallet } from './ConnectWallet';
 import { Container } from './Container';
-import WalletConnect from './WalletConnect';
 
 type NavbarProps = {
   initialTransparent?: boolean;
@@ -71,7 +71,7 @@ const Navbar = ({
             </li>
           ))}
 
-          <WalletConnect />
+          <ConnectWallet />
         </ul>
 
         <button className='block md:hidden'>
