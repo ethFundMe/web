@@ -2,6 +2,7 @@
 
 import { NAVBARROUTES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { useModalStore } from '@/store/modalStore';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { ConnectWallet } from './ConnectWallet';
 import { Container } from './Container';
+import { Sidebar } from './Sidebar';
 
 type NavbarProps = {
   initialTransparent?: boolean;
@@ -34,6 +36,8 @@ const Navbar = ({
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const { openModal, setModalOptions } = useModalStore();
 
   return (
     <motion.nav
@@ -74,7 +78,13 @@ const Navbar = ({
           <ConnectWallet />
         </ul>
 
-        <button className='block md:hidden'>
+        <button
+          className='block md:hidden'
+          onClick={() => {
+            openModal(<Sidebar />);
+            setModalOptions({ hideContent: true });
+          }}
+        >
           <FaBars />
         </button>
       </Container>

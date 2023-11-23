@@ -7,7 +7,7 @@ import { HiXCircle } from 'react-icons/hi';
 import { Container } from './Container';
 
 export default function ModalProvider() {
-  const { content, closeModal } = useModalStore();
+  const { content, closeModal, options } = useModalStore();
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -49,20 +49,24 @@ export default function ModalProvider() {
           onClick={closeModal}
         >
           <Container className='flex h-full items-center justify-center'>
-            <motion.div
-              variants={innerVariants}
-              className='min-w-md relative h-fit w-fit rounded-xl bg-white p-4'
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={closeModal}
-                className='absolute right-2 top-2 text-2xl text-red-500'
+            {options && options.hideContent ? (
+              content
+            ) : (
+              <motion.div
+                variants={innerVariants}
+                className='min-w-md relative h-fit w-fit rounded-xl bg-white p-4'
+                onClick={(e) => e.stopPropagation()}
               >
-                <HiXCircle />
-              </button>
+                <button
+                  onClick={closeModal}
+                  className='absolute right-2 top-2 cursor-pointer text-2xl text-red-500'
+                >
+                  <HiXCircle />
+                </button>
 
-              {content}
-            </motion.div>
+                {content}
+              </motion.div>
+            )}
           </Container>
         </motion.div>
       )}

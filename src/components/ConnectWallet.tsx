@@ -4,17 +4,35 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
 import Image from 'next/image';
+import { useState } from 'react';
 import { FaUnlink } from 'react-icons/fa';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
-export const ConnectWallet = () => {
+export const ConnectWallet = ({
+  variant = 'navbar',
+}: {
+  variant?: 'navbar' | 'sidebar';
+}) => {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { openModal } = useModalStore();
 
+  const [showDisconnect, setShowDisconnect] = useState(false);
+
+  const variantStyles: Record<'navbar' | 'sidebar', string> = {
+    navbar: 'top-[120%]',
+    sidebar: 'bottom-[80%]',
+  };
+
   if (isConnected && address) {
     return (
-      <div className='relative flex items-center gap-2'>
+      <div
+        onClick={() => setShowDisconnect((prev) => !prev)}
+        className={cn(
+          'relative flex cursor-pointer items-center gap-2',
+          variant === 'sidebar' && 'w-full rounded-md bg-slate-200 p-2'
+        )}
+      >
         <Image
           className='h-8 w-8 flex-shrink-0 rounded-full bg-slate-200 object-cover'
           src='/images/Logo-Virgin.png'
@@ -24,13 +42,18 @@ export const ConnectWallet = () => {
         />
         <div>{formatWalletAddress(address)}</div>
 
-        <button
-          className='buttom-0 absolute hidden items-center gap-2 rounded-md bg-white p-2 text-sm text-black'
-          onClick={() => disconnect()}
-        >
-          Disconnect
-          <FaUnlink />
-        </button>
+        {showDisconnect && (
+          <button
+            className={cn(
+              'absolute right-0 flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-sm text-black shadow-sm shadow-neutral-400 hover:bg-slate-100',
+              variantStyles[variant]
+            )}
+            onClick={() => disconnect()}
+          >
+            Disconnect
+            <FaUnlink />
+          </button>
+        )}
       </div>
     );
   }
