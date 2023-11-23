@@ -70,13 +70,13 @@ export const CAMPAIGNCATEGORIES: CampaignCategory[] = [
 export const DONATIONSTEPS: DonationStep[] = [
   {
     subtitle: 'Step 1',
-    title: 'Find a campaign',
+    title: 'Find campaign',
     description:
       'Discover a cause that resonates with you. Browse through a variety of campaigns, from helping accident victims to supporting humanitarian efforts. Find a campaign that touches your heart and aligns with your values',
   },
   {
     subtitle: 'Step 2',
-    title: 'Connect your wallet',
+    title: 'Connect wallet',
     description:
       'Secure your digital wallet for seamless contributions. Link your wallet to your account on our platform to ensure safe and transparent transactions. It is your key to making a difference',
   },
@@ -102,5 +102,28 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Support others on their journey with campaigns for friends, family, or strangers facing challenges,  directly impacting the lives of others.',
     link: '/campaigns/create?campaign-type=others',
+  },
+];
+
+export const FAQS = [
+  {
+    question: 'How to do some action?',
+    answer:
+      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+  },
+  {
+    question: 'Is this allowed on EFM?',
+    answer:
+      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+  },
+  {
+    question: 'More queries?',
+    answer:
+      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+  },
+  {
+    question: 'Do you have customer support?',
+    answer:
+      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
   },
 ];
