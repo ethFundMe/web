@@ -1,5 +1,6 @@
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/sections/Footer';
+import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <ModalProvider />
-        <Toaster />
-        {children}
-        <Footer />
-        <Analytics />
+        <WagmiProvider>
+          <Toaster />
+          <ModalProvider />
+          {children}
+          <Analytics />
+          <Footer />
+        </WagmiProvider>
       </body>
     </html>
   );
