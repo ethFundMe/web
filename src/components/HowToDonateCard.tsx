@@ -9,9 +9,9 @@ export const HowToDonateCard = ({ donationStep }: Props) => {
   const { subtitle, title, description } = donationStep;
 
   return (
-    <div className='group relative h-[350px] overflow-hidden rounded-lg bg-[url(/images/step-card-bg1.avif)] bg-cover bg-center bg-no-repeat text-white transition-all duration-300 ease-in hover:bg-[url(/images/step-card-bg.jpg)]'>
-      <div className='inner h-full  bg-black p-5 transition-all duration-300 ease-in group-hover:bg-opacity-50'>
-        <div className='h-28 group-hover:space-y-3'>
+    <div className='group relative min-h-[350px] overflow-hidden rounded-xl bg-[url(/images/step-card-bg1.avif)] bg-cover bg-center bg-no-repeat text-white transition-all duration-300 ease-in hover:bg-[url(/images/step-card-bg.jpg)]'>
+      <div className='inner flex h-full flex-col gap-5  bg-black px-6 py-5 transition-all duration-300 ease-in group-hover:bg-opacity-50'>
+        <div className='group-hover:space-y-3'>
           <h2
             className={cn(
               TextSizeStyles.h2,
@@ -24,14 +24,14 @@ export const HowToDonateCard = ({ donationStep }: Props) => {
           <p
             className={cn(
               TextSizeStyles.h3,
-              'text-3xl transition-all duration-200 ease-in-out group-hover:text-4xl'
+              'text-3xl leading-8 transition-all duration-200 ease-in-out group-hover:text-5xl'
             )}
           >
             {title}
           </p>
         </div>
 
-        <p className='mt-5 text-lg'>{description}</p>
+        <p className='text-lg'>{description}</p>
       </div>
     </div>
   );
