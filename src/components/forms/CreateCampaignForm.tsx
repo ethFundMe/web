@@ -1,25 +1,81 @@
 'use client';
 
+import { useCreateCampaign } from '@/lib/hook';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import {
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDebounce } from 'usehooks-ts';
+import { isAddress } from 'viem';
+import { useAccount } from 'wagmi';
 import { Button } from '../Button';
 import { InputGroup } from '../formElements/InputGroup';
 import { SelectInputGroup } from '../formElements/SelectInputGroup';
 import { TextAreaInputGroup } from '../formElements/TextArea';
-import { CreateCampaignFormFields } from './types';
+import { CampaignFormFields } from './types';
 
 export default function CreateCampaignForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { address } = useAccount();
+
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
     watch,
-  } = useForm<CreateCampaignFormFields>();
+    control,
+  } = useForm<CampaignFormFields>({
+    defaultValues: {
+      campaignType: 'personal',
+      description: '',
+      fees: 0,
+      goal: 0,
+      title: '',
+      links: [''],
+      beneficiary: address,
+    },
+  });
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const beneficiary = useDebounce(
+    useWatch({ control, name: 'beneficiary', defaultValue: address }),
+    500
+  );
+  const description = useDebounce(
+    useWatch({ control, name: 'description', defaultValue: '' }),
+    500
+  );
+  const goal = useDebounce(
+    useWatch({ control, name: 'goal', defaultValue: 0 }),
+    500
+  );
+  const title = useDebounce(
+    useWatch({ control, name: 'title', defaultValue: '' }),
+    500
+  );
+  // const links = useDebounce(
+  //   useWatch({ control, name: 'links', defaultValue: [''] }),
+  //   500
+  // );
+
+  const {
+    isLoadingCreateCampaign,
+    isLoadingCreateCampaignTxn,
+    isCreateCampaignTxnSuccess,
+    writeCreateCampaign,
+  } = useCreateCampaign({
+    beneficiary,
+    description,
+    goal,
+    links: ['http://link1.example'],
+    title,
+  });
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
@@ -27,22 +83,40 @@ export default function CreateCampaignForm() {
   };
   const campaignType = getCampaignType();
 
-  const onSubmit: SubmitHandler<CreateCampaignFormFields> = (formData) => {
-    // save to db
-    if (
-      window.confirm(`Saved "${formData.title}" to db \nSee all campaigns?`)
-    ) {
-      toast.success('Campaign successfully created');
-      router.push('/campaigns');
+  const onSubmit: SubmitHandler<CampaignFormFields> = (data) => {
+    const { beneficiary, goal } = data;
+    if (!isAddress(beneficiary)) {
+      return toast.error('Address not valid');
     }
 
-    reset();
+    if (goal <= 0) {
+      return toast.error('Enter a valid ETH amount');
+    }
+
+    // if (!links.every((str) => str.trim() !== '')) {
+    //   return toast.error('Please provide a link.');
+    // }
+
+    return writeCreateCampaign?.();
   };
+
+  const onError: SubmitErrorHandler<CampaignFormFields> = (errors) => {
+    console.error(errors);
+  };
+
+  useEffect(() => {
+    if (isCreateCampaignTxnSuccess) {
+      toast.success('Campaign created.');
+      reset();
+      // router.push('/campaigns');
+      return;
+    }
+  }, [isCreateCampaignTxnSuccess, reset, router]);
 
   return (
     <form
       className='mx-auto mt-5 grid max-w-lg grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className='col-span-2 space-y-2'>
         <InputGroup
@@ -129,8 +203,16 @@ export default function CreateCampaignForm() {
         />
       </div>
 
-      <Button size='md' className='col-span-2' wide>
-        Create
+      <Button
+        type='submit'
+        disabled={isLoadingCreateCampaign || isLoadingCreateCampaignTxn}
+        size='md'
+        className='col-span-2'
+        wide
+      >
+        {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
+          ? 'Loading...'
+          : 'Create'}
       </Button>
     </form>
   );

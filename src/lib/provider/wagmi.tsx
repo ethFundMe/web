@@ -1,7 +1,13 @@
 'use client';
 
 import React from 'react';
-import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi';
+import {
+  WagmiConfig,
+  configureChains,
+  createConfig,
+  mainnet,
+  sepolia,
+} from 'wagmi';
 
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
@@ -14,7 +20,7 @@ const sepoliaAlchemyApiKey =
   process.env.NEXT_PUBLIC_SEPOLIA_ALCHEMY_API_KEY ?? '';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
+  [mainnet, sepolia],
   [alchemyProvider({ apiKey: sepoliaAlchemyApiKey }), publicProvider()]
 );
 
