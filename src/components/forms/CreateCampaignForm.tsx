@@ -42,6 +42,17 @@ export default function CreateCampaignForm() {
     reset();
   };
 
+  const campaignGoalAmount = {
+    verified: {
+      value: 1000000,
+      message: 'Enter an amount less than 1000000 ETH',
+    },
+    unverified: {
+      value: 2,
+      message: 'Verify your creator account to exceed 2ETH limit',
+    },
+  };
+
   return (
     <form
       className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
@@ -88,14 +99,8 @@ export default function CreateCampaignForm() {
               message: 'Amount cannot be less than 0.0001 ETH',
             },
             max: user.verifiedCreator
-              ? {
-                  value: 1000000,
-                  message: 'Enter an amount less than 1000000 ETH',
-                }
-              : {
-                  value: 2,
-                  message: 'Verify your creator account to exceed 2ETH limit',
-                },
+              ? campaignGoalAmount.verified
+              : campaignGoalAmount.unverified,
           })}
           error={errors.goal?.message}
         />
