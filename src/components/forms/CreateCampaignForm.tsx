@@ -1,6 +1,7 @@
 'use client';
 
 import { useCreateCampaign } from '@/lib/hook';
+import { userStore } from '@/store/userStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import {
@@ -77,6 +78,8 @@ export default function CreateCampaignForm() {
     title,
   });
 
+  const { user } = userStore();
+
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
     return _ === 'personal' || _ === 'others' ? _ : '';
@@ -113,9 +116,20 @@ export default function CreateCampaignForm() {
     }
   }, [isCreateCampaignTxnSuccess, reset, router]);
 
+  const campaignGoalAmount = {
+    verified: {
+      value: 1000000,
+      message: 'Enter an amount less than 1000000 ETH',
+    },
+    unverified: {
+      value: 2,
+      message: 'Verify your creator account to exceed 2ETH limit',
+    },
+  };
+
   return (
     <form
-      className='mx-auto mt-5 grid max-w-lg grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'
+      className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
       onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className='col-span-2 space-y-2'>
@@ -158,38 +172,52 @@ export default function CreateCampaignForm() {
               value: 0.0001,
               message: 'Amount cannot be less than 0.0001 ETH',
             },
-            max: {
-              value: 1000000,
-              message: 'Enter an amount less than 1000000 ETH',
-            },
+            max: user.verifiedCreator
+              ? campaignGoalAmount.verified
+              : campaignGoalAmount.unverified,
           })}
           error={errors.goal?.message}
         />
       </div>
 
       {watch('campaignType') === 'others' && (
-        <div className='col-span-2 space-y-2'>
-          <InputGroup
-            id='fees'
-            type='number'
-            label='Campaign creator fee (ETH)'
-            step={0.0001}
-            min={0.0001}
-            placeholder='Your creator fee (ETH)'
-            {...register('fees', {
-              required: 'Creator fee is required',
-              min: {
-                value: 0.0001,
-                message: 'Amount cannot be less than 0.0001 ETH',
-              },
-              max: {
-                value: 1000000,
-                message: 'Enter an amount less than 1000000 ETH',
-              },
-            })}
-            error={errors.goal?.message}
-          />
-        </div>
+        <>
+          <div className='col-span-1 space-y-2'>
+            <InputGroup
+              id='beneficiary-address'
+              type='text'
+              label='Beneficiary address'
+              placeholder='Enter beneficiary eth address'
+              {...register('beneficiary', {
+                required: 'Beneficiary address is required',
+              })}
+              error={errors.beneficiary?.message}
+            />
+          </div>
+
+          <div className='col-span-1 space-y-2'>
+            <InputGroup
+              id='fees'
+              type='number'
+              label='Creator fee (ETH)'
+              step={0.0001}
+              min={0.0001}
+              placeholder='Your creator fee (ETH)'
+              {...register('fees', {
+                required: 'Creator fee is required',
+                min: {
+                  value: 0.0001,
+                  message: 'Amount cannot be less than 0.0001 ETH',
+                },
+                max: {
+                  value: 1000000,
+                  message: 'Enter an amount less than 1000000 ETH',
+                },
+              })}
+              error={errors.fees?.message}
+            />
+          </div>
+        </>
       )}
 
       <div className='col-span-2 space-y-2'>
@@ -197,9 +225,39 @@ export default function CreateCampaignForm() {
           label='Campaign description'
           id='description'
           placeholder='Enter a description for your campaign'
-          {...register('description', { required: 'Description is required' })}
+          {...register('description', {
+            required: 'Description is required',
+          })}
           rows={5}
           error={errors.description?.message}
+        />
+      </div>
+
+      <div className='space-y-1'>
+        <InputGroup
+          id='campaign-banner'
+          label='Campaign banner'
+          multiple={false}
+          type='file'
+          accept='image/*'
+        />
+      </div>
+
+      <div className='space-y-1'>
+        <InputGroup
+          id='other-images'
+          label='Other images'
+          type='file'
+          accept='image/*'
+          multiple
+        />
+      </div>
+
+      <div className='col-span-2 space-y-1'>
+        <InputGroup
+          id='other-images'
+          label='Links to Youtube Videos'
+          placeholder='Separate links with comma ,'
         />
       </div>
 
