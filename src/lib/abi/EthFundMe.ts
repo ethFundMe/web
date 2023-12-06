@@ -21,12 +21,17 @@ export const EthFundMe = [
   },
   {
     inputs: [],
-    name: 'EthFundMe__GoalAlreadyReached',
+    name: 'EthFundMe__GoalExceedsNonVerifiedLimit',
     type: 'error',
   },
   {
     inputs: [],
     name: 'EthFundMe__InsufficientFunds',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'EthFundMe__NoGoalSet',
     type: 'error',
   },
   {
@@ -40,15 +45,15 @@ export const EthFundMe = [
     type: 'error',
   },
   {
-    inputs: [],
-    name: 'ReentrancyGuardReentrantCall',
-    type: 'error',
-  },
-  {
     anonymous: false,
     inputs: [
       {
         components: [
+          {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
           {
             internalType: 'address',
             name: 'creator',
@@ -73,11 +78,6 @@ export const EthFundMe = [
             internalType: 'string[]',
             name: 'mediaLinks',
             type: 'string[]',
-          },
-          {
-            internalType: 'bool',
-            name: 'isVerified',
-            type: 'bool',
           },
           {
             internalType: 'uint256',
@@ -126,6 +126,11 @@ export const EthFundMe = [
       {
         components: [
           {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
@@ -149,11 +154,6 @@ export const EthFundMe = [
             internalType: 'string[]',
             name: 'mediaLinks',
             type: 'string[]',
-          },
-          {
-            internalType: 'bool',
-            name: 'isVerified',
-            type: 'bool',
           },
           {
             internalType: 'uint256',
@@ -214,6 +214,11 @@ export const EthFundMe = [
       {
         components: [
           {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
@@ -237,11 +242,6 @@ export const EthFundMe = [
             internalType: 'string[]',
             name: 'mediaLinks',
             type: 'string[]',
-          },
-          {
-            internalType: 'bool',
-            name: 'isVerified',
-            type: 'bool',
           },
           {
             internalType: 'uint256',
@@ -282,9 +282,28 @@ export const EthFundMe = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+      {
         indexed: false,
         internalType: 'uint256',
-        name: 'cratorFee',
+        name: 'feePercentage',
+        type: 'uint256',
+      },
+    ],
+    name: 'CreatorFeeUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'creatorFee',
         type: 'uint256',
       },
       {
@@ -302,49 +321,6 @@ export const EthFundMe = [
     ],
     name: 'CreatorFunded',
     type: 'event',
-  },
-  {
-    stateMutability: 'payable',
-    type: 'fallback',
-  },
-  {
-    inputs: [],
-    name: 'FEE',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'MAX_LIMIT',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'PLTF_WT',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
   },
   {
     inputs: [
@@ -381,13 +357,8 @@ export const EthFundMe = [
     inputs: [
       {
         internalType: 'uint256',
-        name: '_campaignID',
+        name: '_amount',
         type: 'uint256',
-      },
-      {
-        internalType: 'bool',
-        name: '_status',
-        type: 'bool',
       },
     ],
     name: '_0x2',
@@ -416,6 +387,24 @@ export const EthFundMe = [
   {
     inputs: [
       {
+        internalType: 'address[]',
+        name: '_creators',
+        type: 'address[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x3Many',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: '_creator',
         type: 'address',
@@ -434,6 +423,24 @@ export const EthFundMe = [
   {
     inputs: [
       {
+        internalType: 'address[]',
+        name: '_creators',
+        type: 'address[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x4Many',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint256',
         name: '_campaignID',
         type: 'uint256',
@@ -445,6 +452,24 @@ export const EthFundMe = [
       },
     ],
     name: '_0x5',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: '_campaignIDs',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x5Many',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -491,14 +516,111 @@ export const EthFundMe = [
       },
     ],
     name: 'addCampaign',
-    outputs: [
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
       {
         internalType: 'uint256',
-        name: 'campaignID',
+        name: '_campaignID',
         type: 'uint256',
       },
     ],
+    name: 'closeCampaign',
+    outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_campaignID',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: 'comments',
+        type: 'string',
+      },
+    ],
+    name: 'fundCampaign',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'setCreatorFeePercentage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_campaignID',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: '_title',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_desc',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_goal',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string[]',
+        name: '_mediaLinks',
+        type: 'string[]',
+      },
+      {
+        internalType: 'address',
+        name: '_beneficiary',
+        type: 'address',
+      },
+    ],
+    name: 'updateCampaign',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'fallback',
+  },
+  {
+    inputs: [],
+    name: 'CAMPAIGN_DONATION_LIMIT',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -541,14 +663,39 @@ export const EthFundMe = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
-    name: 'closeCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'creator_isBanned',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'creator_isVerified',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -609,59 +756,16 @@ export const EthFundMe = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'creator_isBanned',
+    inputs: [],
+    name: 'FEE',
     outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'creator_isVerified',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
       {
         internalType: 'uint256',
-        name: '_campaignID',
+        name: '',
         type: 'uint256',
       },
-      {
-        internalType: 'string',
-        name: 'comments',
-        type: 'string',
-      },
     ],
-    name: 'fundCampaign',
-    outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -681,6 +785,11 @@ export const EthFundMe = [
     outputs: [
       {
         components: [
+          {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
           {
             internalType: 'address',
             name: 'creator',
@@ -705,11 +814,6 @@ export const EthFundMe = [
             internalType: 'string[]',
             name: 'mediaLinks',
             type: 'string[]',
-          },
-          {
-            internalType: 'bool',
-            name: 'isVerified',
-            type: 'bool',
           },
           {
             internalType: 'uint256',
@@ -768,6 +872,11 @@ export const EthFundMe = [
       {
         components: [
           {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
@@ -791,11 +900,6 @@ export const EthFundMe = [
             internalType: 'string[]',
             name: 'mediaLinks',
             type: 'string[]',
-          },
-          {
-            internalType: 'bool',
-            name: 'isVerified',
-            type: 'bool',
           },
           {
             internalType: 'uint256',
@@ -851,6 +955,32 @@ export const EthFundMe = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'MAX_LIMIT',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'PLTF_WT',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -860,6 +990,11 @@ export const EthFundMe = [
     ],
     name: 's_Campaigns',
     outputs: [
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
       {
         internalType: 'address',
         name: 'creator',
@@ -879,11 +1014,6 @@ export const EthFundMe = [
         internalType: 'uint256',
         name: 'goal',
         type: 'uint256',
-      },
-      {
-        internalType: 'bool',
-        name: 'isVerified',
-        type: 'bool',
       },
       {
         internalType: 'uint256',
@@ -913,60 +1043,5 @@ export const EthFundMe = [
     ],
     stateMutability: 'view',
     type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'setCreatorFeePercentage',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: '_title',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_desc',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: '_goal',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string[]',
-        name: '_mediaLinks',
-        type: 'string[]',
-      },
-      {
-        internalType: 'address',
-        name: '_beneficiary',
-        type: 'address',
-      },
-    ],
-    name: 'updateCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    stateMutability: 'payable',
-    type: 'receive',
   },
 ] as const;
