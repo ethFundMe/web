@@ -8,6 +8,18 @@ import { ConnectWallet } from './ConnectWallet';
 export const Sidebar = () => {
   const { closeModal } = useModalStore();
 
+  // useEffect(() => {
+  //   const handleClose = (e: KeyboardEvent) => {
+  //     if (e.code === 'Escape') {
+  //       alert('close');
+  //     }
+  //   };
+
+  //   document.addEventListener('keyup', handleClose);
+
+  //   return () => document.removeEventListener('keyup', handleClose);
+  // }, [closeModal]);
+
   return (
     <motion.div
       animate={{ right: ['-100%', '0%'] }}
@@ -27,7 +39,7 @@ export const Sidebar = () => {
 
         <ul className='flex-1 space-y-2'>
           {NAVBARROUTES.map((route) => (
-            <li key={route.link}>
+            <li key={route.link} onClick={closeModal}>
               <Link
                 href={route.link}
                 className='block rounded-md py-2 transition-all duration-100 ease-in hover:bg-neutral-200 hover:pl-2'

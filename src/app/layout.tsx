@@ -18,16 +18,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
-      <body>
-        <WagmiProvider>
-          <Toaster />
-          <ModalProvider />
-          {children}
+    <>
+      <html lang='en'>
+        <Toaster />
+        <body>
+          <WagmiProvider>
+            <ModalProvider />
+            {children}
+            <Footer />
+          </WagmiProvider>
           <Analytics />
-          <Footer />
-        </WagmiProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </>
   );
 }

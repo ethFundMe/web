@@ -17,11 +17,11 @@ export const CampaignCard = () => {
   return (
     <div
       onClick={() => router.push('/campaigns/1')}
-      className='cursor-pointer space-y-4 rounded-md border border-customGray p-4 hover:border-primary'
+      className='group cursor-pointer space-y-4 rounded-md border border-customGray p-4 hover:border-primary'
     >
-      <div className='h-80 bg-slate-300 md:h-48 lg:h-60'>
+      <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <Image
-          className='h-full w-full object-cover'
+          className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
           src='/images/homepage-header.jpg'
           height={240}
           width={300}
