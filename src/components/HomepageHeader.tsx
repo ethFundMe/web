@@ -22,17 +22,29 @@ export const HomepageHeader = () => {
             </p>
           </div>
 
-          <Link
-            href='/'
-            className={cn(
-              ButtonStyle.base,
-              ButtonStyle.size.md,
-              ButtonStyle.variant.primary,
-              'mx-auto w-fit'
-            )}
-          >
-            Donate Now
-          </Link>
+          <div className='flex justify-center gap-4'>
+            <Link
+              href='/campaigns'
+              className={cn(
+                ButtonStyle.base,
+                ButtonStyle.size.md,
+                ButtonStyle.variant.primary
+              )}
+            >
+              Donate now
+            </Link>
+
+            <Link
+              href='/campaigns/create'
+              className={cn(
+                ButtonStyle.base,
+                ButtonStyle.variant.tertiary,
+                ButtonStyle.size.md
+              )}
+            >
+              Create Campaign
+            </Link>
+          </div>
         </div>
       </Container>
     </header>

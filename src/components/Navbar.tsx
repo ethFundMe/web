@@ -51,15 +51,15 @@ const Navbar = ({
         'h-20 py-2 md:h-24 md:py-4',
         initialTransparent ? 'bg-transparent' : 'bg-white',
         fixedToTop && floatingNav
-          ? 'top-0 z-40 w-full bg-white text-black md:h-20 md:py-2'
+          ? 'top-0 z-20 w-full bg-white text-black md:h-20 md:py-2'
           : 'bg-transparent'
       )}
     >
-      <Container className='flex h-full items-center justify-between gap-4 py-3'>
+      <Container className='flex h-full items-center justify-between gap-4'>
         <Link href='/' className='h-full'>
           <Image
             className='h-full w-auto'
-            src='/images/Logo-Virgin.png'
+            src='/images/logo-full.png'
             width={50}
             height={50}
             alt='logo'

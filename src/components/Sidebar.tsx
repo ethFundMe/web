@@ -2,23 +2,22 @@ import { NAVBARROUTES } from '@/lib/constants';
 import { useModalStore } from '@/store/modalStore';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { HiXCircle } from 'react-icons/hi';
 import { ConnectWallet } from './ConnectWallet';
 
 export const Sidebar = () => {
   const { closeModal } = useModalStore();
 
-  // useEffect(() => {
-  //   const handleClose = (e: KeyboardEvent) => {
-  //     if (e.code === 'Escape') {
-  //       alert('close');
-  //     }
-  //   };
-
-  //   document.addEventListener('keyup', handleClose);
-
-  //   return () => document.removeEventListener('keyup', handleClose);
-  // }, [closeModal]);
+  useEffect(() => {
+    const handleClose = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        closeModal();
+      }
+    };
+    document.addEventListener('keyup', handleClose);
+    return () => document.removeEventListener('keyup', handleClose);
+  }, [closeModal]);
 
   return (
     <motion.div
