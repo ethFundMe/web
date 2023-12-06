@@ -127,3 +127,7 @@ export const FAQS = [
       'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
   },
 ];
+
+export const REGEX_CODES = {
+  link: /(?:https?|ftp):\/\/\S+/gi,
+};
