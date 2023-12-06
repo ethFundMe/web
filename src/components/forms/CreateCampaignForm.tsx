@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserStore } from '@/store/userStore';
+import { userStore } from '@/store/userStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -22,7 +22,7 @@ export default function CreateCampaignForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { user } = useUserStore();
+  const { user } = userStore();
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');

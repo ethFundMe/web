@@ -5,6 +5,6 @@ type UserStoreType = {
   user: User;
 };
 
-export const useUserStore = create<UserStoreType>(() => ({
+export const userStore = create<UserStoreType>(() => ({
   user: { name: 'John Doe', verifiedCreator: false, creator: true },
 }));
