@@ -1,10 +1,11 @@
-export type CreateCampaignFormFields = {
+export type CampaignFormFields = {
   title: string;
   description: string;
   goal: number;
   campaignType: 'personal' | 'others';
+  links: Array<string>;
+  beneficiary: `0x${string}`;
   fees?: number;
-  beneficiaryAddress?: number;
 };
 
 export type DonateFormProps = {
