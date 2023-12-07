@@ -1,5 +1,6 @@
 import { FAQS } from '@/lib/constants';
 import { TextSizeStyles } from '@/lib/styles';
+import { FaChevronUp } from 'react-icons/fa';
 import { Container } from '../Container';
 
 export const FaqsSection = () => {
@@ -21,7 +22,7 @@ export const FaqsSection = () => {
           <div className='tab'>
             <input type='radio' name='accordion-2' id='close' />
             <label htmlFor='close' className='tab__close'>
-              Close open tab &times;
+              <FaChevronUp />
             </label>
           </div>
         </section>

@@ -45,7 +45,7 @@ export default function ModalProvider() {
           variants={variants}
           animate='animate'
           exit='exit'
-          className='scrollbar-hidden fixed inset-0 z-10 h-screen overflow-auto bg-black bg-opacity-75'
+          className='scrollbar-hidden fixed inset-0 z-40 h-screen overflow-auto bg-black bg-opacity-75'
           onClick={closeModal}
         >
           <Container className='flex h-full items-center justify-center'>
