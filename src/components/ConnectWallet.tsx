@@ -4,7 +4,7 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUnlink } from 'react-icons/fa';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
@@ -15,7 +15,7 @@ export const ConnectWallet = ({
 }) => {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
 
   const [showDisconnect, setShowDisconnect] = useState(false);
 
@@ -23,6 +23,27 @@ export const ConnectWallet = ({
     navbar: 'top-[120%]',
     sidebar: 'bottom-[80%]',
   };
+
+  useEffect(() => {
+    if (isConnected && !address) {
+      closeModal();
+    }
+  }, [isConnected, closeModal, address]);
+
+  useEffect(() => {
+    const body = document.querySelector('body');
+
+    const handleHideDisconnectBtn = (e: MouseEvent) => {
+      if (
+        showDisconnect &&
+        !(e.target as HTMLElement).classList.contains('disconnect-btn')
+      ) {
+        setShowDisconnect(false);
+      }
+    };
+
+    (body as HTMLElement).addEventListener('click', handleHideDisconnectBtn);
+  }, [showDisconnect]);
 
   if (isConnected && address) {
     return (
@@ -45,7 +66,7 @@ export const ConnectWallet = ({
         {showDisconnect && (
           <button
             className={cn(
-              'absolute right-0 flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-sm text-black shadow-sm shadow-neutral-400 hover:bg-slate-100',
+              'disconnect-btn absolute right-0 flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-sm text-black shadow-sm shadow-neutral-400 hover:bg-slate-100',
               variantStyles[variant]
             )}
             onClick={() => disconnect()}
@@ -84,7 +105,7 @@ function ModalContent() {
       <h2 className={cn(TextSizeStyles.h4, 'text-center')}>Connect Wallet</h2>
       {error && <h5>{error.message}</h5>}
 
-      <ul className='mt-4 space-y-2'>
+      <ul className='mt-4 space-y-2 px-4'>
         {connectors.map((connector) => (
           <>
             <WalletOption

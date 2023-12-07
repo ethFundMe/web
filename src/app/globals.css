@@ -168,7 +168,6 @@ body {
   padding: 1rem;
 }
 .tab__close {
-  justify-content: flex-end;
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
 }
