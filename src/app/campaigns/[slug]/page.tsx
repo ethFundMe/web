@@ -1,13 +1,16 @@
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
+import { GET_CAMPAIGNS } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
-export default function CampaignPage() {
+export default async function CampaignPage() {
+  const campaigns = await GET_CAMPAIGNS();
+
   return (
     <>
       <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 md:grid-cols-3 md:items-start'>
@@ -118,8 +121,8 @@ export default function CampaignPage() {
           <h2 className={TextSizeStyles.h6}>Close to their goal</h2>
 
           <div className='space-y-4'>
-            {Array.from({ length: 2 }).map((_, idx) => (
-              <CampaignCard key={idx} />
+            {campaigns.slice(0, 3).map((_, idx) => (
+              <CampaignCard campaign={_} key={idx} />
             ))}
           </div>
         </aside>

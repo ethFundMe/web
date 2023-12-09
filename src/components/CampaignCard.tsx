@@ -4,19 +4,20 @@ import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveInd
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
+import { Campaign } from '@/types/db';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
-import ShareCampaignLink from './ShareCampaignLink';
+import { ShareCampaignLink } from './ShareCampaignLink';
 import DonateForm from './forms/DonateForm';
 
-export const CampaignCard = () => {
+export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   const router = useRouter();
   const { openModal } = useModalStore();
 
   return (
     <div
-      onClick={() => router.push('/campaigns/1')}
+      onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className='group cursor-pointer space-y-4 rounded-md border border-customGray p-4 hover:border-primary'
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
@@ -29,7 +30,10 @@ export const CampaignCard = () => {
         />
       </div>
 
-      <DonationObjectiveIndicator currentAmount={20} seekingAmount={20} />
+      <DonationObjectiveIndicator
+        currentAmount={campaign.total_accrued}
+        seekingAmount={Math.fround(campaign.goal * 0.00000000000000001)}
+      />
 
       <div className='flex flex-col-reverse justify-between gap-2'>
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
@@ -85,7 +89,7 @@ export const CampaignCard = () => {
             e.stopPropagation();
             openModal(
               <ShareCampaignLink
-                link={'https://ethfund.me/campagins/efm-fam-01'}
+                link={`http://localhost:3000/campaigns/${campaign.campaign_id}`}
               />
             );
           }}
