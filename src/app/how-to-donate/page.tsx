@@ -3,10 +3,13 @@ import { Container } from '@/components/Container';
 import { HowToDonateCard } from '@/components/HowToDonateCard';
 import Navbar from '@/components/Navbar';
 import { DONATIONSTEPS } from '@/lib/constants';
+import { GET_CAMPAIGNS } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
-export default function HowToDonatePage() {
+export default async function HowToDonatePage() {
+  const campaigns = await GET_CAMPAIGNS();
+
   return (
     <>
       {/* Move navbar to /how-to-donate/layout.tsx if file is created */}
@@ -35,8 +38,8 @@ export default function HowToDonatePage() {
           </div>
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <CampaignCard key={idx} />
+            {campaigns.slice(0, 4).map((_, idx) => (
+              <CampaignCard key={idx} campaign={_} />
             ))}
           </div>
         </div>
