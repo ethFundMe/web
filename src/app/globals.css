@@ -5,85 +5,85 @@
 /* Typography */
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Light.otf);
+  src: url(/fonts/MonaSansExpanded-Light.otf);
   font-style: normal;
   font-weight: 300;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-LightItalic.otf);
+  src: url(/fonts/MonaSansExpanded-LightItalic.otf);
   font-style: italic;
   font-weight: 300;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Regular.otf);
+  src: url(/fonts/MonaSansExpanded-Regular.otf);
   font-style: normal;
   font-weight: 400;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Italic.otf);
+  src: url(/fonts/MonaSansExpanded-Italic.otf);
   font-style: italic;
   font-weight: 400;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Medium.otf);
+  src: url(/fonts/MonaSansExpanded-Medium.otf);
   font-style: normal;
   font-weight: 500;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-MediumItalic.otf);
+  src: url(/fonts/MonaSansExpanded-MediumItalic.otf);
   font-style: italic;
   font-weight: 500;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-SemiBold.otf);
+  src: url(/fonts/MonaSansExpanded-SemiBold.otf);
   font-style: normal;
   font-weight: 600;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-SemiBoldItalic.otf);
+  src: url(/fonts/MonaSansExpanded-SemiBoldItalic.otf);
   font-style: italic;
   font-weight: 600;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Bold.otf);
+  src: url(/fonts/MonaSansExpanded-Bold.otf);
   font-style: normal;
   font-weight: 700;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-BoldItalic.otf);
+  src: url(/fonts/MonaSansExpanded-BoldItalic.otf);
   font-style: italic;
   font-weight: 700;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-ExtraBold.otf);
+  src: url(/fonts/MonaSansExpanded-ExtraBold.otf);
   font-style: normal;
   font-weight: 800;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-ExtraBoldItalic.otf);
+  src: url(/fonts/MonaSansExpanded-ExtraBoldItalic.otf);
   font-style: italic;
   font-weight: 800;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-Black.otf);
+  src: url(/fonts/MonaSansExpanded-Black.otf);
   font-style: normal;
   font-weight: 900;
 }
 @font-face {
   font-family: 'Mona Sans';
-  src: url(/fonts/MonaSans-BlackItalic.otf);
+  src: url(/fonts/MonaSansExpanded-BlackItalic.otf);
   font-style: italic;
   font-weight: 900;
 }
