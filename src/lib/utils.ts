@@ -8,7 +8,7 @@ export function cn(...input: ClassValue[]) {
 }
 
 export function formatWalletAddress(address: `0x${string}`) {
-  const shortAddress = address.slice(0, 3) + '...' + address.slice(-3);
+  const shortAddress = address.slice(0, 3) + '...' + address.slice(-5);
   return shortAddress;
 }
 

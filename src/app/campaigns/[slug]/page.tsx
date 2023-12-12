@@ -28,7 +28,7 @@ export default async function CampaignPage() {
           />
 
           <div className='space-y-7 pb-5'>
-            <div className='flex flex-col items-end gap-4 sm:flex-row'>
+            <div className='flex flex-col items-center gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
                 seekingAmount={20}
                 currentAmount={20}

@@ -71,7 +71,9 @@ const Navbar = ({
           {NAVBARROUTES.map((route) => (
             <li key={route.link}>
               <NavLink
-                activeStyles={({ isActive }) => (isActive ? 'font-bold' : '')}
+                activeStyles={({ isActive }) =>
+                  isActive ? 'font-semibold text-primary' : ''
+                }
                 href={route.link}
                 className='block hover:scale-95'
               >

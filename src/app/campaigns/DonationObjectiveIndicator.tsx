@@ -1,6 +1,6 @@
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import { FaTrophy } from 'react-icons/fa';
 
 export const DonationObjectiveIndicator = ({
   currentAmount,
@@ -33,14 +33,15 @@ export const DonationObjectiveIndicator = ({
           className={cn('h-full rounded-full bg-primary')}
         />
         {goalReached && (
-          <div className='absolute right-0 top-1/2 -translate-y-1/2'>
-            <Image
+          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary text-white'>
+            <FaTrophy size={20} />
+            {/* <Image
               src='/images/cup.avif'
               width={20}
               height={20}
               alt='...'
               className='rounded-full border border-primary'
-            />
+            /> */}
           </div>
         )}
       </div>

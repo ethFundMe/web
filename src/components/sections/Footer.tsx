@@ -14,10 +14,10 @@ export const Footer = () => {
         <div className='flex flex-col gap-8 md:flex-row md:justify-between'>
           <Link
             href='/'
-            className='block h-12 w-12 overflow-hidden rounded-full bg-white md:h-16 md:w-16'
+            className='grid h-12 w-12 place-content-center  overflow-hidden rounded-full bg-white md:h-16 md:w-16'
           >
             <Image
-              className='h-full w-auto'
+              className='h-10 w-10'
               src='/images/Logo-Virgin.png'
               width={50}
               height={50}
