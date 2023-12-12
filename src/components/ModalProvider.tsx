@@ -3,7 +3,7 @@
 import { useModalStore } from '@/store/modalStore';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { HiXCircle } from 'react-icons/hi';
+import { HiX } from 'react-icons/hi';
 import { Container } from './Container';
 
 export default function ModalProvider() {
@@ -54,14 +54,14 @@ export default function ModalProvider() {
             ) : (
               <motion.div
                 variants={innerVariants}
-                className='min-w-md relative h-fit w-fit rounded-xl bg-white p-4'
+                className='min-w-md relative h-fit w-fit rounded-lg bg-white p-4'
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
                   onClick={closeModal}
-                  className='absolute right-2 top-2 cursor-pointer text-2xl text-red-500'
+                  className='absolute right-2 top-2 cursor-pointer text-2xl text-neutral-700 hover:scale-105 hover:text-red-500'
                 >
-                  <HiXCircle />
+                  <HiX />
                 </button>
 
                 {content}

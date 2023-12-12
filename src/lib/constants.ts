@@ -1,5 +1,11 @@
 import { CampaignCategory } from '@/components/types';
-import { CampaignType, DonationStep, NavbarRoute } from './types';
+import {
+  BiLogoDiscordAlt,
+  BiLogoGithub,
+  BiLogoInstagram,
+  BiLogoTwitter,
+} from 'react-icons/bi';
+import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
   { title: 'Campaigns', link: '/campaigns' },
@@ -125,6 +131,29 @@ export const FAQS = [
     question: 'Do you have customer support?',
     answer:
       'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+  },
+];
+
+export const SOCIAL_LINKS: SocialLink[] = [
+  {
+    name: 'Github',
+    href: 'https://twitter.com/ethfundme',
+    icon: BiLogoGithub({ size: 20 }),
+  },
+  {
+    name: 'Twitter',
+    href: 'https://twitter.com/ethfundme',
+    icon: BiLogoTwitter({ size: 20 }),
+  },
+  {
+    name: 'Instagram',
+    href: 'https://twitter.com/ethfundme',
+    icon: BiLogoInstagram({ size: 20 }),
+  },
+  {
+    name: 'Discord',
+    href: 'https://twitter.com/ethfundme',
+    icon: BiLogoDiscordAlt({ size: 20 }),
   },
 ];
 

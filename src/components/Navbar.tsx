@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { ConnectWallet } from './ConnectWallet';
 import { Container } from './Container';
+import { NavLink } from './NavLink';
 import { Sidebar } from './Sidebar';
 
 type NavbarProps = {
@@ -56,12 +57,12 @@ const Navbar = ({
       )}
     >
       <Container className='flex h-full items-center justify-between gap-4'>
-        <Link href='/' className='h-full'>
+        <Link href='/' className='mb-2 h-1/2'>
           <Image
             className='h-full w-auto'
-            src='/images/logo-full.png'
+            src='/images/logo-full.svg'
             width={50}
-            height={50}
+            height={200}
             alt='logo'
           />
         </Link>
@@ -69,9 +70,13 @@ const Navbar = ({
         <ul className='hidden items-center gap-5 md:flex'>
           {NAVBARROUTES.map((route) => (
             <li key={route.link}>
-              <Link href={route.link} className=''>
+              <NavLink
+                activeStyles={({ isActive }) => (isActive ? 'font-bold' : '')}
+                href={route.link}
+                className='block hover:scale-95'
+              >
                 {route.title}
-              </Link>
+              </NavLink>
             </li>
           ))}
 

@@ -26,7 +26,7 @@ export const Button = ({
 };
 
 export const ButtonStyle: ButtonStyles = {
-  base: 'rounded-md bg-white text-black transition-all duration-150 ease-in hover:bg-opacity-80 active:scale-95',
+  base: 'rounded-md bg-white text-black transition-all duration-200 ease-in hover:bg-opacity-80 active:scale-95',
   size: {
     sm: 'py-2 px-4',
     md: 'py-3 px-5',
@@ -36,6 +36,8 @@ export const ButtonStyle: ButtonStyles = {
     primary: 'bg-primary text-white',
     secondary: 'bg-primaryDark text-white',
     tertiary: 'bg-customGray text-black',
+    blanc: 'bg-white text-black',
+    noire: 'bg-black text-white',
   },
   wide: 'w-full',
 };

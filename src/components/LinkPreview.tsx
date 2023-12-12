@@ -27,7 +27,11 @@ export const LinkPreview = ({ url }: { url: string }) => {
   }, [url]);
 
   const views = {
-    error: <p className='p-3 text-red-800'>Failed to load metadata</p>,
+    error: (
+      <p className='rounded-sm bg-red-200 bg-opacity-30 p-3 text-red-800 sm:min-w-[400px]'>
+        Failed to load metadata
+      </p>
+    ),
     loading: <LinkPreviewLoader />,
     loaded: (
       <Link
@@ -35,8 +39,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
         target='_blank'
         rel='noreferrer'
         className={cn(
-          'card group flex items-center rounded-md hover:bg-neutral-200',
-          error && 'bg-red-200 bg-opacity-30'
+          'group flex items-center rounded-md hover:bg-neutral-200 sm:min-w-[400px]'
         )}
       >
         <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>

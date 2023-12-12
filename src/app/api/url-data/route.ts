@@ -17,7 +17,7 @@ export async function GET(req: Request): Promise<Response> {
   const url = fullUrl.searchParams.get('url');
 
   try {
-    console.log({ fetchedUrl: url });
+    // console.log({ fetchedUrl: url });
 
     const res = await fetch(url as string);
 
@@ -34,13 +34,17 @@ export async function GET(req: Request): Promise<Response> {
       doc.querySelector('meta[property="og:image"]')?.getAttribute('content') ??
       '';
 
+    if (!title) {
+      throw new Error();
+    }
+
     return Response.json({
       message: 'Fetched URL data',
       error: false,
       urlData: { image, title, description },
     });
   } catch (error) {
-    console.error('Failed to fetch URL data');
+    // console.error({ e: 'Failed to fetch URL data', error });
     return Response.json(
       { error: true, message: 'Failed to fetch URL data', urlData: null },
       { status: 500 }

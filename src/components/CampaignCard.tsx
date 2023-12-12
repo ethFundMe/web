@@ -7,7 +7,7 @@ import { useModalStore } from '@/store/modalStore';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
+import { FaEthereum, FaShare } from 'react-icons/fa';
 import { ShareCampaignLink } from './ShareCampaignLink';
 import DonateForm from './forms/DonateForm';
 
@@ -81,7 +81,7 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
           }}
         >
           Donate
-          <FaMoneyBillWave />
+          <FaEthereum />
         </button>
 
         <button

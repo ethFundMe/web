@@ -38,7 +38,7 @@ export const HomepageHeader = () => {
               href='/campaigns/create'
               className={cn(
                 ButtonStyle.base,
-                ButtonStyle.variant.tertiary,
+                ButtonStyle.variant.blanc,
                 ButtonStyle.size.md
               )}
             >

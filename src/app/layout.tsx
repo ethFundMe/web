@@ -20,12 +20,12 @@ export default async function RootLayout({
   return (
     <>
       <html lang='en'>
-        <body>
+        <body className='flex min-h-screen flex-col'>
           <ClientToaster />
 
           <WagmiProvider>
             <ModalProvider />
-            {children}
+            <div className='flex-1'>{children}</div>
             <Footer />
           </WagmiProvider>
           <Analytics />

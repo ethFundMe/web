@@ -13,7 +13,7 @@ export default async function CampaignPage() {
 
   return (
     <>
-      <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 md:grid-cols-3 md:items-start'>
+      <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
         <div className='space-y-4 md:col-span-2'>
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
             Save Somali Refugees From Abject Poverty
@@ -31,7 +31,7 @@ export default async function CampaignPage() {
             <div className='flex flex-col items-end gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
                 seekingAmount={20}
-                currentAmount={2}
+                currentAmount={20}
               />
 
               <button className='w-full flex-1 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90 md:w-fit md:px-5 md:py-3'>
@@ -120,7 +120,7 @@ export default async function CampaignPage() {
         <aside className='space-y-4 pb-4'>
           <h2 className={TextSizeStyles.h6}>Close to their goal</h2>
 
-          <div className='space-y-4'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
             {campaigns.slice(0, 3).map((_, idx) => (
               <CampaignCard campaign={_} key={idx} />
             ))}
