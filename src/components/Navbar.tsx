@@ -51,7 +51,7 @@ const Navbar = ({
         'h-20 py-2 md:h-24 md:py-4',
         initialTransparent ? 'bg-transparent' : 'bg-white',
         fixedToTop && floatingNav
-          ? 'top-0 z-20 w-full bg-white text-black md:h-20 md:py-2'
+          ? 'top-0 z-30 w-full bg-white text-black md:h-20 md:py-2'
           : 'bg-transparent'
       )}
     >

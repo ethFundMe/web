@@ -1,10 +1,10 @@
+import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/sections/Footer';
 import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import React from 'react';
-import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Coming Soon',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -20,8 +20,9 @@ export default function RootLayout({
   return (
     <>
       <html lang='en'>
-        <Toaster />
         <body>
+          <ClientToaster />
+
           <WagmiProvider>
             <ModalProvider />
             {children}

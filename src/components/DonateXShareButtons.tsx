@@ -2,7 +2,7 @@
 
 import { useModalStore } from '@/store/modalStore';
 import { FaMoneyBillWave, FaShare } from 'react-icons/fa';
-import ShareCampaignLink from './ShareCampaignLink';
+import { ShareCampaignLink } from './ShareCampaignLink';
 import DonateForm from './forms/DonateForm';
 
 const DonateXShareButtons = () => {
