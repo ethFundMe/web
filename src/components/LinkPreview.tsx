@@ -1,67 +1,34 @@
-import { ResponseData, UrlData } from '@/app/api/url-data/route';
+import { urlPreview } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { LinkPreviewLoader } from './LinkPreviewLoader';
 
-export const LinkPreview = ({ url }: { url: string }) => {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [urlData, setUrlData] = useState<UrlData | null>(null);
+export const LinkPreview = async ({ url }: { url: string }) => {
+  const url_data = await urlPreview(url);
 
-  useEffect(() => {
-    const getURLData = async () => {
-      setLoading(true);
-      const res = await fetch(`http://localhost:3000/api/url-data/?url=${url}`);
+  return (
+    <Link
+      href={url}
+      target='_blank'
+      rel='noreferrer'
+      className={cn(
+        'card group flex items-center rounded-md hover:bg-neutral-200'
+      )}
+    >
+      <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
+        <Image
+          src={url_data.image ?? ''}
+          height={300}
+          width={300}
+          alt='...'
+          className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
+        />
+      </div>
 
-      const data = (await res.json()) as ResponseData;
-
-      setError(data.error);
-      setUrlData(data.urlData);
-    };
-
-    getURLData()
-      .then(() => setLoading(false))
-      .catch(() => setLoading(false));
-  }, [url]);
-
-  const views = {
-    error: <p className='p-3 text-red-800'>Failed to load metadata</p>,
-    loading: <LinkPreviewLoader />,
-    loaded: (
-      <Link
-        href={url}
-        target='_blank'
-        rel='noreferrer'
-        className={cn(
-          'card group flex items-center rounded-md hover:bg-neutral-200',
-          error && 'bg-red-200 bg-opacity-30'
-        )}
-      >
-        <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
-          <Image
-            src={urlData?.image ?? ''}
-            height={300}
-            width={300}
-            alt='...'
-            className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          />
-        </div>
-
-        <div className='text max-w-sm px-3'>
-          <p className='line-clamp-2 text-lg font-bold'>{urlData?.title}</p>
-          <p className='line-clamp-2'>{urlData?.description}</p>
-        </div>
-      </Link>
-    ),
-  };
-
-  const viewToShow = loading
-    ? views.loading
-    : error
-    ? views.error
-    : views.loaded;
-
-  return viewToShow;
+      <div className='text max-w-sm px-3'>
+        <p className='line-clamp-2 text-lg font-bold'>{url_data.title}</p>
+        <p className='line-clamp-2'>{url_data.description}</p>
+      </div>
+    </Link>
+  );
 };

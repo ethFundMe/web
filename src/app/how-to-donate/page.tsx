@@ -2,13 +2,13 @@ import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import { HowToDonateCard } from '@/components/HowToDonateCard';
 import Navbar from '@/components/Navbar';
+import { getCampaigns } from '@/lib/api';
 import { DONATIONSTEPS } from '@/lib/constants';
-import { GET_CAMPAIGNS } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 export default async function HowToDonatePage() {
-  const campaigns = await GET_CAMPAIGNS();
+  const campaigns = await getCampaigns();
 
   return (
     <>

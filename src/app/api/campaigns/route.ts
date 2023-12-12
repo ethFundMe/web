@@ -52,25 +52,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-export async function GET() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
-
-  try {
-    const campaignsQuery = db
-      .selectFrom('campaign')
-      .selectAll()
-      .orderBy('created_at desc');
-    const campaigns = await campaignsQuery.execute();
-
-    await pool.end();
-    return Response.json(campaigns);
-  } catch (error) {
-    console.error('Failed to get campaigns: ', error);
-    return Response.json(
-      { error: 'Failed to get campaigns.' },
-      { status: 500 }
-    );
-  }
-}

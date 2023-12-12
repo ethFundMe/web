@@ -1,7 +1,7 @@
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
-import { GET_CAMPAIGNS } from '@/lib/queries';
+import { getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 export default async function CampaignPage() {
-  const campaigns = await GET_CAMPAIGNS();
+  const campaigns = await getCampaigns();
 
   return (
     <>
