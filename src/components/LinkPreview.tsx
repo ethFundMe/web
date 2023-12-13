@@ -1,4 +1,5 @@
 import { ResponseData, UrlData } from '@/app/api/url-data/route';
+import { urlPreview } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,7 +14,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
   useEffect(() => {
     const getURLData = async () => {
       setLoading(true);
-      const res = await fetch(`http://localhost:3000/api/url-data/?url=${url}`);
+      const res = await urlPreview(url);
 
       const data = (await res.json()) as ResponseData;
 

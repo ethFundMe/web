@@ -1,11 +1,11 @@
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
-import { GET_CAMPAIGNS } from '@/lib/queries';
+import { getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 export default async function CampaignsPage() {
-  const campaigns = await GET_CAMPAIGNS();
+  const campaigns = await getCampaigns();
 
   return (
     <Container className='space-y-5 py-10'>
