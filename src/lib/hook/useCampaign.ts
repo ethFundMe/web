@@ -1,4 +1,3 @@
-import { NewCampaign } from '@/types/db';
 import { parseEther } from 'viem';
 import {
   useContractEvent,
@@ -62,32 +61,9 @@ export const useCreateCampaign = ({
     eventName: 'CampaignCreated',
     chainId: ethFundMeChainId,
     listener(log) {
-      console.log(log[0].args);
-      if (!log[0].args[0]) return;
-      const campaign: NewCampaign = {
-        beneficiary: log[0].args[0].beneficiary,
-        campaign_id: parseInt(log[0].args[0].id.toString()),
-        creator: log[0].args[0].creator,
-        date_created: parseInt(log[0].args[0].dateCreated.toString()),
-        description: log[0].args[0].description,
-        flagged: log[0].args[0].flagged,
-        goal: parseInt(log[0].args[0].goal.toString()),
-        is_closed: log[0].args[0].isClosed,
-        links: [...log[0].args[0].mediaLinks],
-        title: log[0].args[0].title,
-        total_accrued: parseInt(log[0].args[0].totalAccrued.toString()),
-      };
-      fetch('/api/campaigns', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(campaign),
-      })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.error(err));
+      const campaign = log[0].args[0];
+      console.log(campaign);
+      if (!campaign) return;
       unwatch?.();
     },
   });
