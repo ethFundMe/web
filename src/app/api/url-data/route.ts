@@ -1,8 +1,25 @@
+export type UrlData = {
+  image: string;
+  title: string;
+  description: string;
+};
+
+export type ResponseData = {
+  message: string;
+  error: boolean;
+  urlData: UrlData | null;
+};
+
 import parse from 'node-html-parser';
 
-export async function urlPreview(url: string) {
+export async function GET(req: Request): Promise<Response> {
+  const fullUrl = new URL(req.url);
+  const url = fullUrl.searchParams.get('url');
+
   try {
-    const res = await fetch(url);
+    // console.log({ fetchedUrl: url });
+
+    const res = await fetch(url as string);
 
     if (!res.ok) throw Error();
 
@@ -27,6 +44,7 @@ export async function urlPreview(url: string) {
       urlData: { image, title, description },
     });
   } catch (error) {
+    // console.error({ e: 'Failed to fetch URL data', error });
     return Response.json(
       { error: true, message: 'Failed to fetch URL data', urlData: null },
       { status: 500 }

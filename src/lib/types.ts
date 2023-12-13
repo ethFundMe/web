@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 export type NavbarRoute = {
   title: string;
   link: string;
@@ -28,4 +30,10 @@ export type Campaign = {
   links: string[];
   title: string;
   total_accrued: number;
+};
+
+export type SocialLink = {
+  name: string;
+  href: string;
+  icon: ReactElement;
 };
