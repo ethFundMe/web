@@ -1,7 +1,7 @@
-import { CampaignTable } from './campaign';
+import { CampaignsTable } from './campaign';
 
 export interface Database {
-  campaign: CampaignTable;
+  campaigns: CampaignsTable;
 }
 
 export * from './campaign';

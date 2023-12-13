@@ -7,7 +7,7 @@ export async function getCampaigns() {
   const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
 
   const campaignsQuery = db
-    .selectFrom('campaign')
+    .selectFrom('campaigns')
     .selectAll()
     .orderBy('created_at desc');
   const campaigns = await campaignsQuery.execute();
