@@ -2,26 +2,186 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* Typography */
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Light.otf);
+  font-style: normal;
+  font-weight: 300;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-LightItalic.otf);
+  font-style: italic;
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Regular.otf);
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Italic.otf);
+  font-style: italic;
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Medium.otf);
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-MediumItalic.otf);
+  font-style: italic;
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-SemiBold.otf);
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-SemiBoldItalic.otf);
+  font-style: italic;
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Bold.otf);
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-BoldItalic.otf);
+  font-style: italic;
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-ExtraBold.otf);
+  font-style: normal;
+  font-weight: 800;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-ExtraBoldItalic.otf);
+  font-style: italic;
+  font-weight: 800;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-Black.otf);
+  font-style: normal;
+  font-weight: 900;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(/fonts/MonaSansExpanded-BlackItalic.otf);
+  font-style: italic;
+  font-weight: 900;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: 'Mona Sans', sans-serif;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+
+/* Accordion styles */
+:root {
+  --primary: #dedede;
+  --secondary: #eeeeee;
+  --background: #eee;
+  --highlight: #ffda79;
+  /* Theme color */
+  --theme: var(--primary);
+}
+
+/* Core styles/functionality */
+.tab input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.tab__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+  transition: all 0.35s ease-out;
+}
+.tab input:checked ~ .tab__content {
+  max-height: 10rem;
+}
+
+/* Visual styles */
+.accordion {
+  /* border: 1px solid gray; */
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.tab {
+  background-color: var(--theme);
+}
+.tab:nth-child(even) {
+  background-color: var(--secondary);
+}
+
+.tab__label,
+.tab__close {
+  display: flex;
+  color: black;
+  cursor: pointer;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.827);
+}
+.tab__label {
+  justify-content: space-between;
+  padding: 1rem;
+}
+.tab__content {
+  background-color: white;
+}
+.tab__label::after {
+  content: '\276F';
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transform: rotate(90deg);
+  transition: all 0.35s;
+}
+.tab input:checked + .tab__label::after {
+  transform: rotate(270deg);
+}
+.tab__content p {
+  margin: 0;
+  padding: 1rem;
+}
+.tab__close {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+/* Arrow animation */
+.tab input:not(:checked) + .tab__label:hover::after {
+  animation: bounce 0.5s infinite;
+}
+
+@keyframes bounce {
+  25% {
+    transform: rotate(90deg) translate(0.25rem);
+  }
+  75% {
+    transform: rotate(90deg) translate(-0.25rem);
+  }
 }

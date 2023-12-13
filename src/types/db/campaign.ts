@@ -1,0 +1,23 @@
+import { Generated, Insertable, Selectable, Updateable } from 'kysely';
+
+export interface CampaignTable {
+  id: Generated<string>; // uuid
+  campaign_id: number;
+  // user_id: number;
+  beneficiary: string;
+  creator: string;
+  date_created: number;
+  description: string;
+  flagged: boolean;
+  goal: number;
+  is_closed: boolean;
+  links: Array<string>;
+  title: string;
+  total_accrued: number;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type Campaign = Selectable<CampaignTable>;
+export type NewCampaign = Insertable<CampaignTable>;
+export type CampaignUpdate = Updateable<CampaignTable>;

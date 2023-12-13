@@ -1,23 +1,36 @@
+import { ClientToaster } from '@/components/ClientToaster';
+import ModalProvider from '@/components/ModalProvider';
+import { Footer } from '@/components/sections/Footer';
+import { WagmiProvider } from '@/lib/provider';
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import React from 'react';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Fund Me - Ethereum',
   description: 'Coming Soon',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>{children}</body>
-    </html>
+    <>
+      <html lang='en'>
+        <body className='flex min-h-screen flex-col'>
+          <ClientToaster />
+
+          <WagmiProvider>
+            <ModalProvider />
+            <div className='flex-1'>{children}</div>
+            <Footer />
+          </WagmiProvider>
+          <Analytics />
+        </body>
+      </html>
+    </>
   );
 }
