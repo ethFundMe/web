@@ -11,7 +11,7 @@ export const SelectInputGroup = forwardRef<
   const [isFocused, setIsFocused] = useState(false);
 
   const focusStyles = {
-    inputGroup: isFocused ? 'border-primary' : '',
+    inputGroup: isFocused ? 'border-primary-dafault' : '',
   };
 
   return (

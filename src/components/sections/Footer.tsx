@@ -9,7 +9,7 @@ import { TextAreaInputGroup } from '../formElements/TextArea';
 
 export const Footer = () => {
   return (
-    <footer className='bg-primaryDark text-white'>
+    <footer className='bg-primary-dark text-white'>
       <Container className='py-16 text-sm'>
         <div className='flex flex-col gap-8 md:flex-row md:justify-between'>
           <Link

@@ -33,9 +33,9 @@ export const ButtonStyle: ButtonStyles = {
     lg: 'py-5 px-8',
   },
   variant: {
-    primary: 'bg-primary text-white',
-    secondary: 'bg-primaryDark text-white',
-    tertiary: 'bg-customGray text-black',
+    primary: 'bg-primary-default text-white',
+    secondary: 'bg-primary-dark text-white',
+    tertiary: 'bg-primary-gray text-black',
     blanc: 'bg-white text-black',
     noire: 'bg-black text-white',
   },
