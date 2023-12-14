@@ -34,7 +34,7 @@ export const ShareCampaignLinkBox = ({ link }: { link: string }) => {
       <button
         className={cn(
           'flex-shrink-0 rotate-180 text-lg',
-          linkCopied ? 'text-green-600' : 'text-primary'
+          linkCopied ? 'text-green-600' : 'text-primary-default'
         )}
       >
         {linkCopied ? <AiFillCopy /> : <AiOutlineCopy />}

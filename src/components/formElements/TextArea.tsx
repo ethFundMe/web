@@ -24,7 +24,7 @@ export const TextAreaInputGroup = forwardRef<
         id={id}
         {...props}
         className={cn(
-          'w-full rounded-md border border-neutral-300 px-4 py-3 outline-0 placeholder:text-neutral-700 focus:border-primary',
+          'w-full rounded-md border border-neutral-300 px-4 py-3 outline-0 placeholder:text-neutral-700 focus:border-primary-default',
           className
         )}
       >

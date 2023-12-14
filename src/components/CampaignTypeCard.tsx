@@ -16,7 +16,7 @@ export const CampaignTypeCard = ({
   const router = useRouter();
 
   return (
-    <div className='group flex flex-col items-center gap-4 rounded-lg border p-4 shadow-neutral-500 transition-all duration-150 ease-in hover:border-primary hover:shadow-md'>
+    <div className='group flex flex-col items-center gap-4 rounded-lg border p-4 shadow-neutral-500 transition-all duration-150 ease-in hover:border-primary-default hover:shadow-md'>
       <Image
         className='h-[200px] w-auto'
         src={image}

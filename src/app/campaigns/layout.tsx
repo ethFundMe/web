@@ -7,7 +7,7 @@ export default function Campaignslayout({
 }) {
   return (
     <>
-      <Navbar fixedToTop={false} />
+      <Navbar />
       {children}
     </>
   );

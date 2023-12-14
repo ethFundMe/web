@@ -18,7 +18,7 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
   return (
     <div
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
-      className='group cursor-pointer space-y-4 rounded-md border border-customGray p-4 hover:border-primary'
+      className='group cursor-pointer space-y-4 rounded-md border border-primary-gray p-4 hover:border-primary-default'
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <Image
@@ -74,7 +74,7 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
 
       <div className='cta grid grid-cols-2 gap-4'>
         <button
-          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90'
+          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90'
           onClick={(e) => {
             e.stopPropagation();
             openModal(<DonateForm campaignID={'efm-fam-001'} />);
@@ -93,7 +93,7 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
               />
             );
           }}
-          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primaryDark px-4 py-2 text-white hover:bg-opacity-90'
+          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-dark px-4 py-2 text-white hover:bg-opacity-90'
         >
           Share
           <FaShare />

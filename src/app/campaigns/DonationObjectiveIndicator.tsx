@@ -25,22 +25,22 @@ export const DonationObjectiveIndicator = ({
         </p>
       </div>
 
-      <div className='relative h-2 w-full rounded-full bg-customGray'>
+      <div className='relative h-2 w-full rounded-full bg-primary-gray'>
         <div
           style={{
             width: `${percentageRaised}%`,
           }}
-          className={cn('h-full rounded-full bg-primary')}
+          className={cn('h-full rounded-full bg-primary-default ')}
         />
         {goalReached && (
-          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary text-white'>
+          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-default text-white'>
             <FaTrophy size={20} />
             {/* <Image
               src='/images/cup.avif'
               width={20}
               height={20}
               alt='...'
-              className='rounded-full border border-primary'
+              className='rounded-full border border-primary-default'
             /> */}
           </div>
         )}
