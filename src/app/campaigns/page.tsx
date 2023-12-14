@@ -1,5 +1,12 @@
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
@@ -12,12 +19,19 @@ export default async function CampaignsPage() {
       <h1 className={cn(TextSizeStyles.h1, 'text-center')}>Our Campaigns</h1>
 
       <div>
-        <select className='rounded-md border px-4 py-2 outline-0 focus:border-primaryDark'>
-          <option value=''>All campaigns</option>
-          <option value=''>Type 1</option>
-          <option value=''>Type 2</option>
-          <option value=''>Type 3</option>
-        </select>
+        <Select>
+          <SelectTrigger className='w-[250px] border-0 outline-0 focus:border-0 focus:outline-0'>
+            <SelectValue
+              defaultValue='all'
+              placeholder='Select campagin type'
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='all'>All campaigns</SelectItem>
+            <SelectItem value='personal'>Personal campaigns</SelectItem>
+            <SelectItem value='others'>Organized for others</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>

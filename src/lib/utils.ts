@@ -3,8 +3,8 @@ import { twMerge } from 'tailwind-merge';
 
 import { parse } from 'node-html-parser';
 
-export function cn(...input: ClassValue[]) {
-  return twMerge(clsx(...input));
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
 export function formatWalletAddress(address: `0x${string}`) {

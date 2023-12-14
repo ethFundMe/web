@@ -34,7 +34,7 @@ export default async function CampaignPage() {
                 currentAmount={20}
               />
 
-              <button className='w-full flex-1 rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90 md:w-fit md:px-5 md:py-3'>
+              <button className='w-full flex-1 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:w-fit md:px-5 md:py-3'>
                 Donate
               </button>
             </div>

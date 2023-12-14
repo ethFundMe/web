@@ -9,7 +9,7 @@ export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
     const [isFocused, setIsFocused] = useState(false);
 
     const focusStyles = {
-      inputGroup: isFocused ? 'border-primary' : '',
+      inputGroup: isFocused ? 'border-primary-default' : '',
     };
 
     return (
