@@ -35,15 +35,23 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
         seekingAmount={Math.fround(campaign.goal * 0.00000000000000001)}
       />
 
-      <div className='flex flex-col-reverse justify-between gap-2'>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          router.push('/campaigns/organizers/12');
+        }}
+        className='flex flex-col-reverse justify-between gap-2'
+      >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
-          <Image
-            src='/images/Logo-Virgin.png'
-            className='flex-shrink-0 rounded-full bg-white'
-            width={50}
-            height={50}
-            alt='...'
-          />
+          <div className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full'>
+            <Image
+              src='/images/wallet-connect-logo.png'
+              className='h-full w-full object-cover'
+              width={48}
+              height={48}
+              alt='...'
+            />
+          </div>
 
           <div>
             <p className={TextSizeStyles.small}>Campaign Organizer</p>

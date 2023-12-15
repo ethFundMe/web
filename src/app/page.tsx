@@ -1,3 +1,4 @@
+import { AboutSection } from '@/components/AboutSection';
 import { HomepageHeader } from '@/components/HomepageHeader';
 import Navbar from '@/components/Navbar';
 import { CampaignTypeSection } from '@/components/sections/CampaignTypeSection';
@@ -9,9 +10,10 @@ export default function Home() {
       <Navbar />
 
       <HomepageHeader />
-
+      <AboutSection />
       {/* <CampaignCategorySection /> */}
       <CampaignTypeSection />
+
       <FaqsSection />
     </>
   );

@@ -137,7 +137,7 @@ export const FAQS = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'Github',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://github.com/ethfundme',
     icon: BiLogoGithub({ size: 20 }),
   },
   {
@@ -147,7 +147,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Instagram',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://instagram.com/ethfundme',
     icon: BiLogoInstagram({ size: 20 }),
   },
   {

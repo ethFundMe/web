@@ -15,7 +15,7 @@ export const ConnectWallet = ({
 }) => {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   const [showDisconnect, setShowDisconnect] = useState(false);
 
@@ -23,12 +23,6 @@ export const ConnectWallet = ({
     navbar: 'top-[120%]',
     sidebar: 'bottom-[80%]',
   };
-
-  useEffect(() => {
-    if (isConnected && !address) {
-      closeModal();
-    }
-  }, [isConnected, closeModal, address]);
 
   useEffect(() => {
     const body = document.querySelector('body');
