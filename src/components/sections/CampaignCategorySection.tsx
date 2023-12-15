@@ -21,7 +21,7 @@ export const CampaignCategorySection = () => {
       <Container className='space-y-5 py-10'>
         <div className='py-5 text-center'>
           <h2 className={TextSizeStyles.h2}>Our campaign categories</h2>
-          <p className='font-edium text-lg'>
+          <p className='text-lg'>
             You can contribute to the following categories
           </p>
         </div>

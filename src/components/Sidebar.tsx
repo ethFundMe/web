@@ -1,56 +1,64 @@
 import { NAVBARROUTES } from '@/lib/constants';
 import { useModalStore } from '@/store/modalStore';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import { HiXCircle } from 'react-icons/hi';
-import { ConnectWallet } from './ConnectWallet';
+import { HiX } from 'react-icons/hi';
+import { NavLink } from './NavLink';
+import { SidebarUserCard } from './SidebarUserCard';
 
 export const Sidebar = () => {
   const { closeModal } = useModalStore();
-
-  useEffect(() => {
-    const handleClose = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
-        closeModal();
-      }
-    };
-    document.addEventListener('keyup', handleClose);
-    return () => document.removeEventListener('keyup', handleClose);
-  }, [closeModal]);
 
   return (
     <motion.div
       animate={{ right: ['-100%', '0%'] }}
       exit={{ right: '-100%' }}
-      className='fixed right-0 top-0 h-screen w-full bg-white p-4 sm:w-96 sm:rounded-l-2xl'
+      className='fixed right-0 top-0 h-screen w-full bg-white p-4 sm:w-[400px] sm:rounded-l-2xl'
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className='inner scrollbar-hidden flex h-full  flex-col justify-between overflow-auto'
+        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto'
       >
         <div
-          className='ml-auto w-fit cursor-pointer justify-end text-2xl text-neutral-500 hover:text-red-300 sm:p-2'
+          className='absolute right-0 top-0 w-fit cursor-pointer p-2 text-2xl text-white hover:text-red-400'
           onClick={closeModal}
         >
-          <HiXCircle />
+          <HiX />
         </div>
 
+        <SidebarUserCard />
+
         <ul className='flex-1 space-y-2'>
+          <SidebarNavLink link='/' title='Dashboard' />
+
           {NAVBARROUTES.map((route) => (
-            <li key={route.link} onClick={closeModal}>
-              <Link
-                href={route.link}
-                className='block rounded-md py-2 transition-all duration-100 ease-in hover:bg-neutral-200 hover:pl-2'
-              >
-                {route.title}
-              </Link>
-            </li>
+            <SidebarNavLink key={route.title} {...route} />
           ))}
         </ul>
 
-        <ConnectWallet variant='sidebar' />
+        {/* <ConnectWallet variant='sidebar' /> */}
+
+        <p className='text-center text-sm text-slate-400'>EthFundMe</p>
       </div>
     </motion.div>
+  );
+};
+
+const SidebarNavLink = ({ title, link }: { title: string; link: string }) => {
+  const { closeModal } = useModalStore();
+
+  return (
+    <li onClick={closeModal}>
+      <NavLink
+        href={link}
+        activeStyles={({ isActive }) =>
+          isActive
+            ? 'bg-primary-default text-white hover:bg-primary-default pl-4 font-semibold'
+            : ''
+        }
+        className='block rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-200 hover:font-normal'
+      >
+        {title}
+      </NavLink>
+    </li>
   );
 };

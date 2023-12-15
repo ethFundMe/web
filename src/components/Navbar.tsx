@@ -32,15 +32,15 @@ const Navbar = () => {
           />
         </Link>
 
-        <ul className='hidden items-center gap-5 lg:flex'>
+        <ul className='hidden items-center gap-8 lg:flex'>
           {NAVBARROUTES.map((route) => (
-            <li key={route.link}>
+            <li key={route.link} className=''>
               <NavLink
                 activeStyles={({ isActive }) =>
                   isActive ? 'font-semibold text-primary-default' : ''
                 }
                 href={route.link}
-                className='block hover:scale-95'
+                className=''
               >
                 {route.title}
               </NavLink>

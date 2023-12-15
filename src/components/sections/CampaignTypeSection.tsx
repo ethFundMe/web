@@ -6,10 +6,10 @@ import { Container } from '../Container';
 export const CampaignTypeSection = () => {
   return (
     <section>
-      <Container className='space-y-5 py-10'>
+      <Container className='space-y-5 py-10 lg:py-20'>
         <div className='py-5 text-center'>
           <h2 className={TextSizeStyles.h2}>Campaign Types</h2>
-          <p className='font-edium text-lg'>You can create campaigns for:</p>
+          <p className='text-lg'>You can create campaigns for:</p>
         </div>
 
         <div className='mx-auto grid max-w-4xl grid-cols-1 gap-10 sm:grid-cols-2'>
