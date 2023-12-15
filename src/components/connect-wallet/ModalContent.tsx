@@ -1,14 +1,13 @@
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
-import { useAccount, useConnect } from 'wagmi';
+import { useConnect } from 'wagmi';
 import { getConnectorIcon } from '../ConnectWallet';
 import WalletOption from './WalletOption';
 
 export default function ModalContent() {
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
-  const { address } = useAccount();
   const { closeModal } = useModalStore();
 
   return (
