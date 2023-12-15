@@ -7,7 +7,7 @@ export default function CampaignOrganizerPage() {
       <h1 className={TextSizeStyles.h2}>Campaign Organizer Page</h1>
 
       <div className='mt-4 space-y-4'>
-        {Array.from({ length: 4 }).map((_, idx) => (
+        {Array.from({ length: 2 }).map((_, idx) => (
           <p key={idx}>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae
             excepturi sequi, distinctio iure aperiam quod corporis unde
