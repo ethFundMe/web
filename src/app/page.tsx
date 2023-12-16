@@ -1,4 +1,5 @@
 import { AboutSection } from '@/components/AboutSection';
+import { FeaturedCampaignsSection } from '@/components/FeaturedCampaignsSection';
 import { HomepageHeader } from '@/components/HomepageHeader';
 import Navbar from '@/components/Navbar';
 import { CampaignTypeSection } from '@/components/sections/CampaignTypeSection';
@@ -11,6 +12,7 @@ export default function Home() {
 
       <HomepageHeader />
       <AboutSection />
+      <FeaturedCampaignsSection />
       {/* <CampaignCategorySection /> */}
       <CampaignTypeSection />
 

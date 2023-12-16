@@ -15,3 +15,33 @@ export async function getCampaigns() {
   await pool.end();
   return campaigns;
 }
+
+export async function getCampaign(id: number) {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
+
+  const campaignsQuery = db
+    .selectFrom('campaigns')
+    .selectAll()
+    .where('campaign_id', '=', id);
+
+  const campaign = await campaignsQuery.execute();
+
+  await pool.end();
+  return campaign[0];
+}
+
+export async function getUserCampaigns(id: string) {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
+
+  const campaignsQuery = db
+    .selectFrom('campaigns')
+    .selectAll()
+    .where('creator', '=', id);
+
+  const campaign = await campaignsQuery.execute();
+
+  await pool.end();
+  return campaign;
+}

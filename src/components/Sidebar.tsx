@@ -1,7 +1,9 @@
 import { NAVBARROUTES } from '@/lib/constants';
+import { NavbarRoute } from '@/lib/types';
 import { useModalStore } from '@/store/modalStore';
 import { motion } from 'framer-motion';
 import { HiX } from 'react-icons/hi';
+import { AuthSidebarRoute } from './AuthSidebarRoute';
 import { NavLink } from './NavLink';
 import { SidebarUserCard } from './SidebarUserCard';
 
@@ -28,8 +30,7 @@ export const Sidebar = () => {
         <SidebarUserCard />
 
         <ul className='flex-1 space-y-2'>
-          <SidebarNavLink link='/' title='Dashboard' />
-
+          <AuthSidebarRoute />
           {NAVBARROUTES.map((route) => (
             <SidebarNavLink key={route.title} {...route} />
           ))}
@@ -43,7 +44,7 @@ export const Sidebar = () => {
   );
 };
 
-const SidebarNavLink = ({ title, link }: { title: string; link: string }) => {
+export const SidebarNavLink = ({ title, link, icon }: NavbarRoute) => {
   const { closeModal } = useModalStore();
 
   return (
@@ -53,10 +54,12 @@ const SidebarNavLink = ({ title, link }: { title: string; link: string }) => {
         activeStyles={({ isActive }) =>
           isActive
             ? 'bg-primary-default text-white hover:bg-primary-default pl-4 font-semibold'
-            : ''
+            : 'hover:font-normal'
         }
-        className='block rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-200 hover:font-normal'
+        className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-200'
       >
+        {icon}
+
         {title}
       </NavLink>
     </li>

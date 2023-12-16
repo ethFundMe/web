@@ -1,7 +1,9 @@
 'use client';
 
 import { formatWalletAddress } from '@/lib/utils';
+import { useModalStore } from '@/store/modalStore';
 import Image from 'next/image';
+import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ConnectWallet } from './ConnectWallet';
@@ -31,6 +33,7 @@ const View = ({
   image?: string;
 }) => {
   const { disconnect } = useDisconnect();
+  const { closeModal } = useModalStore();
 
   return (
     <>
@@ -49,11 +52,17 @@ const View = ({
           {address && <p>{formatWalletAddress(address)}</p>}
         </div>
 
-        <div className='flex flex-shrink-0 flex-col items-end text-sm'>
-          <button className='flex w-fit items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-900 hover:bg-opacity-50'>
+        <div
+          className='flex flex-shrink-0 flex-col items-end text-sm'
+          onClick={closeModal}
+        >
+          <Link
+            href={`/dashboard/${address}`}
+            className='flex w-fit items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-900 hover:bg-opacity-50'
+          >
             Update profile
             <FaPen />
-          </button>
+          </Link>
 
           <button
             onClick={() => disconnect()}
