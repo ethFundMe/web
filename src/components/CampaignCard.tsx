@@ -11,14 +11,23 @@ import { FaEthereum, FaShare } from 'react-icons/fa';
 import { ShareCampaignLink } from './ShareCampaignLink';
 import DonateForm from './forms/DonateForm';
 
-export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
+export const CampaignCard = ({
+  campaign,
+  full = true,
+}: {
+  campaign: Campaign;
+  full?: boolean;
+}) => {
   const router = useRouter();
   const { openModal } = useModalStore();
 
   return (
     <div
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
-      className='group cursor-pointer space-y-4 rounded-md border border-primary-gray p-4 hover:border-primary-default'
+      className={cn(
+        'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
+        !full && 'w-full max-w-[400px] flex-shrink-0'
+      )}
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <Image
@@ -71,13 +80,8 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
         </div>
       </div>
 
-      <div>
-        <p className='line-clamp-2'>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro
-          facilis eum doloremque aliquam ad qui rem quisquam, quae ea? Facere
-          atque facilis obcaecati praesentium maiores saepe magni libero quos
-          autem!
-        </p>
+      <div className='flex-1'>
+        <p className='line-clamp-2'>{campaign.description}</p>
       </div>
 
       <div className='cta grid grid-cols-2 gap-4'>
@@ -85,7 +89,7 @@ export const CampaignCard = ({ campaign }: { campaign: Campaign }) => {
           className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90'
           onClick={(e) => {
             e.stopPropagation();
-            openModal(<DonateForm campaignID={'efm-fam-001'} />);
+            openModal(<DonateForm campaignID={campaign.campaign_id} />);
           }}
         >
           Donate

@@ -1,13 +1,23 @@
-import { Metadata } from 'next';
+import { getCampaign } from '@/lib/api';
+import { notFound } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'Save Somali Refugees From Abject Poverty',
-  openGraph: {
-    images: '/images/homepage-header.jpg',
-  },
-  description:
-    'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro facilis',
-};
+export async function generateMetadata({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
+  if (!/^\d+$/.test(slug)) notFound();
+  const campaign = await getCampaign(parseInt(slug));
+  if (!campaign) return notFound();
+
+  return {
+    title: campaign.title,
+    openGraph: {
+      images: '/images/homepage-header.jpg',
+    },
+    description: campaign.description,
+  };
+}
 
 export default function CampaignsLayout({
   children,
