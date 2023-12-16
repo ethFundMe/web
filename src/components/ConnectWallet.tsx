@@ -48,10 +48,10 @@ export const ConnectWallet = ({
           variant === 'sidebar' && 'w-full rounded-md bg-slate-200 p-2'
         )}
       >
-        <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200 p-1'>
+        <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
           <Image
-            className='h-7 w-7 flex-shrink-0 object-cover'
-            src='/images/Logo-Virgin.png'
+            className='h-full w-full flex-shrink-0 object-cover'
+            src='/images/user-pfp.png'
             alt='ENS Avatar'
             width={70}
             height={70}
@@ -78,6 +78,7 @@ export const ConnectWallet = ({
   return (
     <>
       <button
+        className='min-w-[170px] transition-all duration-150 ease-in hover:font-semibold'
         onClick={() =>
           openModal(
             <Suspense>

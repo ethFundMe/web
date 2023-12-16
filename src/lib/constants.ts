@@ -1,16 +1,31 @@
 import { CampaignCategory } from '@/components/types';
 import {
+  BiDonateHeart,
   BiLogoDiscordAlt,
   BiLogoGithub,
   BiLogoInstagram,
   BiLogoTwitter,
 } from 'react-icons/bi';
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { MdOutlineCampaign } from 'react-icons/md';
 import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
-  { title: 'Campaigns', link: '/campaigns' },
-  { title: 'How to donate', link: '/how-to-donate' },
-  { title: 'Create campaign', link: '/campaigns/create' },
+  {
+    title: 'Campaigns',
+    link: '/campaigns',
+    icon: MdOutlineCampaign({ size: 20 }),
+  },
+  {
+    title: 'How to donate',
+    link: '/how-to-donate',
+    icon: FaRegQuestionCircle({ size: 20 }),
+  },
+  {
+    title: 'Create campaign',
+    link: '/campaigns/create',
+    icon: BiDonateHeart({ size: 20 }),
+  },
 ];
 
 export const CAMPAIGNCATEGORIES: CampaignCategory[] = [
@@ -159,4 +174,5 @@ export const SOCIAL_LINKS: SocialLink[] = [
 
 export const REGEX_CODES = {
   link: /(?:https?|ftp):\/\/\S+/gi,
+  walletAddress: /^0x/,
 };

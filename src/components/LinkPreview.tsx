@@ -40,7 +40,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
         target='_blank'
         rel='noreferrer'
         className={cn(
-          'group flex items-center rounded-md hover:bg-neutral-200 sm:min-w-[400px]'
+          'group flex rounded-md hover:bg-neutral-200 sm:min-w-[400px]'
         )}
       >
         <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>

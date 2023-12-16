@@ -20,7 +20,7 @@ export default async function CampaignsPage() {
 
       <div>
         <Select>
-          <SelectTrigger className='w-[250px] border-0 outline-0 focus:border-0 focus:outline-0'>
+          <SelectTrigger className='w-[250px]'>
             <SelectValue
               defaultValue='all'
               placeholder='Select campagin type'

@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { FaEthereum } from 'react-icons/fa';
 import { ButtonStyle } from './Button';
 import { Container } from './Container';
 
 export const HomepageHeader = () => {
   return (
     <header className='bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5)),url(/images/efm-header.png)] bg-cover bg-bottom bg-no-repeat text-white'>
-      <Container className='flex h-full min-h-[calc(100vh-5rem)] items-center justify-center md:min-h-[calc(100vh-6rem)]'>
+      <Container className='flex h-full min-h-[calc(100vh-5rem)]  items-center justify-center md:min-h-[calc(100vh-6rem)]'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
             <h1 className='text-5xl font-bold leading-tight md:text-7xl'>
@@ -25,10 +26,14 @@ export const HomepageHeader = () => {
               className={cn(
                 ButtonStyle.base,
                 ButtonStyle.size.md,
-                ButtonStyle.variant.primary
+                ButtonStyle.variant.primary,
+                'group flex items-center gap-1 overflow-hidden hover:bg-opacity-100'
               )}
             >
               Donate now
+              <span className='relative -right-8 opacity-0 transition-all duration-200 ease-in group-hover:right-0 group-hover:opacity-100 '>
+                <FaEthereum />
+              </span>
             </Link>
 
             <Link
@@ -36,7 +41,8 @@ export const HomepageHeader = () => {
               className={cn(
                 ButtonStyle.base,
                 ButtonStyle.variant.blanc,
-                ButtonStyle.size.md
+                ButtonStyle.size.md,
+                'hover:bg-slate-200 hover:bg-opacity-100'
               )}
             >
               Create Campaign

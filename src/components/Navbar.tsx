@@ -34,7 +34,7 @@ const Navbar = () => {
 
         <ul className='hidden items-center gap-8 lg:flex'>
           {NAVBARROUTES.map((route) => (
-            <li key={route.link} className=''>
+            <li key={route.link} className='min-w-[170px]'>
               <NavLink
                 activeStyles={({ isActive }) =>
                   isActive ? 'font-semibold text-primary-default' : ''
