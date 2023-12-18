@@ -47,7 +47,7 @@ export const CampaignCard = ({
       <div
         onClick={(e) => {
           e.stopPropagation();
-          router.push('/campaigns/organizers/12');
+          router.push('/user-profile/0x2dc334lk556');
         }}
         className='flex flex-col-reverse justify-between gap-2'
       >

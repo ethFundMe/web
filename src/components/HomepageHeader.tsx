@@ -33,7 +33,7 @@ export const HomepageHeader = () => {
               <span className='transition-all duration-200 ease-in group-hover:-translate-x-2 sm:group-hover:-translate-x-2'>
                 Donate now
               </span>
-              <span className='absolute -right-8 top-1/2 -translate-y-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100 sm:group-hover:right-2'>
+              <span className='absolute -right-8 top-1/2 -translate-y-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100'>
                 <FaEthereum />
               </span>
             </Link>
