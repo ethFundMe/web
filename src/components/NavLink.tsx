@@ -22,7 +22,7 @@ export const NavLink = ({
   const isActive = pathname === href;
 
   const combinedStyle = cn(
-    'duration-150 transition-all ease-in hover:font-semibold',
+    'duration-150 transition-all ease-in',
     className,
     activeStyles && activeStyles({ isActive })
   );

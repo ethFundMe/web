@@ -4,10 +4,15 @@ import { formatWalletAddress } from '@/lib/utils';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { useAccount } from 'wagmi';
-import UpdateProfileForm from '../UpdateProfileForm';
 
+// export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
 export const UserProfile = () => {
   const { address } = useAccount();
+
+  // if (ethAddress) {
+  //   const user = getUserFromDB();
+  //   if (!user) notFound();
+  // }
 
   if (!address) notFound();
 
@@ -39,8 +44,6 @@ export const UserProfile = () => {
           </div>
         </div>
       </div>
-
-      <UpdateProfileForm />
     </div>
   );
 };
