@@ -2,6 +2,7 @@
 
 import { NavbarRoute } from '@/lib/types';
 import { BiUser } from 'react-icons/bi';
+import { IoPencilOutline, IoTrashBin } from 'react-icons/io5';
 import { MdOutlineCampaign } from 'react-icons/md';
 import { useAccount } from 'wagmi';
 import { NavLink } from './NavLink';
@@ -21,6 +22,16 @@ export const DashboardSidebar = () => {
           link={`/dashboard/${address}/campaigns`}
           title='My campaigns'
           icon={<MdOutlineCampaign />}
+        />
+        <SidebarNavLink
+          link={`/dashboard/${address}/update-profile`}
+          title='Update profile'
+          icon={<IoPencilOutline />}
+        />
+        <SidebarNavLink
+          link={`/dashboard/${address}/delete-account`}
+          title='Delete account'
+          icon={<IoTrashBin />}
         />
       </ul>
     </aside>

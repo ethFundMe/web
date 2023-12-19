@@ -4,12 +4,16 @@ import { formatWalletAddress } from '@/lib/utils';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { useAccount } from 'wagmi';
-import UpdateProfileForm from '../UpdateProfileForm';
 
-export const UserProfile = () => {
+export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
   const { address } = useAccount();
 
-  if (!address) notFound();
+  // if (ethAddress) {
+  //   const user = getUserFromDB();
+  //   if (!user) notFound();
+  // }
+
+  if (!ethAddress && !address) notFound();
 
   return (
     <div className='w-full'>
@@ -31,7 +35,11 @@ export const UserProfile = () => {
             <div className='flex flex-1 items-end justify-between'>
               <div>
                 <p className='text-xl font-bold md:text-3xl'>John Doe</p>
-                <p>{formatWalletAddress(address as `0x${string}`)}</p>
+                <p>
+                  {formatWalletAddress(
+                    (address || ethAddress) as `0x${string}`
+                  )}
+                </p>
               </div>
 
               <p className='text-sm'>Verified creator</p>
@@ -39,8 +47,6 @@ export const UserProfile = () => {
           </div>
         </div>
       </div>
-
-      <UpdateProfileForm />
     </div>
   );
 };

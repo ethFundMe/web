@@ -20,18 +20,20 @@ export const HomepageHeader = () => {
             </p>
           </div>
 
-          <div className='flex justify-center gap-4'>
+          <div className='flex flex-wrap items-center justify-center gap-4'>
             <Link
               href='/campaigns'
               className={cn(
                 ButtonStyle.base,
                 ButtonStyle.size.md,
                 ButtonStyle.variant.primary,
-                'group flex items-center gap-1 overflow-hidden hover:bg-opacity-100'
+                'group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
               )}
             >
-              Donate now
-              <span className='relative -right-8 opacity-0 transition-all duration-200 ease-in group-hover:right-0 group-hover:opacity-100 '>
+              <span className='transition-all duration-200 ease-in group-hover:-translate-x-2 sm:group-hover:-translate-x-2'>
+                Donate now
+              </span>
+              <span className='absolute -right-8 top-1/2 -translate-y-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100'>
                 <FaEthereum />
               </span>
             </Link>

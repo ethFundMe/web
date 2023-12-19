@@ -11,9 +11,11 @@ export default function NotFound() {
 
       <div className='space-y-4 text-center'>
         <h1 className='text-xl font-bold sm:text-3xl'>
-          404 Error: Page Not found
+          404 Error: Page Not Found
         </h1>
-        <p className='text-lg'>You seem a bit lost</p>
+        <p className='text-lg'>
+          We can&rsquo;t seem to find the page you&rsquo;re looking for.
+        </p>
 
         <Link
           href='/'
