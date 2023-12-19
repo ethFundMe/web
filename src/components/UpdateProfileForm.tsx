@@ -61,6 +61,7 @@ export default function UpdateProfileForm() {
           <FormField
             control={form.control}
             name='eth_address'
+            disabled
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Wallet Address</FormLabel>

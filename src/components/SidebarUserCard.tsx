@@ -18,7 +18,7 @@ export const SidebarUserCard = () => {
       </div>
     ) : (
       <div className='flex flex-col rounded-lg bg-primary-default p-4 text-center text-white'>
-        <ConnectWallet variant='sidebar' />
+        <ConnectWallet />
       </div>
     );
 

@@ -14,7 +14,7 @@ export const FaqsSection = () => {
           </p>
         </div>
 
-        <section className='accordion accordion--radio mx-auto max-w-3xl'>
+        <section className='accordion accordion--radio mx-auto w-full max-w-4xl'>
           {FAQS.map((item, idx) => (
             <FaqTab key={idx} {...item} checked={!!(idx === 0)} />
           ))}

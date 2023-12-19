@@ -73,7 +73,7 @@ export default async function CampaignPage({
           </div>
         </div>
 
-        <aside className='space-y-4 pb-4'>
+        <aside className='mt-16 space-y-4 pb-4'>
           <h2 className={TextSizeStyles.h6}>Related campaigns</h2>
 
           <ScrollArea className='lg:h-[800px] lg:pr-2'>
