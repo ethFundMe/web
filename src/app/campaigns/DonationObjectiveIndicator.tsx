@@ -1,6 +1,7 @@
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { FaTrophy } from 'react-icons/fa';
+import { formatEther } from 'viem';
 
 export const DonationObjectiveIndicator = ({
   currentAmount,
@@ -16,11 +17,13 @@ export const DonationObjectiveIndicator = ({
     <div className='w-full space-y-2'>
       <div className='flex justify-between'>
         <p>
-          <span className={TextSizeStyles.h6}>{currentAmount} ETH </span>
+          <span className={TextSizeStyles.h6}>
+            {formatEther(BigInt(currentAmount))} ETH{' '}
+          </span>
           raised
           <span className={cn(goalReached && 'hidden')}>
             {' '}
-            of {seekingAmount} ETH
+            of {formatEther(BigInt(seekingAmount))} ETH
           </span>
         </p>
       </div>

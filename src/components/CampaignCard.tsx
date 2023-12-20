@@ -38,7 +38,7 @@ export const CampaignCard = ({
 
       <DonationObjectiveIndicator
         currentAmount={campaign.total_accrued}
-        seekingAmount={Math.fround(campaign.goal * 0.00000000000000001)}
+        seekingAmount={campaign.goal}
       />
 
       <div

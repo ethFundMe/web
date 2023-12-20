@@ -32,8 +32,8 @@ export default async function CampaignPage({
           <div className='space-y-7 pb-5'>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
-                seekingAmount={20}
-                currentAmount={20}
+                seekingAmount={campaign.goal}
+                currentAmount={campaign.total_accrued}
               />
 
               <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
