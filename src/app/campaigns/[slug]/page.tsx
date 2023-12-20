@@ -39,7 +39,8 @@ export default async function CampaignPage({
               <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
                 {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
                 <DonateBtn
-                  className='w-full whitespace-nowrap'
+                  text='Donate Now'
+                  className='w-full whitespace-nowrap sm:mt-1'
                   campaignId={campaign.campaign_id}
                 />
               </div>
@@ -69,14 +70,14 @@ export default async function CampaignPage({
               </div>
             </div>
             <div className='space-y-4'>{campaign.description}</div>
-            <DonateXShareButtons campaign={campaign} />C
+            <DonateXShareButtons campaign={campaign} />
           </div>
         </div>
 
         <aside className='mt-16 space-y-4 pb-4'>
           <h2 className={TextSizeStyles.h6}>Related campaigns</h2>
 
-          <ScrollArea className='lg:h-[800px] lg:pr-2'>
+          <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border lg:p-2'>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
               {campaigns
                 .filter((_) => _.campaign_id !== campaign.campaign_id)

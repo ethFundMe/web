@@ -2,7 +2,6 @@ import { ResponseData, UrlData } from '@/app/api/url-data/route';
 import { urlPreview } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { LinkPreviewLoader } from './LinkPreviewLoader';
 
@@ -35,14 +34,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
     ),
     loading: <LinkPreviewLoader />,
     loaded: (
-      <Link
-        href={url}
-        target='_blank'
-        rel='noreferrer'
-        className={cn(
-          'group flex rounded-md hover:bg-neutral-200 sm:min-w-[400px]'
-        )}
-      >
+      <div className={cn('group flex rounded-md')}>
         <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
           <Image
             src={urlData?.image ?? ''}
@@ -57,7 +49,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
           <p className='line-clamp-2 text-lg font-bold'>{urlData?.title}</p>
           <p className='line-clamp-2'>{urlData?.description}</p>
         </div>
-      </Link>
+      </div>
     ),
   };
 

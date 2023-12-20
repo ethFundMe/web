@@ -3,13 +3,10 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaEthereum, FaShare } from 'react-icons/fa';
-import { ShareCampaignLink } from './ShareCampaignLink';
-import DonateForm from './forms/DonateForm';
+import DonateXShareButtons from './DonateXShareButtons';
 
 export const CampaignCard = ({
   campaign,
@@ -19,10 +16,10 @@ export const CampaignCard = ({
   full?: boolean;
 }) => {
   const router = useRouter();
-  const { openModal } = useModalStore();
 
   return (
     <div
+      // href={`/campaigns/${campaign.campaign_id}`}
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
         'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
@@ -72,7 +69,7 @@ export const CampaignCard = ({
 
         <div>
           <p className={TextSizeStyles.small}>
-            Organized On:{' '}
+            Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
               29th October, 2023
             </span>
@@ -84,33 +81,7 @@ export const CampaignCard = ({
         <p className='line-clamp-2'>{campaign.description}</p>
       </div>
 
-      <div className='cta grid grid-cols-2 gap-4'>
-        <button
-          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90'
-          onClick={(e) => {
-            e.stopPropagation();
-            openModal(<DonateForm campaignID={campaign.campaign_id} />);
-          }}
-        >
-          Donate
-          <FaEthereum />
-        </button>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            openModal(
-              <ShareCampaignLink
-                link={`http://localhost:3000/campaigns/${campaign.campaign_id}`}
-              />
-            );
-          }}
-          className='flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-dark px-4 py-2 text-white hover:bg-opacity-90'
-        >
-          Share
-          <FaShare />
-        </button>
-      </div>
+      <DonateXShareButtons campaign={campaign} />
     </div>
   );
 };
