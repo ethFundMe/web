@@ -29,7 +29,7 @@ export const ShareLinkBtn = ({ campaignId, text }: Props) => {
           Share link
         </DialogTitle>
         <ShareCampaignLink
-          link={`http://localhost:3000/campaigns/${campaignId}`}
+          link={`${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaignId}`}
         />
       </DialogContent>
     </Dialog>
