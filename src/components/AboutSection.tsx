@@ -1,3 +1,5 @@
+'use client';
+
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -13,7 +15,7 @@ export const AboutSection = () => {
           {/* <p className='font-edium text-lg'>s </p> */}
         </div>
 
-        <p>
+        <p className='text-justify sm:text-center'>
           EthFundMe is the pioneering crowdfunding platform where compassion
           meets blockchain technology. Here, we unite the power of community
           support with the transparency and efficiency of web3 technologies.

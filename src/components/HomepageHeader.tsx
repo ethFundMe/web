@@ -6,7 +6,16 @@ import { Container } from './Container';
 
 export const HomepageHeader = () => {
   return (
-    <header className='bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5)),url(/images/efm-header.png)] bg-cover bg-bottom bg-no-repeat text-white'>
+    <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
+      <div className='absolute top-0 -z-10 h-full w-full'>
+        <video
+          src='/videos/header-video.mp4'
+          muted
+          loop
+          autoPlay
+          className='absolute h-full w-full bg-slate-900 object-cover'
+        />
+      </div>
       <Container className='flex h-full min-h-[calc(100vh-5rem)]  items-center justify-center md:min-h-[calc(100vh-6rem)]'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>

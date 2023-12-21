@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <Container className='flex min-h-screen flex-col items-center justify-center gap-8'>
-      <Image src='/images/logo-full.svg' width={300} height={300} alt='logo' />
+      <Image src='/images/efm-logo.svg' width={300} height={300} alt='logo' />
 
       <div className='space-y-4 text-center'>
         <h1 className='text-xl font-bold sm:text-3xl'>

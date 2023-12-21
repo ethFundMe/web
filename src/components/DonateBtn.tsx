@@ -1,32 +1,63 @@
 'use client';
 
+import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
 import { FaEthereum } from 'react-icons/fa';
-import { Button } from './Button';
 import DonateForm from './forms/DonateForm';
+import { buttonVariants } from './ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 
 type Props = React.ComponentProps<'button'> & {
-  campaignId?: number;
+  campaignId: number;
+  text?: string;
 };
 
-export const DonateBtn = ({ className, campaignId, ...rest }: Props) => {
-  const { openModal } = useModalStore();
-
+export const DonateBtn = ({ className, campaignId, text }: Props) => {
   const btnStyles = {
-    base: 'flex items-center justify-center gap-2 rounded-md bg-primary-default px-4 py-2 text-white transition-all duration-200 ease-in hover:bg-opacity-90 md:px-5 md:py-3',
+    base: 'flex items-center justify-center gap-2 transition-all duration-200 ease-in',
   };
 
-  const combinedStyles = cn(btnStyles.base, className);
-
-  const handleClick = () => {
-    openModal(<DonateForm campaignID={campaignId} />);
-  };
+  const combinedStyles = cn(
+    btnStyles.base,
+    buttonVariants({ variant: 'default' }),
+    className
+  );
 
   return (
-    <Button className={combinedStyles} onClick={handleClick} {...rest}>
-      Donate Now
-      <FaEthereum />
-    </Button>
+    <Dialog>
+      <DialogTrigger
+        onClick={(e) => e.stopPropagation()}
+        className={combinedStyles}
+      >
+        <>
+          {text ?? 'Donate'}
+          <FaEthereum />
+        </>
+      </DialogTrigger>
+
+      <DialogContent className='gap-0' onClick={(e) => e.stopPropagation()}>
+        <DialogTitle className={TextSizeStyles.h4}>
+          Donate to campaign
+        </DialogTitle>
+
+        <DonateForm
+          campaignID={campaignId}
+          customClose={
+            <DialogClose
+              type='submit'
+              className={cn(buttonVariants({ variant: 'default' }), 'w-full')}
+            >
+              Donate
+            </DialogClose>
+          }
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
