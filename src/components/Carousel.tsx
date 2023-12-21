@@ -43,7 +43,7 @@ export const Carousel = () => {
 
   return (
     <>
-      <div className='relative'>
+      <div className='relative overflow-hidden'>
         <AnimatePresence initial={false}>
           <AnimImage
             key={currentIndex}

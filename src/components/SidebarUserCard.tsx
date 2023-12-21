@@ -1,12 +1,19 @@
 'use client';
 
-import { formatWalletAddress } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
+import { cn, formatWalletAddress } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ConnectWallet } from './ConnectWallet';
+import { buttonVariants } from './ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 
 export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
@@ -33,45 +40,60 @@ const View = ({
   image?: string;
 }) => {
   const { disconnect } = useDisconnect();
-  const { closeModal } = useModalStore();
 
   return (
-    <>
-      <Image
-        className='h-12 w-12 flex-shrink-0 rounded-full md:h-20 md:w-20'
-        src={image ?? 'https://picsum.photos/300/300'}
-        width={50}
-        height={50}
-        alt='...'
-      />
+    <div className='flex items-start justify-between'>
+      <div className='space-y-1'>
+        <Image
+          className='h-12 w-12 flex-shrink-0 rounded-full md:h-20 md:w-20'
+          src={image ?? 'https://picsum.photos/300/300'}
+          width={50}
+          height={50}
+          alt='...'
+        />
 
-      <div className='flex flex-1 items-end justify-between'>
-        <div>
+        <>
           <p className='line-clamp-1 text-lg font-bold'>Bernard Eyram Franz </p>
 
           {address && <p>{formatWalletAddress(address)}</p>}
-        </div>
 
-        <div
-          className='flex flex-shrink-0 flex-col items-end text-sm'
-          onClick={closeModal}
-        >
-          <Link
-            href={`/dashboard/${address}`}
-            className='flex w-fit items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-900 hover:bg-opacity-50'
-          >
-            Update profile
-            <FaPen />
-          </Link>
+          <Dialog>
+            <DialogTrigger>
+              <button className='flex w-fit items-center gap-2 rounded-md py-1 text-red-400 hover:bg-slate-900 hover:bg-opacity-50 hover:px-2'>
+                Disconnect <FaUnlink />
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Sure to disconnect wallet?</DialogTitle>
 
-          <button
-            onClick={() => disconnect()}
-            className='flex w-fit items-center justify-end gap-2 rounded-md px-2 py-1 hover:bg-slate-900 hover:bg-opacity-50'
-          >
-            Disconnect <FaUnlink />
-          </button>
-        </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <DialogClose
+                  onClick={() => disconnect()}
+                  className={buttonVariants({ variant: 'default' })}
+                >
+                  Confirm
+                </DialogClose>
+                <DialogClose
+                  className={cn(
+                    buttonVariants(),
+                    'bg-slate-300 text-red-500 hover:bg-slate-300/80'
+                  )}
+                >
+                  Cancel
+                </DialogClose>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       </div>
-    </>
+
+      <Link
+        href={`/dashboard/${address}/update-profile`}
+        title='Update profile'
+        className='w-fit rounded-md p-2 hover:bg-slate-900 hover:bg-opacity-50'
+      >
+        <FaPen />
+      </Link>
+    </div>
   );
 };
