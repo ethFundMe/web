@@ -66,7 +66,10 @@ export const AccountForm = () => {
         setUser(user);
 
         const nonce_res = await fetch(
-          `${efm_endpoint}/api/nonce/${user.ethAddress}`
+          `${efm_endpoint}/api/nonce/${user.ethAddress}`,
+          {
+            credentials: 'include',
+          }
         );
         if (!nonce_res.ok) {
           const err: { error: ErrorResponse } = await nonce_res.json();

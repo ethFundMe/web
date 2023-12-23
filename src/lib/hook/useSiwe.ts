@@ -41,7 +41,9 @@ export const useSiwe = () => {
 
       try {
         setIsLoadingSiwe(true);
-        const nonce_res = await fetch(`${efm_endpoint}/api/nonce/${address}`);
+        const nonce_res = await fetch(`${efm_endpoint}/api/nonce/${address}`, {
+          credentials: 'include',
+        });
         if (!nonce_res.ok) {
           const err: { error: ErrorResponse } = await nonce_res.json();
           throw err;
