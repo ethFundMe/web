@@ -2,8 +2,8 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Button } from '../Button';
-import { InputGroup } from '../formElements/InputGroup';
+import { Input } from '../formElements/InputGroup';
+import { Button } from '../inputs/Button';
 import { DonateFormProps } from './types';
 
 type DonateFormValues = {
@@ -33,14 +33,14 @@ export default function DonateForm({ campaignID, amount }: DonateFormProps) {
       </h2>
 
       <div className='mt-5 space-y-4'>
-        <InputGroup
+        <Input
           {...register('campaignID', { required: 'Campaign ID is required' })}
           defaultValue={campaignID}
           placeholder='Enter campaign ID'
           error={errors.campaignID?.message}
         />
 
-        <InputGroup
+        <Input
           type='number'
           step='any'
           {...register('amount', {

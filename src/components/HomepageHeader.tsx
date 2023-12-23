@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { ButtonStyle } from './Button';
 import { Container } from './Container';
+import { ButtonStyle } from './inputs/Button';
 
 export const HomepageHeader = () => {
   return (

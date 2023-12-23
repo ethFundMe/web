@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import Link, { LinkProps } from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HTMLAttributes } from 'react';
-// import {NavLi}
 
 type NavLinkProps = LinkProps &
   HTMLAttributes<HTMLAnchorElement> & {

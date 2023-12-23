@@ -1,5 +1,5 @@
 import { NAVBARROUTES } from '@/lib/constants';
-import { useModalStore } from '@/store/modalStore';
+import { useModalStore } from '@/store/modal';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect } from 'react';

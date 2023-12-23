@@ -7,12 +7,12 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaBars } from 'react-icons/fa';
-import { ConnectWallet } from './ConnectWallet';
-import { Container } from './Container';
-import { NavLink } from './NavLink';
-import { Sidebar } from './Sidebar';
+import { ConnectWallet } from '../ConnectWallet';
+import { Container } from '../Container';
+import { NavLink } from '../NavLink';
+import { Sidebar } from '../Sidebar';
 
-const Navbar = () => {
+export const HeaderNav = () => {
   const { openModal, setModalOptions } = useModalStore();
 
   return (
@@ -63,5 +63,3 @@ const Navbar = () => {
     </motion.nav>
   );
 };
-
-export default Navbar;

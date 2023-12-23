@@ -1,7 +1,7 @@
 'use client';
 
 import { useCreateCampaign } from '@/lib/hook';
-import { userStore } from '@/store/userStore';
+import { userStore } from '@/store/user';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import {
@@ -14,10 +14,7 @@ import toast from 'react-hot-toast';
 import { useDebounce } from 'usehooks-ts';
 import { isAddress } from 'viem';
 import { useAccount } from 'wagmi';
-import { Button } from '../Button';
-import { InputGroup } from '../formElements/InputGroup';
-import { SelectInputGroup } from '../formElements/SelectInputGroup';
-import { TextAreaInputGroup } from '../formElements/TextArea';
+import { Button, Input, Select, Textarea } from '../inputs';
 import { CampaignFormFields } from './types';
 
 export default function CreateCampaignForm() {
@@ -133,7 +130,7 @@ export default function CreateCampaignForm() {
       onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className='col-span-2 space-y-2'>
-        <InputGroup
+        <Input
           id='title'
           label='Campaign title'
           {...register('title', { required: 'Title is required' })}
@@ -146,7 +143,7 @@ export default function CreateCampaignForm() {
       </div>
 
       <div className='col-span-1 space-y-2'>
-        <SelectInputGroup
+        <Select
           id='campaignType'
           label='Campaign type'
           defaultValue={campaignType}
@@ -155,11 +152,11 @@ export default function CreateCampaignForm() {
           <option disabled>-- Select campaign type --</option>
           <option value='personal'>Personal</option>
           <option value='others'>Others</option>
-        </SelectInputGroup>
+        </Select>
       </div>
 
       <div className='col-span-1 space-y-2'>
-        <InputGroup
+        <Input
           id='goal'
           type='number'
           label='Goal (ETH)'
@@ -183,7 +180,7 @@ export default function CreateCampaignForm() {
       {watch('campaignType') === 'others' && (
         <>
           <div className='col-span-1 space-y-2'>
-            <InputGroup
+            <Input
               id='beneficiary-address'
               type='text'
               label='Beneficiary address'
@@ -196,7 +193,7 @@ export default function CreateCampaignForm() {
           </div>
 
           <div className='col-span-1 space-y-2'>
-            <InputGroup
+            <Input
               id='fees'
               type='number'
               label='Creator fee (ETH)'
@@ -221,7 +218,7 @@ export default function CreateCampaignForm() {
       )}
 
       <div className='col-span-2 space-y-2'>
-        <TextAreaInputGroup
+        <Textarea
           label='Campaign description'
           id='description'
           placeholder='Enter a description for your campaign'
@@ -234,7 +231,7 @@ export default function CreateCampaignForm() {
       </div>
 
       <div className='space-y-1'>
-        <InputGroup
+        <Input
           id='campaign-banner'
           label='Campaign banner'
           multiple={false}
@@ -244,7 +241,7 @@ export default function CreateCampaignForm() {
       </div>
 
       <div className='space-y-1'>
-        <InputGroup
+        <Input
           id='other-images'
           label='Other images'
           type='file'
@@ -254,7 +251,7 @@ export default function CreateCampaignForm() {
       </div>
 
       <div className='col-span-2 space-y-1'>
-        <InputGroup
+        <Input
           id='other-images'
           label='Links to Youtube Videos'
           placeholder='Separate links with comma ,'

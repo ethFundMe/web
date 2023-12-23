@@ -3,7 +3,7 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
+import { useModalStore } from '@/store/modal';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
