@@ -169,7 +169,7 @@ export default function CreateCampaignForm() {
               value: 0.0001,
               message: 'Amount cannot be less than 0.0001 ETH',
             },
-            max: user.verifiedCreator
+            max: user.isVerified
               ? campaignGoalAmount.verified
               : campaignGoalAmount.unverified,
           })}

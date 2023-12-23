@@ -8,17 +8,18 @@ type UserState = {
 
 export const userStore = create<UserState>()((set) => ({
   user: {
-    banner_url: '',
-    created_at: new Date(Date.now()),
-    creator_fee: 0,
-    eth_address: '',
-    full_name: '',
+    bannerUrl: '',
+    createdAt: new Date(Date.now()),
+    creatorFee: 0,
+    email: '',
+    ethAddress: '',
+    fullName: '',
     id: '',
-    is_banned: false,
-    is_verified: false,
-    profile_url: '',
+    isBanned: false,
+    isVerified: false,
+    profileUrl: '',
     role: 'beneficiary',
-    updated_at: new Date(Date.now()),
+    updatedAt: new Date(Date.now()),
   },
   setUser(user) {
     set(() => ({ user }));

@@ -1,5 +1,5 @@
-import { useModalStore } from '@/store';
-import { ErrorResponse } from '@/types';
+import { useModalStore, userStore } from '@/store';
+import { ErrorResponse, User } from '@/types';
 import { hasCookie } from 'cookies-next';
 import { redirect, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ export const useSiwe = () => {
   const { disconnect } = useDisconnect();
   const router = useRouter();
   const { closeModal } = useModalStore();
+  const { setUser } = userStore();
 
   const { push, refresh } = router;
 
@@ -81,12 +82,17 @@ export const useSiwe = () => {
         if (!verify_res.ok) {
           const err: ErrorResponse = await verify_res.json();
           throw err;
-        } else {
-          setIsLoadingSiwe(false);
-          refresh();
-          closeModal();
-          return;
         }
+        const verify_data = (await verify_res.json()) as {
+          message: string;
+          ok: boolean;
+          user: User;
+        };
+        setUser(verify_data.user);
+        setIsLoadingSiwe(false);
+        refresh();
+        closeModal();
+        return;
       } catch (error) {
         setIsLoadingSiwe(false);
         console.error(error);

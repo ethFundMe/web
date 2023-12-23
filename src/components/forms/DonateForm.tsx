@@ -2,8 +2,7 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Input } from '../formElements/InputGroup';
-import { Button } from '../inputs/Button';
+import { Button, Input } from '../inputs';
 import { DonateFormProps } from './types';
 
 type DonateFormValues = {
