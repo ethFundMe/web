@@ -1,7 +1,7 @@
 'use client';
 
 import { cn, formatWalletAddress } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
+import { useModalStore } from '@/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';

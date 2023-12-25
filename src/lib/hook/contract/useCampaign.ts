@@ -61,7 +61,7 @@ export const useCreateCampaign = ({
     eventName: 'CampaignCreated',
     chainId: ethFundMeChainId,
     listener(log) {
-      const campaign = log[0].args[0];
+      const campaign = log[0].args.campaign;
       console.log(campaign);
       if (!campaign) return;
       unwatch?.();
