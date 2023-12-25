@@ -41,7 +41,7 @@ export const ConnectWallet = ({
     (body as HTMLElement).addEventListener('click', handleHideDisconnectBtn);
   }, [showDisconnect]);
 
-  if (hasCookie('efmJwtToken') && address) {
+  if (hasCookie('efmSiwe') && address) {
     return (
       <div
         onClick={() => setShowDisconnect((prev) => !prev)}

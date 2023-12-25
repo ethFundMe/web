@@ -23,16 +23,16 @@ export const useSiwe = () => {
   const { address } = useAccount({
     async onConnect({ address, connector, isReconnected }) {
       if (!address || !connector || !chain?.id) return;
-      const efmJwt = hasCookie('efmJwtToken');
+      const efmSiwe = hasCookie('efmSiwe');
 
-      if (efmJwt) {
+      if (efmSiwe) {
         refresh();
         closeModal();
         return;
       }
 
       if (isReconnected) {
-        if (!efmJwt) {
+        if (!efmSiwe) {
           disconnect();
           closeModal();
           toast.error('Session has ended. Please reconnect.');
@@ -118,8 +118,8 @@ export const useSiwe = () => {
     },
 
     async onDisconnect() {
-      const efmJwt = hasCookie('efmJwtToken');
-      if (efmJwt) {
+      const efmSiwe = hasCookie('efmSiwe');
+      if (efmSiwe) {
         try {
           const disconnect_res = await fetch(`${efm_endpoint}/api/disconnect`, {
             credentials: 'include',
