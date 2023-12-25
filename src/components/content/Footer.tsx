@@ -1,11 +1,9 @@
 import { NAVBARROUTES, SOCIAL_LINKS } from '@/lib/constants';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '../Button';
 import { Container } from '../Container';
 import { FooterLink } from '../FooterLink';
-import { InputGroup } from '../formElements/InputGroup';
-import { TextAreaInputGroup } from '../formElements/TextArea';
+import { Button, Input, Textarea } from '../inputs';
 
 export const Footer = () => {
   return (
@@ -41,14 +39,14 @@ export const Footer = () => {
             <h3 className='text-base font-semibold'>Send us an email</h3>
 
             <form className='space-y-3 bg-white bg-opacity-40 p-4'>
-              <InputGroup
+              <Input
                 label='Email'
                 className='p-0 text-black'
                 id='email'
                 placeholder='Enter your email'
               />
 
-              <TextAreaInputGroup
+              <Textarea
                 label='Message'
                 className=' max-h-52 text-black'
                 placeholder='Enter message'

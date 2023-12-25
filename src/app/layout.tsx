@@ -1,6 +1,7 @@
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
-import { Footer } from '@/components/sections/Footer';
+import { Footer } from '@/components/content';
+import { HeaderNav } from '@/components/navigation';
 import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
@@ -25,7 +26,8 @@ export default async function RootLayout({
 
           <WagmiProvider>
             <ModalProvider />
-            <div className='flex-1'>{children}</div>
+            <HeaderNav />
+            <main className='flex-1'>{children}</main>
             <Footer />
           </WagmiProvider>
           <Analytics />

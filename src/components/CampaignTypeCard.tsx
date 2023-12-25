@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaChevronRight } from 'react-icons/fa';
-import { Button } from './Button';
+import { Button } from './inputs/Button';
 
 export const CampaignTypeCard = ({
   campaignType: { image, title, description, link },

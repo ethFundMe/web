@@ -3,8 +3,8 @@
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { ButtonStyle } from './Button';
 import { Container } from './Container';
+import { ButtonStyle } from './inputs';
 
 export const AboutSection = () => {
   return (

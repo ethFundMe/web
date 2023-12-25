@@ -1,6 +1,6 @@
 'use client';
 
-import { useModalStore } from '@/store/modalStore';
+import { useModalStore } from '@/store/modal';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { HiX } from 'react-icons/hi';

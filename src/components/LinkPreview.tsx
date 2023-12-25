@@ -1,14 +1,19 @@
 import { urlPreview } from '@/actions';
-import { UrlData } from '@/app/api/url-data/route';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { LinkPreviewLoader } from './LinkPreviewLoader';
 
+type UrlPreview = {
+  image: string;
+  title: string;
+  description: string;
+};
+
 export const LinkPreview = ({ url }: { url: string }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [urlData, setUrlData] = useState<UrlData | null>(null);
+  const [urlData, setUrlData] = useState<UrlPreview | null>();
 
   useEffect(() => {
     const getURLData = async () => {

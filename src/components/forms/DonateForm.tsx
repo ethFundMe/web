@@ -1,7 +1,8 @@
+import { TextSizeStyles } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Button } from '../Button';
-import { InputGroup } from '../formElements/InputGroup';
+import { Button, Input } from '../inputs';
 import { DonateFormProps } from './types';
 
 type DonateFormValues = {
@@ -37,18 +38,22 @@ export default function DonateForm({
       className='w-full space-y-4 bg-white'
       onSubmit={handleSubmit(onSubmit)}
     >
-      <InputGroup
-        {...register('campaignID')}
-        className='hidden'
-        placeholder='Enter campaign ID'
-        error={errors.campaignID?.message}
-      />
+      <h2 className={cn(TextSizeStyles.h3, 'text-center')}>
+        Donate to campaign
+      </h2>
 
-      <InputGroup
-        label='Amount in ETH'
-        id='amount'
+      <div className='mt-5 space-y-4'>
+        <Input
+          {...register('campaignID', { required: 'Campaign ID is required' })}
+          defaultValue={campaignID}
+          placeholder='Enter campaign ID'
+          error={errors.campaignID?.message}
+        />
+      </div>
+
+      <Input
         type='number'
-        step={0.000001}
+        step='any'
         {...register('amount', {
           required: 'Amount is required',
           min: {

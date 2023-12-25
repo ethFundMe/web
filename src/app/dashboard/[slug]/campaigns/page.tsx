@@ -1,5 +1,5 @@
-import { ButtonStyle } from '@/components/Button';
 import { CampaignCard } from '@/components/CampaignCard';
+import { ButtonStyle } from '@/components/inputs';
 import { getUserCampaigns } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
