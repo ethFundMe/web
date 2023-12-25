@@ -9,6 +9,7 @@ export type CampaignFormFields = {
 };
 
 export type DonateFormProps = {
-  campaignID?: string;
+  campaignID?: number;
   amount?: number;
+  customClose?: React.ReactNode;
 };

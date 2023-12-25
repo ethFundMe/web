@@ -1,44 +1,50 @@
 import { CampaignCard } from '@/components/CampaignCard';
+import { Carousel } from '@/components/Carousel';
 import { Container } from '@/components/Container';
+import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
-import { getCampaigns } from '@/lib/api';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getCampaign, getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
-export default async function CampaignPage() {
+export default async function CampaignPage({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
   const campaigns = await getCampaigns();
+  const campaign = await getCampaign(parseInt(slug));
 
   return (
     <>
-      <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
-        <div className='space-y-4 md:col-span-2'>
+      <Container className='relative grid grid-cols-1 gap-4 py-10 sm:gap-8 lg:grid-cols-3 lg:items-start lg:py-12'>
+        <div className='space-y-5 md:col-span-2 lg:space-y-8'>
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-            Save Somali Refugees From Abject Poverty
+            {campaign.title}
           </h2>
 
-          <Image
-            className='h-80 w-full object-cover sm:h-96 lg:h-[450px]'
-            src='/images/homepage-header1.jpg'
-            width={500}
-            height={400}
-            alt='...'
-          />
+          <Carousel />
 
           <div className='space-y-7 pb-5'>
-            <div className='flex flex-col items-center gap-4 sm:flex-row'>
+            <div className='flex flex-col gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
-                seekingAmount={20}
-                currentAmount={20}
+                seekingAmount={campaign.goal}
+                currentAmount={campaign.total_accrued}
               />
 
-              <button className='w-full flex-1 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:w-fit md:px-5 md:py-3'>
-                Donate
-              </button>
+              <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
+                {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
+                <DonateBtn
+                  text='Donate Now'
+                  className='w-full whitespace-nowrap sm:mt-1'
+                  campaignId={campaign.campaign_id}
+                />
+              </div>
             </div>
-
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
               <Link
                 href='/campaigns/organizers/1'
@@ -46,7 +52,7 @@ export default async function CampaignPage() {
               >
                 <Image
                   src='/images/Logo-Virgin.png'
-                  className='flex-shrink-0 rounded-full bg-white'
+                  className='block h-12 w-12 flex-shrink-0 rounded-full bg-white'
                   width={50}
                   height={50}
                   alt='...'
@@ -63,68 +69,24 @@ export default async function CampaignPage() {
                 <p className='font-semibold'>29th October, 2023</p>
               </div>
             </div>
-
-            <div className='space-y-4'>
-              <div>
-                <h3 className='font-bold'>Our goal</h3>
-                <p className=''>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Vitae maiores nemo necessitatibus laboriosam doloremque rerum
-                  repellat esse deserunt illum, accusamus, atque neque voluptate
-                  dolor ab, aut ipsa quaerat nisi sapiente. Amet consectetur
-                  adipisicing elit. Odit quod, quibusdam velit voluptas non
-                  minima a nihil, ex, accusamus exercitationem est consectetur
-                  doloribus. Error magni explicabo incidunt officiis dolorem!
-                  Nesciunt?
-                </p>
-              </div>
-
-              <div>
-                <h3 className='font-bold'>Why we care</h3>
-                <p className=''>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Expedita cumque voluptatum asperiores facilis atque error id?
-                  Facere laudantium nihil impedit culpa molestias, voluptate,
-                  repudiandae officiis sed earum possimus ea fuga mollitia
-                  nostrum sit non? Nemo ut molestiae sint id optio dolores
-                  voluptatum accusantium?
-                </p>
-
-                <p>
-                  Sit commodi ut architecto vel labore nobis vero in assumenda
-                  rem nulla! Dicta, voluptatibus enim amet doloremque rerum
-                  laudantium officiis omnis, nulla voluptatem delectus
-                  distinctio! Voluptate animi quam consequuntur, enim laborum
-                  doloremque, molestias nemo nulla vel dignissimos maxime. Sed
-                  temporibus commodi expedita veritatis esse sit, similique
-                  facilis illo, necessitatibus ab dolores ipsa. Eum quae
-                  exercitationem facere quas!
-                </p>
-              </div>
-
-              <div>
-                <h3 className='font-bold'>Impact Statement</h3>
-                <p className=''>
-                  amet consectetur adipisicing elit. Odit quod, quibusdam velit
-                  voluptas non minima a nihil, ex, accusamus exercitationem est
-                  consectetur doloribus. Error magni explicabo incidunt officiis
-                  dolorem! Nesciunt?
-                </p>
-              </div>
-            </div>
-
-            <DonateXShareButtons />
+            <div className='space-y-4'>{campaign.description}</div>
+            <DonateXShareButtons campaign={campaign} />
           </div>
         </div>
 
-        <aside className='space-y-4 pb-4'>
-          <h2 className={TextSizeStyles.h6}>Close to their goal</h2>
+        <aside className='mt-16 space-y-4 pb-4'>
+          <h2 className={TextSizeStyles.h6}>Related campaigns</h2>
 
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
-            {campaigns.slice(0, 3).map((_, idx) => (
-              <CampaignCard campaign={_} key={idx} />
-            ))}
-          </div>
+          <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border lg:p-2'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
+              {campaigns
+                .filter((_) => _.campaign_id !== campaign.campaign_id)
+                .slice(0, 3)
+                .map((_, idx) => (
+                  <CampaignCard campaign={_} key={idx} />
+                ))}
+            </div>
+          </ScrollArea>
         </aside>
       </Container>
     </>

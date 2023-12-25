@@ -18,6 +18,16 @@ export default function ModalProvider() {
     }
   }, [content]);
 
+  useEffect(() => {
+    const handleClose = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        closeModal();
+      }
+    };
+    document.addEventListener('keyup', handleClose);
+    return () => document.removeEventListener('keyup', handleClose);
+  }, [closeModal]);
+
   const variants: Variants = {
     animate: {
       opacity: [0, 1],

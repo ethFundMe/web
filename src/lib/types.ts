@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 export type NavbarRoute = {
   title: string;
   link: string;
+  icon?: React.ReactNode;
 };
 
 export type DonationStep = {

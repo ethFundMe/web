@@ -1,16 +1,31 @@
 import { CampaignCategory } from '@/components/types';
 import {
+  BiDonateHeart,
   BiLogoDiscordAlt,
   BiLogoGithub,
   BiLogoInstagram,
   BiLogoTwitter,
 } from 'react-icons/bi';
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { MdOutlineCampaign } from 'react-icons/md';
 import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
-  { title: 'Campaigns', link: '/campaigns' },
-  { title: 'How to donate', link: '/how-to-donate' },
-  { title: 'Create campaign', link: '/campaigns/create' },
+  {
+    title: 'Campaigns',
+    link: '/campaigns',
+    icon: MdOutlineCampaign({ size: 20 }),
+  },
+  {
+    title: 'How to donate',
+    link: '/how-to-donate',
+    icon: FaRegQuestionCircle({ size: 20 }),
+  },
+  {
+    title: 'Create campaign',
+    link: '/campaigns/create',
+    icon: BiDonateHeart({ size: 20 }),
+  },
 ];
 
 export const CAMPAIGNCATEGORIES: CampaignCategory[] = [
@@ -137,7 +152,7 @@ export const FAQS = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'Github',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://github.com/ethfundme',
     icon: BiLogoGithub({ size: 20 }),
   },
   {
@@ -147,7 +162,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Instagram',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://instagram.com/ethfundme',
     icon: BiLogoInstagram({ size: 20 }),
   },
   {
@@ -159,4 +174,5 @@ export const SOCIAL_LINKS: SocialLink[] = [
 
 export const REGEX_CODES = {
   link: /(?:https?|ftp):\/\/\S+/gi,
+  walletAddress: /^0x/,
 };

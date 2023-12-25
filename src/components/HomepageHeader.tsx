@@ -1,12 +1,22 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { FaEthereum } from 'react-icons/fa';
 import { Container } from './Container';
-import { ButtonStyle } from './inputs/Button';
+import { ButtonStyle } from './inputs';
 
 export const HomepageHeader = () => {
   return (
-    <header className='bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85),rgba(0,0,0,0.5)),url(/images/homepage-header.jpg)] bg-cover bg-bottom bg-no-repeat text-white'>
-      <Container className='flex h-full min-h-[calc(100vh-5rem)] items-center justify-center md:min-h-[calc(100vh-6rem)]'>
+    <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
+      <div className='absolute top-0 -z-10 h-full w-full'>
+        <video
+          src='/videos/header-video.mp4'
+          muted
+          loop
+          autoPlay
+          className='absolute h-full w-full bg-slate-900 object-cover'
+        />
+      </div>
+      <Container className='flex h-full min-h-[calc(100vh-5rem)]  items-center justify-center md:min-h-[calc(100vh-6rem)]'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
             <h1 className='text-5xl font-bold leading-tight md:text-7xl'>
@@ -19,16 +29,22 @@ export const HomepageHeader = () => {
             </p>
           </div>
 
-          <div className='flex justify-center gap-4'>
+          <div className='flex flex-wrap items-center justify-center gap-4'>
             <Link
               href='/campaigns'
               className={cn(
                 ButtonStyle.base,
                 ButtonStyle.size.md,
-                ButtonStyle.variant.primary
+                ButtonStyle.variant.primary,
+                'group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
               )}
             >
-              Donate now
+              <span className='transition-all duration-200 ease-in group-hover:-translate-x-2 sm:group-hover:-translate-x-2'>
+                Donate now
+              </span>
+              <span className='absolute -right-8 top-1/2 -translate-y-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100'>
+                <FaEthereum />
+              </span>
             </Link>
 
             <Link
@@ -36,7 +52,8 @@ export const HomepageHeader = () => {
               className={cn(
                 ButtonStyle.base,
                 ButtonStyle.variant.blanc,
-                ButtonStyle.size.md
+                ButtonStyle.size.md,
+                'hover:bg-slate-200 hover:bg-opacity-100'
               )}
             >
               Create Campaign

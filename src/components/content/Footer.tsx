@@ -9,7 +9,7 @@ export const Footer = () => {
   return (
     <footer className='bg-primary-dark text-white'>
       <Container className='py-16 text-sm'>
-        <div className='flex flex-col gap-8 md:flex-row md:justify-between'>
+        <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>
           <Link
             href='/'
             className='grid h-12 w-12 place-content-center  overflow-hidden rounded-full bg-white md:h-16 md:w-16'
@@ -24,7 +24,7 @@ export const Footer = () => {
           </Link>
 
           <div className='space-y-4'>
-            <h3 className='text-base font-semibold'>Useful links</h3>
+            {/* <h3 className='text-base font-semibold'>Useful links</h3> */}
 
             <ul className='flex flex-wrap gap-4 md:gap-8'>
               {NAVBARROUTES.map(({ title, link }) => (
