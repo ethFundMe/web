@@ -11,11 +11,16 @@ import DonateXShareButtons from './DonateXShareButtons';
 export const CampaignCard = ({
   campaign,
   full = true,
+  inSidebar = false,
 }: {
   campaign: Campaign;
   full?: boolean;
+  inSidebar?: boolean;
 }) => {
   const router = useRouter();
+  const variantStyles = cn(
+    !inSidebar ? '' : 'lg:bg-neutral-200 lg:border-none'
+  );
 
   return (
     <div
@@ -23,7 +28,8 @@ export const CampaignCard = ({
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
         'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
-        !full && 'w-full max-w-[400px] flex-shrink-0'
+        !full && 'w-full max-w-[400px] flex-shrink-0',
+        variantStyles
       )}
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
@@ -44,7 +50,7 @@ export const CampaignCard = ({
       <div
         onClick={(e) => {
           e.stopPropagation();
-          router.push('/user-profile/0x2dc334lk556');
+          router.push(`/user-profile/${campaign.creator}`);
         }}
         className='flex flex-col-reverse justify-between gap-2'
       >

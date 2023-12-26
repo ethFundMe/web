@@ -1,4 +1,4 @@
-import { urlPreview } from '@/lib/api';
+import { urlPreview } from '@/actions';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -13,21 +13,17 @@ type UrlPreview = {
 export const LinkPreview = ({ url }: { url: string }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [urlData, setUrlData] = useState<UrlPreview>();
+  const [urlData, setUrlData] = useState<UrlPreview | null>();
 
   useEffect(() => {
     const getURLData = async () => {
       setLoading(true);
       const res = await urlPreview(url);
 
-      const data = (await res.json()) as {
-        message: string;
-        error: boolean;
-        previewData: UrlPreview | undefined;
-      };
+      const data = res;
 
       setError(data.error);
-      setUrlData(data.previewData);
+      setUrlData(data.urlData);
     };
 
     getURLData()
@@ -37,7 +33,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
 
   const views = {
     error: (
-      <p className='rounded-sm bg-red-200 bg-opacity-30 p-3 text-red-800 sm:min-w-[400px]'>
+      <p className='flex-grow rounded-sm bg-red-200 bg-opacity-30 p-3 text-red-800'>
         Failed to load metadata
       </p>
     ),

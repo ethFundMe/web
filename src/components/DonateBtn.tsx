@@ -5,13 +5,7 @@ import { cn } from '@/lib/utils';
 import { FaEthereum } from 'react-icons/fa';
 import DonateForm from './forms/DonateForm';
 import { buttonVariants } from './ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 type Props = React.ComponentProps<'button'> & {
   campaignId: number;
@@ -48,14 +42,14 @@ export const DonateBtn = ({ className, campaignId, text }: Props) => {
 
         <DonateForm
           campaignID={campaignId}
-          customClose={
-            <DialogClose
-              type='submit'
-              className={cn(buttonVariants({ variant: 'default' }), 'w-full')}
-            >
-              Donate
-            </DialogClose>
-          }
+          // customClose={
+          //   <DialogClose
+          //     type='submit'
+          //     className={cn(buttonVariants({ variant: 'default' }), 'w-full')}
+          //   >
+          //     Donate
+          //   </DialogClose>
+          // }
         />
       </DialogContent>
     </Dialog>

@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import { useConnect } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
+import { Button } from './ui/button';
 
 export const ConnectWallet = () => {
   const { address } = useSiwe();
@@ -35,7 +36,7 @@ export const ConnectWallet = () => {
 
   return (
     <>
-      <button
+      <Button
         className='transition-all duration-150 ease-in'
         onClick={() =>
           openModal(
@@ -46,7 +47,7 @@ export const ConnectWallet = () => {
         }
       >
         Connect Wallet
-      </button>
+      </Button>
     </>
   );
 };

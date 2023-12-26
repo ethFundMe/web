@@ -16,9 +16,7 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      className={cn(
-        'sticky top-0 z-30 h-20 w-full bg-white py-2 text-black md:h-24'
-      )}
+      className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
     >
       <Container className='flex h-full items-center justify-between gap-4'>
         <Link href='/' className='mb-2 h-1/2 w-[180px] sm:w-auto'>

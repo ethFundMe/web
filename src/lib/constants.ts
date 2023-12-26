@@ -175,4 +175,6 @@ export const SOCIAL_LINKS: SocialLink[] = [
 export const REGEX_CODES = {
   link: /(?:https?|ftp):\/\/\S+/gi,
   walletAddress: /^0x/,
+  ytLink:
+    /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
 };
