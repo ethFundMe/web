@@ -28,7 +28,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
 
   const views = {
     error: (
-      <p className='rounded-sm bg-red-200 bg-opacity-30 p-3 text-red-800 sm:min-w-[400px]'>
+      <p className='flex-grow rounded-sm bg-red-200 bg-opacity-30 p-3 text-red-800'>
         Failed to load metadata
       </p>
     ),

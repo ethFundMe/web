@@ -29,7 +29,7 @@ export default function DonateForm({
     toast.success(
       `Donated ${formData.amount}ETH to Campaign ${formData.campaignID}`
     );
-    console.log({ formData });
+    // console.log({ formData });
   };
 
   return (

@@ -47,7 +47,7 @@ export default async function CampaignPage({
             </div>
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
               <Link
-                href='/campaigns/organizers/1'
+                href={`/user-profiles/${campaign.creator}`}
                 className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
@@ -77,13 +77,13 @@ export default async function CampaignPage({
         <aside className='mt-16 space-y-4 pb-4'>
           <h2 className={TextSizeStyles.h6}>Related campaigns</h2>
 
-          <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border lg:p-2'>
+          <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border'>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
               {campaigns
                 .filter((_) => _.campaign_id !== campaign.campaign_id)
                 .slice(0, 3)
                 .map((_, idx) => (
-                  <CampaignCard campaign={_} key={idx} />
+                  <CampaignCard inSidebar campaign={_} key={idx} />
                 ))}
             </div>
           </ScrollArea>

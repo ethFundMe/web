@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import ModalContent from './connect-wallet/ModalContent';
+import { Button } from './ui/button';
 
 export const ConnectWallet = () => {
   const { isConnected, address } = useAccount();
@@ -33,7 +34,7 @@ export const ConnectWallet = () => {
 
   return (
     <>
-      <button
+      <Button
         className='transition-all duration-150 ease-in'
         onClick={() =>
           openModal(
@@ -44,7 +45,7 @@ export const ConnectWallet = () => {
         }
       >
         Connect Wallet
-      </button>
+      </Button>
     </>
   );
 };

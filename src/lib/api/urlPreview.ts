@@ -2,7 +2,9 @@ import parse from 'node-html-parser';
 
 export async function urlPreview(url: string) {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      mode: 'no-cors',
+    });
 
     if (!res.ok) throw Error();
 
