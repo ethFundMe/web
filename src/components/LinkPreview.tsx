@@ -1,5 +1,5 @@
-import { ResponseData, UrlData } from '@/app/api/url-data/route';
-import { urlPreview } from '@/lib/api';
+import { urlPreview } from '@/actions';
+import { UrlData } from '@/app/api/url-data/route';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export const LinkPreview = ({ url }: { url: string }) => {
       setLoading(true);
       const res = await urlPreview(url);
 
-      const data = (await res.json()) as ResponseData;
+      const data = res;
 
       setError(data.error);
       setUrlData(data.urlData);

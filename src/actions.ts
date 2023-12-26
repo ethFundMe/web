@@ -1,10 +1,10 @@
+'use server';
+
 import parse from 'node-html-parser';
 
 export async function urlPreview(url: string) {
   try {
-    const res = await fetch(url, {
-      mode: 'no-cors',
-    });
+    const res = await fetch(url);
 
     if (!res.ok) throw Error();
 
@@ -19,19 +19,19 @@ export async function urlPreview(url: string) {
       doc.querySelector('meta[property="og:image"]')?.getAttribute('content') ??
       '';
 
-    if (!title) {
-      throw new Error();
-    }
+    if (!title)
+      return {
+        error: true,
+        message: 'Failed to fetch URL data',
+        urlData: null,
+      };
 
-    return Response.json({
+    return {
       message: 'Fetched URL data',
       error: false,
       urlData: { image, title, description },
-    });
+    };
   } catch (error) {
-    return Response.json(
-      { error: true, message: 'Failed to fetch URL data', urlData: null },
-      { status: 500 }
-    );
+    return { error: true, message: 'Failed to fetch URL data', urlData: null };
   }
 }

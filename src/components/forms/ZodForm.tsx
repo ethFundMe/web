@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
@@ -85,6 +86,7 @@ export default function CreateCampaignForm() {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     console.log({ data });
+    toast.success('Campaign successfully created');
   }
 
   function handleImageUpload(
@@ -284,7 +286,7 @@ export default function CreateCampaignForm() {
               <FormLabel>Other images</FormLabel>
 
               {otherImgsPreview.length > 0 && (
-                <ScrollArea className='h-40'>
+                <ScrollArea className='max-h-40'>
                   <div className='grid grid-cols-3 gap-2'>
                     {otherImgsPreview.map((item, idx) => (
                       <Image
