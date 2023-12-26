@@ -5,8 +5,8 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction,
 } from 'wagmi';
-import { EthFundMe } from '../abi';
-import { ethFundMeChainId, ethFundMeContractAddress } from '../constant';
+import { EthFundMe } from '../../abi';
+import { ethFundMeChainId, ethFundMeContractAddress } from '../../constant';
 
 export const useCreateCampaign = ({
   beneficiary,

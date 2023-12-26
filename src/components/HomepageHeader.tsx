@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { FaEthereum } from 'react-icons/fa';
-import { ButtonStyle } from './Button';
 import { Container } from './Container';
+import { ButtonStyle } from './inputs';
 
 export const HomepageHeader = () => {
   return (

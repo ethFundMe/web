@@ -1,6 +1,6 @@
 import { NAVBARROUTES } from '@/lib/constants';
 import { NavbarRoute } from '@/lib/types';
-import { useModalStore } from '@/store/modalStore';
+import { useModalStore } from '@/store';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { HiX } from 'react-icons/hi';

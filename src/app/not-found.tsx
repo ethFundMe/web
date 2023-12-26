@@ -1,5 +1,5 @@
-import { ButtonStyle } from '@/components/Button';
 import { Container } from '@/components/Container';
+import { ButtonStyle } from '@/components/inputs';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
