@@ -1,5 +1,5 @@
 import { Container } from '@/components/Container';
-import CreateCampaignForm from '@/components/forms/CreateCampaignForm';
+import CreateCampaignForm from '@/components/forms/ZodForm';
 import { TextSizeStyles } from '@/lib/styles';
 
 export default function CreateCampaignPage() {
@@ -12,6 +12,7 @@ export default function CreateCampaignPage() {
         </p>
       </div>
 
+      {/* <CreateCampaignForm /> */}
       <CreateCampaignForm />
     </Container>
   );

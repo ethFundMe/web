@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { FaEthereum } from 'react-icons/fa';
-import { ButtonStyle } from './Button';
 import { Container } from './Container';
+import { ButtonStyle } from './inputs';
 
 export const HomepageHeader = () => {
   return (
@@ -16,7 +16,7 @@ export const HomepageHeader = () => {
           className='absolute h-full w-full bg-slate-900 object-cover'
         />
       </div>
-      <Container className='flex h-full min-h-[calc(100vh-5rem)]  items-center justify-center md:min-h-[calc(100vh-6rem)]'>
+      <Container className='flex h-full min-h-[calc(100vh-4rem)]  items-center justify-center'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
             <h1 className='text-5xl font-bold leading-tight md:text-7xl'>

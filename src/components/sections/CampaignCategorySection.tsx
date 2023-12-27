@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ButtonStyle } from '../Button';
 import { CampaignCategoryCard } from '../CampaignCategoryCard';
 import { Container } from '../Container';
+import { ButtonStyle } from '../inputs/Button';
 import { CampaignCategory } from '../types';
 
 export const CampaignCategorySection = () => {

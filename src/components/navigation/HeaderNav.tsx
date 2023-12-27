@@ -6,20 +6,23 @@ import { useModalStore } from '@/store/modal';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ConnectWallet } from './ConnectWallet';
-import { Container } from './Container';
-import { NavLink } from './NavLink';
-import { Sidebar } from './Sidebar';
+import { FaBars } from 'react-icons/fa';
+import { ConnectWallet } from '../ConnectWallet';
+import { Container } from '../Container';
+import { NavLink } from '../NavLink';
+import { Sidebar } from '../Sidebar';
 
-const Navbar = () => {
+export const HeaderNav = () => {
   const { openModal, setModalOptions } = useModalStore();
 
   return (
     <motion.nav
-      className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
+      className={cn(
+        'sticky top-0 z-30 h-20 w-full bg-white py-2 text-black md:h-24'
+      )}
     >
       <Container className='flex h-full items-center justify-between gap-4'>
-        <Link href='/' className='mb-2 h-1/2 w-[180px] sm:w-auto'>
+        <Link href='/' className='mb-2 h-1/2'>
           <Image
             className='h-full w-auto'
             src='/images/efm-logo.svg'
@@ -29,17 +32,15 @@ const Navbar = () => {
           />
         </Link>
 
-        <ul className='hidden items-center gap-8 lg:flex'>
+        <ul className='hidden items-center gap-5 lg:flex'>
           {NAVBARROUTES.map((route) => (
             <li key={route.link}>
               <NavLink
                 activeStyles={({ isActive }) =>
-                  isActive
-                    ? 'font-semibold text-primary-default'
-                    : 'hover:text-primary-default'
+                  isActive ? 'font-semibold text-primary-default' : ''
                 }
                 href={route.link}
-                className=''
+                className='block hover:scale-95'
               >
                 {route.title}
               </NavLink>
@@ -56,18 +57,9 @@ const Navbar = () => {
             setModalOptions({ hideContent: true });
           }}
         >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='30'
-            height='30'
-            viewBox='0 0 50 50'
-          >
-            <path d='M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z'></path>
-          </svg>
+          <FaBars size={20} />
         </button>
       </Container>
     </motion.nav>
   );
 };
-
-export default Navbar;

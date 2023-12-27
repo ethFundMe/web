@@ -1,6 +1,7 @@
 'use client';
 
 import { cn, formatWalletAddress } from '@/lib/utils';
+import { useModalStore } from '@/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';
@@ -40,6 +41,7 @@ const View = ({
   image?: string;
 }) => {
   const { disconnect } = useDisconnect();
+  const { closeModal } = useModalStore();
 
   return (
     <div className='flex items-start justify-between'>
@@ -91,6 +93,7 @@ const View = ({
         href={`/dashboard/${address}/update-profile`}
         title='Update profile'
         className='w-fit rounded-md p-2 hover:bg-slate-900 hover:bg-opacity-50'
+        onClick={closeModal}
       >
         <FaPen />
       </Link>

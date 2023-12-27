@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/Button';
 import {
   Form,
   FormControl,
@@ -19,6 +18,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAccount } from 'wagmi';
 import * as z from 'zod';
+import { Button } from './inputs';
 
 const formSchema = z.object({
   fullname: z
