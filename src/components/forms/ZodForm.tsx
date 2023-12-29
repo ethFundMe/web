@@ -1,12 +1,16 @@
 'use client';
 
 import { REGEX_CODES } from '@/lib/constants';
+import { useCreateCampaign } from '@/lib/hook';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDebounce } from 'usehooks-ts';
+import { isAddress } from 'viem';
+import { useAccount } from 'wagmi';
 import * as z from 'zod';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
@@ -29,43 +33,51 @@ import {
 } from '../ui/select';
 import { Textarea } from '../ui/textarea';
 
-const formSchema = z.object({
-  title: z
-    .string({ required_error: 'Title is required' })
-    .min(5, { message: 'Campaign title must be more than 4 characters' }),
-  type: z.enum(['personal', 'others'] as const, {
-    required_error: 'Type is required',
-  }),
-  description: z
-    .string({ required_error: 'Description is required' })
-    .min(11, { message: 'Description must be more than 10 characters' }),
-  goal: z
-    .number({ required_error: 'Enter amount in ETH' })
-    .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
-    .max(100, { message: 'Amount cannot be less than 0.0001 ETH' }),
-  beneficiaryAddress: z
-    .string({
-      required_error: 'Beneficiary address is required',
-    })
-    .regex(REGEX_CODES.walletAddress, {
-      message: 'Enter a valid wallet address',
-    })
-    .optional(),
-  creatorFee: z
-    .number({ required_error: 'Enter amount in ETH' })
-    .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
-    .max(2, { message: 'Amount cannot be more than 2 ETH' })
-    .optional(),
-  banner: z.string().optional(),
-  otherImages: z.string().optional(),
-  ytLink: z
-    .string()
-    .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
-    .optional(),
-});
+function getFormSchema(verifiedAddress: boolean = false) {
+  return z.object({
+    title: z
+      .string({ required_error: 'Title is required' })
+      .min(5, { message: 'Campaign title must be more than 4 characters' }),
+    type: z.enum(['personal', 'others'] as const, {
+      required_error: 'Type is required',
+    }),
+    description: z
+      .string({ required_error: 'Description is required' })
+      .min(11, { message: 'Description must be more than 10 characters' }),
+    goal: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
+      .max(verifiedAddress ? 100000 : 2, {
+        message: verifiedAddress
+          ? 'Enter an amount less than 1000000 ETH'
+          : 'Verify your creator account to exceed 2ETH limit',
+      }),
+    beneficiaryAddress: z
+      .string({
+        required_error: 'Beneficiary address is required',
+      })
+      .regex(REGEX_CODES.walletAddress, {
+        message: 'Enter a valid wallet address',
+      })
+      .optional(),
+    creatorFee: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
+      .max(2, { message: 'Amount cannot be more than 2 ETH' })
+      .optional(),
+    banner: z.string().optional(),
+    otherImages: z.string().optional(),
+    ytLink: z
+      .string()
+      .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
+      .optional(),
+  });
+}
 
 export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
+  const { address } = useAccount();
+  const router = useRouter();
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
   const [otherImgsPreview, setOtherImgsPreview] = useState<string[]>([]);
@@ -76,18 +88,78 @@ export default function CreateCampaignForm() {
   };
 
   const campaignType = getCampaignType();
+  const formSchema = getFormSchema(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: campaignType,
+      type: campaignType ?? 'personal',
+      beneficiaryAddress: address,
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log({ data });
-    toast.success('Campaign successfully created');
-  }
+  const beneficiary = useDebounce(
+    useWatch({
+      control: form.control,
+      name: 'beneficiaryAddress',
+      defaultValue: address,
+    }) as `0x${string}`,
+    500
+  );
+  const description = useDebounce(
+    useWatch({ control: form.control, name: 'description' }),
+    500
+  );
+  const goal = useDebounce(
+    useWatch({ control: form.control, name: 'goal', defaultValue: 0 }),
+    500
+  );
+  const title = useDebounce(
+    useWatch({ control: form.control, name: 'title' }),
+    500
+  );
+  const links = useDebounce(
+    useWatch({ control: form.control, name: 'ytLink' }),
+    500
+  );
+
+  const {
+    isLoadingCreateCampaign,
+    isLoadingCreateCampaignTxn,
+    isCreateCampaignTxnSuccess,
+    writeCreateCampaign,
+  } = useCreateCampaign({
+    beneficiary,
+    description,
+    goal,
+    links: [links as string],
+    title,
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = () => {
+    if (!isAddress(String(beneficiary))) {
+      return toast.error(`Address not valid ${beneficiary}`);
+    }
+
+    return writeCreateCampaign?.();
+  };
+
+  useEffect(() => {
+    if (isCreateCampaignTxnSuccess) {
+      toast.success('Campaign created.');
+      form.reset();
+      router.push('/campaigns');
+      return;
+    }
+  }, [isCreateCampaignTxnSuccess, form, router]);
+
+  // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
+  //   console.error(errors);
+  // };
+
+  // function onError(errors: z.infer<typeof formSchema>) {
+  //   console.error(errors);
+  // }
 
   function handleImageUpload(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -335,7 +407,16 @@ export default function CreateCampaignForm() {
           />
         </div>
 
-        <Button className='col-span-2'>Submit</Button>
+        <Button
+          type='submit'
+          disabled={isLoadingCreateCampaign || isLoadingCreateCampaignTxn}
+          size='default'
+          className='col-span-2'
+        >
+          {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
+            ? 'Loading...'
+            : 'Create'}
+        </Button>
       </form>
     </Form>
   );
