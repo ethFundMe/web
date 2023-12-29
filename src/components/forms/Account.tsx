@@ -112,8 +112,7 @@ export const AccountForm = () => {
             await verify_res.json();
             setIsLoading(false);
             toast.success('Account has been successfully created!');
-            router.refresh();
-            return;
+            router.push('/');
           }
         }
       }
