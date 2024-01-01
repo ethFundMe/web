@@ -1,11 +1,11 @@
 'use client';
 
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
+import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import DonateXShareButtons from './DonateXShareButtons';
 
 export const CampaignCard = ({
@@ -17,7 +17,7 @@ export const CampaignCard = ({
   full?: boolean;
   inSidebar?: boolean;
 }) => {
-  const router = useRouter();
+  const router = usePRouter();
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
 
   return (
