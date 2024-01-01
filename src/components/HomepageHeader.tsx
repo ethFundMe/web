@@ -19,11 +19,11 @@ export const HomepageHeader = () => {
       <Container className='flex h-full min-h-[calc(100vh-4rem)]  items-center justify-center'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
-            <h1 className='text-5xl font-bold leading-tight md:text-7xl'>
+            <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
               Welcome to EthFundMe!
             </h1>
 
-            <p className='mx-auto max-w-xs text-center text-lg sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
+            <p className='mx-auto max-w-xs text-center text-lg text-white/80 sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
               Support projects and causes you care about with the power of
               blockchain.
             </p>

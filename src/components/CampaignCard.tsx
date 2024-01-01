@@ -18,9 +18,7 @@ export const CampaignCard = ({
   inSidebar?: boolean;
 }) => {
   const router = useRouter();
-  const variantStyles = cn(
-    !inSidebar ? '' : 'lg:bg-neutral-200 lg:border-none'
-  );
+  const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
 
   return (
     <div

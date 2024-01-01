@@ -75,7 +75,11 @@ export default async function CampaignPage({
         </div>
 
         <aside className='mt-16 space-y-4 pb-4'>
-          <h2 className={TextSizeStyles.h6}>Related campaigns</h2>
+          <h2
+            className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
+          >
+            Related campaigns
+          </h2>
 
           <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border'>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
@@ -83,7 +87,12 @@ export default async function CampaignPage({
                 .filter((_) => _.campaign_id !== campaign.campaign_id)
                 .slice(0, 3)
                 .map((_, idx) => (
-                  <CampaignCard inSidebar campaign={_} key={idx} />
+                  <>
+                    <CampaignCard inSidebar campaign={_} key={idx} />
+                    {idx !== 2 && (
+                      <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
+                    )}
+                  </>
                 ))}
             </div>
           </ScrollArea>
