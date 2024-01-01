@@ -18,9 +18,7 @@ export const CampaignCard = ({
   inSidebar?: boolean;
 }) => {
   const router = useRouter();
-  const variantStyles = cn(
-    !inSidebar ? '' : 'lg:bg-neutral-200 lg:border-none'
-  );
+  const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
 
   return (
     <div
@@ -35,7 +33,7 @@ export const CampaignCard = ({
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <Image
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src='/images/homepage-header.jpg'
+          src={campaign?.media_links[0] ?? '/images/homepage-header.jpg'}
           height={240}
           width={300}
           alt='...'

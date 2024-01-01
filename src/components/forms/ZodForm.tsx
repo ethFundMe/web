@@ -4,10 +4,12 @@ import { REGEX_CODES } from '@/lib/constants';
 import { useCreateCampaign } from '@/lib/hook';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { useDebounce } from 'usehooks-ts';
 import { isAddress } from 'viem';
 import { useAccount } from 'wagmi';
@@ -32,6 +34,12 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Textarea } from '../ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 function getFormSchema(verifiedAddress: boolean = false) {
   return z.object({
@@ -290,11 +298,36 @@ export default function CreateCampaignForm() {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Creator fees (ETH)</FormLabel>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <FormLabel className='flex items-center gap-2'>
+                          <span>Creator fees (ETH)</span>
+                          <AiOutlineExclamationCircle />
+                        </FormLabel>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Visit your{' '}
+                          <Link
+                            className='italic text-primary-default'
+                            href={`/dashboard/${address}/update-profile`}
+                          >
+                            dashboard
+                          </Link>{' '}
+                          if you wish to change your creator fee
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
                   <FormControl>
                     <Input
                       type='number'
                       step={0.00001}
+                      disabled
+                      // value={User.creatorFee}
+                      value={0.02}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>
