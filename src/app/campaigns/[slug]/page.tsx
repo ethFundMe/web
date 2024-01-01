@@ -27,7 +27,7 @@ export default async function CampaignPage({
             {campaign.title}
           </h2>
 
-          <Carousel />
+          <Carousel images={campaign.media_links} />
 
           <div className='space-y-7 pb-5'>
             <div className='flex flex-col gap-4 sm:flex-row'>
@@ -65,7 +65,7 @@ export default async function CampaignPage({
               </Link>
 
               <div>
-                <p className={TextSizeStyles.caption}>Organized On:</p>
+                <p className={TextSizeStyles.caption}>Organized On</p>
                 <p className='font-semibold'>29th October, 2023</p>
               </div>
             </div>
