@@ -7,14 +7,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-export const Carousel = () => {
-  const images = [
-    'https://picsum.photos/id/123/700',
-    'https://picsum.photos/id/132/700',
-    'https://picsum.photos/id/13/700',
-    'https://picsum.photos/id/113/700',
-  ];
-
+export const Carousel = ({ images }: { images: string[] }) => {
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [currentIndex, setCurrentIndex] = useState(0);
 

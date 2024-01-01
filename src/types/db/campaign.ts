@@ -11,7 +11,7 @@ export interface CampaignsTable {
   flagged: boolean;
   goal: number;
   is_closed: boolean;
-  links: Array<string>;
+  media_links: Array<string>;
   title: string;
   total_accrued: number;
   created_at: Generated<Date>;

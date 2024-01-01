@@ -19,7 +19,7 @@ const Navbar = () => {
       className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
     >
       <Container className='flex h-full items-center justify-between gap-4'>
-        <Link href='/' className='mb-2 w-[180px] sm:h-1/2 sm:w-auto'>
+        <Link href='/' className='mb-2 h-4/5 sm:h-1/2 sm:w-auto'>
           <Image
             className='h-full w-auto'
             src='/images/efm-logo.svg'

@@ -10,7 +10,7 @@ export const DonationObjectiveIndicator = ({
   currentAmount: number;
   seekingAmount: number;
 }) => {
-  const goalReached = currentAmount >= seekingAmount;
+  const goalReached = currentAmount === seekingAmount;
   const percentageRaised =
     100 - ((seekingAmount - currentAmount) / seekingAmount) * 100;
   return (
@@ -38,13 +38,6 @@ export const DonationObjectiveIndicator = ({
         {goalReached && (
           <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-dark text-white'>
             <FaTrophy size={20} />
-            {/* <Image
-              src='/images/cup.avif'
-              width={20}
-              height={20}
-              alt='...'
-              className='rounded-full border border-primary-default'
-            /> */}
           </div>
         )}
       </div>
