@@ -39,7 +39,6 @@ const Navbar = () => {
                     : 'hover:text-primary-default'
                 }
                 href={route.link}
-                className=''
               >
                 {route.title}
               </NavLink>

@@ -17,12 +17,12 @@ export const NAVBARROUTES: NavbarRoute[] = [
     icon: MdOutlineCampaign({ size: 20 }),
   },
   {
-    title: 'How to donate',
+    title: 'How to Donate',
     link: '/how-to-donate',
     icon: FaRegQuestionCircle({ size: 20 }),
   },
   {
-    title: 'Create campaign',
+    title: 'Create Campaign',
     link: '/campaigns/create',
     icon: BiDonateHeart({ size: 20 }),
   },
