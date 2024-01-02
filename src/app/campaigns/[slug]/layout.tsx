@@ -13,7 +13,9 @@ export async function generateMetadata({
   return {
     title: campaign.title,
     openGraph: {
-      images: `${process.env.NEXT_PUBLIC_WEB_URL}/images/homepage-header.jpg`,
+      images:
+        campaign.media_links[0] ??
+        `${process.env.NEXT_PUBLIC_WEB_URL}/images/homepage-header.jpg`,
     },
     description: campaign.description,
   };

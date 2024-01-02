@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
 import DonateXShareButtons from './DonateXShareButtons';
+import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
   campaign,
@@ -31,7 +32,7 @@ export const CampaignCard = ({
       )}
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
-        <Image
+        <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
           src={campaign?.media_links[0] ?? '/images/homepage-header.jpg'}
           height={240}
