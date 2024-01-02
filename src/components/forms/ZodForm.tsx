@@ -2,6 +2,10 @@
 
 import { REGEX_CODES } from '@/lib/constants';
 import { useCreateCampaign } from '@/lib/hook';
+import {
+  GET_CREATE_CAMPAIGN_FORM_SCHEMA,
+  uploadToCloudinary,
+} from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,47 +45,6 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 
-function getFormSchema(verifiedAddress: boolean = false) {
-  return z.object({
-    title: z
-      .string({ required_error: 'Title is required' })
-      .min(5, { message: 'Campaign title must be more than 4 characters' }),
-    type: z.enum(['personal', 'others'] as const, {
-      required_error: 'Type is required',
-    }),
-    description: z
-      .string({ required_error: 'Description is required' })
-      .min(11, { message: 'Description must be more than 10 characters' }),
-    goal: z
-      .number({ required_error: 'Enter amount in ETH' })
-      .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
-      .max(verifiedAddress ? 100000 : 2, {
-        message: verifiedAddress
-          ? 'Enter an amount less than 1000000 ETH'
-          : 'Verify your creator account to exceed 2ETH limit',
-      }),
-    beneficiaryAddress: z
-      .string({
-        required_error: 'Beneficiary address is required',
-      })
-      .regex(REGEX_CODES.walletAddress, {
-        message: 'Enter a valid wallet address',
-      })
-      .optional(),
-    creatorFee: z
-      .number({ required_error: 'Enter amount in ETH' })
-      .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
-      .max(2, { message: 'Amount cannot be more than 2 ETH' })
-      .optional(),
-    banner: z.string().optional(),
-    otherImages: z.string().optional(),
-    ytLink: z
-      .string()
-      .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
-      .optional(),
-  });
-}
-
 export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const { address } = useAccount();
@@ -96,14 +59,16 @@ export default function CreateCampaignForm() {
   };
 
   const campaignType = getCampaignType();
-  const formSchema = getFormSchema(false);
+  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       type: campaignType ?? 'personal',
       beneficiaryAddress: address,
+      banner: undefined,
     },
+    mode: 'onChange',
+    resolver: zodResolver(formSchema),
   });
 
   const beneficiary = useDebounce(
@@ -140,15 +105,48 @@ export default function CreateCampaignForm() {
     beneficiary,
     description,
     goal,
+
     links: [links as string],
     title,
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = () => {
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     if (!isAddress(String(beneficiary))) {
       return toast.error(`Address not valid ${beneficiary}`);
     }
 
+    async function handleMediaLinksUpload() {
+      const mediaLinks: string[] = [];
+
+      if (data.banner) {
+        uploadToCloudinary(data.banner)
+          .then((res) => {
+            mediaLinks.push(...(res as string[]));
+          })
+          .then(() => {
+            toast.success('Banner uploaded');
+          })
+          .catch((e) => {
+            toast.error(e.message);
+            throw new Error('Could not upload banner');
+          });
+      }
+      if (data.otherImages) {
+        uploadToCloudinary(data.otherImages)
+          .then((res) => {
+            mediaLinks.push(...(res as string[]));
+          })
+          .then(() => {
+            toast.success('Other images uploaded');
+          })
+          .catch((e) => {
+            toast.error(e.message);
+            throw new Error('Could not upload other images');
+          });
+      }
+    }
+
+    handleMediaLinksUpload();
     return writeCreateCampaign?.();
   };
 
@@ -169,7 +167,7 @@ export default function CreateCampaignForm() {
   //   console.error(errors);
   // }
 
-  function handleImageUpload(
+  function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,
     type: 'banner' | 'others'
   ) {
@@ -205,11 +203,6 @@ export default function CreateCampaignForm() {
     } else {
       handleOtherImgsUpload();
     }
-
-    // if (type === 'banner') {
-    //   setBannerPreview('banner');
-    //   toast('Upoaded');
-    // }
   }
 
   return (
@@ -356,8 +349,8 @@ export default function CreateCampaignForm() {
         <FormField
           name='banner'
           control={form.control}
-          render={() => (
-            <FormItem className=''>
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Campaign banner</FormLabel>
 
               {bannerPreview && (
@@ -373,10 +366,15 @@ export default function CreateCampaignForm() {
               <FormControl>
                 <Input
                   type='file'
-                  onChange={(e) => handleImageUpload(e, 'banner')}
-                  multiple={false}
+                  onChange={(e) => {
+                    showImagePreview(e, 'banner');
+                    field.onChange(e.target.files);
+                  }}
                   accept='image/*'
+                  // {...bannerRef}
                 />
+
+                {/* <Input type='file' accept='image/*' {...fileRef} /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -386,7 +384,7 @@ export default function CreateCampaignForm() {
         <FormField
           name='otherImages'
           control={form.control}
-          render={() => (
+          render={({ field }) => (
             <FormItem className=''>
               <FormLabel>Other images</FormLabel>
 
@@ -410,7 +408,10 @@ export default function CreateCampaignForm() {
               <FormControl>
                 <Input
                   type='file'
-                  onChange={(e) => handleImageUpload(e, 'others')}
+                  onChange={(e) => {
+                    showImagePreview(e, 'others');
+                    field.onChange(e.target.files);
+                  }}
                   multiple
                   accept='image/*'
                 />
