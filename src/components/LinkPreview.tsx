@@ -1,7 +1,7 @@
 import { urlPreview } from '@/actions';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import ImageWithFallback from './ImageWithFallback';
 import { LinkPreviewLoader } from './LinkPreviewLoader';
 
 type UrlPreview = {
@@ -39,22 +39,13 @@ export const LinkPreview = ({ url }: { url: string }) => {
     ),
     loading: <LinkPreviewLoader />,
     loaded: (
-      <div className={cn('group flex rounded-md')}>
-        <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
-          <Image
-            src={urlData?.image ?? ''}
-            height={300}
-            width={300}
-            alt='...'
-            className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          />
-        </div>
-
-        <div className='text max-w-sm px-3'>
-          <p className='line-clamp-2 text-lg font-bold'>{urlData?.title}</p>
-          <p className='line-clamp-2'>{urlData?.description}</p>
-        </div>
-      </div>
+      <LinkPreviewCmp
+        params={{
+          title: urlData?.title as string,
+          image: urlData?.image as string,
+          description: urlData?.description as string,
+        }}
+      />
     ),
   };
 
@@ -66,3 +57,26 @@ export const LinkPreview = ({ url }: { url: string }) => {
 
   return viewToShow;
 };
+
+export const LinkPreviewCmp = ({
+  params: { title, image, description },
+}: {
+  params: UrlPreview;
+}) => (
+  <div className={cn('group flex rounded-md')}>
+    <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
+      <ImageWithFallback
+        src={image ?? ''}
+        height={300}
+        width={300}
+        alt='...'
+        className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
+      />
+    </div>
+
+    <div className='text max-w-sm px-3'>
+      <p className='line-clamp-2 text-lg font-bold'>{title}</p>
+      <p className='line-clamp-2'>{description}</p>
+    </div>
+  </div>
+);

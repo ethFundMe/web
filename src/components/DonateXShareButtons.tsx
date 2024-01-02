@@ -19,7 +19,7 @@ const DonateXShareButtons = ({
     <div className={cn('cta grid gap-4', variantStyles)}>
       <DonateBtn campaignId={campaign.campaign_id} />
 
-      <ShareLinkBtn campaignId={campaign.campaign_id} />
+      <ShareLinkBtn campaign={campaign} />
     </div>
   );
 };
