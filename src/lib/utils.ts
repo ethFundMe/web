@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from 'clsx';
 import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
+import { z } from 'zod';
+import { REGEX_CODES } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,4 +27,100 @@ export async function fetchUrlData(url: string) {
     '';
 
   return { image, title, description };
+}
+
+export async function uploadToCloudinary(files: FileList | string[]) {
+  const formData = new FormData();
+  const urls: string[] = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const image = files[i];
+
+    formData.append('file', image);
+    formData.append('upload_preset', 'neqfirer');
+
+    const resolve = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (!data?.error) {
+          urls.push(data?.url);
+        } else {
+          throw new Error('Failed to upload image');
+        }
+      })
+      .then(() => {
+        return urls;
+      })
+      .catch(() => {
+        throw new Error('Failed to upload image');
+      });
+
+    return resolve;
+  }
+}
+
+export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
+  verifiedAddress: boolean = false
+) {
+  return z.object({
+    title: z
+      .string({ required_error: 'Title is required' })
+      .min(5, { message: 'Campaign title must be more than 4 characters' }),
+    type: z.enum(['personal', 'others'] as const, {
+      required_error: 'Type is required',
+    }),
+    description: z
+      .string({ required_error: 'Description is required' })
+      .min(11, { message: 'Description must be more than 10 characters' }),
+    goal: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
+      .max(verifiedAddress ? 100000 : 2, {
+        message: verifiedAddress
+          ? 'Enter an amount less than 1000000 ETH'
+          : 'Verify your creator account to exceed 2ETH limit',
+      }),
+    beneficiaryAddress: z
+      .string({
+        required_error: 'Beneficiary address is required',
+      })
+      .regex(REGEX_CODES.walletAddress, {
+        message: 'Enter a valid wallet address',
+      })
+      .optional(),
+    creatorFee: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
+      .max(2, { message: 'Amount cannot be more than 2 ETH' })
+      .optional(),
+    banner: z.any().refine((file) => file?.length == 1, 'File is required.'),
+    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
+    // .refine(
+    //   (files) =>
+    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
+    //       files?.[0]?.type
+    //     ),
+    //   '.jpg, .jpeg, .png and .webp files are accepted.')
+    otherImages: z.any(),
+    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
+    // .refine(
+    //   (files) =>
+    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
+    //       files?.[0]?.type
+    //     ),
+    //   '.jpg, .jpeg, .png and .webp files are accepted.'
+    // )
+    ytLink: z
+      .string()
+      .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
+      .optional(),
+  });
 }

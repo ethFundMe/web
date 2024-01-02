@@ -4,6 +4,7 @@ import { Footer } from '@/components/content';
 import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
+import NextTopLoader from 'nextjs-toploader';
 import React from 'react';
 import './globals.css';
 
@@ -21,6 +22,7 @@ export default async function RootLayout({
     <>
       <html lang='en'>
         <body className='flex min-h-screen flex-col'>
+          <NextTopLoader showSpinner={false} color='#0062a6' />
           <ClientToaster />
 
           <WagmiProvider>
