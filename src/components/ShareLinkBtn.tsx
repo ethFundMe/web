@@ -2,16 +2,17 @@
 
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+import { Campaign } from '@/types';
 import { FaShare } from 'react-icons/fa';
 import { ShareCampaignLink } from './ShareCampaignLink';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 type Props = React.ComponentProps<'button'> & {
-  campaignId: number;
+  campaign: Campaign;
   text?: string;
 };
 
-export const ShareLinkBtn = ({ campaignId, text }: Props) => {
+export const ShareLinkBtn = ({ campaign, text }: Props) => {
   return (
     <Dialog>
       <DialogTrigger
@@ -29,7 +30,8 @@ export const ShareLinkBtn = ({ campaignId, text }: Props) => {
           Share link
         </DialogTitle>
         <ShareCampaignLink
-          link={`${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaignId}`}
+          campaign={campaign}
+          link={`${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}`}
         />
       </DialogContent>
     </Dialog>
