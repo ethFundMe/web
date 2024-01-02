@@ -46,6 +46,11 @@ export const CampaignCard = ({
         seekingAmount={campaign.goal}
       />
 
+      <div className='flex-1'>
+        <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
+        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+      </div>
+
       <div
         onClick={(e) => {
           e.stopPropagation();
@@ -80,10 +85,6 @@ export const CampaignCard = ({
             </span>
           </p>
         </div>
-      </div>
-
-      <div className='flex-1'>
-        <p className='line-clamp-2'>{campaign.description}</p>
       </div>
 
       <DonateXShareButtons campaign={campaign} />
