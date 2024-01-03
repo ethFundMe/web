@@ -10,9 +10,10 @@ export const DonationObjectiveIndicator = ({
   currentAmount: number;
   seekingAmount: number;
 }) => {
-  const goalReached = currentAmount === seekingAmount;
-  const percentageRaised =
-    100 - ((seekingAmount - currentAmount) / seekingAmount) * 100;
+  const percentage = (currentAmount / seekingAmount) * 100;
+  const percentageRaised = percentage > 100 ? 100 : percentage;
+  const goalReached = percentageRaised >= 100;
+
   return (
     <div className='w-full space-y-2'>
       <div className='flex justify-between'>
