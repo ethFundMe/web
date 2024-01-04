@@ -1,6 +1,8 @@
 'use server';
 
 import parse from 'node-html-parser';
+import { cache } from 'react';
+import { Campaign } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -35,3 +37,17 @@ export async function urlPreview(url: string) {
     return { error: true, message: 'Failed to fetch URL data', urlData: null };
   }
 }
+
+export const getCampaigns = cache(async (page?: number) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/?page=${
+      page ?? 1
+    }&limit=1`
+  );
+  const data = await res.json();
+
+  const campaigns: Campaign[] = data.campaigns;
+  const totalCampaigns: number = data.meta.totalCampaigns;
+
+  return { campaigns: campaigns ?? [], totalCampaigns: totalCampaigns };
+});
