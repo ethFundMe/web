@@ -3,6 +3,7 @@
 
 import { formatWalletAddress } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
@@ -111,9 +112,14 @@ export default function LiveDonations() {
 
   return (
     <div>
-      <h2 className='text-center text-2xl font-light'>Live Donations</h2>
+      <h2 className='text-center text-2xl font-light text-primary-dark'>
+        Live Donations
+      </h2>
 
-      <ul ref={ref} className='relative mx-auto max-w-sm overflow-hidden'>
+      <ul
+        ref={ref}
+        className='relative mx-auto max-w-sm overflow-hidden text-primary-default'
+      >
         <AnimatePresence initial={false}>
           {dts.map((i) => (
             <motion.li
@@ -126,16 +132,24 @@ export default function LiveDonations() {
               }}
               transition={{ type: 'spring', damping: 14 }}
               key={i.id}
-              className='flex items-center gap-2 border-b border-slate-600 py-3'
             >
-              <span>
-                <FaEthereum size={20} />
-              </span>
-              <span>
-                {formatWalletAddress(i.address as `0x${string}`)} donated{' '}
-                {format(i.amount)}ETH
-              </span>
-              <span className='ml-auto text-sm'>{i.time}</span>
+              {/* Update with real tx when available */}
+              <Link
+                href='https://etherscan.io/tx/0xa04bea27c6a906dcad8861c951e7c870907b880f47ffb2e76db36d2f8b3c3910'
+                target='_blank'
+                rel='noreferrer'
+                title='View transaction details'
+                className='flex items-center gap-2 border-b border-slate-600 py-3'
+              >
+                <span>
+                  <FaEthereum size={20} />
+                </span>
+                <span>
+                  {formatWalletAddress(i.address as `0x${string}`)} donated{' '}
+                  {format(i.amount)}ETH
+                </span>
+                <span className='ml-auto text-sm'>{i.time}</span>
+              </Link>
             </motion.li>
           ))}
         </AnimatePresence>
