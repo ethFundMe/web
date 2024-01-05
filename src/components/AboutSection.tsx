@@ -8,11 +8,10 @@ import { ButtonStyle } from './inputs';
 
 export const AboutSection = () => {
   return (
-    <section className=''>
+    <section>
       <Container className='mx-auto max-w-3xl space-y-5 py-10 text-center lg:py-20'>
         <div className='pt-5'>
           <h2 className={TextSizeStyles.h2}>About Us</h2>
-          {/* <p className='font-edium text-lg'>s </p> */}
         </div>
 
         <p className='text-center'>
