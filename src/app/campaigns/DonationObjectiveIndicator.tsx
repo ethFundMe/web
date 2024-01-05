@@ -37,7 +37,7 @@ export const DonationObjectiveIndicator = ({
           className={cn('h-full rounded-full bg-primary-default ')}
         />
         {goalReached && (
-          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-dark text-white'>
+          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-default text-white'>
             <FaTrophy size={20} />
           </div>
         )}
