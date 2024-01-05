@@ -11,6 +11,47 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
+import type { Metadata } from 'next';
+
+type Props = {
+  params: { slug: string };
+};
+
+export async function generateMetadata(
+  { params }: Props
+  // parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const id = params.slug;
+
+  const campaign = await getCampaign(parseInt(id));
+
+  return {
+    title: `${campaign.title}`,
+    description: `${campaign.description}`,
+    keywords:
+      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+    openGraph: {
+      type: 'website',
+      title: `${campaign.title}`,
+      description: `${campaign.description}`,
+      images: [
+        'https://images.pexels.com/photos/5486872/pexels-photo-5486872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      ],
+      url: 'https://ethfund.me',
+    },
+    twitter: {
+      title: `${campaign.title}`,
+      card: 'summary_large_image',
+      description: `${campaign.description}`,
+      images:
+        'https://images.pexels.com/photos/5486872/pexels-photo-5486872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      site: '@ethfundme',
+      creator: '@ethfundme',
+    },
+  };
+}
+
 export default async function CampaignPage({
   params: { slug },
 }: {
