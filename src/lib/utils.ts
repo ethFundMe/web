@@ -3,6 +3,7 @@ import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import { REGEX_CODES } from './constants';
+import { CampaignTags } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -101,7 +102,20 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
       .max(2, { message: 'Amount cannot be more than 2 ETH' })
       .optional(),
-    banner: z.any().refine((file) => file?.length == 1, 'File is required.'),
+    tag: z.enum([
+      CampaignTags['Arts and Culture'],
+      CampaignTags['Business and Entrepreneurship'],
+      CampaignTags['Community and Social Impact'],
+      CampaignTags['Education and Learning'],
+      CampaignTags['Entertainment and Media'],
+      CampaignTags['Environment and Sustainability'],
+      CampaignTags['Health and Wellness'],
+      CampaignTags['Lifestyle and Hobbies'],
+      CampaignTags.Others,
+      CampaignTags['Science and Research'],
+      CampaignTags['Technology and Innovation'],
+    ]),
+    banner: z.any().refine((file) => file?.length == 1, 'Banner is required.'),
     // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
     // .refine(
     //   (files) =>

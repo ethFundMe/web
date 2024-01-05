@@ -2,6 +2,7 @@
 
 import { REGEX_CODES } from '@/lib/constants';
 import { useCreateCampaign } from '@/lib/hook';
+import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   uploadToCloudinary,
@@ -269,6 +270,31 @@ export default function CreateCampaignForm() {
             </FormItem>
           )}
           name='goal'
+        />
+
+        <FormField
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className='col-span-2'>
+              <FormLabel>Campaign tag</FormLabel>
+              <FormControl>
+                <Select onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Choose a campaign tag' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(CampaignTags).map(([key, value]) => (
+                      <>
+                        <SelectItem value={key}>{value}</SelectItem>
+                      </>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+          name='tag'
         />
 
         {form.watch('type') === 'others' && (
