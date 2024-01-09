@@ -31,23 +31,7 @@ export default function ActiveStatsSection() {
           <div className='flex flex-col items-center gap-4 text-center md:flex-row md:text-left'>
             <Image
               className='w-10 md:w-[80px]'
-              src='/images/active-campaign.svg'
-              width={80}
-              height={80}
-              alt='eth-logo'
-            />
-            <p>
-              <span className='text-xl font-bold md:text-3xl'>
-                <CountUp duration={3} end={3218} />
-              </span>
-              <span className='block'>campaigns funded</span>
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center gap-4 text-center md:flex-row md:text-left'>
-            <Image
-              className='w-10 md:w-[80px]'
-              src='/images/campaigns-funded.svg'
+              src='/images/active-campaigns.svg'
               width={80}
               height={80}
               alt='eth-logo'
@@ -57,6 +41,22 @@ export default function ActiveStatsSection() {
                 <CountUp duration={3} end={3000} />
               </span>
               <span className='block'>active campaigns</span>
+            </p>
+          </div>
+
+          <div className='flex flex-col items-center gap-4 text-center md:flex-row md:text-left'>
+            <Image
+              className='w-10 md:w-[80px]'
+              src='/images/funded-campaigns.svg'
+              width={80}
+              height={80}
+              alt='funded'
+            />
+            <p>
+              <span className='text-xl font-bold md:text-3xl'>
+                <CountUp duration={3} end={3218} />
+              </span>
+              <span className='block'>campaigns funded</span>
             </p>
           </div>
         </div>
