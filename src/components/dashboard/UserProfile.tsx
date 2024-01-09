@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { CampaignCard } from '../CampaignCard';
 import { Container } from '../Container';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 
 export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
   const { address } = useAccount();
@@ -25,15 +26,28 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
 
           <Container>
             <div className='flex flex-col gap-4 py-4 md:flex-row md:items-end lg:py-8'>
-              <div className='image h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
-                <Image
-                  className='h-full w-full object-cover'
-                  src={'/images/user-pfp.jpg'}
-                  height={300}
-                  width={300}
-                  alt='user-pfp'
-                />
-              </div>
+              <Dialog>
+                <DialogTrigger className='w-fit'>
+                  <div className='image h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
+                    <Image
+                      className='h-full w-full object-cover'
+                      src={'/images/pfp.svg'}
+                      height={150}
+                      width={150}
+                      alt='user-pfp'
+                    />
+                  </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <Image
+                    className='h-full w-full object-cover'
+                    src={'/images/pfp.svg'}
+                    height={500}
+                    width={500}
+                    alt='user-pfp'
+                  />
+                </DialogContent>
+              </Dialog>
 
               <div>
                 <div className='flex items-start'>
@@ -42,7 +56,7 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
                   </p>
                   <Image
                     className='h-auto w-[12px] md:w-4'
-                    src='/images/tick.png'
+                    src='/images/verified.svg'
                     width={20}
                     height={20}
                     alt='...'

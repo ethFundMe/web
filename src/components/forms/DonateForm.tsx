@@ -1,5 +1,3 @@
-import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Button, Input } from '../inputs';
@@ -38,18 +36,14 @@ export default function DonateForm({
       className='w-full space-y-4 bg-white'
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className={cn(TextSizeStyles.h3, 'text-center')}>
-        Donate to campaign
-      </h2>
-
-      <div className='mt-5 space-y-4'>
+      {/* <div className='mt-5 space-y-4'>
         <Input
           {...register('campaignID', { required: 'Campaign ID is required' })}
           defaultValue={campaignID}
           placeholder='Enter campaign ID'
           error={errors.campaignID?.message}
         />
-      </div>
+      </div> */}
 
       <Input
         type='number'
