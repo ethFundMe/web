@@ -1,10 +1,10 @@
+import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
 import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
-import NextTopLoader from 'nextjs-toploader';
 import React from 'react';
 import './globals.css';
 
@@ -22,7 +22,7 @@ export default async function RootLayout({
     <>
       <html lang='en'>
         <body className='flex min-h-screen flex-col'>
-          <NextTopLoader showSpinner={false} color='#0062a6' />
+          <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
 
           <WagmiProvider>

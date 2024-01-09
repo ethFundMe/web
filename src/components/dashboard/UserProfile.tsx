@@ -7,7 +7,7 @@ import { useAccount } from 'wagmi';
 import { CampaignCard } from '../CampaignCard';
 import { Container } from '../Container';
 
-export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
+export const UserProfile = ({ ethAddress }: { ethAddress: `0x${string}` }) => {
   const { address } = useAccount();
 
   // if (ethAddress) {
@@ -15,7 +15,7 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
   //   if (!user) notFound();
   // }
 
-  if (!ethAddress && !address) notFound();
+  if (!address) notFound();
 
   return (
     <div className='w-full'>

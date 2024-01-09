@@ -1,7 +1,5 @@
 'use client';
 
-import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { FaShare } from 'react-icons/fa';
 import { ShareCampaignLink } from './ShareCampaignLink';
@@ -26,9 +24,7 @@ export const ShareLinkBtn = ({ campaign, text }: Props) => {
       </DialogTrigger>
 
       <DialogContent onClick={(e) => e.stopPropagation()}>
-        <DialogTitle className={cn(TextSizeStyles.h6, 'text-neutral-600')}>
-          Share link
-        </DialogTitle>
+        <DialogTitle>Share link</DialogTitle>
         <ShareCampaignLink
           campaign={campaign}
           link={`${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}`}

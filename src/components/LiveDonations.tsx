@@ -13,6 +13,12 @@ export default function LiveDonations() {
   const donations = useMemo(
     () => [
       {
+        id: 0,
+        address: '0x3434jkb34bkj34',
+        amount: 32439882432434324,
+        time: '9:10pm',
+      },
+      {
         id: 1,
         address: '0x3434jkb34bkj34',
         amount: 32439882432434324,
@@ -118,7 +124,7 @@ export default function LiveDonations() {
 
       <ul
         ref={ref}
-        className='relative mx-auto max-w-sm overflow-hidden text-primary-default'
+        className='relative mx-auto h-[210px] max-w-sm overflow-hidden overflow-y-hidden text-primary-default'
       >
         <AnimatePresence initial={false}>
           {dts.map((i) => (
@@ -154,7 +160,7 @@ export default function LiveDonations() {
           ))}
         </AnimatePresence>
 
-        <div className='absolute bottom-0 h-20 w-full bg-gradient-to-b from-transparent to-white'></div>
+        {/* <div className='absolute bottom-0 h-20 w-full bg-gradient-to-b from-transparent to-white'></div> */}
       </ul>
     </div>
   );
