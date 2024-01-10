@@ -31,10 +31,10 @@ export default function ActiveStatsSection() {
           <div className='flex flex-col items-center gap-4 text-center md:flex-row md:text-left'>
             <Image
               className='w-10 md:w-[80px]'
-              src='/images/active-campaigns.svg'
+              src='/images/funded-campaigns.svg'
               width={80}
               height={80}
-              alt='eth-logo'
+              alt='funded'
             />
             <p>
               <span className='text-xl font-bold md:text-3xl'>
@@ -47,10 +47,10 @@ export default function ActiveStatsSection() {
           <div className='flex flex-col items-center gap-4 text-center md:flex-row md:text-left'>
             <Image
               className='w-10 md:w-[80px]'
-              src='/images/funded-campaigns.svg'
+              src='/images/active-campaigns.svg'
               width={80}
               height={80}
-              alt='funded'
+              alt='eth-logo'
             />
             <p>
               <span className='text-xl font-bold md:text-3xl'>
