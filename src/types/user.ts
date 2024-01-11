@@ -1,14 +1,14 @@
 export interface User {
-  bannerUrl: string | null;
-  createdAt: Date;
-  creatorFee: number;
-  email: string;
+  id: string;
   ethAddress: string;
   fullName: string;
-  id: string;
+  email: string;
+  role: 'beneficiary' | 'creator' | 'admin';
   isBanned: boolean;
   isVerified: boolean;
+  creatorFee: number;
   profileUrl: string | null;
-  role: 'beneficiary';
+  bannerUrl: string | null;
+  createdAt: Date;
   updatedAt: Date;
 }

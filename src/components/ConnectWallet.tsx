@@ -15,7 +15,7 @@ export const ConnectWallet = () => {
   const { address } = useSiwe();
   const { openModal } = useModalStore();
 
-  if (hasCookie('efmSiwe') && address) {
+  if (hasCookie('efmToken') && address) {
     return (
       <AuthNavbarMenu>
         <div className='flex cursor-pointer items-center gap-x-3'>
