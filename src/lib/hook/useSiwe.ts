@@ -1,3 +1,5 @@
+'use client';
+
 import { useModalStore, userStore } from '@/store';
 import { ErrorResponse, User } from '@/types';
 import { hasCookie } from 'cookies-next';
@@ -6,8 +8,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { SiweMessage } from 'siwe';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
-
-const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
 
 export const useSiwe = () => {
   const [isLoadingSiwe, setIsLoadingSiwe] = useState(false);
@@ -23,16 +23,16 @@ export const useSiwe = () => {
   const { address } = useAccount({
     async onConnect({ address, connector, isReconnected }) {
       if (!address || !connector || !chain?.id) return;
-      const efmSiwe = hasCookie('efmSiwe');
+      const efmToken = hasCookie('efmToken');
 
-      if (efmSiwe) {
+      if (efmToken) {
         refresh();
         closeModal();
         return;
       }
 
       if (isReconnected) {
-        if (!efmSiwe) {
+        if (!efmToken) {
           disconnect();
           closeModal();
           toast.error('Session has ended. Please reconnect.');
@@ -42,9 +42,7 @@ export const useSiwe = () => {
 
       try {
         setIsLoadingSiwe(true);
-        const nonce_res = await fetch(`${efm_endpoint}/api/nonce/${address}`, {
-          credentials: 'include',
-        });
+        const nonce_res = await fetch(`/api/nonce/${address}`);
         if (!nonce_res.ok) {
           const err: { error: ErrorResponse } = await nonce_res.json();
           throw err;
@@ -67,25 +65,19 @@ export const useSiwe = () => {
           account: address,
         });
 
-        const verify_res = await fetch(
-          `${efm_endpoint}/api/verify/${address}`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message, signature }),
-          }
-        );
+        const verify_res = await fetch(`/api/verify/${address}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nonce, message, signature }),
+        });
 
         if (!verify_res.ok) {
           const err: ErrorResponse = await verify_res.json();
           throw err;
         }
         const verify_data = (await verify_res.json()) as {
-          message: string;
-          ok: boolean;
           user: User;
         };
         setUser(verify_data.user);
@@ -118,12 +110,10 @@ export const useSiwe = () => {
     },
 
     async onDisconnect() {
-      const efmSiwe = hasCookie('efmSiwe');
-      if (efmSiwe) {
+      const efmToken = hasCookie('efmToken');
+      if (efmToken) {
         try {
-          const disconnect_res = await fetch(`${efm_endpoint}/api/disconnect`, {
-            credentials: 'include',
-          });
+          const disconnect_res = await fetch('/api/disconnect', {});
 
           if (!disconnect_res.ok) {
             const err = await disconnect_res.json();
