@@ -1,12 +1,13 @@
 'use client';
 
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
+import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import DonateXShareButtons from './DonateXShareButtons';
+import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
   campaign,
@@ -17,10 +18,8 @@ export const CampaignCard = ({
   full?: boolean;
   inSidebar?: boolean;
 }) => {
-  const router = useRouter();
-  const variantStyles = cn(
-    !inSidebar ? '' : 'lg:bg-neutral-200 lg:border-none'
-  );
+  const router = usePRouter();
+  const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
 
   return (
     <div
@@ -33,9 +32,9 @@ export const CampaignCard = ({
       )}
     >
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
-        <Image
+        <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src='/images/homepage-header.jpg'
+          src={campaign?.media_links[0] ?? '/images/homepage-header.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -46,6 +45,11 @@ export const CampaignCard = ({
         currentAmount={campaign.total_accrued}
         seekingAmount={campaign.goal}
       />
+
+      <div className='flex-1'>
+        <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
+        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+      </div>
 
       <div
         onClick={(e) => {
@@ -81,10 +85,6 @@ export const CampaignCard = ({
             </span>
           </p>
         </div>
-      </div>
-
-      <div className='flex-1'>
-        <p className='line-clamp-2'>{campaign.description}</p>
       </div>
 
       <DonateXShareButtons campaign={campaign} />

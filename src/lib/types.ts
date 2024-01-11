@@ -38,3 +38,17 @@ export type SocialLink = {
   href: string;
   icon: ReactElement;
 };
+
+export enum CampaignTags {
+  'Technology and Innovation' = 'Technology and Innovation',
+  'Arts and Culture' = 'Arts and Culture',
+  'Business and Entrepreneurship' = 'Business and Entrepreneurship',
+  'Community and Social Impact' = 'Community and Social Impact',
+  'Education and Learning' = 'Education and Learning',
+  'Health and Wellness' = 'Health and Wellness',
+  'Environment and Sustainability' = 'Environment and Sustainability',
+  'Entertainment and Media' = 'Entertainment and Media',
+  'Lifestyle and Hobbies' = 'Lifestyle and Hobbies',
+  'Science and Research' = 'Science and Research',
+  'Others' = 'Others',
+}

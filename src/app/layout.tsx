@@ -1,3 +1,4 @@
+import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
@@ -21,6 +22,7 @@ export default async function RootLayout({
     <>
       <html lang='en'>
         <body className='flex min-h-screen flex-col'>
+          <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
 
           <WagmiProvider>

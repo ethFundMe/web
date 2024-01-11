@@ -17,12 +17,12 @@ export const NAVBARROUTES: NavbarRoute[] = [
     icon: MdOutlineCampaign({ size: 20 }),
   },
   {
-    title: 'How to donate',
+    title: 'How to Donate',
     link: '/how-to-donate',
     icon: FaRegQuestionCircle({ size: 20 }),
   },
   {
-    title: 'Create campaign',
+    title: 'Create Campaign',
     link: '/campaigns/create',
     icon: BiDonateHeart({ size: 20 }),
   },
@@ -178,3 +178,10 @@ export const REGEX_CODES = {
   ytLink:
     /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
 };
+
+export const CAROUSEL_IMAGES = [
+  'https://picsum.photos/id/123/700',
+  'https://picsum.photos/id/132/700',
+  'https://picsum.photos/id/13/700',
+  'https://picsum.photos/id/113/700',
+];

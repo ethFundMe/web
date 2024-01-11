@@ -4,6 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import * as React from 'react';
 
+import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 const Dialog = DialogPrimitive.Root;
@@ -44,7 +45,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:text-red-500 hover:opacity-100 focus:text-red-500 focus:outline-none focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400'>
+      <DialogPrimitive.Close className='absolute right-0 top-0 rounded-md p-1.5 opacity-70 ring-offset-white transition-opacity hover:text-red-500 hover:opacity-100 focus:text-red-500 focus:outline-none focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400'>
         <X className='h-4 w-4' />
         <span className='sr-only'>Close</span>
       </DialogPrimitive.Close>
@@ -88,7 +89,8 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
+      TextSizeStyles.h5,
+      'font-semibold leading-none tracking-tight',
       className
     )}
     {...props}

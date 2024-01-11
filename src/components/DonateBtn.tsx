@@ -1,6 +1,5 @@
 'use client';
 
-import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { FaEthereum } from 'react-icons/fa';
 import DonateForm from './forms/DonateForm';
@@ -35,10 +34,8 @@ export const DonateBtn = ({ className, campaignId, text }: Props) => {
         </>
       </DialogTrigger>
 
-      <DialogContent className='gap-0' onClick={(e) => e.stopPropagation()}>
-        <DialogTitle className={TextSizeStyles.h4}>
-          Donate to campaign
-        </DialogTitle>
+      <DialogContent onClick={(e) => e.stopPropagation()}>
+        <DialogTitle>Donate to campaign</DialogTitle>
 
         <DonateForm
           campaignID={campaignId}

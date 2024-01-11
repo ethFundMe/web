@@ -10,9 +10,10 @@ export const DonationObjectiveIndicator = ({
   currentAmount: number;
   seekingAmount: number;
 }) => {
-  const goalReached = currentAmount >= seekingAmount;
-  const percentageRaised =
-    100 - ((seekingAmount - currentAmount) / seekingAmount) * 100;
+  const percentage = (currentAmount / seekingAmount) * 100;
+  const percentageRaised = percentage > 100 ? 100 : percentage;
+  const goalReached = percentageRaised >= 100;
+
   return (
     <div className='w-full space-y-2'>
       <div className='flex justify-between'>
@@ -36,15 +37,8 @@ export const DonationObjectiveIndicator = ({
           className={cn('h-full rounded-full bg-primary-default ')}
         />
         {goalReached && (
-          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-dark text-white'>
+          <div className='absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-content-center rounded-full bg-primary-default text-white'>
             <FaTrophy size={20} />
-            {/* <Image
-              src='/images/cup.avif'
-              width={20}
-              height={20}
-              alt='...'
-              className='rounded-full border border-primary-default'
-            /> */}
           </div>
         )}
       </div>
