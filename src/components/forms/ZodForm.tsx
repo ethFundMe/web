@@ -187,6 +187,7 @@ export default function CreateCampaignForm() {
       toast.success('Campaign created.');
       form.reset();
       router.push('/campaigns');
+      setUploadedImageUrls([]);
       return;
     }
     if (isCreateCampaignError) {
