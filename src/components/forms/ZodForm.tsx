@@ -52,7 +52,15 @@ export default function CreateCampaignForm() {
   const router = useRouter();
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
+  const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
+    false,
+    false,
+  ]);
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [otherImgsPreview, setOtherImgsPreview] = useState<string[]>([]);
+  const [formStatus, setFormStatus] = useState<
+    null | 'error' | 'Uploading images' | 'Creating campaign'
+  >(null);
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
@@ -92,63 +100,86 @@ export default function CreateCampaignForm() {
     useWatch({ control: form.control, name: 'title' }),
     500
   );
-  const links = useDebounce(
-    useWatch({ control: form.control, name: 'ytLink' }),
-    500
-  );
+  // const tag = useDebounce(
+  //   useWatch({ control: form.control, name: 'tag' }),
+  //   500
+  // );
+
+  const mediaLinks = [
+    ...uploadedImageUrls,
+    useDebounce(
+      useWatch({ control: form.control, name: 'ytLink' }),
+      500
+    ) as string,
+  ];
 
   const {
     isLoadingCreateCampaign,
     isLoadingCreateCampaignTxn,
     isCreateCampaignTxnSuccess,
+    isCreateCampaignError,
     writeCreateCampaign,
   } = useCreateCampaign({
-    beneficiary,
-    description,
-    goal,
-
-    links: [links as string],
     title,
+    description,
+    beneficiary,
+    goal,
+    mediaLinks,
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     if (!isAddress(String(beneficiary))) {
       return toast.error(`Address not valid ${beneficiary}`);
     }
+    if (isLoadingCreateCampaign || isLoadingCreateCampaignTxn) return;
 
     async function handleMediaLinksUpload() {
-      const mediaLinks: string[] = [];
-
       if (data.banner) {
         uploadToCloudinary(data.banner)
           .then((res) => {
-            mediaLinks.push(...(res as string[]));
+            setUploadedImageUrls((prev) => [...(res as string[]), ...prev]);
           })
           .then(() => {
             toast.success('Banner uploaded');
+            setImagesUploaded([true, imagesUploaded[1]]);
           })
           .catch((e) => {
             toast.error(e.message);
+            setFormStatus(null);
+            setImagesUploaded([false, imagesUploaded[1]]);
             throw new Error('Could not upload banner');
           });
       }
       if (data.otherImages) {
         uploadToCloudinary(data.otherImages)
           .then((res) => {
-            mediaLinks.push(...(res as string[]));
+            setUploadedImageUrls((prev) => [...prev, ...(res as string[])]);
           })
           .then(() => {
+            setImagesUploaded([imagesUploaded[0], true]);
             toast.success('Other images uploaded');
           })
           .catch((e) => {
             toast.error(e.message);
+            setFormStatus(null);
+            setImagesUploaded([imagesUploaded[0], false]);
             throw new Error('Could not upload other images');
           });
       }
     }
 
-    handleMediaLinksUpload();
-    return writeCreateCampaign?.();
+    // setFormStatus('Uploading images');
+    handleMediaLinksUpload()
+      .then(() => {
+        setFormStatus(null);
+        if (uploadedImageUrls.length > 1) {
+          setFormStatus('Creating campaign');
+          writeCreateCampaign?.();
+        }
+      })
+      .then(() => {
+        setFormStatus(null);
+      });
   };
 
   useEffect(() => {
@@ -158,7 +189,12 @@ export default function CreateCampaignForm() {
       router.push('/campaigns');
       return;
     }
-  }, [isCreateCampaignTxnSuccess, form, router]);
+    if (isCreateCampaignError) {
+      toast.error('Failed to create campaign.');
+      setFormStatus(null);
+      return;
+    }
+  }, [isCreateCampaignTxnSuccess, isCreateCampaignError, form, router]);
 
   // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
   //   console.error(errors);
@@ -321,7 +357,7 @@ export default function CreateCampaignForm() {
                     <>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger className='block flex items-center gap-2 pb-2'>
+                          <TooltipTrigger className='flex items-center gap-2 pb-2'>
                             <span>Creator fees (ETH)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
@@ -471,13 +507,17 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
-          disabled={isLoadingCreateCampaign || isLoadingCreateCampaignTxn}
+          disabled={
+            isLoadingCreateCampaign ||
+            isLoadingCreateCampaignTxn ||
+            formStatus === 'Uploading images'
+          }
           size='default'
-          className='col-span-2'
+          className='col-span-2 disabled:cursor-not-allowed'
         >
           {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
-            ? 'Loading...'
-            : 'Create'}
+            ? 'Creating campaign'
+            : formStatus ?? 'Create'}
         </Button>
       </form>
     </Form>

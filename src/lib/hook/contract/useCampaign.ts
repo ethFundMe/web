@@ -12,14 +12,17 @@ export const useCreateCampaign = ({
   beneficiary,
   description,
   goal,
-  links,
-  title,
+  mediaLinks,
+  title, // tag,
+  // type,
 }: {
   title: string;
   description: string;
+  // tag: string;
   goal: number;
-  links: Array<string>;
+  mediaLinks: Array<string>;
   beneficiary: `0x${string}`;
+  // type: 'personal' | 'others';
 }) => {
   const {
     config,
@@ -29,7 +32,15 @@ export const useCreateCampaign = ({
     abi: EthFundMe,
     address: ethFundMeContractAddress,
     functionName: 'addCampaign',
-    args: [title, description, parseEther(goal.toString()), links, beneficiary],
+    args: [
+      title,
+      description,
+      parseEther(goal ? goal.toString() : String(0)),
+      mediaLinks,
+      beneficiary,
+      // tag,
+      // type,
+    ],
     chainId: ethFundMeChainId,
     onSettled(data, error) {
       console.log('Settled Prepared addCampign: ', { data, error });
