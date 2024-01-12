@@ -15,7 +15,7 @@ export const HomepageHeader = () => {
           className='absolute h-full w-full bg-slate-900 object-cover'
         />
       </div>
-      <Container className='flex h-full min-h-[calc(100vh-4rem)]  items-center justify-center'>
+      <Container className='flex h-[calc(100dvh-4rem)] max-h-[910px]  items-center justify-center'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
             <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
