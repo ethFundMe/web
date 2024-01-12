@@ -11,7 +11,7 @@ import { useConnect } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Button } from './ui/button';
 
-export const ConnectWallet = () => {
+export const ConnectWallet = ({ className }: { className?: string }) => {
   const { address } = useSiwe();
   const { openModal } = useModalStore();
 
@@ -37,7 +37,7 @@ export const ConnectWallet = () => {
   return (
     <>
       <Button
-        className='transition-all duration-150 ease-in'
+        className={cn('transition-all duration-150 ease-in', className)}
         onClick={() =>
           openModal(
             <Suspense>

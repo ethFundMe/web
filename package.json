@@ -29,6 +29,7 @@
     "cloudinary": "^1.41.1",
     "clsx": "^2.0.0",
     "cookies-next": "^4.1.0",
+    "dayjs": "^1.11.10",
     "framer-motion": "^10.16.4",
     "kysely": "^0.26.3",
     "lucide-react": "^0.295.0",

@@ -1,8 +1,7 @@
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { FaEthereum } from 'react-icons/fa';
 import { Container } from './Container';
-import { ButtonStyle } from './inputs';
+import { Button } from './ui/button';
 
 export const HomepageHeader = () => {
   return (
@@ -29,35 +28,24 @@ export const HomepageHeader = () => {
             </p>
           </div>
 
-          <div className='flex flex-wrap items-center justify-center gap-4'>
-            <Link
-              href='/campaigns'
-              className={cn(
-                ButtonStyle.base,
-                ButtonStyle.size.md,
-                ButtonStyle.variant.primary,
-                'group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
-              )}
-            >
-              <span className='transition-all duration-200 ease-in group-hover:-translate-x-2 sm:group-hover:-translate-x-2'>
-                Donate now
-              </span>
-              <span className='absolute -right-8 top-1/2 -translate-y-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100'>
-                <FaEthereum />
-              </span>
-            </Link>
+          <div className='mx-auto flex max-w-[200px] flex-col items-stretch justify-center gap-4 sm:max-w-fit sm:flex-row sm:items-center'>
+            <Button asChild size='lg'>
+              <Link
+                href='/campaigns'
+                className='group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
+              >
+                <span className='transition-all duration-200 ease-in sm:group-hover:-translate-x-3'>
+                  Donate now
+                </span>
+                <span className='-right-8 top-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100 sm:absolute sm:-translate-y-1/2'>
+                  <FaEthereum />
+                </span>
+              </Link>
+            </Button>
 
-            <Link
-              href='/campaigns/create'
-              className={cn(
-                ButtonStyle.base,
-                ButtonStyle.variant.blanc,
-                ButtonStyle.size.md,
-                'hover:bg-slate-200 hover:bg-opacity-100'
-              )}
-            >
-              Create Campaign
-            </Link>
+            <Button asChild variant='secondary' size='lg'>
+              <Link href='/campaigns/create'>Create Campaign</Link>
+            </Button>
           </div>
         </div>
       </Container>

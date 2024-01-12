@@ -6,7 +6,8 @@ import DonateXShareButtons from '@/components/DonateXShareButtons';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCampaign, getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
+import { cn, formatWalletAddress } from '@/lib/utils';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
@@ -48,25 +49,29 @@ export default async function CampaignPage({
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
               <Link
                 href={`/user-profiles/${campaign.creator}`}
-                className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200 sm:w-fit'
+                className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
-                  src='/images/Logo-Virgin.png'
-                  className='block h-12 w-12 flex-shrink-0 rounded-full bg-white'
+                  src='/images/pfp.svg'
+                  className='block flex-shrink-0 rounded-full bg-slate-200'
                   width={50}
                   height={50}
                   alt='...'
                 />
 
-                <div>
+                <div className='pr-2'>
                   <p className={TextSizeStyles.caption}>Campaign Organizer</p>
-                  <p className='font-semibold'>CLET For Africa Foundation</p>
+                  <p className='font-semibold'>
+                    {formatWalletAddress(campaign.creator as `0x${string}`)}
+                  </p>
                 </div>
               </Link>
 
               <div>
                 <p className={TextSizeStyles.caption}>Organized On</p>
-                <p className='font-semibold'>29th October, 2023</p>
+                <p className='font-semibold'>
+                  {dayjs(campaign.created_at).format('DD MMM, YYYY')}
+                </p>
               </div>
             </div>
             <div className='space-y-4'>{campaign.description}</div>

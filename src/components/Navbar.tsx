@@ -21,7 +21,7 @@ const Navbar = () => {
       <Container className='flex h-full items-center justify-between gap-4'>
         <Link href='/' className='mb-2 h-4/5 sm:h-1/2 sm:w-auto'>
           <Image
-            className='h-full w-auto'
+            className='h-[70%] w-auto sm:h-full'
             src='/images/efm-logo.svg'
             width={50}
             height={200}

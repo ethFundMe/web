@@ -62,7 +62,7 @@ export const SidebarNavLink = ({ title, link, icon }: NavbarRoute) => {
         href={link}
         activeStyles={({ isActive }) =>
           isActive
-            ? 'bg-primary-default text-white hover:bg-primary-default pl-4 font-semibold'
+            ? 'bg-primary-dark text-white hover:bg-primary-default pl-4 font-semibold'
             : 'hover:font-normal'
         }
         className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-200'
