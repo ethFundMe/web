@@ -3,8 +3,9 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
+import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types/db';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import DonateXShareButtons from './DonateXShareButtons';
 import ImageWithFallback from './ImageWithFallback';
@@ -59,20 +60,18 @@ export const CampaignCard = ({
         className='flex flex-col-reverse justify-between gap-2'
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
-          <div className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full'>
-            <Image
-              src='/images/wallet-connect-logo.png'
-              className='h-full w-full object-cover'
-              width={48}
-              height={48}
-              alt='...'
-            />
-          </div>
+          <Image
+            src='/images/pfp.svg'
+            className='flex-shrink-0 rounded-full bg-slate-200 object-cover'
+            width={48}
+            height={48}
+            alt='...'
+          />
 
           <div>
             <p className={TextSizeStyles.small}>Campaign Organizer</p>
             <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              CLET For Africa Foundation
+              {formatWalletAddress(campaign.creator as `0x${string}`)}{' '}
             </p>
           </div>
         </div>
@@ -81,7 +80,7 @@ export const CampaignCard = ({
           <p className={TextSizeStyles.small}>
             Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              29th October, 2023
+              {dayjs(campaign.created_at).format('DD MMM, YYYY')}
             </span>
           </p>
         </div>

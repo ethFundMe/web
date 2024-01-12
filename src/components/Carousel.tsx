@@ -3,15 +3,15 @@
 import { CarouselVariants } from '@/lib/animationVariants';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
 import { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import ImageWithFallback from './ImageWithFallback';
 
 export const Carousel = ({ images }: { images: string[] }) => {
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const AnimImage = motion(Image);
+  // const AnimImage = motion(Image);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
@@ -38,22 +38,25 @@ export const Carousel = ({ images }: { images: string[] }) => {
     <>
       <div className='relative overflow-hidden'>
         <AnimatePresence initial={false}>
-          <AnimImage
-            key={currentIndex}
+          <motion.div
             variants={CarouselVariants}
             initial={direction === 'right' ? 'hiddenRight' : 'hiddenLeft'}
             animate='visible'
             exit={direction === 'right' ? 'exitLeft' : 'exitRight'}
             transition={{ type: 'spring', damping: 20 }}
-            className='h-80 w-full flex-shrink-0 object-cover sm:h-96 lg:h-[450px]'
-            src={images[currentIndex]}
-            width={500}
-            height={400}
-            alt='...'
-          />
+          >
+            <ImageWithFallback
+              key={currentIndex}
+              className='h-80 w-full flex-shrink-0 object-cover sm:h-96 lg:h-[450px]'
+              src={images[currentIndex]}
+              width={500}
+              height={400}
+              alt='...'
+            />
+          </motion.div>
         </AnimatePresence>
 
-        <div className='absolute left-0 right-0 top-0 flex h-full items-stretch justify-between text-white'>
+        <div className='absolute left-0 right-0 top-0 flex h-full items-center justify-between text-white'>
           <button
             disabled={currentIndex === 0}
             className='h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-10'

@@ -317,28 +317,30 @@ export default function CreateCampaignForm() {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <FormLabel className='flex items-center gap-2'>
-                          <span>Creator fees (ETH)</span>
-                          <AiOutlineExclamationCircle />
-                        </FormLabel>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>
-                          Visit your{' '}
-                          <Link
-                            className='italic text-primary-default'
-                            href={`/dashboard/${address}/update-profile`}
-                          >
-                            dashboard
-                          </Link>{' '}
-                          if you wish to change your creator fee
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <FormLabel>
+                    <>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='block flex items-center gap-2 pb-2'>
+                            <span>Creator fees (ETH)</span>
+                            <AiOutlineExclamationCircle />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              Visit your{' '}
+                              <Link
+                                className='italic text-primary-default'
+                                href={`/dashboard/${address}/update-profile`}
+                              >
+                                dashboard
+                              </Link>{' '}
+                              if you wish to change your creator fee
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </>
+                  </FormLabel>
 
                   <FormControl>
                     <Input

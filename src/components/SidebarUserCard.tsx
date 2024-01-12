@@ -21,13 +21,13 @@ export const SidebarUserCard = () => {
 
   const view =
     isConnected && address ? (
-      <div className='space-y-2 rounded-lg bg-primary-default p-4 text-white'>
+      <div className='space-y-2 rounded-lg bg-primary-dark p-4 text-white'>
         <View address={address} />
       </div>
     ) : (
-      <div className='flex flex-col rounded-lg bg-primary-default p-4 text-center text-white'>
-        <ConnectWallet />
-      </div>
+      // <div className='flex flex-col rounded-lg bg-primary-default p-4 text-center text-white'>
+      <ConnectWallet className='w-full' />
+      // </div>
     );
 
   return view;

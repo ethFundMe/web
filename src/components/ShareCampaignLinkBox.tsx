@@ -25,8 +25,8 @@ export const ShareCampaignLinkBox = ({ link }: { link: string }) => {
       </motion.p>
 
       <motion.p
+        className='w-[19ch] overflow-hidden overflow-ellipsis sm:w-full'
         animate={{ y: linkCopied ? 50 : 0, opacity: linkCopied ? 0 : 1 }}
-        className=''
       >
         {link}
       </motion.p>
