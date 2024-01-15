@@ -138,23 +138,25 @@ export default function CreateCampaignForm() {
         isLoadingCreateCampaign ||
         isLoadingCreateCampaignTxn ||
         uploadedImageUrls.length < 1
-      )
-        if (data.banner) {
-          uploadToCloudinary(data.banner)
-            .then((res) => {
-              setUploadedImageUrls((prev) => [...(res as string[]), ...prev]);
-            })
-            .then(() => {
-              toast.success('Banner uploaded');
-              setImagesUploaded([true, imagesUploaded[1]]);
-            })
-            .catch((e) => {
-              toast.error(e.message);
-              setFormStatus(null);
-              setImagesUploaded([false, imagesUploaded[1]]);
-              throw new Error('Could not upload banner');
-            });
-        }
+      ) {
+        return;
+      }
+      if (data.banner) {
+        uploadToCloudinary(data.banner)
+          .then((res) => {
+            setUploadedImageUrls((prev) => [...(res as string[]), ...prev]);
+          })
+          .then(() => {
+            toast.success('Banner uploaded');
+            setImagesUploaded([true, imagesUploaded[1]]);
+          })
+          .catch((e) => {
+            toast.error(e.message);
+            setFormStatus(null);
+            setImagesUploaded([false, imagesUploaded[1]]);
+            throw new Error('Could not upload banner');
+          });
+      }
       if (data.otherImages) {
         uploadToCloudinary(data.otherImages)
           .then((res) => {
