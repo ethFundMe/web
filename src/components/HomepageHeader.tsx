@@ -29,7 +29,7 @@ export const HomepageHeader = () => {
           </div>
 
           <div className='mx-auto flex max-w-[200px] flex-col items-stretch justify-center gap-4 sm:max-w-fit sm:flex-row sm:items-center'>
-            <Button asChild size='lg'>
+            <Button asChild size='lg' variant='dark'>
               <Link
                 href='/campaigns'
                 className='group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
