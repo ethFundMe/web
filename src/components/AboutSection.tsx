@@ -1,10 +1,9 @@
 'use client';
 
 import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Container } from './Container';
-import { ButtonStyle } from './inputs';
+import { Button } from './ui/button';
 
 export const AboutSection = () => {
   return (
@@ -24,17 +23,9 @@ export const AboutSection = () => {
           towards a brighter future
         </p>
 
-        <Link
-          href='/about'
-          className={cn(
-            'mx-auto block w-fit',
-            ButtonStyle.base,
-            ButtonStyle.size.md,
-            ButtonStyle.variant.primary
-          )}
-        >
-          Learn More
-        </Link>
+        <Button asChild size='lg'>
+          <Link href='/about'>Learn More</Link>
+        </Button>
       </Container>
     </section>
   );

@@ -134,6 +134,13 @@ export default function CreateCampaignForm() {
     if (isLoadingCreateCampaign || isLoadingCreateCampaignTxn) return;
 
     async function handleMediaLinksUpload() {
+      if (
+        isLoadingCreateCampaign ||
+        isLoadingCreateCampaignTxn ||
+        uploadedImageUrls.length < 1
+      ) {
+        return;
+      }
       if (data.banner) {
         uploadToCloudinary(data.banner)
           .then((res) => {
@@ -171,6 +178,7 @@ export default function CreateCampaignForm() {
     // setFormStatus('Uploading images');
     handleMediaLinksUpload()
       .then(() => {
+        setUploadedImageUrls([]);
         setFormStatus(null);
         if (uploadedImageUrls.length > 1) {
           setFormStatus('Creating campaign');
