@@ -1,18 +1,18 @@
 'use client';
 
-import { useSiwe } from '@/lib/hook';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store';
 import { hasCookie } from 'cookies-next';
 import Image from 'next/image';
 import { Suspense } from 'react';
-import { useConnect } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Button } from './ui/button';
 
 export const ConnectWallet = ({ className }: { className?: string }) => {
-  const { address } = useSiwe();
+  // const { address } = useSiwe();
+  const { address } = useAccount();
   const { openModal } = useModalStore();
 
   if (hasCookie('efmToken') && address) {
