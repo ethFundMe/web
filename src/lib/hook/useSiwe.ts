@@ -1,47 +1,39 @@
 'use client';
 
-import { useModalStore, userStore } from '@/store';
+import { userStore } from '@/store';
 import { ErrorResponse, User } from '@/types';
 import { hasCookie } from 'cookies-next';
 import { redirect, useRouter } from 'next/navigation';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { SiweMessage } from 'siwe';
-import { useAccount, useDisconnect, useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export const useSiwe = () => {
-  const [isLoadingSiwe, setIsLoadingSiwe] = useState(false);
-
   const { chain } = useNetwork();
-  const { disconnect } = useDisconnect();
   const router = useRouter();
-  const { closeModal } = useModalStore();
   const { setUser } = userStore();
 
   const { push, refresh } = router;
 
-  const { address } = useAccount({
+  useAccount({
     async onConnect({ address, connector, isReconnected }) {
       if (!address || !connector || !chain?.id) return;
       const efmToken = hasCookie('efmToken');
 
       if (efmToken) {
         refresh();
-        closeModal();
         return;
       }
 
       if (isReconnected) {
         if (!efmToken) {
-          disconnect();
-          closeModal();
-          toast.error('Session has ended. Please reconnect.');
+          connector.disconnect();
+          refresh();
           return;
         }
       }
 
       try {
-        setIsLoadingSiwe(true);
         const nonce_res = await fetch(`/api/nonce/${address}`);
         if (!nonce_res.ok) {
           const err: { error: ErrorResponse } = await nonce_res.json();
@@ -81,29 +73,25 @@ export const useSiwe = () => {
           user: User;
         };
         setUser(verify_data.user);
-        setIsLoadingSiwe(false);
         refresh();
-        closeModal();
         return;
       } catch (error) {
-        setIsLoadingSiwe(false);
+        connector.disconnect();
         console.error(error);
-        closeModal();
         const err = error as unknown as { error: ErrorResponse };
 
         if (err.error.name === 'USER_ETH_ADDRESS_NOT_FOUND') {
           push('/account');
-          closeModal();
           return;
         }
 
         if (err.error.name === 'INVALID_ETHEREUM_ADDRESS') {
-          disconnect();
+          connector.disconnect();
           toast.error('Not a valid wallet address.');
           return;
         }
 
-        disconnect();
+        connector.disconnect();
         toast.error('Wallet connection failed. Retry.');
         return;
       }
@@ -113,7 +101,7 @@ export const useSiwe = () => {
       const efmToken = hasCookie('efmToken');
       if (efmToken) {
         try {
-          const disconnect_res = await fetch('/api/disconnect', {});
+          const disconnect_res = await fetch('/api/disconnect');
 
           if (!disconnect_res.ok) {
             const err = await disconnect_res.json();
@@ -129,9 +117,4 @@ export const useSiwe = () => {
       }
     },
   });
-
-  return {
-    address,
-    isLoadingSiwe,
-  };
 };

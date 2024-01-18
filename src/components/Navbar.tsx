@@ -6,13 +6,16 @@ import { useModalStore } from '@/store/modal';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ConnectWallet } from './ConnectWallet';
+// import { ConnectWallet } from './ConnectWallet';
+import { useSiwe } from '@/lib/hook';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Container } from './Container';
 import { NavLink } from './NavLink';
 import { Sidebar } from './Sidebar';
 
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
+  useSiwe();
 
   return (
     <motion.nav
@@ -45,7 +48,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          <ConnectWallet />
+          <ConnectButton />
         </ul>
 
         <button

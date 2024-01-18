@@ -1,11 +1,12 @@
 'use client';
 
+import { useSiwe } from '@/lib/hook';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi';
-import { ConnectWallet } from './ConnectWallet';
 import ImageWithFallback from './ImageWithFallback';
 import { buttonVariants } from './ui/button';
 import {
@@ -18,6 +19,7 @@ import {
 
 export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
+  useSiwe();
 
   const view =
     isConnected && address ? (
@@ -25,9 +27,7 @@ export const SidebarUserCard = () => {
         <View address={address} />
       </div>
     ) : (
-      // <div className='flex flex-col rounded-lg bg-primary-default p-4 text-center text-white'>
-      <ConnectWallet className='w-full' />
-      // </div>
+      <ConnectButton />
     );
 
   return view;
