@@ -31,7 +31,7 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
                   <div className='image h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                     <Image
                       className='h-full w-full object-cover'
-                      src={'/images/pfp.svg'}
+                      src={'/images/pfp.png'}
                       height={150}
                       width={150}
                       alt='user-pfp'

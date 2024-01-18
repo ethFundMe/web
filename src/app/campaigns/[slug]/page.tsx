@@ -1,15 +1,16 @@
+import { getCampaign, getCampaigns } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
 import { Carousel } from '@/components/Carousel';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getCampaign, getCampaigns } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 export default async function CampaignPage({
@@ -17,8 +18,11 @@ export default async function CampaignPage({
 }: {
   params: { slug: string };
 }) {
-  const campaigns = await getCampaigns();
   const campaign = await getCampaign(parseInt(slug));
+  const campaignsData = await getCampaigns();
+  const { campaigns } = campaignsData;
+
+  if (!campaign) notFound();
 
   return (
     <>
@@ -27,16 +31,13 @@ export default async function CampaignPage({
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
             {campaign.title}
           </h2>
-
           <Carousel images={campaign.media_links} />
-
           <div className='space-y-7 pb-5'>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
                 seekingAmount={campaign.goal}
                 currentAmount={campaign.total_accrued}
               />
-
               <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
                 {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
                 <DonateBtn
@@ -52,13 +53,12 @@ export default async function CampaignPage({
                 className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
-                  src='/images/pfp.svg'
+                  src={campaign.user.profileUrl ?? '/images/pfp.png'}
                   className='block flex-shrink-0 rounded-full bg-slate-200'
                   width={50}
                   height={50}
                   alt='...'
                 />
-
                 <div className='pr-2'>
                   <p className={TextSizeStyles.caption}>Campaign Organizer</p>
                   <p className='font-semibold'>
@@ -66,7 +66,6 @@ export default async function CampaignPage({
                   </p>
                 </div>
               </Link>
-
               <div>
                 <p className={TextSizeStyles.caption}>Organized On</p>
                 <p className='font-semibold'>
@@ -78,15 +77,13 @@ export default async function CampaignPage({
             <DonateXShareButtons campaign={campaign} />
           </div>
         </div>
-
         <aside className='mt-16 space-y-4 pb-4'>
           <h2
             className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
           >
             Related campaigns
           </h2>
-
-          <ScrollArea className='rounded-md border-primary-default lg:h-[800px] lg:border'>
+          <ScrollArea className='min-h-fit rounded-md border-primary-default lg:max-h-[800px] lg:border'>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
               {campaigns
                 .filter((_) => _.campaign_id !== campaign.campaign_id)

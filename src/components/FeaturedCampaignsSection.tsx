@@ -1,11 +1,13 @@
-import { getCampaigns } from '@/lib/api';
+import { getCampaigns } from '@/actions';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { CampaignCard } from './CampaignCard';
 import { Container } from './Container';
 
 export const FeaturedCampaignsSection = async () => {
-  const campaigns = await getCampaigns();
+  const { campaigns } = await getCampaigns();
+
+  console.log(campaigns[0].media_links);
 
   return (
     <section>

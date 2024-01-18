@@ -22,7 +22,7 @@ export const ConnectWallet = ({ className }: { className?: string }) => {
           <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
             <Image
               className='h-full w-full flex-shrink-0 object-cover'
-              src='/images/user-pfp.png'
+              src={'/images/pfp.png'}
               alt='ENS Avatar'
               width={70}
               height={70}

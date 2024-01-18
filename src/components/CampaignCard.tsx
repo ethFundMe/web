@@ -24,7 +24,6 @@ export const CampaignCard = ({
 
   return (
     <div
-      // href={`/campaigns/${campaign.campaign_id}`}
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
         'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
@@ -35,7 +34,7 @@ export const CampaignCard = ({
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src={campaign?.media_links[0] ?? '/images/homepage-header.jpg'}
+          src={campaign?.media_links[0] ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -61,7 +60,7 @@ export const CampaignCard = ({
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
           <Image
-            src='/images/pfp.svg'
+            src='/images/pfp.png'
             className='flex-shrink-0 rounded-full bg-slate-200 object-cover'
             width={48}
             height={48}
