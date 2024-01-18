@@ -49,8 +49,8 @@ export const Carousel = ({ images }: { images: string[] }) => {
               key={currentIndex}
               className='h-80 w-full flex-shrink-0 object-cover sm:h-96 lg:h-[450px]'
               src={images[currentIndex]}
-              width={500}
-              height={400}
+              width={800}
+              height={800}
               alt='...'
             />
           </motion.div>
