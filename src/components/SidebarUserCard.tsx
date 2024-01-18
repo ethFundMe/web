@@ -2,11 +2,11 @@
 
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ConnectWallet } from './ConnectWallet';
+import ImageWithFallback from './ImageWithFallback';
 import { buttonVariants } from './ui/button';
 import {
   Dialog,
@@ -46,9 +46,10 @@ const View = ({
   return (
     <div className='flex items-start justify-between'>
       <div className='space-y-1'>
-        <Image
-          className='h-12 w-12 flex-shrink-0 rounded-full md:h-20 md:w-20'
-          src={image ?? 'https://picsum.photos/300/300'}
+        <ImageWithFallback
+          priority
+          className='h-12 w-12 flex-shrink-0 rounded-full bg-slate-200 md:h-20 md:w-20'
+          src={image as string}
           width={50}
           height={50}
           alt='...'

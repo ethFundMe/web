@@ -16,6 +16,20 @@ export interface CampaignsTable {
   total_accrued: number;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
+  user: {
+    id: Generated<string>;
+    ethAddress: string;
+    fullName: string;
+    email: string;
+    role: string;
+    isBanned: boolean;
+    isVerified: boolean;
+    profileUrl: string;
+    creatorFee: number;
+    bannerUrl: string;
+    created_at: Generated<Date>;
+    updated_at: Generated<Date>;
+  };
 }
 
 export type Campaign = Selectable<CampaignsTable>;

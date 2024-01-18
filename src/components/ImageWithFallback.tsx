@@ -9,7 +9,7 @@ type Props = {
 } & ImageProps;
 
 export default function ImageWithFallback({
-  fallback = '/images/user-pfp.png',
+  fallback = '/images/broken.jpg',
   alt,
   src,
   ...rest
@@ -25,7 +25,7 @@ export default function ImageWithFallback({
   return (
     <Image
       className={cn(
-        loading && 'animate-pulse bg-slate-200',
+        loading && 'animate-pulse bg-slate-500',
         error && 'grayscale'
       )}
       src={error ? fallback : src}

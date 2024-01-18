@@ -66,7 +66,7 @@ export const LinkPreviewCmp = ({
   <div className={cn('group flex rounded-md')}>
     <div className='h-28 w-28 flex-shrink-0 cursor-pointer overflow-hidden  rounded-md bg-slate-300'>
       <ImageWithFallback
-        src={image ?? ''}
+        src={image}
         height={300}
         width={300}
         alt='...'

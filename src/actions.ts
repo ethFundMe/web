@@ -1,7 +1,6 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { cache } from 'react';
 import { Campaign } from './types';
 
 export async function urlPreview(url: string) {
@@ -38,16 +37,25 @@ export async function urlPreview(url: string) {
   }
 }
 
-export const getCampaigns = cache(async (page?: number) => {
+export const getCampaigns = async (page?: number) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/?page=${
-      page ?? 1
-    }&limit=1`
+    `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/?page=${page ?? 1}`
   );
   const data = await res.json();
 
   const campaigns: Campaign[] = data.campaigns;
   const totalCampaigns: number = data.meta.totalCampaigns;
 
-  return { campaigns: campaigns ?? [], totalCampaigns: totalCampaigns };
-});
+  return { campaigns: campaigns as Campaign[], totalCampaigns };
+};
+
+export const getCampaign = async (id: number) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`
+  );
+  const data = await res.json();
+
+  const campaign: Campaign = data;
+
+  return campaign ?? null;
+};
