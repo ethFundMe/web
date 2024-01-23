@@ -1,7 +1,7 @@
 'use client';
 
 import { NAVBARROUTES } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store/modal';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -9,6 +9,9 @@ import Link from 'next/link';
 // import { ConnectWallet } from './ConnectWallet';
 import { useSiwe } from '@/lib/hook';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ChevronDown } from 'lucide-react';
+import { useAccount } from 'wagmi';
+import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
 import { NavLink } from './NavLink';
 import { Sidebar } from './Sidebar';
@@ -16,6 +19,7 @@ import { Sidebar } from './Sidebar';
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   useSiwe();
+  const { address, isConnected } = useAccount();
 
   return (
     <motion.nav
@@ -48,7 +52,25 @@ const Navbar = () => {
             </li>
           ))}
 
-          <ConnectButton />
+          {address && isConnected ? (
+            <AuthNavbarMenu>
+              <div className='flex cursor-pointer items-center gap-x-3'>
+                <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
+                  <Image
+                    className='flex-shrink-0 object-cover'
+                    src={'/images/pfp.svg'}
+                    alt='ENS Avatar'
+                    width={70}
+                    height={70}
+                  />
+                </div>
+                <p className='font-semibold'>{formatWalletAddress(address)}</p>
+                <ChevronDown size={10} />
+              </div>
+            </AuthNavbarMenu>
+          ) : (
+            <ConnectButton showBalance={false} />
+          )}
         </ul>
 
         <button

@@ -1,9 +1,15 @@
 'use client';
 
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import {
+  RainbowKitProvider,
+  Theme,
+  getDefaultWallets,
+  lightTheme,
+} from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
+import lodash from 'lodash';
 import React from 'react';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 
 import { alchemyProvider } from 'wagmi/providers/alchemy';
@@ -31,10 +37,18 @@ const config = createConfig({
   webSocketPublicClient,
 });
 
+const theme: Theme = lodash.merge(lightTheme(), {
+  colors: { accentColor: '#0062A6' },
+  radii: { connectButton: '10px', actionButton: '10px' },
+  fonts: { body: 'Mona Sans' },
+} as Theme);
+
 export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiConfig config={config}>
-      <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+      <RainbowKitProvider theme={theme} chains={chains}>
+        {children}
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 };

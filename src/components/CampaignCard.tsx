@@ -60,7 +60,7 @@ export const CampaignCard = ({
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
           <Image
-            src='/images/pfp.png'
+            src='/images/pfp.svg'
             className='flex-shrink-0 rounded-full bg-slate-200 object-cover'
             width={48}
             height={48}

@@ -39,8 +39,6 @@ export const Sidebar = () => {
           ))}
         </ul>
 
-        {/* <ConnectWallet variant='sidebar' /> */}
-
         <Image
           alt='efm-logo'
           width={130}
