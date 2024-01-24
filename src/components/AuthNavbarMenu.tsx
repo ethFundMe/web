@@ -1,31 +1,34 @@
 'use client';
 
+import { useAccountModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
+import { FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline } from 'react-icons/io5';
 import { LiaUserCogSolid } from 'react-icons/lia';
 import { LuUnlink } from 'react-icons/lu';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
 export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
-  const { disconnect } = useDisconnect();
   const { address } = useAccount();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
 
   const router = useRouter();
 
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className=''>{children}</DropdownMenuTrigger>
+        <DropdownMenuTrigger className='outline-0'>
+          {children}
+        </DropdownMenuTrigger>
 
-        <DropdownMenuContent className=''>
-          <DropdownMenuSeparator />
+        <DropdownMenuContent>
           <DropdownMenuItem
             className='flex items-center gap-2'
             onClick={() => router.push(`/dashboard/${address}`)}
@@ -33,6 +36,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
             <LiaUserCogSolid />
             Dashboard
           </DropdownMenuItem>
+
           <DropdownMenuItem
             className='flex items-center gap-2'
             onClick={() => router.push(`/dashboard/${address}/update-profile`)}
@@ -40,10 +44,19 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
             <IoPencilOutline />
             Update profile
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+
           <DropdownMenuItem
             className='flex items-center gap-2'
-            onClick={() => disconnect()}
+            onClick={openChainModal}
+          >
+            <FaEthereum />
+            Switch network
+          </DropdownMenuItem>
+
+          {/* <DropdownMenuSeparator /> */}
+          <DropdownMenuItem
+            className='flex items-center gap-2'
+            onClick={openAccountModal}
           >
             <LuUnlink />
             Disconnect
