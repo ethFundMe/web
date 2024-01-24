@@ -145,7 +145,7 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='flex items-center gap-2 border-b border-slate-600 py-3'
+                className='flex items-center gap-2 border-b border-slate-600 py-3 transition-all duration-150 ease-in hover:opacity-60'
               >
                 <span>
                   <FaEthereum size={20} />

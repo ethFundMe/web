@@ -1,24 +1,23 @@
 'use client';
 
 import { useSiwe } from '@/lib/hook';
-import { cn, formatWalletAddress } from '@/lib/utils';
+import { formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import Link from 'next/link';
-import { FaPen, FaUnlink } from 'react-icons/fa';
-import { useAccount, useDisconnect } from 'wagmi';
-import ImageWithFallback from './ImageWithFallback';
-import { buttonVariants } from './ui/button';
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog';
+  useAccountModal,
+  useChainModal,
+  useConnectModal,
+} from '@rainbow-me/rainbowkit';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaEthereum, FaPen, FaUnlink } from 'react-icons/fa';
+import { useAccount } from 'wagmi';
+import { Button } from './ui/button';
 
 export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
   useSiwe();
 
   const view =
@@ -27,7 +26,9 @@ export const SidebarUserCard = () => {
         <View address={address} />
       </div>
     ) : (
-      <ConnectButton />
+      <Button variant='dark' className='w-full' onClick={openConnectModal}>
+        Connect Wallet
+      </Button>
     );
 
   return view;
@@ -40,54 +41,47 @@ const View = ({
   address?: `0x${string}`;
   image?: string;
 }) => {
-  const { disconnect } = useDisconnect();
   const { closeModal } = useModalStore();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
 
   return (
     <div className='flex items-start justify-between'>
-      <div className='space-y-1'>
-        <ImageWithFallback
+      <div className='space-y-2'>
+        <Image
           priority
           className='h-12 w-12 flex-shrink-0 rounded-full bg-slate-200 md:h-20 md:w-20'
-          src={image as string}
+          src={image ?? '/images/pfp.svg'}
           width={50}
           height={50}
           alt='...'
         />
 
-        <>
+        <div>
           <p className='line-clamp-1 text-lg font-bold'>Bernard Eyram Franz </p>
-
           {address && <p>{formatWalletAddress(address)}</p>}
+        </div>
 
-          <Dialog>
-            <DialogTrigger>
-              <button className='flex w-fit items-center gap-2 rounded-md py-1 text-red-400 hover:bg-slate-900 hover:bg-opacity-50 hover:px-2'>
-                Disconnect <FaUnlink />
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle>Sure to disconnect wallet?</DialogTitle>
-
-              <div className='grid grid-cols-2 gap-4'>
-                <DialogClose
-                  onClick={() => disconnect()}
-                  className={buttonVariants({ variant: 'default' })}
-                >
-                  Confirm
-                </DialogClose>
-                <DialogClose
-                  className={cn(
-                    buttonVariants(),
-                    'bg-slate-300 text-red-500 hover:bg-slate-300/80'
-                  )}
-                >
-                  Cancel
-                </DialogClose>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </>
+        <div className='grid w-full grid-cols-2 gap-4'>
+          <Button
+            size='sm'
+            variant='dark'
+            className='flex w-full items-center gap-2 rounded-md py-1 text-xs hover:bg-slate-900 hover:bg-opacity-50'
+            onClick={openChainModal}
+          >
+            <FaEthereum />
+            Switch Network
+          </Button>
+          <Button
+            size='sm'
+            variant='dark'
+            className='flex w-full items-center gap-2 rounded-md py-1 text-xs text-red-400 hover:bg-slate-900 hover:bg-opacity-50'
+            onClick={openAccountModal}
+          >
+            <FaUnlink />
+            Disconnect
+          </Button>
+        </div>
       </div>
 
       <Link
