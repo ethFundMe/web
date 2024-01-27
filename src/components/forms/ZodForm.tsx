@@ -8,6 +8,7 @@ import {
   uploadToCloudinary,
 } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { FaMinusCircle } from 'react-icons/fa';
 import { useDebounce } from 'usehooks-ts';
 import { isAddress } from 'viem';
 import { useAccount } from 'wagmi';
@@ -57,7 +59,10 @@ export default function CreateCampaignForm() {
     false,
   ]);
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [otherImgsPreview, setOtherImgsPreview] = useState<string[]>([]);
+
+  const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
+    null
+  );
   const [formStatus, setFormStatus] = useState<
     null | 'error' | 'Uploading images' | 'Creating campaign'
   >(null);
@@ -157,8 +162,8 @@ export default function CreateCampaignForm() {
             throw new Error('Could not upload banner');
           });
       }
-      if (data.otherImages) {
-        uploadToCloudinary(data.otherImages)
+      if (otherImgsPrepared) {
+        uploadToCloudinary(otherImgsPrepared as unknown as FileList)
           .then((res) => {
             setUploadedImageUrls((prev) => [...prev, ...(res as string[])]);
           })
@@ -182,7 +187,7 @@ export default function CreateCampaignForm() {
         setFormStatus(null);
         if (uploadedImageUrls.length > 1) {
           setFormStatus('Creating campaign');
-          writeCreateCampaign?.();
+          return writeCreateCampaign?.();
         }
       })
       .then(() => {
@@ -213,16 +218,16 @@ export default function CreateCampaignForm() {
   //   console.error(errors);
   // }
 
+  const createUrl = (file: File) => {
+    const newURL = URL.createObjectURL(file);
+    return newURL;
+  };
+
   function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,
     type: 'banner' | 'others'
   ) {
     const data = e.target.files;
-
-    const createUrl = (file: File) => {
-      const newURL = URL.createObjectURL(file);
-      return newURL;
-    };
 
     const handleBannerUpload = () => {
       if (data && data[0]) {
@@ -232,22 +237,8 @@ export default function CreateCampaignForm() {
       }
     };
 
-    const handleOtherImgsUpload = () => {
-      setOtherImgsPreview([]);
-
-      if (data && data.length > 0) {
-        Array.from(data).forEach((file) => {
-          setOtherImgsPreview((prev) => [...prev, createUrl(file)]);
-        });
-      } else {
-        setOtherImgsPreview([]);
-      }
-    };
-
     if (type === 'banner') {
       handleBannerUpload();
-    } else {
-      handleOtherImgsUpload();
     }
   }
 
@@ -446,8 +437,6 @@ export default function CreateCampaignForm() {
                   accept='image/*'
                   // {...bannerRef}
                 />
-
-                {/* <Input type='file' accept='image/*' {...fileRef} /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -461,29 +450,80 @@ export default function CreateCampaignForm() {
             <FormItem className=''>
               <FormLabel>Other images</FormLabel>
 
-              {otherImgsPreview.length > 0 && (
-                <ScrollArea className='max-h-40'>
-                  <div className='grid grid-cols-3 gap-2'>
-                    {otherImgsPreview.map((item, idx) => (
-                      <Image
-                        key={idx}
-                        className='h-16 w-full object-cover lg:h-20'
-                        src={item}
-                        width={300}
-                        height={300}
-                        alt='image-preview'
-                      />
-                    ))}
-                  </div>
-                </ScrollArea>
+              {otherImgsPrepared && otherImgsPrepared.length > 0 && (
+                <>
+                  <ScrollArea className='max-h-40'>
+                    <div className='grid grid-cols-3 gap-2'>
+                      <AnimatePresence>
+                        <div className='hidden'>{field.name}</div>
+                        {otherImgsPrepared.map((item, idx) => (
+                          <motion.div
+                            animate={{
+                              scale: ['0%', '100%'],
+                            }}
+                            transition={{ type: 'spring', damping: 20 }}
+                            exit={{ scale: 0 }}
+                            key={idx}
+                            className='relative'
+                          >
+                            <Image
+                              className='h-16 w-full object-cover lg:h-20'
+                              src={createUrl(item as File)}
+                              width={300}
+                              height={300}
+                              alt='image-preview'
+                            />
+
+                            <div
+                              title='Remove image'
+                              onClick={() => {
+                                setOtherImgsPrepared((prev) => {
+                                  return prev
+                                    ? prev.filter(
+                                        (item) =>
+                                          item !== otherImgsPrepared[idx]
+                                      )
+                                    : null;
+                                });
+                              }}
+                              className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                            >
+                              <FaMinusCircle color='tomato' />
+                            </div>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  </ScrollArea>
+                </>
               )}
 
               <FormControl>
                 <Input
                   type='file'
                   onChange={(e) => {
-                    showImagePreview(e, 'others');
-                    field.onChange(e.target.files);
+                    const itemss: FileList | null = e.target.files;
+
+                    const getFiles = () => {
+                      if (itemss) {
+                        return [...Array.from(itemss).map((_) => _)].slice(
+                          0,
+                          otherImgsPrepared ? 6 - otherImgsPrepared.length : 6
+                        );
+                      }
+                    };
+
+                    const files = getFiles();
+
+                    setOtherImgsPrepared((prev) => {
+                      if (prev && prev.length > 6 && files && files.length) {
+                        toast('Cannot upload more than 6 images');
+                        return prev;
+                      }
+                      if (files && prev) return [...prev, ...files];
+                      if (files && !prev) return files;
+                      return prev;
+                    });
                   }}
                   multiple
                   accept='image/*'
