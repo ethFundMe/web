@@ -1,5 +1,9 @@
+import { useFund } from '@/lib/hook';
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDebounce } from 'usehooks-ts';
 import { Button, Input } from '../inputs';
 import { DonateFormProps } from './types';
 
@@ -17,6 +21,7 @@ export default function DonateForm({
     handleSubmit,
     register,
     formState: { errors },
+    watch,
   } = useForm<DonateFormValues>({
     defaultValues: {
       campaignID,
@@ -24,12 +29,32 @@ export default function DonateForm({
     },
   });
 
+  const fundingAmt = useDebounce(watch('amount'), 500);
+
+  const {
+    fundCampaignWrite,
+    isLoadingFundCampaign,
+    isLoadingFundCampaignTxn,
+    isFundCampaignSuccess,
+  } = useFund({ id: campaignID, amt: fundingAmt });
+
+  const isLoadingTxn = isLoadingFundCampaign || isLoadingFundCampaignTxn;
+
   const onSubmit: SubmitHandler<DonateFormValues> = (formData) => {
-    toast.success(
-      `Donated ${formData.amount}ETH to Campaign ${formData.campaignID}`
-    );
-    // console.log({ formData });
+    if (formData.amount <= 0) {
+      toast.error('Fund more than 0 ETH');
+      return;
+    }
+
+    return fundCampaignWrite?.();
   };
+
+  useEffect(() => {
+    if (isFundCampaignSuccess) {
+      toast.success('Successfully funded campaign');
+      return redirect(`/campaigns/${campaignID}`);
+    }
+  }, [campaignID, isFundCampaignSuccess]);
 
   return (
     <form
@@ -60,7 +85,9 @@ export default function DonateForm({
         placeholder='Enter an amount in ETH'
       />
 
-      {customClose ?? <Button wide>Donate</Button>}
+      {customClose ?? (
+        <Button wide>{isLoadingTxn ? 'Donating...' : 'Donate'}</Button>
+      )}
     </form>
   );
 }
