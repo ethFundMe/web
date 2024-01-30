@@ -8,18 +8,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 // import { ConnectWallet } from './ConnectWallet';
 import { useSiwe } from '@/lib/hook';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { hasCookie } from 'cookies-next';
 import { ChevronDown } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
 import { NavLink } from './NavLink';
 import { Sidebar } from './Sidebar';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
-  useSiwe();
   const { address, isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
+  useSiwe();
 
   return (
     <motion.nav
@@ -52,7 +56,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {address && isConnected ? (
+          {isConnected && address && hasCookie('efmToken') ? (
             <AuthNavbarMenu>
               <div className='flex cursor-pointer items-center gap-x-3'>
                 <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
@@ -69,7 +73,13 @@ const Navbar = () => {
               </div>
             </AuthNavbarMenu>
           ) : (
-            <ConnectButton showBalance={false} />
+            <>
+              {openConnectModal && (
+                <Button onClick={openConnectModal} type='button'>
+                  Connect Wallet
+                </Button>
+              )}
+            </>
           )}
         </ul>
 
