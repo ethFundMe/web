@@ -12,8 +12,9 @@ export const useCreateCampaign = ({
   description,
   goal,
   mediaLinks,
-  title,
-}: {
+  title, // tag,
+} // type,
+: {
   title: string;
   description: string;
   goal: number;

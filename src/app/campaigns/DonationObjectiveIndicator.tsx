@@ -32,7 +32,13 @@ export const DonationObjectiveIndicator = ({
       <div className='relative h-2 w-full rounded-full bg-primary-gray'>
         <div
           style={{
-            width: `${percentageRaised}%`,
+            width:
+              percentageRaised > 1
+                ? `${percentageRaised}%`
+                : percentageRaised !== 0
+                ? '1%'
+                : 0,
+            // width: `${percentageRaised}%`,
           }}
           className={cn('h-full rounded-full bg-primary-default ')}
         />

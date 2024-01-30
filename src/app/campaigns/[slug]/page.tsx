@@ -65,6 +65,10 @@ export default async function CampaignPage({
 
   if (!campaign) notFound();
 
+  const campaignsToShow = campaigns
+    .filter((_) => _.campaign_id !== campaign.campaign_id)
+    .slice(0, 3);
+
   return (
     <>
       <Container className='relative grid grid-cols-1 gap-4 py-10 sm:gap-8 lg:grid-cols-3 lg:items-start lg:py-12'>
@@ -94,7 +98,7 @@ export default async function CampaignPage({
                 className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
-                  src={campaign.user.profileUrl ?? '/images/pfp.png'}
+                  src={campaign.user.profileUrl ?? '/images/pfp.svg'}
                   className='block flex-shrink-0 rounded-full bg-slate-200'
                   width={50}
                   height={50}
@@ -124,19 +128,21 @@ export default async function CampaignPage({
           >
             Related campaigns
           </h2>
-          <ScrollArea className='min-h-fit rounded-md border-primary-default lg:max-h-[800px] lg:border'>
+          <ScrollArea
+            className={cn(
+              'rounded-md border-primary-default lg:max-h-[800px] lg:border',
+              campaignsToShow.length > 1 ? 'h-[780px]' : 'h-[610px]'
+            )}
+          >
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
-              {campaigns
-                .filter((_) => _.campaign_id !== campaign.campaign_id)
-                .slice(0, 3)
-                .map((_, idx) => (
-                  <>
-                    <CampaignCard inSidebar campaign={_} key={idx} />
-                    {idx !== 2 && (
-                      <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                    )}
-                  </>
-                ))}
+              {campaignsToShow.map((_, idx) => (
+                <>
+                  <CampaignCard inSidebar campaign={_} key={idx} />
+                  {idx !== 2 && (
+                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
+                  )}
+                </>
+              ))}
             </div>
           </ScrollArea>
         </aside>
