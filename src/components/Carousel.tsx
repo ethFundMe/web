@@ -76,14 +76,22 @@ export const Carousel = ({ images }: { images: string[] }) => {
 
       <div className='flex justify-center gap-4'>
         {images.map((_, idx) => (
-          <div
+          <motion.div
             key={_}
+            animate={{
+              scale: [0, 1],
+              background: [
+                '#e2e8f0',
+                currentIndex === idx ? '#0062a6' : '#e2e8f0',
+              ],
+            }}
+            layout
             className={cn(
-              'h-3 w-3 cursor-pointer rounded-full',
-              currentIndex === idx ? 'bg-primary-default' : 'bg-slate-200'
+              'h-3 w-3 cursor-pointer rounded-full'
+              // currentIndex === idx ? 'bg-primary-default' : 'bg-slate-200'
             )}
             onClick={() => handleDotClick(idx)}
-          ></div>
+          ></motion.div>
         ))}
       </div>
     </>

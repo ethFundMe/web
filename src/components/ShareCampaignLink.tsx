@@ -1,6 +1,7 @@
 import { Campaign } from '@/types';
 import { LinkPreviewCmp } from './LinkPreview';
 import { ShareCampaignLinkBox } from './ShareCampaignLinkBox';
+import ShareCampaignOptions from './ShareCampaignOptions';
 
 export const ShareCampaignLink = ({
   link,
@@ -19,6 +20,10 @@ export const ShareCampaignLink = ({
         }}
       />
       <ShareCampaignLinkBox link={link} />
+
+      <ShareCampaignOptions campaign={campaign} />
     </div>
   );
 };
+
+// https://wa.me/?text=I'm%20inquiring%20about%20the%20apartment%20listing
