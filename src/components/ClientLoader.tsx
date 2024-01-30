@@ -13,5 +13,5 @@ export default function ClientLoader({ ...props }: NextTopLoaderProps) {
     NProgress.done();
   }, [pathname, router]);
 
-  return <NextTopLoader {...props} />;
+  return <NextTopLoader crawlSpeed={500} speed={1000} {...props} />;
 }

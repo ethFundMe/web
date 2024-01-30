@@ -98,7 +98,7 @@ export default async function CampaignPage({
                 className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
-                  src={campaign.user.profileUrl ?? '/images/pfp.png'}
+                  src={campaign.user.profileUrl ?? '/images/pfp.svg'}
                   className='block flex-shrink-0 rounded-full bg-slate-200'
                   width={50}
                   height={50}

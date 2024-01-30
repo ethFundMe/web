@@ -3,14 +3,10 @@
 import { useSiwe } from '@/lib/hook';
 import { formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store';
-import {
-  useAccountModal,
-  useChainModal,
-  useConnectModal,
-} from '@rainbow-me/rainbowkit';
+import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaEthereum, FaPen, FaUnlink } from 'react-icons/fa';
+import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { Button } from './ui/button';
 
@@ -43,7 +39,6 @@ const View = ({
 }) => {
   const { closeModal } = useModalStore();
   const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
 
   return (
     <div className='flex items-start justify-between'>
@@ -62,26 +57,17 @@ const View = ({
           {address && <p>{formatWalletAddress(address)}</p>}
         </div>
 
-        <div className='grid w-full grid-cols-2 gap-4'>
-          <Button
-            size='sm'
-            variant='dark'
-            className='flex w-full items-center gap-2 rounded-md py-1 text-xs hover:bg-slate-900 hover:bg-opacity-50'
-            onClick={openChainModal}
-          >
-            <FaEthereum />
-            Switch Network
-          </Button>
-          <Button
-            size='sm'
-            variant='dark'
-            className='flex w-full items-center gap-2 rounded-md py-1 text-xs text-red-400 hover:bg-slate-900 hover:bg-opacity-50'
-            onClick={openAccountModal}
-          >
-            <FaUnlink />
-            Disconnect
-          </Button>
-        </div>
+        {/* <div className='grid w-full grid-cols-2 gap-4'> */}
+        <Button
+          size='sm'
+          variant='dark'
+          className='flex w-full items-center gap-2 rounded-md py-1 text-xs text-red-400 hover:bg-slate-900 hover:bg-opacity-50'
+          onClick={openAccountModal}
+        >
+          <FaUnlink />
+          Disconnect
+        </Button>
+        {/* </div> */}
       </div>
 
       <Link

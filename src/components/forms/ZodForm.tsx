@@ -110,13 +110,14 @@ export default function CreateCampaignForm() {
   //   500
   // );
 
-  const mediaLinks = [
-    ...uploadedImageUrls,
-    useDebounce(
-      useWatch({ control: form.control, name: 'ytLink' }),
-      500
-    ) as string,
-  ];
+  const ytLink = useDebounce(
+    useWatch({ control: form.control, name: 'ytLink' }),
+    500
+  );
+
+  const mediaLinks = ytLink
+    ? [...uploadedImageUrls, ytLink]
+    : uploadedImageUrls;
 
   const {
     isLoadingCreateCampaign,
@@ -132,80 +133,103 @@ export default function CreateCampaignForm() {
     mediaLinks,
   });
 
+  const SubmitStatusList = [
+    'Uploading banner',
+    'Uploading other images',
+    'Creating campaign',
+  ] as const;
+
+  const [submitStatus, setSubmitStatus] = useState<
+    (typeof SubmitStatusList)[number] | null
+  >(null);
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     if (!isAddress(String(beneficiary))) {
       return toast.error(`Address not valid ${beneficiary}`);
     }
+
     if (isLoadingCreateCampaign || isLoadingCreateCampaignTxn) return;
 
-    async function handleMediaLinksUpload() {
-      if (
-        isLoadingCreateCampaign ||
-        isLoadingCreateCampaignTxn ||
-        uploadedImageUrls.length < 1
-      ) {
-        return;
+    async function uploadBanner() {
+      if (data.banner && !imagesUploaded[0]) {
+        setSubmitStatus('Uploading banner');
+
+        const bannerUploadUrl = await uploadToCloudinary(data.banner);
+
+        if (bannerUploadUrl) {
+          setSubmitStatus(null);
+          setImagesUploaded([true, imagesUploaded[1]]);
+          setUploadedImageUrls([...bannerUploadUrl, ...uploadedImageUrls]);
+          toast.success('Banner uploaded');
+          return true;
+        } else {
+          setSubmitStatus(null);
+          setImagesUploaded([false, imagesUploaded[1]]);
+          throw new Error('Failed to upload banner');
+        }
       }
-      if (data.banner) {
-        uploadToCloudinary(data.banner)
-          .then((res) => {
-            setUploadedImageUrls((prev) => [...(res as string[]), ...prev]);
-          })
-          .then(() => {
-            toast.success('Banner uploaded');
-            setImagesUploaded([true, imagesUploaded[1]]);
-          })
-          .catch((e) => {
-            toast.error(e.message);
-            setFormStatus(null);
-            setImagesUploaded([false, imagesUploaded[1]]);
-            throw new Error('Could not upload banner');
-          });
-      }
-      if (otherImgsPrepared) {
-        uploadToCloudinary(otherImgsPrepared as unknown as FileList)
-          .then((res) => {
-            setUploadedImageUrls((prev) => [...prev, ...(res as string[])]);
-          })
-          .then(() => {
-            setImagesUploaded([imagesUploaded[0], true]);
-            toast.success('Other images uploaded');
-          })
-          .catch((e) => {
-            toast.error(e.message);
-            setFormStatus(null);
-            setImagesUploaded([imagesUploaded[0], false]);
-            throw new Error('Could not upload other images');
-          });
-      }
+      return false;
     }
 
-    // setFormStatus('Uploading images');
+    async function uploadOtherImages() {
+      if (otherImgsPrepared && !imagesUploaded[1]) {
+        setSubmitStatus('Uploading other images');
+
+        const OIUploadUrl = await uploadToCloudinary(
+          otherImgsPrepared as unknown as FileList
+        );
+
+        if (OIUploadUrl) {
+          setSubmitStatus(null);
+          setImagesUploaded([imagesUploaded[0], true]);
+          setUploadedImageUrls([
+            ...uploadedImageUrls,
+            ...(OIUploadUrl as string[]),
+          ]);
+          toast.success('Other images uploaded');
+          return true;
+        } else {
+          setSubmitStatus(null);
+          toast.error('Failed to upload other images');
+          setImagesUploaded([imagesUploaded[0], false]);
+          throw new Error('Could not upload other images');
+        }
+      }
+      return false;
+    }
+
+    async function handleMediaLinksUpload() {
+      const bannerUploaded = await uploadBanner();
+      const otherImagesUploaded = await uploadOtherImages();
+      return otherImgsPrepared
+        ? bannerUploaded && otherImagesUploaded
+        : bannerUploaded;
+    }
+
     handleMediaLinksUpload()
-      .then(() => {
-        setUploadedImageUrls([]);
-        setFormStatus(null);
-        if (uploadedImageUrls.length > 1) {
-          setFormStatus('Creating campaign');
-          return writeCreateCampaign?.();
+      .then((uploaded) => {
+        setSubmitStatus(null);
+        if (uploaded) {
+          setSubmitStatus('Creating campaign');
+          writeCreateCampaign?.();
         }
       })
-      .then(() => {
-        setFormStatus(null);
-      });
+      .catch((e) => toast.error(e));
   };
 
   useEffect(() => {
     if (isCreateCampaignTxnSuccess) {
       toast.success('Campaign created.');
+      setSubmitStatus(null);
       form.reset();
-      router.push('/campaigns');
       setUploadedImageUrls([]);
+      router.push('/campaigns');
       return;
     }
     if (isCreateCampaignError) {
       toast.error('Failed to create campaign.');
       setFormStatus(null);
+
       return;
     }
   }, [isCreateCampaignTxnSuccess, isCreateCampaignError, form, router]);
@@ -557,16 +581,16 @@ export default function CreateCampaignForm() {
         <Button
           type='submit'
           disabled={
+            submitStatus !== null ||
             isLoadingCreateCampaign ||
-            isLoadingCreateCampaignTxn ||
-            formStatus === 'Uploading images'
+            isLoadingCreateCampaignTxn
           }
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
         >
           {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
             ? 'Creating campaign'
-            : formStatus ?? 'Create'}
+            : submitStatus ?? 'Create'}
         </Button>
       </form>
     </Form>
