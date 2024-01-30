@@ -12,9 +12,9 @@ export default function CampaignsPageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className='min-h-[calc(100vh-260px)]'>
       <Navbar />
       {children}
-    </>
+    </div>
   );
 }
