@@ -26,5 +26,5 @@ export default function CampaignsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <div className='min-h-[calc(100vh-260px)]'>{children}</div>;
 }
