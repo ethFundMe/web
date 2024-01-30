@@ -1,12 +1,10 @@
 'use client';
 
-import { useAccountModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
-import { FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline } from 'react-icons/io5';
 import { LiaUserCogSolid } from 'react-icons/lia';
 import { LuUnlink } from 'react-icons/lu';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +14,7 @@ import {
 
 export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
   const { address } = useAccount();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
+  const { disconnect } = useDisconnect();
 
   const router = useRouter();
 
@@ -45,18 +42,10 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
             Update profile
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            className='flex items-center gap-2'
-            onClick={openChainModal}
-          >
-            <FaEthereum />
-            Switch network
-          </DropdownMenuItem>
-
           {/* <DropdownMenuSeparator /> */}
           <DropdownMenuItem
             className='flex items-center gap-2'
-            onClick={openAccountModal}
+            onClick={() => disconnect()}
           >
             <LuUnlink />
             Disconnect

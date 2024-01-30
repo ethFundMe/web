@@ -1,12 +1,11 @@
 import { parseEther } from 'viem';
 import {
-  useContractEvent,
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
 } from 'wagmi';
 import { EthFundMe } from '../../abi';
-import { ethFundMeChainId, ethFundMeContractAddress } from '../../constant';
+import { ethChainId, ethFundMeContractAddress } from '../../constant';
 
 export const useCreateCampaign = ({
   beneficiary,
@@ -18,11 +17,9 @@ export const useCreateCampaign = ({
 : {
   title: string;
   description: string;
-  // tag: string;
   goal: number;
   mediaLinks: Array<string>;
   beneficiary: `0x${string}`;
-  // type: 'personal' | 'others';
 }) => {
   const {
     config,
@@ -38,10 +35,8 @@ export const useCreateCampaign = ({
       parseEther(goal ? goal.toString() : String(0)),
       mediaLinks,
       beneficiary,
-      // tag,
-      // type,
     ],
-    chainId: ethFundMeChainId,
+    chainId: ethChainId,
     onSettled(data, error) {
       console.log('Settled Prepared addCampign: ', { data, error });
     },
@@ -65,19 +60,6 @@ export const useCreateCampaign = ({
     isLoading: isLoadingCreateCampaignTxn,
     isSuccess: isCreateCampaignTxnSuccess,
   } = useWaitForTransaction({ hash: createCampainData?.hash });
-
-  const unwatch = useContractEvent({
-    abi: EthFundMe,
-    address: ethFundMeContractAddress,
-    eventName: 'CampaignCreated',
-    chainId: ethFundMeChainId,
-    listener(log) {
-      const campaign = log[0].args.campaign;
-      console.log(campaign);
-      if (!campaign) return;
-      unwatch?.();
-    },
-  });
 
   return {
     createCampainError,

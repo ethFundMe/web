@@ -14,14 +14,21 @@ import { mainnet, sepolia } from 'wagmi/chains';
 
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import { ethChainId } from '../constant';
 
 const sepoliaAlchemyApiKey =
   process.env.NEXT_PUBLIC_SEPOLIA_ALCHEMY_API_KEY ?? '';
+const mainnetAlchemyApiKey =
+  process.env.NEXT_PUBLIC_MAINNET_ALCHEMY_API_KEY ?? '';
 const wcProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID ?? '';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, sepolia],
-  [alchemyProvider({ apiKey: sepoliaAlchemyApiKey }), publicProvider()]
+  [ethChainId === 1 ? mainnet : sepolia],
+  [
+    alchemyProvider({ apiKey: mainnetAlchemyApiKey }),
+    alchemyProvider({ apiKey: sepoliaAlchemyApiKey }),
+    publicProvider(),
+  ]
 );
 
 const { connectors } = getDefaultWallets({

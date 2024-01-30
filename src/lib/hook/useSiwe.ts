@@ -4,9 +4,12 @@ import { userStore } from '@/store';
 import { ErrorResponse, User } from '@/types';
 import { hasCookie } from 'cookies-next';
 import { redirect, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { SiweMessage } from 'siwe';
 import { useAccount, useNetwork } from 'wagmi';
+
+const ethChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1);
 
 export const useSiwe = () => {
   const { chain } = useNetwork();
@@ -15,7 +18,24 @@ export const useSiwe = () => {
 
   const { push, refresh } = router;
 
-  useAccount({
+  async function disconnectAcc() {
+    try {
+      const disconnect_res = await fetch('/api/disconnect');
+
+      if (!disconnect_res.ok) {
+        const err = await disconnect_res.json();
+        throw err;
+      }
+      await disconnect_res.json();
+      return refresh();
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong. Try again');
+      return refresh();
+    }
+  }
+
+  const { connector } = useAccount({
     async onConnect({ address, connector, isReconnected }) {
       if (!address || !connector || !chain?.id) return;
       const efmToken = hasCookie('efmToken');
@@ -31,6 +51,12 @@ export const useSiwe = () => {
           refresh();
           return;
         }
+      }
+
+      const chainId = await connector.getChainId();
+      if (chainId !== ethChainId) {
+        toast.error('Wrong network');
+        return await disconnectAcc();
       }
 
       try {
@@ -100,21 +126,23 @@ export const useSiwe = () => {
     async onDisconnect() {
       const efmToken = hasCookie('efmToken');
       if (efmToken) {
-        try {
-          const disconnect_res = await fetch('/api/disconnect');
-
-          if (!disconnect_res.ok) {
-            const err = await disconnect_res.json();
-            throw err;
-          }
-          await disconnect_res.json();
-          return redirect('/');
-        } catch (error) {
-          console.error(error);
-        }
+        await disconnectAcc();
       } else {
         return redirect('/');
       }
     },
   });
+
+  useEffect(() => {
+    connector?.on('change', async () => {
+      toast.error('Wrong network');
+      return await disconnectAcc();
+    });
+
+    return () => {
+      connector?.off('change', async () => {
+        return await disconnectAcc();
+      });
+    };
+  }, [connector]);
 };
