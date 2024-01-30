@@ -63,9 +63,6 @@ export default function CreateCampaignForm() {
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
     null
   );
-  const [formStatus, setFormStatus] = useState<
-    null | 'error' | 'Uploading images' | 'Creating campaign'
-  >(null);
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
@@ -228,7 +225,7 @@ export default function CreateCampaignForm() {
     }
     if (isCreateCampaignError) {
       toast.error('Failed to create campaign.');
-      setFormStatus(null);
+      setSubmitStatus(null);
 
       return;
     }
