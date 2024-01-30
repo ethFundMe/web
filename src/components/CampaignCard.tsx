@@ -54,7 +54,7 @@ export const CampaignCard = ({
       <div
         onClick={(e) => {
           e.stopPropagation();
-          router.push(`/user-profile/${campaign.creator}`);
+          router.push(`/profile/${campaign.creator}`);
         }}
         className='flex flex-col-reverse justify-between gap-2'
       >

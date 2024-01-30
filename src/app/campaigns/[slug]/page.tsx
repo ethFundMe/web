@@ -90,7 +90,7 @@ export default async function CampaignPage({
             </div>
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
               <Link
-                href={`/user-profiles/${campaign.creator}`}
+                href={`/profile/${campaign.creator}`}
                 className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <Image
