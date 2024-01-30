@@ -11,7 +11,7 @@ export default async function HowToDonatePage() {
   const campaigns = await getCampaigns();
 
   return (
-    <>
+    <div className='min-h-[calc(100vh-260px)]'>
       {/* Move navbar to /how-to-donate/layout.tsx if file is created */}
       <Navbar />
 
@@ -44,6 +44,6 @@ export default async function HowToDonatePage() {
           </div>
         </div>
       </Container>
-    </>
+    </div>
   );
 }

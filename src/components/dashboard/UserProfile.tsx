@@ -2,10 +2,12 @@
 
 import { formatWalletAddress } from '@/lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { CampaignCard } from '../CampaignCard';
 import { Container } from '../Container';
+import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 
 export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
@@ -22,7 +24,7 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
     <div className='w-full'>
       <div className='flex-1 rounded-md'>
         <div className='header'>
-          <div className='banner h-40 bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5)),url(/images/efm-header.png)] bg-cover bg-center bg-no-repeat md:h-72'></div>
+          <div className='banner h-40 bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5)),url(/images/efm-header.png)] bg-cover bg-center bg-no-repeat md:h-72' />
 
           <Container>
             <div className='flex flex-col gap-4 py-4 md:flex-row md:items-end lg:py-8'>
@@ -31,7 +33,7 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
                   <div className='image h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                     <Image
                       className='h-full w-full object-cover'
-                      src={'/images/pfp.png'}
+                      src={'/images/pfp.svg'}
                       height={150}
                       width={150}
                       alt='user-pfp'
@@ -49,19 +51,26 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
                 </DialogContent>
               </Dialog>
 
-              <div>
-                <div className='flex items-start'>
-                  <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
-                    John Doe
-                  </p>
-                  <Image
-                    className='h-auto w-[12px] md:w-4'
-                    src='/images/verified.svg'
-                    width={20}
-                    height={20}
-                    alt='...'
-                  />
+              <div className='w-full'>
+                <div className='flex justify-between'>
+                  <div className='flex items-start'>
+                    <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
+                      John Doe
+                    </p>
+                    <Image
+                      className='h-auto w-4 md:w-6'
+                      src='/images/verified.svg'
+                      width={24}
+                      height={24}
+                      alt='...'
+                    />
+                  </div>
+
+                  <Button variant='secondary'>
+                    <Link href='/apply-for-verification'>Get verified</Link>
+                  </Button>
                 </div>
+
                 <p className='text-slate-500'>
                   {formatWalletAddress(
                     (address || ethAddress) as `0x${string}`
