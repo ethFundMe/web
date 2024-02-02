@@ -1,29 +1,23 @@
 'use client';
 
 import { REGEX_CODES } from '@/lib/constants';
-import { useCreateCampaign } from '@/lib/hook';
 import { CampaignTags } from '@/lib/types';
-import {
-  GET_CREATE_CAMPAIGN_FORM_SCHEMA,
-  createUrl,
-  uploadToCloudinary,
-} from '@/lib/utils';
+import { GET_CREATE_CAMPAIGN_FORM_SCHEMA, createUrl } from '@/lib/utils';
+import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
-import { useDebounce } from 'usehooks-ts';
-import { isAddress } from 'viem';
+import { formatEther } from 'viem';
 import { useAccount } from 'wagmi';
 import * as z from 'zod';
-import { LinkPreview } from '../LinkPreview';
-import { Button } from '../ui/button';
+import { LinkPreview } from './LinkPreview';
+import { Button } from './ui/button';
 import {
   Form,
   FormControl,
@@ -31,214 +25,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { ScrollArea } from '../ui/scroll-area';
+} from './ui/form';
+import { Input } from './ui/input';
+import { ScrollArea } from './ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Textarea } from '../ui/textarea';
+} from './ui/select';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui/tooltip';
+} from './ui/tooltip';
 
-export default function CreateCampaignForm() {
-  const searchParams = useSearchParams();
-  const { address } = useAccount();
-  const router = useRouter();
-
+export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
-  const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
-    false,
-    false,
-  ]);
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
     null
   );
 
-  const getCampaignType = () => {
-    const _ = searchParams.get('campaign-type');
-    return _ === 'personal' || _ === 'others' ? _ : undefined;
-  };
-
-  const campaignType = getCampaignType();
-  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(false);
+  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA();
+  const { address } = useAccount();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
-      type: campaignType ?? 'personal',
-      beneficiaryAddress: address,
-      banner: undefined,
+      type: campaign.beneficiary === campaign.creator ? 'personal' : 'others',
+      beneficiaryAddress: campaign.beneficiary,
+      banner: campaign.media_links[0],
+      title: campaign.title,
+      goal: parseFloat(formatEther(BigInt(campaign.goal))),
+      tag: CampaignTags['Arts and Culture'],
+      ytLink:
+        campaign.media_links.filter((link) =>
+          REGEX_CODES.ytLink.test(link)
+        )[0] ?? undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   });
 
-  const beneficiary = useDebounce(
-    useWatch({
-      control: form.control,
-      name: 'beneficiaryAddress',
-      defaultValue: address,
-    }) as `0x${string}`,
-    500
-  );
-  const description = useDebounce(
-    useWatch({ control: form.control, name: 'description' }),
-    500
-  );
-  const goal = useDebounce(
-    useWatch({ control: form.control, name: 'goal', defaultValue: 0 }),
-    500
-  );
-  const title = useDebounce(
-    useWatch({ control: form.control, name: 'title' }),
-    500
-  );
-  // const tag = useDebounce(
-  //   useWatch({ control: form.control, name: 'tag' }),
-  //   500
-  // );
-
-  const ytLink = useDebounce(
-    useWatch({ control: form.control, name: 'ytLink' }),
-    500
-  );
-
-  const mediaLinks = ytLink
-    ? [...uploadedImageUrls, ytLink]
-    : uploadedImageUrls;
-
-  const {
-    isLoadingCreateCampaign,
-    isLoadingCreateCampaignTxn,
-    isCreateCampaignTxnSuccess,
-    isCreateCampaignError,
-    writeCreateCampaign,
-  } = useCreateCampaign({
-    title,
-    description,
-    beneficiary,
-    goal,
-    mediaLinks,
-  });
-
-  const SubmitStatusList = [
-    'Uploading banner',
-    'Uploading other images',
-    'Creating campaign',
-  ] as const;
-
-  const [submitStatus, setSubmitStatus] = useState<
-    (typeof SubmitStatusList)[number] | null
-  >(null);
-
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    if (!isAddress(String(beneficiary))) {
-      return toast.error(`Address not valid ${beneficiary}`);
-    }
-
-    if (isLoadingCreateCampaign || isLoadingCreateCampaignTxn) return;
-
-    async function uploadBanner() {
-      if (data.banner && !imagesUploaded[0]) {
-        setSubmitStatus('Uploading banner');
-
-        const bannerUploadUrl = await uploadToCloudinary(data.banner);
-
-        if (bannerUploadUrl) {
-          setSubmitStatus(null);
-          setImagesUploaded([true, imagesUploaded[1]]);
-          setUploadedImageUrls([...bannerUploadUrl, ...uploadedImageUrls]);
-          toast.success('Banner uploaded');
-          return true;
-        } else {
-          setSubmitStatus(null);
-          setImagesUploaded([false, imagesUploaded[1]]);
-          throw new Error('Failed to upload banner');
-        }
-      }
-      return false;
-    }
-
-    async function uploadOtherImages() {
-      if (otherImgsPrepared && !imagesUploaded[1]) {
-        setSubmitStatus('Uploading other images');
-
-        const OIUploadUrl = await uploadToCloudinary(
-          otherImgsPrepared as unknown as FileList
-        );
-
-        if (OIUploadUrl) {
-          setSubmitStatus(null);
-          setImagesUploaded([imagesUploaded[0], true]);
-          setUploadedImageUrls([
-            ...uploadedImageUrls,
-            ...(OIUploadUrl as string[]),
-          ]);
-          toast.success('Other images uploaded');
-          return true;
-        } else {
-          setSubmitStatus(null);
-          toast.error('Failed to upload other images');
-          setImagesUploaded([imagesUploaded[0], false]);
-          throw new Error('Could not upload other images');
-        }
-      }
-      return false;
-    }
-
-    async function handleMediaLinksUpload() {
-      const bannerUploaded = await uploadBanner();
-      const otherImagesUploaded = await uploadOtherImages();
-      return otherImgsPrepared
-        ? bannerUploaded && otherImagesUploaded
-        : bannerUploaded;
-    }
-
-    handleMediaLinksUpload()
-      .then((uploaded) => {
-        setSubmitStatus(null);
-        if (uploaded) {
-          setSubmitStatus('Creating campaign');
-          writeCreateCampaign?.();
-        }
-      })
-      .catch((e) => toast.error(e));
-  };
-
   useEffect(() => {
-    if (isCreateCampaignTxnSuccess) {
-      toast.success('Campaign created.');
-      setSubmitStatus(null);
-      form.reset();
-      setUploadedImageUrls([]);
-      router.push('/campaigns');
-      return;
+    if (campaign.media_links.length) {
+      setBannerPreview(campaign.media_links[0]);
     }
-    if (isCreateCampaignError) {
-      toast.error('Failed to create campaign.');
-      setSubmitStatus(null);
-
-      return;
+    const otherMedia = campaign.media_links.slice(1);
+    const mediaWithoutYTLink = otherMedia.filter(
+      (media) => !REGEX_CODES.ytLink.test(media)
+    );
+    if (otherMedia.length) {
+      setOtherImgsPrepared(mediaWithoutYTLink);
     }
-  }, [isCreateCampaignTxnSuccess, isCreateCampaignError, form, router]);
-
-  // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
-  //   console.error(errors);
-  // };
-
-  // function onError(errors: z.infer<typeof formSchema>) {
-  //   console.error(errors);
-  // }
+  }, [campaign]);
 
   function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -261,10 +103,7 @@ export default function CreateCampaignForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
-      >
+      <form className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'>
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -316,6 +155,7 @@ export default function CreateCampaignForm() {
                 <Input
                   type='number'
                   step={0.00001}
+                  defaultValue={field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -331,7 +171,10 @@ export default function CreateCampaignForm() {
             <FormItem className='col-span-2'>
               <FormLabel>Campaign tag</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder='Choose a campaign tag' />
                   </SelectTrigger>
@@ -414,20 +257,6 @@ export default function CreateCampaignForm() {
         )}
 
         <FormField
-          name='description'
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className='col-span-2'>
-              <FormLabel>Campaign description</FormLabel>
-              <FormControl>
-                <Textarea {...field} placeholder='Enter campaign description' />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
           name='banner'
           control={form.control}
           render={({ field }) => (
@@ -485,7 +314,11 @@ export default function CreateCampaignForm() {
                           >
                             <Image
                               className='h-16 w-full object-cover lg:h-20'
-                              src={createUrl(item as File)}
+                              src={
+                                typeof item === 'string'
+                                  ? item
+                                  : createUrl(item as File)
+                              }
                               width={300}
                               height={300}
                               alt='image-preview'
@@ -573,17 +406,10 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
-          disabled={
-            submitStatus !== null ||
-            isLoadingCreateCampaign ||
-            isLoadingCreateCampaignTxn
-          }
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
         >
-          {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
-            ? 'Creating campaign'
-            : submitStatus ?? 'Create'}
+          Update campaign
         </Button>
       </form>
     </Form>
