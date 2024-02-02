@@ -11,6 +11,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_WEB_URL as string),
   title: {
     default: 'EthFundMe',
     template: '%s | EthFundMe',
