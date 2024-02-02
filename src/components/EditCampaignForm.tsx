@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -43,6 +44,12 @@ import {
 } from './ui/tooltip';
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
+  const { address } = useAccount();
+
+  useEffect(() => {
+    if (!address) redirect('/');
+  }, [address]);
+
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
 
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
@@ -50,7 +57,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   );
 
   const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA();
-  const { address } = useAccount();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
