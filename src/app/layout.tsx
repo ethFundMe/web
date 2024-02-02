@@ -2,6 +2,7 @@ import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
+import { Toaster } from '@/components/ui/sonner';
 import { WagmiProvider } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
@@ -54,6 +55,7 @@ export default async function RootLayout({
         <body className='flex min-h-screen flex-col'>
           <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
+          <Toaster />
 
           <WagmiProvider>
             <ModalProvider />

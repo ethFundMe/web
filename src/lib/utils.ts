@@ -138,3 +138,8 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       .optional(),
   });
 }
+
+export const createUrl = (file: File) => {
+  const newURL = URL.createObjectURL(file);
+  return newURL;
+};
