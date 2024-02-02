@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Textarea } from './ui/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -261,6 +262,20 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             />
           </>
         )}
+
+        <FormField
+          name='description'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className='col-span-2'>
+              <FormLabel>Campaign description</FormLabel>
+              <FormControl>
+                <Textarea {...field} placeholder='Enter campaign description' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           name='banner'
