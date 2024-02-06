@@ -6,7 +6,7 @@ import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   createUrl,
-  uploadToCloudinary,
+  uploadToCloudinary2,
 } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -152,13 +152,12 @@ export default function CreateCampaignForm() {
       if (data.banner && !imagesUploaded[0]) {
         setSubmitStatus('Uploading banner');
 
-        const bannerUploadUrl = await uploadToCloudinary(data.banner);
+        const bannerUploadUrl = await uploadToCloudinary2(data.banner);
 
         if (bannerUploadUrl) {
           setSubmitStatus(null);
           setImagesUploaded([true, imagesUploaded[1]]);
           setUploadedImageUrls([...bannerUploadUrl, ...uploadedImageUrls]);
-          toast.success('Banner uploaded');
           return true;
         } else {
           setSubmitStatus(null);
@@ -173,7 +172,7 @@ export default function CreateCampaignForm() {
       if (otherImgsPrepared && !imagesUploaded[1]) {
         setSubmitStatus('Uploading other images');
 
-        const OIUploadUrl = await uploadToCloudinary(
+        const OIUploadUrl = await uploadToCloudinary2(
           otherImgsPrepared as unknown as FileList
         );
 
@@ -184,7 +183,6 @@ export default function CreateCampaignForm() {
             ...uploadedImageUrls,
             ...(OIUploadUrl as string[]),
           ]);
-          toast.success('Other images uploaded');
           return true;
         } else {
           setSubmitStatus(null);
@@ -222,6 +220,7 @@ export default function CreateCampaignForm() {
       form.reset();
       setUploadedImageUrls([]);
       router.push('/campaigns');
+
       return;
     }
     if (isCreateCampaignError) {
@@ -583,7 +582,7 @@ export default function CreateCampaignForm() {
         >
           {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
             ? 'Creating campaign'
-            : submitStatus ?? 'Create'}
+            : submitStatus ?? 'Create campaign'}
         </Button>
       </form>
     </Form>
