@@ -148,6 +148,17 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     });
   };
 
+  useEffect(() => {
+    if (isUpdateCampaignError) {
+      toast.error('Failed to update campaign');
+      console.error(updateCampaignError);
+    }
+
+    if (isUpdateCampaignSuccess) {
+      toast.success('Campaign updated');
+    }
+  }, [isUpdateCampaignError, isUpdateCampaignSuccess, updateCampaignError]);
+
   return (
     <Form {...form}>
       <form
