@@ -53,15 +53,15 @@ export const UserProfile = ({ ethAddress }: { ethAddress?: `0x${string}` }) => {
 
               <div className='w-full'>
                 <div className='flex justify-between'>
-                  <div className='flex items-start'>
+                  <div className='flex items-center gap-1'>
                     <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
                       John Doe
                     </p>
                     <Image
-                      className='h-auto w-4 md:w-6'
+                      className='h-auto w-5 md:w-6'
                       src='/images/verified.svg'
-                      width={24}
-                      height={24}
+                      width={30}
+                      height={30}
                       alt='...'
                     />
                   </div>

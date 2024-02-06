@@ -47,7 +47,7 @@ export default function InfiniteScroll({
         {campaigns.length !== totalCampaigns ? (
           <div
             ref={ref}
-            className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-red-300 border-t-transparent p-4'
+            className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
           ></div>
         ) : (
           <p className='py-4 text-center text-slate-500'>
