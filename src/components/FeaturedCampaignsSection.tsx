@@ -7,8 +7,6 @@ import { Container } from './Container';
 export const FeaturedCampaignsSection = async () => {
   const { campaigns } = await getCampaigns();
 
-  console.log(campaigns[0].media_links);
-
   return (
     <section>
       <Container>

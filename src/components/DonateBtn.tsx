@@ -1,17 +1,18 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { Campaign } from '@/types';
 import { FaEthereum } from 'react-icons/fa';
 import DonateForm from './forms/DonateForm';
 import { buttonVariants } from './ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 type Props = React.ComponentProps<'button'> & {
-  campaignId: number;
+  campaign: Campaign;
   text?: string;
 };
 
-export const DonateBtn = ({ className, campaignId, text }: Props) => {
+export const DonateBtn = ({ className, campaign, text }: Props) => {
   const btnStyles = {
     base: 'flex items-center justify-center gap-2 transition-all duration-200 ease-in',
   };
@@ -38,7 +39,7 @@ export const DonateBtn = ({ className, campaignId, text }: Props) => {
         <DialogTitle>Donate to campaign</DialogTitle>
 
         <DonateForm
-          campaignID={campaignId}
+          campaign={campaign}
           // customClose={
           //   <DialogClose
           //     type='submit'

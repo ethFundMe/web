@@ -70,7 +70,8 @@ export const CampaignCard = ({
           <div>
             <p className={TextSizeStyles.small}>Campaign Organizer</p>
             <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {formatWalletAddress(campaign.creator as `0x${string}`)}{' '}
+              {campaign.user.fullName ??
+                formatWalletAddress(campaign.creator as `0x${string}`)}{' '}
             </p>
           </div>
         </div>

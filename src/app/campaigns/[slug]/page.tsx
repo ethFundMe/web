@@ -88,7 +88,7 @@ export default async function CampaignPage({
                 <DonateBtn
                   text='Donate Now'
                   className='w-full whitespace-nowrap sm:mt-1'
-                  campaignId={campaign.campaign_id}
+                  campaign={campaign}
                 />
               </div>
             </div>
@@ -107,7 +107,8 @@ export default async function CampaignPage({
                 <div className='pr-2'>
                   <p className={TextSizeStyles.caption}>Campaign Organizer</p>
                   <p className='font-semibold'>
-                    {formatWalletAddress(campaign.creator as `0x${string}`)}
+                    {campaign.user.fullName ??
+                      formatWalletAddress(campaign.creator as `0x${string}`)}
                   </p>
                 </div>
               </Link>
