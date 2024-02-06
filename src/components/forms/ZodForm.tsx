@@ -1,7 +1,8 @@
 'use client';
 
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
-import { useCreateCampaign } from '@/lib/hook';
 import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
@@ -14,13 +15,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
-import { useDebounce } from 'usehooks-ts';
-import { isAddress } from 'viem';
-import { useAccount } from 'wagmi';
+import { isAddress, parseEther } from 'viem';
+import { useAccount, useContractWrite } from 'wagmi';
 import * as z from 'zod';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
@@ -59,8 +59,6 @@ export default function CreateCampaignForm() {
     false,
     false,
   ]);
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
     null
   );
@@ -83,52 +81,20 @@ export default function CreateCampaignForm() {
     resolver: zodResolver(formSchema),
   });
 
-  const beneficiary = useDebounce(
-    useWatch({
-      control: form.control,
-      name: 'beneficiaryAddress',
-      defaultValue: address,
-    }) as `0x${string}`,
-    500
-  );
-  const description = useDebounce(
-    useWatch({ control: form.control, name: 'description' }),
-    500
-  );
-  const goal = useDebounce(
-    useWatch({ control: form.control, name: 'goal', defaultValue: 0 }),
-    500
-  );
-  const title = useDebounce(
-    useWatch({ control: form.control, name: 'title' }),
-    500
-  );
-  // const tag = useDebounce(
-  //   useWatch({ control: form.control, name: 'tag' }),
-  //   500
-  // );
-
-  const ytLink = useDebounce(
-    useWatch({ control: form.control, name: 'ytLink' }),
-    500
-  );
-
-  const mediaLinks = ytLink
-    ? [...uploadedImageUrls, ytLink]
-    : uploadedImageUrls;
-
   const {
-    isLoadingCreateCampaign,
-    isLoadingCreateCampaignTxn,
-    isCreateCampaignTxnSuccess,
-    isCreateCampaignError,
-    writeCreateCampaign,
-  } = useCreateCampaign({
-    title,
-    description,
-    beneficiary,
-    goal,
-    mediaLinks,
+    error: createCampaignError,
+    isError: isCreateCampaignError,
+    isLoading: isLoadingCreateCampaign,
+    isSuccess: isCreateCampaignSuccess,
+    write: createCampaign,
+  } = useContractWrite({
+    abi: EthFundMe,
+    address: ethFundMeContractAddress,
+    functionName: 'addCampaign',
+    chainId: ethChainId,
+    onSettled(data, error) {
+      console.log('Settled addCampaign', { data, error });
+    },
   });
 
   const SubmitStatusList = [
@@ -141,31 +107,33 @@ export default function CreateCampaignForm() {
     (typeof SubmitStatusList)[number] | null
   >(null);
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    if (!isAddress(String(beneficiary))) {
-      return toast.error(`Address not valid ${beneficiary}`);
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+    const { description, goal, title, banner, beneficiaryAddress, ytLink } =
+      data;
+    if (isLoadingCreateCampaign) return;
+
+    if (!isAddress(String(beneficiaryAddress))) {
+      return toast.error(`Address not valid ${beneficiaryAddress}`);
     }
 
-    if (isLoadingCreateCampaign || isLoadingCreateCampaignTxn) return;
-
     async function uploadBanner() {
-      if (data.banner && !imagesUploaded[0]) {
+      if (banner && !imagesUploaded[0]) {
         setSubmitStatus('Uploading banner');
 
-        const bannerUploadUrl = await uploadToCloudinary2(data.banner);
+        const bannerUploadUrl = await uploadToCloudinary2(banner);
 
-        if (bannerUploadUrl) {
+        if (bannerUploadUrl && bannerUploadUrl.length > 0) {
           setSubmitStatus(null);
           setImagesUploaded([true, imagesUploaded[1]]);
-          setUploadedImageUrls([...bannerUploadUrl, ...uploadedImageUrls]);
-          return true;
+          toast.success('Banner uploaded');
+          return bannerUploadUrl;
         } else {
           setSubmitStatus(null);
           setImagesUploaded([false, imagesUploaded[1]]);
           throw new Error('Failed to upload banner');
         }
       }
-      return false;
+      return [];
     }
 
     async function uploadOtherImages() {
@@ -176,14 +144,11 @@ export default function CreateCampaignForm() {
           otherImgsPrepared as unknown as FileList
         );
 
-        if (OIUploadUrl) {
+        if (OIUploadUrl && OIUploadUrl.length > 0) {
           setSubmitStatus(null);
           setImagesUploaded([imagesUploaded[0], true]);
-          setUploadedImageUrls([
-            ...uploadedImageUrls,
-            ...(OIUploadUrl as string[]),
-          ]);
-          return true;
+          toast.success('Other images uploaded');
+          return OIUploadUrl;
         } else {
           setSubmitStatus(null);
           toast.error('Failed to upload other images');
@@ -191,45 +156,64 @@ export default function CreateCampaignForm() {
           throw new Error('Could not upload other images');
         }
       }
-      return false;
+      return [];
     }
 
     async function handleMediaLinksUpload() {
       const bannerUploaded = await uploadBanner();
       const otherImagesUploaded = await uploadOtherImages();
-      return otherImgsPrepared
-        ? bannerUploaded && otherImagesUploaded
-        : bannerUploaded;
+      return bannerUploaded.length > 0 &&
+        otherImgsPrepared &&
+        otherImgsPrepared.length > 0
+        ? [...bannerUploaded, ...otherImagesUploaded]
+        : bannerUploaded.length > 0
+        ? bannerUploaded
+        : [];
     }
 
-    handleMediaLinksUpload()
+    await handleMediaLinksUpload()
       .then((uploaded) => {
         setSubmitStatus(null);
-        if (uploaded) {
+        if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
-          writeCreateCampaign?.();
+          const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
+          createCampaign({
+            args: [
+              title,
+              description,
+              parseEther(goal.toString()),
+              mediaLinks,
+              beneficiaryAddress as `0x${string}`,
+            ],
+          });
         }
       })
       .catch((e) => toast.error(e));
   };
 
   useEffect(() => {
-    if (isCreateCampaignTxnSuccess) {
+    if (isCreateCampaignSuccess) {
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
-      setUploadedImageUrls([]);
       router.push('/campaigns');
 
       return;
     }
     if (isCreateCampaignError) {
+      console.error(createCampaignError);
       toast.error('Failed to create campaign.');
       setSubmitStatus(null);
 
       return;
     }
-  }, [isCreateCampaignTxnSuccess, isCreateCampaignError, form, router]);
+  }, [
+    isCreateCampaignError,
+    form,
+    router,
+    createCampaignError,
+    isCreateCampaignSuccess,
+  ]);
 
   // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
   //   console.error(errors);
@@ -572,15 +556,11 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
-          disabled={
-            submitStatus !== null ||
-            isLoadingCreateCampaign ||
-            isLoadingCreateCampaignTxn
-          }
+          disabled={submitStatus !== null || isLoadingCreateCampaign}
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
         >
-          {isLoadingCreateCampaign || isLoadingCreateCampaignTxn
+          {isLoadingCreateCampaign
             ? 'Creating campaign'
             : submitStatus ?? 'Create campaign'}
         </Button>
