@@ -1,3 +1,5 @@
+import { Campaign } from '@/types';
+
 export type CampaignFormFields = {
   title: string;
   description: string;
@@ -9,7 +11,7 @@ export type CampaignFormFields = {
 };
 
 export type DonateFormProps = {
-  campaignID: number;
+  campaign: Campaign;
   amount?: number;
   customClose?: React.ReactNode;
 };
