@@ -13,8 +13,6 @@ export default async function EditCampaign({
   const campaign = await getCampaign(slug);
   if (!campaign) notFound();
 
-  console.log(campaign.title);
-
   return (
     <div className='min-h-[calc(100vh-260px)]'>
       <Container>

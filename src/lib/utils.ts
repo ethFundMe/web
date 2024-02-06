@@ -72,6 +72,44 @@ export async function uploadToCloudinary(files: FileList | string[]) {
   }
 }
 
+export async function uploadToCloudinary2(files: FileList | string[]) {
+  const formData = new FormData();
+
+  const upload: (file: File) => Promise<string> = async (file) => {
+    formData.append('file', file);
+    formData.append(
+      'upload_preset',
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
+    );
+    formData.append('folder', 'campaign_media');
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    if (data?.error) {
+      throw new Error('Failed to upload file');
+    }
+
+    return data?.url;
+  };
+
+  const itu = Array.from(files as FileList).map(async (file) => {
+    const res = await upload(file as unknown as File);
+    return res;
+  });
+
+  const tromise = await Promise.all(itu);
+
+  return tromise;
+}
+
 export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
   verifiedAddress: boolean = false
 ) {

@@ -1,5 +1,7 @@
 'use client';
 
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import { GET_CREATE_CAMPAIGN_FORM_SCHEMA, createUrl } from '@/lib/utils';
@@ -10,12 +12,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
-import { formatEther } from 'viem';
-import { useAccount } from 'wagmi';
+import { formatEther, parseEther } from 'viem';
+import { useAccount, useContractWrite } from 'wagmi';
 import * as z from 'zod';
 import { LinkPreview } from './LinkPreview';
 import { Button } from './ui/button';
@@ -57,6 +59,22 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     null
   );
 
+  const {
+    error: updateCampaignError,
+    isError: isUpdateCampaignError,
+    isLoading: isLoadingUpdateCampaign,
+    isSuccess: isUpdateCampaignSuccess,
+    write: updateCampaign,
+  } = useContractWrite({
+    abi: EthFundMe,
+    address: ethFundMeContractAddress,
+    functionName: 'updateCampaign',
+    chainId: ethChainId,
+    onSettled(data, error) {
+      console.log('Settled updateCampaign', { data, error });
+    },
+  });
+
   const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,6 +82,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       type: campaign.beneficiary === campaign.creator ? 'personal' : 'others',
       beneficiaryAddress: campaign.beneficiary,
       banner: campaign.media_links[0],
+      description: campaign.description,
       title: campaign.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
       tag: CampaignTags['Arts and Culture'],
@@ -108,9 +127,44 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     }
   }
 
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
+    console.log(data);
+    const { description, goal, title, beneficiaryAddress } = data;
+    const { campaign_id } = campaign;
+
+    // validate and make sure there is a change before calling the func below
+
+    return updateCampaign({
+      args: [
+        BigInt(campaign_id),
+        title,
+        description,
+        parseEther(goal.toString()),
+        [
+          'https://images.unsplash.com/photo-1527788263495-3518a5c1c42d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnVuZHJhaXNpbmd8ZW58MHx8MHx8fDA%3D',
+        ],
+        beneficiaryAddress as `0x${string}`,
+      ],
+    });
+  };
+
+  useEffect(() => {
+    if (isUpdateCampaignError) {
+      toast.error('Failed to update campaign');
+      console.error(updateCampaignError);
+    }
+
+    if (isUpdateCampaignSuccess) {
+      toast.success('Campaign updated');
+    }
+  }, [isUpdateCampaignError, isUpdateCampaignSuccess, updateCampaignError]);
+
   return (
     <Form {...form}>
-      <form className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'>
+      <form
+        className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -430,7 +484,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
         >
-          Update campaign
+          {isLoadingUpdateCampaign ? 'Loading...' : 'Update campaign'}
         </Button>
       </form>
     </Form>
