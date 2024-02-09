@@ -2,10 +2,12 @@
 
 import { REGEX_CODES } from '@/lib/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { Button } from '../ui/button';
@@ -28,21 +30,19 @@ import {
 } from '../ui/tooltip';
 
 export default function VerificationForm() {
-  // [Todo]: country select
+  const [selectedCountry, setSelectedCountry] = useState<string>('GH');
 
-  // useEffect(() => {
-  //   fetch('https://ipapi.co/json/')
-  //     .then((res) => res.json())
-  //     .then((response) => {
-  //       setSelectedCountry(
-  //         countries.find((country) => country.code === response?.country) ??
-  //           countries[0]
-  //       );
-  //     })
-  //     .catch((data) => {
-  //       console.log('Request failed:', data);
-  //     });
-  // }, [selectedCountry]);
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then((res) => res.json())
+      .then((response) => {
+        if (!response?.country) return;
+        setSelectedCountry(response.country ?? 'GH');
+      })
+      .catch((data) => {
+        console.log('Request failed:', data);
+      });
+  }, [selectedCountry]);
 
   const formSchema = z.object({
     fullname: z.string({ required_error: 'Enter your full name' }),
@@ -61,9 +61,11 @@ export default function VerificationForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       agree: false,
+      phoneNumber: '',
+      email: '',
     },
   });
 
@@ -71,7 +73,8 @@ export default function VerificationForm() {
     toast(
       <pre>
         <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>
+      </pre>,
+      { position: 'top-right' }
     );
     console.log({ data });
   };
@@ -129,7 +132,31 @@ export default function VerificationForm() {
                 </>
 
                 <FormControl>
-                  <Input placeholder='Enter phone number' {...field} />
+                  <>
+                    <PhoneInput
+                      inputClass='input'
+                      containerStyle={{
+                        border: 'none',
+                        margin: 0,
+                        marginTop: 5,
+                      }}
+                      inputStyle={{
+                        border: '1px solid rgb(226,232,240)',
+                        height: '2.5rem',
+                      }}
+                      buttonStyle={{
+                        background: 'rgb(245,245,245)',
+                        border: '1px solid rgb(226,232,240)',
+                        paddingRight: '3px',
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(`+${e}`);
+                      }}
+                      country={selectedCountry.toLowerCase()}
+                      countryCodeEditable
+                    />
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
