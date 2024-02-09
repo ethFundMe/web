@@ -1,10 +1,16 @@
+'use client';
+
 import { useFund } from '@/lib/hook';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDebounce } from 'usehooks-ts';
+import { formatEther } from 'viem';
+import { useAccount } from 'wagmi';
 import { Button, Input } from '../inputs';
+import { Slider } from '../ui/slider';
 import { DonateFormProps } from './types';
 
 type DonateFormValues = {
@@ -13,7 +19,7 @@ type DonateFormValues = {
 };
 
 export default function DonateForm({
-  campaignID,
+  campaign,
   amount,
   customClose,
 }: DonateFormProps) {
@@ -21,22 +27,26 @@ export default function DonateForm({
     handleSubmit,
     register,
     formState: { errors },
+    setValue,
+
     watch,
   } = useForm<DonateFormValues>({
     defaultValues: {
-      campaignID,
+      campaignID: campaign.campaign_id,
       amount: 0.000001,
     },
   });
 
   const fundingAmt = useDebounce(watch('amount'), 500);
+  const { address } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   const {
     fundCampaignWrite,
     isLoadingFundCampaign,
     isLoadingFundCampaignTxn,
     isFundCampaignSuccess,
-  } = useFund({ id: campaignID, amt: fundingAmt });
+  } = useFund({ id: campaign.campaign_id, amt: fundingAmt });
 
   const isLoadingTxn = isLoadingFundCampaign || isLoadingFundCampaignTxn;
 
@@ -52,9 +62,9 @@ export default function DonateForm({
   useEffect(() => {
     if (isFundCampaignSuccess) {
       toast.success('Successfully funded campaign');
-      return redirect(`/campaigns/${campaignID}`);
+      return redirect(`/campaigns/${campaign.campaign_id}`);
     }
-  }, [campaignID, isFundCampaignSuccess]);
+  }, [campaign, isFundCampaignSuccess]);
 
   return (
     <form
@@ -85,8 +95,23 @@ export default function DonateForm({
         placeholder='Enter an amount in ETH'
       />
 
-      {customClose ?? (
+      <Slider
+        // defaultValue={[parseFloat(formatEther(BigInt(campaign.total_accrued)))]}
+        onValueChange={(e) => {
+          setValue('amount', e[0]);
+          console.log({ e: e[0] });
+        }}
+        min={parseFloat(formatEther(BigInt(campaign.total_accrued)))}
+        max={parseFloat(formatEther(BigInt(campaign.goal)))}
+        step={0.01}
+      />
+
+      {customClose ?? address ? (
         <Button wide>{isLoadingTxn ? 'Donating...' : 'Donate'}</Button>
+      ) : (
+        <Button wide onClick={openConnectModal}>
+          Donate
+        </Button>
       )}
     </form>
   );

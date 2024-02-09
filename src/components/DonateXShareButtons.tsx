@@ -34,7 +34,7 @@ const DonateXShareButtons = ({
           </Link>
         </Button>
       ) : (
-        <DonateBtn campaignId={campaign.campaign_id} />
+        <DonateBtn campaign={campaign} />
       )}
 
       <ShareLinkBtn campaign={campaign} />
