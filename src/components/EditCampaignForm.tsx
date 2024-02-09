@@ -127,6 +127,15 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     }
   }
 
+  const editMade =
+    form.watch('title') !== campaign.title ||
+    form.watch('description') !== campaign.description ||
+    form.watch('beneficiaryAddress') !== campaign.beneficiary ||
+    form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
+    form.watch('banner') !== campaign.media_links[0];
+
+  console.log(form.watch());
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     console.log(data);
     const { description, goal, title, beneficiaryAddress } = data;
@@ -483,6 +492,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           type='submit'
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
+          disabled={!editMade}
         >
           {isLoadingUpdateCampaign ? 'Loading...' : 'Update campaign'}
         </Button>
