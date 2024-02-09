@@ -86,7 +86,7 @@ export default function DonateForm({
         {...register('amount', {
           required: 'Amount is required',
           min: {
-            value: 0.000001,
+            value: 0,
             message: 'Enter an amount larger than 0.000001 ETH',
           },
         })}
