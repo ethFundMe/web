@@ -141,8 +141,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     const { description, goal, title, beneficiaryAddress } = data;
     const { campaign_id } = campaign;
 
-    // validate and make sure there is a change before calling the func below
-
     return updateCampaign({
       args: [
         BigInt(campaign_id),
