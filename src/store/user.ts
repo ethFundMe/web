@@ -12,7 +12,7 @@ export const userStore = create<UserState>()((set) => ({
     createdAt: new Date(Date.now()),
     creatorFee: 0,
     email: '',
-    ethAddress: '',
+    ethAddress: '0x00',
     fullName: '',
     id: '',
     isBanned: false,
