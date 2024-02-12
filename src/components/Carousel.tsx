@@ -1,10 +1,12 @@
 'use client';
 
 import { CarouselVariants } from '@/lib/animationVariants';
+import { REGEX_CODES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import YoutubePlayer from 'react-player';
 import ImageWithFallback from './ImageWithFallback';
 
 export const Carousel = ({ images }: { images: string[] }) => {
@@ -39,34 +41,45 @@ export const Carousel = ({ images }: { images: string[] }) => {
       <div className='relative overflow-hidden'>
         <AnimatePresence initial={false}>
           <motion.div
+            className='h-80 sm:h-96 lg:h-[450px]'
             variants={CarouselVariants}
             initial={direction === 'right' ? 'hiddenRight' : 'hiddenLeft'}
             animate='visible'
             exit={direction === 'right' ? 'exitLeft' : 'exitRight'}
             transition={{ type: 'spring', damping: 20 }}
           >
-            <ImageWithFallback
-              key={currentIndex}
-              className='h-80 w-full flex-shrink-0 object-cover sm:h-96 lg:h-[450px]'
-              src={images[currentIndex]}
-              width={800}
-              height={800}
-              alt='...'
-            />
+            {REGEX_CODES.ytLink.test(images[currentIndex]) ? (
+              <>
+                <YoutubePlayer
+                  url={images[currentIndex]}
+                  width='100%'
+                  height='100%'
+                />
+              </>
+            ) : (
+              <ImageWithFallback
+                key={currentIndex}
+                className='w-full flex-shrink-0 object-cover'
+                src={images[currentIndex]}
+                width={800}
+                height={800}
+                alt='...'
+              />
+            )}
           </motion.div>
         </AnimatePresence>
 
-        <div className='absolute left-0 right-0 top-0 flex h-full items-center justify-between text-white'>
+        <div className='pointer-events-none absolute left-0 right-0 top-0 flex h-full items-center justify-between text-white'>
           <button
             disabled={currentIndex === 0}
-            className='h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-10'
+            className='pointer-events-auto h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-10'
             onClick={handlePrevious}
           >
             <FaArrowLeft />
           </button>
           <button
             disabled={images.length - 1 === currentIndex}
-            className='disabled:hover;opacity-10 h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed'
+            className='disabled:hover;opacity-10 pointer-events-auto h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed'
             onClick={handleNext}
           >
             <FaArrowRight />

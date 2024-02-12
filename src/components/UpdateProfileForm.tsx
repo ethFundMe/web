@@ -1,5 +1,6 @@
 'use client';
 
+import { updateUser } from '@/actions';
 import {
   Form,
   FormControl,
@@ -10,78 +11,101 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { REGEX_CODES } from '@/lib/constants';
-import { formatWalletAddress } from '@/lib/utils';
+import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useAccount } from 'wagmi';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
 import { Button } from './inputs';
+import { Textarea } from './ui/textarea';
 
-const formSchema = z.object({
-  fullname: z
-    .string({ required_error: 'Fullname is required' })
-    .min(2)
-    .max(250),
-  bannerUrl: z.string().optional(),
-  profileUrl: z.string().optional(),
-  eth_address: z.string().regex(REGEX_CODES.walletAddress).optional(),
-});
+type FormStatus =
+  | 'Uploading profile picture'
+  | 'Uploading banner'
+  | 'Saving changes';
 
-export default function UpdateProfileForm() {
-  const { address } = useAccount();
+export default function UpdateProfileForm({ user }: { user: User }) {
+  const formSchema = z.object({
+    fullName: z
+      .string({ required_error: 'Fullname is required' })
+      .min(2)
+      .max(250),
+    email: z
+      .string()
+      .regex(REGEX_CODES.email, { message: 'Enter a valid email' }),
+    bio: z.string().optional(),
+    // ethAddress: z.string().regex(REGEX_CODES.walletAddress).optional(),
+    creatorFee: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0, { message: 'Enter a fee of 0 or greater' })
+      .max(user.isVerified ? 100000 : 2, {
+        message: user.isVerified
+          ? 'Enter an amount less than 1000000 ETH'
+          : 'Verify your creator account to exceed 2ETH limit',
+      })
+      .optional(),
+  });
+
+  const [formStatus, setFormStatus] = useState<FormStatus | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: 'John Doe',
-      eth_address: formatWalletAddress(address as `0x${string}`),
+      fullName: user.fullName ?? '',
+      creatorFee: user.creatorFee ?? 0,
+      bio: user.bio ?? '',
+      email: user.email ?? '',
     },
   });
 
+  const editMade =
+    form.watch('fullName').trim() !== user.fullName ||
+    form.watch('creatorFee') !== user.creatorFee ||
+    form.watch('email') !== user.email ||
+    !!form.watch('bio')?.trim() !== !!user.bio ||
+    form.watch('bio')?.trim() !== user.bio;
+
+  const router = useRouter();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ values });
+    // console.log({ values });
+    setFormStatus('Saving changes');
+    updateUser({
+      bio: values.bio,
+      // creatorFee: values.creatorFee,
+      email: values.email,
+      ethAddress: user.ethAddress,
+      fullName: values.fullName,
+    })
+      .then((data) => {
+        setFormStatus(null);
+        form.reset();
+        router.push(`/dashboard/${data.ethAddress}`);
+        toast.success('Profile updated successfully');
+      })
+      .catch(() => {
+        setFormStatus(null);
+        toast.error('Failed to update profile');
+      });
   }
-
-  const [bannerPreview, setBannerPreview] = useState<string | undefined | null>(
-    null
-  );
-
-  const [pfpPreview, setPfpPreview] = useState<string | undefined | null>(null);
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='mx-auto w-full space-y-4 py-10 md:py-4'
+        className='mx-auto w-full space-y-4 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:p-5 md:py-4'
       >
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid w-full grid-cols-2 gap-4'>
           <FormField
             control={form.control}
-            name='eth_address'
-            disabled
+            name='fullName'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Wallet Address</FormLabel>
-                <FormControl>
-                  <Input placeholder='Your wallet address' {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='fullname'
-            render={({ field }) => (
-              <FormItem>
+              <FormItem className='col-span-2'>
                 <FormLabel>Fullname</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your fullname' {...field} />
+                  <Input placeholder='Enter your fullName' {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -91,51 +115,14 @@ export default function UpdateProfileForm() {
 
           <FormField
             control={form.control}
-            name='profileUrl'
+            name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile picture</FormLabel>
-
-                <AnimatePresence mode='wait'>
-                  {pfpPreview && (
-                    <motion.div
-                      key={pfpPreview}
-                      animate={{ scale: [0, 1], opacity: [0, 1] }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: 'spring', damping: 20 }}
-                      className='h-auto w-full bg-slate-400'
-                    >
-                      <Image
-                        className='h-auto max-h-72 w-full object-cover'
-                        src={pfpPreview}
-                        width={400}
-                        height={400}
-                        alt='pfp-preview'
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <FormControl
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const files = e.target.files;
-
-                    if (!files || !files.item(0)) {
-                      setPfpPreview(null);
-                      return;
-                    }
-
-                    const newUrl = URL.createObjectURL(files[0]);
-
-                    if (newUrl !== bannerPreview) {
-                      setPfpPreview(newUrl);
-                    }
-                  }}
-                >
+                <FormLabel>Email address</FormLabel>
+                <FormControl>
                   <Input
-                    type='file'
-                    accept='image/*'
-                    multiple={false}
+                    type='email'
+                    placeholder='Enter your email'
                     {...field}
                   />
                 </FormControl>
@@ -147,52 +134,16 @@ export default function UpdateProfileForm() {
 
           <FormField
             control={form.control}
-            name='bannerUrl'
+            name='creatorFee'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Banner</FormLabel>
-
-                <AnimatePresence mode='wait'>
-                  {bannerPreview && (
-                    <motion.div
-                      key={bannerPreview}
-                      animate={{ scale: [0, 1], opacity: [0, 1] }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: 'spring', damping: 20 }}
-                      className='h-auto w-full bg-slate-400'
-                    >
-                      <Image
-                        className='h-auto max-h-72 w-full object-cover'
-                        src={bannerPreview}
-                        width={400}
-                        height={400}
-                        alt='banner-preview'
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <FormControl
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const files = e.target.files;
-
-                    if (!files || !files.item(0)) {
-                      setBannerPreview(null);
-                      return;
-                    }
-
-                    const newUrl = URL.createObjectURL(files[0]);
-
-                    if (newUrl !== bannerPreview) {
-                      setBannerPreview(newUrl);
-                    }
-                  }}
-                >
+                <FormLabel>Creator Fees</FormLabel>
+                <FormControl>
                   <Input
-                    type='file'
-                    accept='image/*'
-                    multiple={false}
+                    type='number'
+                    placeholder='Enter your creator fee'
                     {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                 </FormControl>
 
@@ -202,7 +153,30 @@ export default function UpdateProfileForm() {
           />
         </div>
 
-        <Button className='mx-auto block w-full md:w-52'>Save</Button>
+        <FormField
+          control={form.control}
+          name='bio'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bio</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder='Describe yourself and what you do'
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button
+          disabled={!!formStatus || !editMade}
+          className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50 md:w-52'
+        >
+          {formStatus ?? 'Save'}
+        </Button>
       </form>
     </Form>
   );

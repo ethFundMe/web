@@ -154,7 +154,7 @@ export default function VerificationForm() {
                         field.onChange(`+${e}`);
                       }}
                       country={selectedCountry.toLowerCase()}
-                      countryCodeEditable
+                      // countryCodeEditable
                     />
                   </>
                 </FormControl>

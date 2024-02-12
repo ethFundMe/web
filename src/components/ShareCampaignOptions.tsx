@@ -27,12 +27,11 @@ export default function ShareCampaignOptions({
         process.env.NEXT_PUBLIC_WEB_URL +
         '/campaigns/' +
         campaign.campaign_id +
-        '\n\nThank you in advance for your generosity!\n\nBest regards, \n' +
-        campaign.user.fullName
+        '\n\nThank you in advance for your generosity!\n\nBest regards, \n'
     )}`,
   };
   return (
-    <div className='mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3'>
+    <div className='mt-4 grid grid-cols-3 gap-4'>
       <OptionCard link={shareLinks.whatsapp}>
         <Image
           src='/images/whatsapp-logo.png'

@@ -1,7 +1,8 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { Campaign } from './types';
+import toast from 'react-hot-toast';
+import { Campaign, User } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -60,4 +61,48 @@ export const getCampaign = async (id: number) => {
   const campaign: Campaign = data;
 
   return campaign ?? null;
+};
+
+export const getUser = async (userId: `0x${string}`) => {
+  const res = await fetch(
+    `${process.env.ETH_FUND_ENDPOINT}/api/user/${userId}`,
+    { cache: 'no-store' }
+  );
+  const data = await res.json();
+
+  const user: User = data;
+
+  return user ?? null;
+};
+
+export const updateUser = async (user: {
+  ethAddress: `0x${string}`;
+  email: string;
+  fullName: string;
+  bio?: string;
+  bannerUrl?: string;
+  profileUrl?: string;
+}) => {
+  const userData = {
+    eth_address: user.ethAddress,
+    full_name: user.fullName,
+    email: user.email,
+    banner_url: user.bannerUrl,
+    profile_url: user.profileUrl,
+    bio: user.bio,
+  };
+
+  const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/user`, {
+    body: JSON.stringify(userData),
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const data = await res.json();
+
+  const resData: User = data;
+  if (data.error) {
+    toast.error('Failed to update profile');
+    throw new Error('Failed to update profile');
+  }
+  return resData;
 };
