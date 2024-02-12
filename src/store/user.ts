@@ -8,11 +8,14 @@ type UserState = {
 
 export const userStore = create<UserState>()((set) => ({
   user: {
+    bio: '',
+    campaigns: [],
+    fundings: [],
     bannerUrl: '',
     createdAt: new Date(Date.now()),
     creatorFee: 0,
     email: '',
-    ethAddress: '',
+    ethAddress: '0x00',
     fullName: '',
     id: '',
     isBanned: false,

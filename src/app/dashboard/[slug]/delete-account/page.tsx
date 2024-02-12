@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils';
 
 export default function DeleteAccountPage() {
   return (
-    <div className='flex w-full flex-col gap-4 p-4'>
-      <h1 className={cn(TextSizeStyles.h4, 'text-red-500')}>
+    <div className='flex w-full flex-col gap-6 p-4 lg:gap-8'>
+      <h1 className={cn(TextSizeStyles.h4, 'text-center text-red-500')}>
         Delete your EthFundMe account?
       </h1>
       <p>This action is not reversible</p>
