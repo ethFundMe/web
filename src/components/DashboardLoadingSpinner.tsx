@@ -11,7 +11,7 @@ export default function DashboardLoadingSpinner() {
         alt='logo'
       />
 
-      <div className='mx-auto mt-4 h-8 w-8 animate-spin rounded-full border-2 border-r-0 border-primary-default lg:h-16 lg:w-16'></div>
+      <div className='mx-auto mt-6 h-8 w-8 animate-spin rounded-full border-2 border-r-0 border-primary-default' />
     </div>
   );
 }

@@ -71,15 +71,6 @@ export default function DonateForm({
       className='w-full space-y-4 bg-white'
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* <div className='mt-5 space-y-4'>
-        <Input
-          {...register('campaignID', { required: 'Campaign ID is required' })}
-          defaultValue={campaignID}
-          placeholder='Enter campaign ID'
-          error={errors.campaignID?.message}
-        />
-      </div> */}
-
       <Input
         type='number'
         step='any'
