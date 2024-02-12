@@ -1,14 +1,14 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Campaign } from '@/types';
+import { Campaign, SimpleCampaign } from '@/types';
 import { FaEthereum } from 'react-icons/fa';
 import DonateForm from './forms/DonateForm';
 import { buttonVariants } from './ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 type Props = React.ComponentProps<'button'> & {
-  campaign: Campaign;
+  campaign: Campaign | SimpleCampaign;
   text?: string;
 };
 

@@ -1,4 +1,4 @@
-import { Campaign } from '@/types';
+import { Campaign, SimpleCampaign } from '@/types';
 
 export type CampaignFormFields = {
   title: string;
@@ -11,7 +11,7 @@ export type CampaignFormFields = {
 };
 
 export type DonateFormProps = {
-  campaign: Campaign;
+  campaign: Campaign | SimpleCampaign;
   amount?: number;
   customClose?: React.ReactNode;
 };
