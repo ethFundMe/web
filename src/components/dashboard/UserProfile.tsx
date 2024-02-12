@@ -1,25 +1,26 @@
 'use client';
 
-import { cn, formatWalletAddress } from '@/lib/utils';
+import { formatWalletAddress } from '@/lib/utils';
 import { User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { Container } from '../Container';
 import UserCampaignCard from '../UserCampaignCard';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
-import { ScrollArea } from '../ui/scroll-area';
 
 export const UserProfile = ({ user }: { user: User }) => {
   const { address } = useAccount();
+  const router = useRouter();
 
   if (!user.ethAddress && !address) notFound();
+  if (user.ethAddress === address) router.push(`/dashboard/${address}`);
 
   return (
-    <div className='w-full'>
+    <div className='mb-20 w-full'>
       <div className='flex-1 rounded-md'>
         <div className='header'>
           <div
@@ -57,7 +58,7 @@ export const UserProfile = ({ user }: { user: User }) => {
           </div>
 
           <Container>
-            <div className='flex flex-col gap-4 py-4 md:flex-row md:items-center lg:py-8'>
+            <div className='flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'>
               <Dialog>
                 <DialogTrigger className='w-fit'>
                   <div className='image group relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
@@ -117,14 +118,7 @@ export const UserProfile = ({ user }: { user: User }) => {
                 </p>
 
                 {user.bio && (
-                  <ScrollArea
-                    className={cn(
-                      'rounded-md bg-slate-50 p-1',
-                      user.bio.split(' ').length > 20 ? 'h-20' : 'h-12'
-                    )}
-                  >
-                    <p className='max-w-[700px] text-sm'>{user.bio}</p>
-                  </ScrollArea>
+                  <p className='max-w-[700px] text-sm'>{user.bio}</p>
                 )}
               </div>
             </div>
@@ -134,7 +128,15 @@ export const UserProfile = ({ user }: { user: User }) => {
               {user.campaigns.length ? (
                 <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                   {user.campaigns.map((_) => (
-                    <UserCampaignCard campaign={_} key={_.id} />
+                    <UserCampaignCard
+                      campaign={_}
+                      variant={
+                        user.ethAddress && user.ethAddress === address
+                          ? 'user'
+                          : 'viewer'
+                      }
+                      key={_.id}
+                    />
                   ))}
                 </div>
               ) : (

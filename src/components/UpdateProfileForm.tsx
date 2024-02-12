@@ -35,7 +35,10 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     email: z
       .string()
       .regex(REGEX_CODES.email, { message: 'Enter a valid email' }),
-    bio: z.string().optional(),
+    bio: z
+      .string()
+      .max(450, { message: 'Bio is limited to 450 characters' })
+      .optional(),
     // ethAddress: z.string().regex(REGEX_CODES.walletAddress).optional(),
     creatorFee: z
       .number({ required_error: 'Enter amount in ETH' })
