@@ -1,4 +1,5 @@
 import { getCampaign } from '@/lib/api';
+import { seoBannerURL } from '@/lib/seoBannerUrl';
 import { notFound } from 'next/navigation';
 
 export async function generateMetadata({
@@ -13,9 +14,12 @@ export async function generateMetadata({
   return {
     title: campaign.title,
     openGraph: {
-      images:
-        campaign.media_links[0] ??
-        `${process.env.NEXT_PUBLIC_WEB_URL}/images/homepage-header.jpg`,
+      images: seoBannerURL(
+        campaign?.user?.fullName,
+        campaign.goal.toString(),
+        campaign.title,
+        campaign.description
+      ),
     },
     description: campaign.description,
   };
