@@ -79,32 +79,37 @@ export const UserProfile = ({ user }: { user: User }) => {
               }) center center/cover no-repeat`,
             }}
           >
-            <div className='-mt-10 flex w-fit gap-2 bg-white p-2 duration-200 ease-in-out group-hover:-mt-0'>
-              <Dialog>
-                <DialogTrigger>
-                  <span title='Change banner' className='cursor-pointer'>
-                    <RefreshCcw />
-                  </span>
-                </DialogTrigger>
-                <DialogContent className='w-full max-w-2xl'>
-                  <div className='relative h-96'>
-                    <DnDUpload maxFiles={1} handleUpload={handleBannerUpdate} />
-                  </div>
-                  <DialogClose
-                    ref={closeBannerRef}
-                    className='pointer-events-none absolute opacity-0'
-                  >
-                    Close
-                  </DialogClose>
-                </DialogContent>
-              </Dialog>
-              <span
-                title='Remove banner'
-                className='cursor-pointer text-red-500'
-              >
-                <Trash />
-              </span>
-            </div>
+            {user.ethAddress === address && (
+              <div className='-mt-10 flex w-fit gap-2 bg-white p-2 duration-200 ease-in-out group-hover:-mt-0'>
+                <Dialog>
+                  <DialogTrigger>
+                    <span title='Change banner' className='cursor-pointer'>
+                      <RefreshCcw />
+                    </span>
+                  </DialogTrigger>
+                  <DialogContent className='w-full max-w-2xl'>
+                    <div className='relative h-96'>
+                      <DnDUpload
+                        maxFiles={1}
+                        handleUpload={handleBannerUpdate}
+                      />
+                    </div>
+                    <DialogClose
+                      ref={closeBannerRef}
+                      className='pointer-events-none absolute opacity-0'
+                    >
+                      Close
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
+                <span
+                  title='Remove banner'
+                  className='cursor-pointer text-red-500'
+                >
+                  <Trash />
+                </span>
+              </div>
+            )}
           </div>
 
           <Container className='flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'>
@@ -134,24 +139,26 @@ export const UserProfile = ({ user }: { user: User }) => {
                     alt={user.fullName ?? 'profile-picture'}
                   />
 
-                  <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
-                    <span
-                      title='Change image'
-                      className='cursor-pointer'
-                      onClick={() => setShowPfpUpload(true)}
-                    >
-                      <RefreshCcw />
-                    </span>
-
-                    {user.profileUrl && (
+                  {user.ethAddress === address && (
+                    <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
                       <span
-                        title='Remove image'
-                        className='cursor-pointer text-red-500'
+                        title='Change image'
+                        className='cursor-pointer'
+                        onClick={() => setShowPfpUpload(true)}
                       >
-                        <Trash />
+                        <RefreshCcw />
                       </span>
-                    )}
-                  </div>
+
+                      {user.profileUrl && (
+                        <span
+                          title='Remove image'
+                          className='cursor-pointer text-red-500'
+                        >
+                          <Trash />
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {showPfpUpload && (
