@@ -51,7 +51,7 @@ export const UserProfile = ({ user }: { user: User }) => {
   const handleBannerUpdate = (bannerUrl: string[]) => {
     updateUser({
       ethAddress: user.ethAddress,
-      fullName: 'William Smith',
+      fullName: user.fullName,
       email: user.email,
       bannerUrl: bannerUrl[0],
     })
