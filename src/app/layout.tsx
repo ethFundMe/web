@@ -4,6 +4,7 @@ import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
 import { WagmiProvider } from '@/lib/provider';
+import { seoBannerURL } from '@/lib/seoBannerUrl';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -39,7 +40,12 @@ export const metadata: Metadata = {
     siteName: 'EthFundMe',
     images: [
       {
-        url: 'https://images.pexels.com/photos/5486872/pexels-photo-5486872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        url: seoBannerURL(
+          'test_Name',
+          '0.35',
+          'test_title',
+          'test_description'
+        ),
       },
     ],
   },
