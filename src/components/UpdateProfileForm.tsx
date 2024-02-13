@@ -61,6 +61,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       bio: user.bio ?? '',
       email: user.email ?? '',
     },
+    mode: 'onChange',
   });
 
   const editMade =

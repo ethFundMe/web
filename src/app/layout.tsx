@@ -56,7 +56,7 @@ export default async function RootLayout({
         <body className='flex min-h-screen flex-col'>
           <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
-          <Toaster />
+          <Toaster position='top-left' />
 
           <WagmiProvider>
             <ModalProvider />
