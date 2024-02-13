@@ -75,7 +75,7 @@ export const getUser = async (userId: `0x${string}`) => {
   return user ?? null;
 };
 
-export const updateUser = async (user: {
+export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
   email: string;
   fullName: string;
@@ -84,12 +84,12 @@ export const updateUser = async (user: {
   profileUrl?: string;
 }) => {
   const userData = {
-    eth_address: user.ethAddress,
-    full_name: user.fullName,
-    email: user.email,
-    banner_url: user.bannerUrl,
-    profile_url: user.profileUrl,
-    bio: user.bio,
+    eth_address: userDetails.ethAddress,
+    full_name: userDetails.fullName,
+    email: userDetails.email,
+    bannerUrl: userDetails.bannerUrl,
+    profileUrl: userDetails.profileUrl,
+    bio: userDetails.bio,
   };
 
   const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/user`, {
