@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
+import { seoBannerURL } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -38,7 +39,14 @@ export async function generateMetadata(
       title: `${campaign.title}`,
       description: `${campaign.description}`,
       images: [
-        'https://images.pexels.com/photos/5486872/pexels-photo-5486872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        {
+          url: seoBannerURL(
+            campaign.user.fullName,
+            campaign.goal.toString(),
+            campaign.title,
+            campaign.description
+          ),
+        },
       ],
       url: 'https://ethfund.me',
     },
@@ -46,8 +54,16 @@ export async function generateMetadata(
       title: `${campaign.title}`,
       card: 'summary_large_image',
       description: `${campaign.description}`,
-      images:
-        'https://images.pexels.com/photos/5486872/pexels-photo-5486872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      images: [
+        {
+          url: seoBannerURL(
+            campaign.user.fullName,
+            campaign.goal.toString(),
+            campaign.title,
+            campaign.description
+          ),
+        },
+      ],
       site: '@ethfundme',
       creator: '@ethfundme',
     },
