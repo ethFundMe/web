@@ -13,62 +13,62 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
-// import { seoBannerURL } from '@/lib/seoBannerUrl';
-// import type { Metadata } from 'next';
+import { seoBannerURL } from '@/lib/seoBannerUrl';
+import type { Metadata } from 'next';
 
-// type Props = {
-//   params: { slug: string };
-// };
+type Props = {
+  params: { slug: string };
+};
 
-// export async function generateMetadata(
-//   { params }: Props
-//   // parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//   // read route params
-//   const id = params.slug;
+export async function generateMetadata(
+  { params }: Props
+  // parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const id = params.slug;
 
-//   const campaign = await getCampaign(parseInt(id));
+  const campaign = await getCampaign(parseInt(id));
 
-//   return {
-//     title: `${campaign.title}`,
-//     description: `${campaign.description}`,
-//     keywords:
-//       'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
-//     openGraph: {
-//       type: 'website',
-//       title: `${campaign.title}`,
-//       description: `${campaign.description}`,
-//       images: [
-//         {
-//           url: seoBannerURL(
-//             campaign.user.fullName,
-//             campaign.goal.toString(),
-//             campaign.title,
-//             campaign.description
-//           ),
-//         },
-//       ],
-//       url: 'https://ethfund.me',
-//     },
-//     twitter: {
-//       title: `${campaign.title}`,
-//       card: 'summary_large_image',
-//       description: `${campaign.description}`,
-//       images: [
-//         {
-//           url: seoBannerURL(
-//             campaign.user.fullName,
-//             campaign.goal.toString(),
-//             campaign.title,
-//             campaign.description
-//           ),
-//         },
-//       ],
-//       site: '@ethfundme',
-//       creator: '@ethfundme',
-//     },
-//   };
-// }
+  return {
+    title: `${campaign.title}`,
+    description: `${campaign.description}`,
+    keywords:
+      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+    openGraph: {
+      type: 'website',
+      title: `${campaign.title}`,
+      description: `${campaign.description}`,
+      images: [
+        {
+          url: seoBannerURL(
+            campaign.user.fullName,
+            campaign.goal.toString(),
+            campaign.title,
+            campaign.description
+          ),
+        },
+      ],
+      url: 'https://ethfund.me',
+    },
+    twitter: {
+      title: `${campaign.title}`,
+      card: 'summary_large_image',
+      description: `${campaign.description}`,
+      images: [
+        {
+          url: seoBannerURL(
+            campaign.user.fullName,
+            campaign.goal.toString(),
+            campaign.title,
+            campaign.description
+          ),
+        },
+      ],
+      site: '@ethfundme',
+      creator: '@ethfundme',
+    },
+  };
+}
 
 export default async function CampaignPage({
   params: { slug },
