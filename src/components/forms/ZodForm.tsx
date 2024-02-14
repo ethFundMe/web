@@ -20,7 +20,12 @@ import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
 import { isAddress, parseEther } from 'viem';
-import { useAccount, useContractWrite } from 'wagmi';
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+  type BaseError,
+} from 'wagmi';
 import * as z from 'zod';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
@@ -82,20 +87,21 @@ export default function CreateCampaignForm() {
   });
 
   const {
-    error: createCampaignError,
-    isError: isCreateCampaignError,
-    isLoading: isLoadingCreateCampaign,
-    isSuccess: isCreateCampaignSuccess,
-    write: createCampaign,
-  } = useContractWrite({
-    abi: EthFundMe,
-    address: ethFundMeContractAddress,
-    functionName: 'addCampaign',
-    chainId: ethChainId,
-    onSettled(data, error) {
-      console.log('Settled addCampaign', { data, error });
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled addCampaign', { data, error });
+      },
     },
   });
+
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
   const SubmitStatusList = [
     'Uploading banner',
@@ -110,7 +116,7 @@ export default function CreateCampaignForm() {
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     const { description, goal, title, banner, beneficiaryAddress, ytLink } =
       data;
-    if (isLoadingCreateCampaign) return;
+    if (isPending || isConfirmingTxn) return;
 
     if (!isAddress(String(beneficiaryAddress))) {
       return toast.error(`Address not valid ${beneficiaryAddress}`);
@@ -177,7 +183,10 @@ export default function CreateCampaignForm() {
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
           const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
-          createCampaign({
+          writeContract({
+            abi: EthFundMe,
+            address: ethFundMeContractAddress,
+            functionName: 'addCampaign',
             args: [
               title,
               description,
@@ -185,6 +194,7 @@ export default function CreateCampaignForm() {
               mediaLinks,
               beneficiaryAddress as `0x${string}`,
             ],
+            chainId: ethChainId,
           });
         }
       })
@@ -192,7 +202,7 @@ export default function CreateCampaignForm() {
   };
 
   useEffect(() => {
-    if (isCreateCampaignSuccess) {
+    if (isConfirmedTxn) {
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
@@ -200,20 +210,13 @@ export default function CreateCampaignForm() {
 
       return;
     }
-    if (isCreateCampaignError) {
-      console.error(createCampaignError);
-      toast.error('Failed to create campaign.');
+    if (isError && error) {
+      toast.error((error as BaseError).shortMessage || error.message);
       setSubmitStatus(null);
 
       return;
     }
-  }, [
-    isCreateCampaignError,
-    form,
-    router,
-    createCampaignError,
-    isCreateCampaignSuccess,
-  ]);
+  }, [error, form, isConfirmedTxn, isError, router]);
 
   // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
   //   console.error(errors);
@@ -556,11 +559,11 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
-          disabled={submitStatus !== null || isLoadingCreateCampaign}
+          disabled={submitStatus !== null || isPending || isConfirmingTxn}
           size='default'
           className='col-span-2 disabled:cursor-not-allowed'
         >
-          {isLoadingCreateCampaign
+          {isPending || isConfirmingTxn
             ? 'Creating campaign'
             : submitStatus ?? 'Create campaign'}
         </Button>
