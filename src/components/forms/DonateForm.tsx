@@ -1,14 +1,19 @@
 'use client';
 
-import { useFund } from '@/lib/hook';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useDebounce } from 'usehooks-ts';
-import { formatEther } from 'viem';
-import { useAccount } from 'wagmi';
+import { formatEther, parseEther } from 'viem';
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+  type BaseError,
+} from 'wagmi';
 import { Button, Input } from '../inputs';
 import { Slider } from '../ui/slider';
 import { DonateFormProps } from './types';
@@ -28,8 +33,6 @@ export default function DonateForm({
     register,
     formState: { errors },
     setValue,
-
-    watch,
   } = useForm<DonateFormValues>({
     defaultValues: {
       campaignID: campaign.campaign_id,
@@ -37,34 +40,57 @@ export default function DonateForm({
     },
   });
 
-  const fundingAmt = useDebounce(watch('amount'), 500);
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const {
-    fundCampaignWrite,
-    isLoadingFundCampaign,
-    isLoadingFundCampaignTxn,
-    isFundCampaignSuccess,
-  } = useFund({ id: campaign.campaign_id, amt: fundingAmt });
+    data: hash,
+    isPending,
+    error,
+    isError,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled fundCampaign', { data, error });
+      },
+    },
+  });
 
-  const isLoadingTxn = isLoadingFundCampaign || isLoadingFundCampaignTxn;
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
-  const onSubmit: SubmitHandler<DonateFormValues> = (formData) => {
-    if (formData.amount <= 0) {
+  const isLoadingTxn = isPending || isConfirmingTxn;
+
+  const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
+    const { amount, campaignID } = data;
+    if (amount <= 0) {
       toast.error('Fund more than 0 ETH');
       return;
     }
 
-    return fundCampaignWrite?.();
+    return writeContract({
+      abi: EthFundMe,
+      address: ethFundMeContractAddress,
+      functionName: 'fundCampaign',
+      args: [BigInt(campaignID)],
+      value: parseEther(amount.toString() || '0'),
+      chainId: ethChainId,
+    });
   };
 
   useEffect(() => {
-    if (isFundCampaignSuccess) {
+    if (isConfirmedTxn) {
       toast.success('Successfully funded campaign');
       return redirect(`/campaigns/${campaign.campaign_id}`);
     }
-  }, [campaign, isFundCampaignSuccess]);
+  }, [campaign.campaign_id, isConfirmedTxn]);
+
+  useEffect(() => {
+    if (isError && error) {
+      toast.error((error as BaseError).shortMessage || error?.message);
+    }
+  }, [error, isError]);
 
   return (
     <form
@@ -98,7 +124,9 @@ export default function DonateForm({
       />
 
       {customClose ?? address ? (
-        <Button wide>{isLoadingTxn ? 'Donating...' : 'Donate'}</Button>
+        <Button wide disabled={isLoadingTxn}>
+          {isLoadingTxn ? 'Donating...' : 'Donate'}
+        </Button>
       ) : (
         <Button wide onClick={openConnectModal}>
           Donate

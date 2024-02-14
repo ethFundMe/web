@@ -10,14 +10,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
 import { formatEther, parseEther } from 'viem';
-import { useAccount, useContractWrite } from 'wagmi';
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+  type BaseError,
+} from 'wagmi';
 import * as z from 'zod';
 import { LinkPreview } from './LinkPreview';
 import { Button } from './ui/button';
@@ -48,6 +53,7 @@ import {
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { address } = useAccount();
+  const router = useRouter();
 
   useEffect(() => {
     if (!address) redirect('/');
@@ -60,20 +66,21 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   );
 
   const {
-    error: updateCampaignError,
-    isError: isUpdateCampaignError,
-    isLoading: isLoadingUpdateCampaign,
-    isSuccess: isUpdateCampaignSuccess,
-    write: updateCampaign,
-  } = useContractWrite({
-    abi: EthFundMe,
-    address: ethFundMeContractAddress,
-    functionName: 'updateCampaign',
-    chainId: ethChainId,
-    onSettled(data, error) {
-      console.log('Settled updateCampaign', { data, error });
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled updateCampaign', { data, error });
+      },
     },
   });
+
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
   const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA();
 
@@ -141,7 +148,11 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     const { description, goal, title, beneficiaryAddress } = data;
     const { campaign_id } = campaign;
 
-    return updateCampaign({
+    return writeContract({
+      abi: EthFundMe,
+      address: ethFundMeContractAddress,
+      functionName: 'updateCampaign',
+      chainId: ethChainId,
       args: [
         BigInt(campaign_id),
         title,
@@ -156,15 +167,16 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   };
 
   useEffect(() => {
-    if (isUpdateCampaignError) {
-      toast.error('Failed to update campaign');
-      console.error(updateCampaignError);
+    if (isError && error) {
+      toast.error((error as BaseError).shortMessage || error.message);
+      return;
     }
 
-    if (isUpdateCampaignSuccess) {
+    if (isConfirmedTxn) {
       toast.success('Campaign updated');
+      return router.push(`/campaigns/${campaign.id}`);
     }
-  }, [isUpdateCampaignError, isUpdateCampaignSuccess, updateCampaignError]);
+  }, [campaign.id, error, isConfirmedTxn, isError, router]);
 
   return (
     <Form {...form}>
@@ -492,7 +504,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           className='col-span-2 disabled:cursor-not-allowed'
           disabled={!editMade}
         >
-          {isLoadingUpdateCampaign ? 'Loading...' : 'Update campaign'}
+          {isPending || isConfirmingTxn ? 'Loading...' : 'Update campaign'}
         </Button>
       </form>
     </Form>

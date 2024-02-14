@@ -3,7 +3,7 @@ import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
-import { WagmiProvider } from '@/lib/provider';
+import { WagmiWrapper } from '@/lib/provider';
 import { seoBannerURL } from '@/lib/seoBannerUrl';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
@@ -54,11 +54,11 @@ export default async function RootLayout({
           <ClientToaster />
           <Toaster position='top-left' />
 
-          <WagmiProvider>
+          <WagmiWrapper>
             <ModalProvider />
             <main className='flex-1'>{children}</main>
             <Footer />
-          </WagmiProvider>
+          </WagmiWrapper>
           <Analytics />
         </body>
       </html>

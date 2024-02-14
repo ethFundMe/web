@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { SiweMessage } from 'siwe';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useSignMessage } from 'wagmi';
 import { Button, Input } from '../inputs';
 
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
@@ -21,8 +21,8 @@ export const AccountForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { setUser } = userStore();
-  const { address, connector } = useAccount();
-  const { chain } = useNetwork();
+  const { address, connector, chainId } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const router = useRouter();
 
   const { handleSubmit, register } = useForm<TAccount>({
@@ -33,7 +33,7 @@ export const AccountForm = () => {
   });
 
   const onSubmit: SubmitHandler<TAccount> = async (data) => {
-    if (!address || !connector || !chain?.id) {
+    if (!address || !connector || !chainId) {
       toast.error('Wallet not connected.');
       router.refresh();
       return;
@@ -79,7 +79,7 @@ export const AccountForm = () => {
         const message = new SiweMessage({
           domain: window.location.host,
           address,
-          chainId: chain.id,
+          chainId: chainId,
           statement:
             'Welcome to EthFundMe. I accept the EthFundMe terms of service: https://ethfund.me',
           uri: window.location.origin,
@@ -87,10 +87,8 @@ export const AccountForm = () => {
           nonce,
         }).prepareMessage();
 
-        const walletClient = await connector.getWalletClient();
-        const signature = await walletClient.signMessage({
+        const signature = await signMessageAsync({
           message,
-          account: address,
         });
         if (signature) {
           const verify_res = await fetch(

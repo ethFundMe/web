@@ -7,12 +7,14 @@ import { redirect, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { SiweMessage } from 'siwe';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccountEffect, useConfig, useSignMessage } from 'wagmi';
+import { watchAccount } from 'wagmi/actions';
 
 const ethChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1);
 
 export const useSiwe = () => {
-  const { chain } = useNetwork();
+  const config = useConfig();
+  const { signMessageAsync } = useSignMessage();
   const router = useRouter();
   const { setUser } = userStore();
 
@@ -35,9 +37,10 @@ export const useSiwe = () => {
     }
   }
 
-  const { connector } = useAccount({
-    async onConnect({ address, connector, isReconnected }) {
-      if (!address || !connector || !chain?.id) return;
+  useAccountEffect({
+    async onConnect({ address, chainId, connector, isReconnected }) {
+      if (!address || !chainId || !connector) return;
+
       const efmToken = hasCookie('efmToken');
 
       if (efmToken) {
@@ -53,7 +56,6 @@ export const useSiwe = () => {
         }
       }
 
-      const chainId = await connector.getChainId();
       if (chainId !== ethChainId) {
         toast.error('Wrong network');
         return await disconnectAcc();
@@ -69,7 +71,7 @@ export const useSiwe = () => {
         const message = new SiweMessage({
           domain: window.location.host,
           address,
-          chainId: chain.id,
+          chainId,
           statement:
             'Welcome to EthFundMe. I accept the EthFundMe terms of service: https://ethfund.me',
           uri: window.location.origin,
@@ -77,11 +79,7 @@ export const useSiwe = () => {
           nonce,
         }).prepareMessage();
 
-        const walletClient = await connector.getWalletClient();
-        const signature = await walletClient.signMessage({
-          message,
-          account: address,
-        });
+        const signature = await signMessageAsync({ message });
 
         const verify_res = await fetch(`/api/verify/${address}`, {
           method: 'POST',
@@ -134,15 +132,14 @@ export const useSiwe = () => {
   });
 
   useEffect(() => {
-    connector?.on('change', async () => {
-      toast.error('Wrong network');
-      return await disconnectAcc();
+    if (!config) return;
+    const unWatch = watchAccount(config, {
+      async onChange() {
+        return await disconnectAcc();
+      },
     });
 
-    return () => {
-      connector?.off('change', async () => {
-        return await disconnectAcc();
-      });
-    };
-  }, [connector]);
+    return unWatch;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config]);
 };

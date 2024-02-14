@@ -1,48 +1,32 @@
 'use client';
 
-import {
-  RainbowKitProvider,
-  Theme,
-  getDefaultWallets,
-  lightTheme,
-} from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import lodash from 'lodash';
 import React from 'react';
-import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import {
+  RainbowKitProvider,
+  Theme,
+  getDefaultConfig,
+  lightTheme,
+} from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider, http } from 'wagmi';
 import { ethChainId } from '../constant';
 
-const sepoliaAlchemyApiKey =
-  process.env.NEXT_PUBLIC_SEPOLIA_ALCHEMY_API_KEY ?? '';
-const mainnetAlchemyApiKey =
-  process.env.NEXT_PUBLIC_MAINNET_ALCHEMY_API_KEY ?? '';
 const wcProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID ?? '';
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ethChainId === 1 ? mainnet : sepolia],
-  [
-    alchemyProvider({ apiKey: mainnetAlchemyApiKey }),
-    alchemyProvider({ apiKey: sepoliaAlchemyApiKey }),
-    publicProvider(),
-  ]
-);
-
-const { connectors } = getDefaultWallets({
+const config = getDefaultConfig({
   appName: 'EthFundMe',
   projectId: wcProjectId,
-  chains,
+  chains: [ethChainId === 1 ? mainnet : sepolia],
+  transports:
+    ethChainId === 1 ? { [mainnet.id]: http() } : { [sepolia.id]: http() },
+  ssr: true,
 });
 
-const config = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-  webSocketPublicClient,
-});
+const queryClient = new QueryClient();
 
 const theme: Theme = lodash.merge(lightTheme(), {
   colors: { accentColor: '#0062A6' },
@@ -50,12 +34,12 @@ const theme: Theme = lodash.merge(lightTheme(), {
   fonts: { body: 'Mona Sans' },
 } as Theme);
 
-export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
+export const WagmiWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <WagmiConfig config={config}>
-      <RainbowKitProvider theme={theme} chains={chains}>
-        {children}
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider theme={theme}>{children}</RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
