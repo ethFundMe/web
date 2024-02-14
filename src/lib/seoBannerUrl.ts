@@ -6,7 +6,7 @@
 // }
 export function seoBannerURL(
   name: string,
-  goal: string,
+  goal: number,
   title: string,
   description: string
 ) {
