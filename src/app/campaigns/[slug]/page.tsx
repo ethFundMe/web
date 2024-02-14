@@ -15,6 +15,7 @@ import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 import { seoBannerURL } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
+import { formatEther } from 'viem';
 
 type Props = {
   params: { slug: string };
@@ -42,7 +43,7 @@ export async function generateMetadata(
         {
           url: seoBannerURL(
             campaign.user.fullName,
-            campaign.goal.toString(),
+            parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description
           ),
@@ -58,7 +59,7 @@ export async function generateMetadata(
         {
           url: seoBannerURL(
             campaign.user.fullName,
-            campaign.goal.toString(),
+            parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description
           ),
