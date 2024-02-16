@@ -181,6 +181,62 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
   });
 }
 
+export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
+  verifiedAddress: boolean = false
+) {
+  return z.object({
+    title: z
+      .string({ required_error: 'Title is required' })
+      .min(5, { message: 'Campaign title must be more than 4 characters' }),
+    type: z.enum(['personal', 'others'] as const, {
+      required_error: 'Type is required',
+    }),
+    description: z
+      .string({ required_error: 'Description is required' })
+      .min(11, { message: 'Description must be more than 10 characters' }),
+    goal: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
+      .max(verifiedAddress ? 100000 : 2, {
+        message: verifiedAddress
+          ? 'Enter an amount less than 1000000 ETH'
+          : 'Verify your creator account to exceed 2ETH limit',
+      }),
+    beneficiaryAddress: z
+      .string({
+        required_error: 'Beneficiary address is required',
+      })
+      .regex(REGEX_CODES.walletAddress, {
+        message: 'Enter a valid wallet address',
+      })
+      .optional(),
+    creatorFee: z
+      .number({ required_error: 'Enter amount in ETH' })
+      .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
+      .max(2, { message: 'Amount cannot be more than 2 ETH' })
+      .optional(),
+    tag: z.enum([
+      CampaignTags['Arts and Culture'],
+      CampaignTags['Business and Entrepreneurship'],
+      CampaignTags['Community and Social Impact'],
+      CampaignTags['Education and Learning'],
+      CampaignTags['Entertainment and Media'],
+      CampaignTags['Environment and Sustainability'],
+      CampaignTags['Health and Wellness'],
+      CampaignTags['Lifestyle and Hobbies'],
+      CampaignTags.Others,
+      CampaignTags['Science and Research'],
+      CampaignTags['Technology and Innovation'],
+    ]),
+    banner: z.any(),
+    otherImages: z.any(),
+    ytLink: z
+      .string()
+      .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
+      .optional(),
+  });
+}
+
 export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;

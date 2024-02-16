@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { REGEX_CODES } from '@/lib/constants';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -71,7 +71,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     !!form.watch('bio')?.trim() !== !!user.bio ||
     form.watch('bio')?.trim() !== user.bio;
 
-  const router = useRouter();
+  // const router = useRouter();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log({ values });
@@ -86,8 +86,8 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .then((data) => {
         setFormStatus(null);
         form.reset();
-        router.push(`/dashboard/${data.ethAddress}`);
         toast.success('Profile updated successfully');
+        redirect(`/dashboard/${data.ethAddress}`);
       })
       .catch(() => {
         setFormStatus(null);

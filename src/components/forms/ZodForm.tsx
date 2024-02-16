@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -244,6 +244,8 @@ export default function CreateCampaignForm() {
       handleBannerUpload();
     }
   }
+
+  if (!address) redirect('/');
 
   return (
     <Form {...form}>
