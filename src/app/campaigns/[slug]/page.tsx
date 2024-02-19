@@ -13,7 +13,7 @@ import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 import { SwiperCarousel } from '@/components/SwiperCarousel';
-import { seoBannerURL } from '@/lib/seoBannerUrl';
+import { seoCampaign } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
 import { formatEther } from 'viem';
 
@@ -41,7 +41,7 @@ export async function generateMetadata(
       description: `${campaign.description}`,
       images: [
         {
-          url: seoBannerURL(
+          url: seoCampaign(
             campaign.user.fullName,
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
@@ -58,7 +58,7 @@ export async function generateMetadata(
       description: `${campaign.description}`,
       images: [
         {
-          url: seoBannerURL(
+          url: seoCampaign(
             campaign.user.fullName,
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
