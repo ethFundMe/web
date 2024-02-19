@@ -1,5 +1,6 @@
 import { Container } from '@/components/Container';
 import EditCampaignForm from '@/components/EditCampaignForm';
+import UpdateCampaignMediaForm from '@/components/UpdateCampaignMediaForm';
 import { getCampaign } from '@/lib/api';
 import { TextSizeStyles } from '@/lib/styles';
 import { notFound } from 'next/navigation';
@@ -59,7 +60,15 @@ export default async function EditCampaign({
           </div>
         </div> */}
 
-        <EditCampaignForm campaign={campaign} />
+        <div className='my-5 grid grid-cols-1 items-start gap-y-5 lg:grid-cols-3'>
+          <div className='col-span-2 w-full'>
+            <EditCampaignForm campaign={campaign} />
+          </div>
+
+          <div>
+            <UpdateCampaignMediaForm campaign={campaign} />
+          </div>
+        </div>
       </Container>
     </div>
   );

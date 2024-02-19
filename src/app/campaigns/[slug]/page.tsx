@@ -1,6 +1,5 @@
 import { getCampaign, getCampaigns } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
-import { Carousel } from '@/components/Carousel';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
@@ -13,6 +12,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
+import { SwiperCarousel } from '@/components/SwiperCarousel';
 import { seoBannerURL } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
 import { formatEther } from 'viem';
@@ -46,7 +46,7 @@ export async function generateMetadata(
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
-            campaign.media_links[0]
+            campaign?.media_links[0] || ''
           ),
         },
       ],
@@ -63,7 +63,7 @@ export async function generateMetadata(
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
-            campaign.media_links[0]
+            campaign?.media_links[0] || ''
           ),
         },
       ],
@@ -95,7 +95,9 @@ export default async function CampaignPage({
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
             {campaign.title}
           </h2>
-          <Carousel images={campaign.media_links} />
+
+          <SwiperCarousel images={campaign.media_links} />
+
           <div className='space-y-7 pb-5'>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <DonationObjectiveIndicator
@@ -114,17 +116,19 @@ export default async function CampaignPage({
             <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
               <Link
                 href={`/profile/${campaign.creator}`}
-                className='mt-2 flex w-full cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
+                className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
-                <Image
-                  src={campaign.user.profileUrl ?? '/images/pfp.svg'}
-                  className='block flex-shrink-0 rounded-full bg-slate-200'
-                  width={50}
-                  height={50}
-                  alt='...'
-                />
+                <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                  <Image
+                    src={campaign.user.profileUrl ?? '/images/pfp.svg'}
+                    className='block rounded-full bg-slate-50'
+                    fill
+                    alt='...'
+                  />
+                </div>
+
                 <div className='pr-2'>
-                  <p className={TextSizeStyles.caption}>Campaign Organizer</p>
+                  <p className={TextSizeStyles.caption}>Organizer</p>
                   <p className='font-semibold'>
                     {campaign.user.fullName ??
                       formatWalletAddress(campaign.creator as `0x${string}`)}

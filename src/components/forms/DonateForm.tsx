@@ -32,11 +32,12 @@ export default function DonateForm({
     handleSubmit,
     register,
     formState: { errors },
+    watch,
     setValue,
   } = useForm<DonateFormValues>({
     defaultValues: {
       campaignID: campaign.campaign_id,
-      amount: 0.000001,
+      amount: 0,
     },
   });
 
@@ -92,6 +93,8 @@ export default function DonateForm({
     }
   }, [error, isError]);
 
+  const watchedAmount: number = watch('amount');
+
   return (
     <form
       className='w-full space-y-4 bg-white'
@@ -99,12 +102,14 @@ export default function DonateForm({
     >
       <Input
         type='number'
-        step='any'
+        step={0.01}
+        min={0}
+        max={parseFloat(formatEther(BigInt(campaign.goal)))}
         {...register('amount', {
           required: 'Amount is required',
           min: {
             value: 0,
-            message: 'Enter an amount larger than 0.000001 ETH',
+            message: 'Enter an amount larger than 0.001 ETH',
           },
         })}
         error={errors.amount?.message}
@@ -113,11 +118,10 @@ export default function DonateForm({
       />
 
       <Slider
-        // defaultValue={[parseFloat(formatEther(BigInt(campaign.total_accrued)))]}
         onValueChange={(e) => {
-          setValue('amount', e[0]);
-          console.log({ e: e[0] });
+          setValue('amount', e[0] as number);
         }}
+        value={[watchedAmount as unknown as number]}
         min={parseFloat(formatEther(BigInt(campaign.total_accrued)))}
         max={parseFloat(formatEther(BigInt(campaign.goal)))}
         step={0.01}

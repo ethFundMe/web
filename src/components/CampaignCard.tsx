@@ -7,7 +7,6 @@ import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import DonateXShareButtons from './DonateXShareButtons';
 import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
@@ -59,16 +58,18 @@ export const CampaignCard = ({
         className='flex flex-col-reverse justify-between gap-2'
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
-          <Image
-            src='/images/pfp.svg'
-            className='flex-shrink-0 rounded-full bg-slate-200 object-cover'
-            width={48}
-            height={48}
-            alt='...'
-          />
+          <div className='relative h-[48px] w-[48px] flex-shrink-0'>
+            <Image
+              src={campaign.user.profileUrl ?? '/images/pfp.svg'}
+              className='rounded-full bg-slate-200 object-cover'
+              fill
+              sizes='48px'
+              alt='...'
+            />
+          </div>
 
           <div>
-            <p className={TextSizeStyles.small}>Campaign Organizer</p>
+            <p className={TextSizeStyles.small}>Organizer</p>
             <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
               {campaign.user?.fullName ??
                 formatWalletAddress(campaign.creator as `0x${string}`)}{' '}
@@ -86,7 +87,7 @@ export const CampaignCard = ({
         </div>
       </div>
 
-      <DonateXShareButtons campaign={campaign} />
+      {/* <DonateXShareButtons campaign={campaign} /> */}
     </div>
   );
 };

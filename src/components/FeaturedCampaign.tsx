@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
+import { DonateBtn } from './DonateBtn';
 import { Button } from './ui/button';
 
 export default function FeaturedCampaign({
@@ -55,7 +56,7 @@ export default function FeaturedCampaign({
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
             {campaign.title}
           </p>
-          <p className='line-clamp-3 max-w-lg text-xs md:text-sm'>
+          <p className='line-clamp-2 max-w-lg text-xs md:text-sm'>
             {campaign.description}
           </p>
         </div>
@@ -90,13 +91,12 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <Button
-          asChild
-          variant='secondary'
-          className='mt-4 w-full max-w-[10rem]'
-        >
-          <Link href={`/campaigns/${campaign.campaign_id}`}>I will help!</Link>
-        </Button>
+        <div className='mt-4 flex items-center gap-2'>
+          <DonateBtn campaign={campaign} />
+          <Button asChild variant='secondary' className='w-full max-w-[10rem]'>
+            <Link href={`/campaigns/${campaign.campaign_id}`}>Read more</Link>
+          </Button>
+        </div>
       </div>
 
       <AnimatePresence mode='popLayout' initial={false}>

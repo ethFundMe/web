@@ -5,7 +5,7 @@ import { REGEX_CODES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import YoutubePlayer from 'react-player';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -75,14 +75,14 @@ export const Carousel = ({ images }: { images: string[] }) => {
             className='pointer-events-auto h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-10'
             onClick={handlePrevious}
           >
-            <FaArrowLeft />
+            <RxCaretLeft size={20} />
           </button>
           <button
             disabled={images.length - 1 === currentIndex}
             className='disabled:hover;opacity-10 pointer-events-auto h-full bg-black bg-opacity-50 p-4 opacity-0 transition-all duration-150 ease-in hover:opacity-50 disabled:cursor-not-allowed'
             onClick={handleNext}
           >
-            <FaArrowRight />
+            <RxCaretRight size={20} />
           </button>
         </div>
       </div>
