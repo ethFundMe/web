@@ -40,7 +40,6 @@ export default function CreateCampaignPage() {
           </p>
         </div>
 
-        {/* <CreateCampaignForm /> */}
         <CreateCampaignForm />
       </Container>
     </>

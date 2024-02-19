@@ -101,12 +101,12 @@ export default function DnDUpload({
       setDropStatus('idle');
     return acceptedFiles.map((file) => {
       return (
-        <li key={file.name} className='basis-20 text-sm'>
+        <li key={file.name} className='w-full basis-20 text-sm'>
           <Image
             className='h-auto w-full object-cover'
             src={URL.createObjectURL(file)}
-            width={70}
-            height={70}
+            width={800}
+            height={800}
             alt={file.name}
           />
         </li>
@@ -118,14 +118,14 @@ export default function DnDUpload({
     <div
       {...getRootProps({
         className: cn(
-          'absolute border-dashed outline-2 outline-transparent rounded-md outline-dashed transition-all duration-150 ease-in-out left-0 top-0 h-full w-full cursor-pointer',
+          'absolute border-dashed overflow-hidden outline-2 outline-transparent rounded-md outline-dashed transition-all duration-150 ease-in-out left-0 top-0 h-full w-full cursor-pointer',
           (isDragActive || isDragAccept) && 'outline-blue-200 bg-slate-200',
           dropStatusStyles[dropStatus],
           className
         ),
       })}
     >
-      <div className='absolute left-1/2 top-1/2 flex w-fit -translate-x-1/2 -translate-y-1/2 flex-col items-center'>
+      <div className='absolute left-1/2 top-1/2 flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center'>
         {isDragActive ? (
           <div className='flex flex-col items-center'>
             <Download size={50} strokeWidth={1.2} />
@@ -143,9 +143,12 @@ export default function DnDUpload({
         {!!dndAcceptedFiles.length && dndErrors.length === 0 && (
           <>
             <ul
+              onClick={() => {}}
               className={cn(
-                'my-2 grid max-h-40 gap-2 overflow-y-auto p-2',
-                dndAcceptedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'
+                'my-2 grid w-full gap-2 overflow-y-auto p-2',
+                dndAcceptedFiles.length > 1
+                  ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-2'
+                  : 'grid-cols-1'
               )}
             >
               {dndAcceptedFiles}
