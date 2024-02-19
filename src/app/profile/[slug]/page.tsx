@@ -2,7 +2,12 @@ import { getUser } from '@/actions';
 import Navbar from '@/components/Navbar';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+type Props = {
+  params: { slug: string };
+};
 
 export async function generateMetadata(
   { params }: Props
