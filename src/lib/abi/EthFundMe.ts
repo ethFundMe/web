@@ -6,6 +6,11 @@ export const EthFundMe = [
   },
   {
     inputs: [],
+    name: 'EthFundMe__Banned',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'EthFundMe__CampaignAlreadyClosed',
     type: 'error',
   },
@@ -53,6 +58,19 @@ export const EthFundMe = [
     inputs: [],
     name: 'EthFundMe__Unauthorized',
     type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'campaign_id',
+        type: 'uint256',
+      },
+    ],
+    name: 'CampaignClosed',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -122,6 +140,44 @@ export const EthFundMe = [
       },
     ],
     name: 'CampaignCreated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'campaignID',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'state',
+        type: 'bool',
+      },
+    ],
+    name: 'CampaignFlagged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'campaignIDs',
+        type: 'uint256[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bool[]',
+        name: 'states',
+        type: 'bool[]',
+      },
+    ],
+    name: 'CampaignFlagged_Many',
     type: 'event',
   },
   {
@@ -299,6 +355,63 @@ export const EthFundMe = [
     inputs: [
       {
         indexed: false,
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'state',
+        type: 'bool',
+      },
+    ],
+    name: 'CreatorBanned',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'creators',
+        type: 'address[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bool[]',
+        name: 'states',
+        type: 'bool[]',
+      },
+    ],
+    name: 'CreatorBanned_Many',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'CreatorFeeUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: 'uint256',
         name: 'creatorFee',
         type: 'uint256',
@@ -317,6 +430,44 @@ export const EthFundMe = [
       },
     ],
     name: 'CreatorFunded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'state',
+        type: 'bool',
+      },
+    ],
+    name: 'CreatorVerified',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'creators',
+        type: 'address[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bool[]',
+        name: 'states',
+        type: 'bool[]',
+      },
+    ],
+    name: 'CreatorVerified_Many',
     type: 'event',
   },
   {
@@ -462,6 +613,24 @@ export const EthFundMe = [
       },
     ],
     name: '_0x5',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: '_campaignIDs',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x5Many',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
