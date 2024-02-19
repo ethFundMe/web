@@ -150,25 +150,30 @@ export default async function CampaignPage({
           <h2
             className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
           >
-            Related campaigns
+            {campaignsToShow.length > 0
+              ? 'Related campaigns'
+              : 'No related campaigns'}
           </h2>
-          <ScrollArea
-            className={cn(
-              'rounded-md border-primary-default lg:max-h-[800px] lg:border',
-              campaignsToShow.length > 1 ? 'h-[780px]' : 'h-[610px]'
-            )}
-          >
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
-              {campaignsToShow.map((_, idx) => (
-                <>
-                  <CampaignCard inSidebar campaign={_} key={idx} />
-                  {idx !== 2 && (
-                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                  )}
-                </>
-              ))}
-            </div>
-          </ScrollArea>
+
+          {campaignsToShow.length > 0 && (
+            <ScrollArea
+              className={cn(
+                'rounded-md border-primary-default lg:max-h-[800px] lg:border',
+                campaignsToShow.length > 1 ? 'h-[780px]' : 'h-[610px]'
+              )}
+            >
+              <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
+                {campaignsToShow.map((_, idx) => (
+                  <>
+                    <CampaignCard inSidebar campaign={_} key={idx} />
+                    {idx !== 2 && (
+                      <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
+                    )}
+                  </>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </aside>
       </Container>
     </>

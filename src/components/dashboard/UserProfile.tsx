@@ -209,7 +209,8 @@ export const UserProfile = ({ user }: { user: User }) => {
 
           <Container className='mt-8 space-y-6'>
             <h2 className='text-xl font-bold'>My campaigns</h2>
-            {user.campaigns.length ? (
+            {/* Replace with campaigns returned from fetchUserCampaigns */}
+            {user?.campaigns?.length ? (
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                 {user.campaigns.map((_) => (
                   <UserCampaignCard
