@@ -1,6 +1,5 @@
 import { getCampaign, getCampaigns } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
-import { Carousel } from '@/components/Carousel';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
@@ -13,6 +12,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
+import { SwiperCarousel } from '@/components/SwiperCarousel';
 import { seoBannerURL } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
 import { formatEther } from 'viem';
@@ -95,7 +95,9 @@ export default async function CampaignPage({
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
             {campaign.title}
           </h2>
-          <Carousel images={campaign.media_links} />
+
+          <SwiperCarousel images={campaign.media_links} />
+
           <div className='space-y-7 pb-5'>
             <div className='flex flex-col gap-4 sm:flex-row'>
               <DonationObjectiveIndicator

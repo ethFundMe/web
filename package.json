@@ -59,6 +59,7 @@
     "react-use-refs": "^1.0.1",
     "siwe": "^2.1.4",
     "sonner": "^1.4.0",
+    "swiper": "^11.0.6",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "tw-merge": "0.0.1-alpha.3",

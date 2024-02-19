@@ -15,10 +15,8 @@ const ethChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1);
 export const useSiwe = () => {
   const config = useConfig();
   const { signMessageAsync } = useSignMessage();
-  const router = useRouter();
+  const { push, refresh } = useRouter();
   const { setUser } = userStore();
-
-  const { push, refresh } = router;
 
   async function disconnectAcc() {
     try {
