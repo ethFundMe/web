@@ -92,19 +92,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     resolver: zodResolver(formSchema),
   });
 
-  useEffect(() => {
-    if (campaign.media_links.length) {
-      setBannerPreview(campaign.media_links[0]);
-    }
-    const otherMedia = campaign.media_links.slice(1);
-    const mediaWithoutYTLink = otherMedia.filter(
-      (media) => !REGEX_CODES.ytLink.test(media)
-    );
-    if (otherMedia.length) {
-      setOtherImgsPrepared(mediaWithoutYTLink);
-    }
-  }, [campaign]);
-
   const editMade =
     form.watch('title') !== campaign.title ||
     form.watch('description') !== campaign.description ||
