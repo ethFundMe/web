@@ -46,7 +46,7 @@ export async function generateMetadata(
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
-            campaign.media_links[0]
+            campaign?.media_links[0] || ''
           ),
         },
       ],
@@ -63,7 +63,7 @@ export async function generateMetadata(
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
-            campaign.media_links[0]
+            campaign?.media_links[0] || ''
           ),
         },
       ],
