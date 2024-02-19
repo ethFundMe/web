@@ -8,14 +8,15 @@ export function seoBannerURL(
   name: string,
   goal: number,
   title: string,
-  description: string
+  description: string,
+  imageUrl: string
 ) {
   const isVerified = true;
 
   let link2, link5;
 
   const link1 =
-    'https://res.cloudinary.com/dg68lnbnq/image/upload/u_wnq8dctwtnwcgcblm9h7/c_fill,h_1062,w_1653/fl_layer_apply/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_29_bold_normal_left:';
+    'https://res.cloudinary.com/dg68lnbnq/image/fetch/c_fill,h_1062,w_1653/l_toacvtnrxuiya6obruwq/c_fill,h_1062,w_1653/fl_layer_apply/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_29_bold_normal_left:';
   const link3 =
     '/fl_layer_apply,g_west,x_120,y_-286/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_46_bold_normal_left:';
   const linkk =
@@ -26,13 +27,11 @@ export function seoBannerURL(
   if (isVerified == true) {
     link2 =
       '/fl_layer_apply,g_west,x_158,y_-330/co_rgb:FFFFFF,l_text:Mona-Sans-MediumWide.ttf_29.8_bold_normal_left:SEEKS';
-    link5 =
-      '/fl_layer_apply,g_west,x_120,y_388/l_michael-dam-mEZ3PoFGs_k-unsplash_rgb9tc/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_82/l_verified_xcic9g/c_scale,w_40/e_mask,fl_layer_apply,x_-694,y_-330/l_Eth-Logo-50_tweu9l/c_scale,w_27/e_mask,fl_layer_apply,g_west,x_122,y_110/l_Logo-30_bal9yx/c_scale,w_150/fl_layer_apply,g_east,x_75,y_330/toacvtnrxuiya6obruwq.jpg';
+    link5 = `/fl_layer_apply,g_west,x_120,y_388/l_michael-dam-mEZ3PoFGs_k-unsplash_rgb9tc/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_82/l_verified_xcic9g/c_scale,w_40/e_mask,fl_layer_apply,x_-694,y_-330/l_Eth-Logo-50_tweu9l/c_scale,w_27/e_mask,fl_layer_apply,g_west,x_122,y_110/l_Logo-30_bal9yx/c_scale,w_150/fl_layer_apply,g_east,x_75,y_330/${imageUrl}`;
   } else if (isVerified == false) {
     link2 =
       '/fl_layer_apply,g_west,x_120,y_-330/co_rgb:FFFFFF,l_text:Mona-Sans-MediumWide.ttf_29.8_bold_normal_left:SEEKS';
-    link5 =
-      '/fl_layer_apply,g_west,x_120,y_388/l_michael-dam-mEZ3PoFGs_k-unsplash_rgb9tc/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_82/l_Eth-Logo-50_tweu9l/c_scale,w_27/e_mask,fl_layer_apply,g_west,x_122,y_110/l_Logo-30_bal9yx/c_scale,w_150/fl_layer_apply,g_east,x_75,y_330/toacvtnrxuiya6obruwq.jpg';
+    link5 = `/fl_layer_apply,g_west,x_120,y_388/l_michael-dam-mEZ3PoFGs_k-unsplash_rgb9tc/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_82/l_Eth-Logo-50_tweu9l/c_scale,w_27/e_mask,fl_layer_apply,g_west,x_122,y_110/l_Logo-30_bal9yx/c_scale,w_150/fl_layer_apply,g_east,x_75,y_330/${imageUrl}`;
   }
 
   if (title.length > 45) {

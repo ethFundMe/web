@@ -4,7 +4,6 @@ import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
 import { WagmiWrapper } from '@/lib/provider';
-import { seoBannerURL } from '@/lib/seoBannerUrl';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
       'Welcome to EthFundMe - where passion meets potential! Empower your dreams with the ultimate ethereum-powered crowdfunding experience. Harness the blockchain revolution to fuel your projects, ideas, and causes. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support. Start your journey today with EthFundMe, where every donation counts, and every dream matters. Elevate, innovate, and fundraise with crypto - the future is in your hands!',
     site: '@ethfundme',
     creator: '@ethfundme',
-    images: seoBannerURL('test_Name', 0.35, 'test_title', 'test_description'),
+    images: '/images/seo-common.png',
   },
   openGraph: {
     type: 'website',
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
     description:
       'Welcome to EthFundMe - where passion meets potential! Empower your dreams with the ultimate ethereum-powered crowdfunding experience. Harness the blockchain revolution to fuel your projects, ideas, and causes. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support. Start your journey today with EthFundMe, where every donation counts, and every dream matters. Elevate, innovate, and fundraise with crypto - the future is in your hands!',
     siteName: 'EthFundMe',
-    images: seoBannerURL('test_Name', 0.35, 'test_title', 'test_description'),
+    images: '/images/seo-common.png',
   },
 };
 
@@ -52,7 +51,7 @@ export default async function RootLayout({
         <body className='flex min-h-screen flex-col'>
           <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
-          <Toaster position='top-left' />
+          <Toaster />
 
           <WagmiWrapper>
             <ModalProvider />
