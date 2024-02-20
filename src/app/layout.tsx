@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       'Welcome to EthFundMe - where passion meets potential! Empower your dreams with the ultimate ethereum-powered crowdfunding experience. Harness the blockchain revolution to fuel your projects, ideas, and causes. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support. Start your journey today with EthFundMe, where every donation counts, and every dream matters. Elevate, innovate, and fundraise with crypto - the future is in your hands!',
     site: '@ethfundme',
     creator: '@ethfundme',
-    images: '/images/seo-common.jpg',
+    images: 'public/images/seo-common.jpg',
   },
   openGraph: {
     type: 'website',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     description:
       'Welcome to EthFundMe - where passion meets potential! Empower your dreams with the ultimate ethereum-powered crowdfunding experience. Harness the blockchain revolution to fuel your projects, ideas, and causes. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support. Start your journey today with EthFundMe, where every donation counts, and every dream matters. Elevate, innovate, and fundraise with crypto - the future is in your hands!',
     siteName: 'EthFundMe',
-    images: '/images/seo-common.jpg',
+    images: 'public/images/seo-common.jpg',
   },
 };
 
