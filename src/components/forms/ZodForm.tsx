@@ -7,13 +7,13 @@ import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   createUrl,
-  uploadToCloudinary2,
+  uploadToCloudinary,
 } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -126,7 +126,7 @@ export default function CreateCampaignForm() {
       if (banner && !imagesUploaded[0]) {
         setSubmitStatus('Uploading banner');
 
-        const bannerUploadUrl = await uploadToCloudinary2(banner);
+        const bannerUploadUrl = await uploadToCloudinary(banner);
 
         if (bannerUploadUrl && bannerUploadUrl.length > 0) {
           setSubmitStatus(null);
@@ -146,7 +146,7 @@ export default function CreateCampaignForm() {
       if (otherImgsPrepared && !imagesUploaded[1]) {
         setSubmitStatus('Uploading other images');
 
-        const OIUploadUrl = await uploadToCloudinary2(
+        const OIUploadUrl = await uploadToCloudinary(
           otherImgsPrepared as unknown as FileList
         );
 
@@ -245,7 +245,11 @@ export default function CreateCampaignForm() {
     }
   }
 
-  if (!address) redirect('/');
+  useEffect(() => {
+    if (address) {
+      return form.setValue('beneficiaryAddress', address);
+    }
+  }, [address, form]);
 
   return (
     <Form {...form}>
@@ -303,7 +307,7 @@ export default function CreateCampaignForm() {
               <FormControl>
                 <Input
                   type='number'
-                  step={0.00001}
+                  step={0.1}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -386,7 +390,7 @@ export default function CreateCampaignForm() {
                   <FormControl>
                     <Input
                       type='number'
-                      step={0.00001}
+                      step={0.1}
                       disabled
                       // value={User.creatorFee}
                       value={0.02}
@@ -561,9 +565,11 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
-          disabled={submitStatus !== null || isPending || isConfirmingTxn}
+          disabled={
+            submitStatus !== null || isPending || isConfirmingTxn || !address
+          }
           size='default'
-          className='col-span-2 disabled:cursor-not-allowed'
+          className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
         >
           {isPending || isConfirmingTxn
             ? 'Creating campaign'

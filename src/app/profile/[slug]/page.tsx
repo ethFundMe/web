@@ -20,6 +20,8 @@ export async function generateMetadata(
   const user = await getUser(id as `0x${string}`);
   const campaigns = await getCampaigns(1, user.ethAddress);
 
+  console.log({ uname: user.fullName });
+
   return {
     title: `${user.fullName}`,
     description: `${user.bio}`,

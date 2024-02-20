@@ -1,3 +1,4 @@
+import ConnectWalletIndicator from '@/components/ConnectWalletIndicator';
 import { Container } from '@/components/Container';
 import CreateCampaignForm from '@/components/forms/ZodForm';
 import { TextSizeStyles } from '@/lib/styles';
@@ -31,8 +32,10 @@ export const metadata: Metadata = {
 
 export default function CreateCampaignPage() {
   return (
-    <>
-      <Container className='pb-4 sm:pb-10'>
+    <div className='space-y-4'>
+      <ConnectWalletIndicator />
+
+      <Container className='p-4 sm:pb-10'>
         <div className='pb-3 text-center sm:py-5'>
           <h1 className={TextSizeStyles.h1}>New Campaign</h1>
           <p className='text-lg font-medium'>
@@ -42,6 +45,6 @@ export default function CreateCampaignPage() {
 
         <CreateCampaignForm />
       </Container>
-    </>
+    </div>
   );
 }

@@ -26,13 +26,13 @@ export default function UserCampaignCard({
         />
       </Link>
 
-      <div className='space-y-2 border-t border-slate-300 px-4 py-3'>
+      <div className='flex flex-col gap-2 border-t border-slate-300 px-4 py-3'>
         <DonationObjectiveIndicator
           currentAmount={campaign.total_accrued}
           seekingAmount={campaign.goal}
         />
 
-        <div className='space-y-1'>
+        <div className='flex-1 space-y-1'>
           <p className='font-bold'>{campaign.title}</p>
           {variant === 'viewer' && (
             <p className='line-clamp-4'>{campaign.description}</p>
