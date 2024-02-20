@@ -39,7 +39,7 @@ export const Sidebar = () => {
 
         {isConnected && address ? (
           <Button
-            className='rounded-lg bg-red-900 text-lg font-semibold text-white hover:bg-red-900/90'
+            className='rounded-lg bg-red-900 text-lg font-bold text-white hover:bg-red-900/90'
             onClick={openAccountModal}
             size='lg'
           >
@@ -48,7 +48,7 @@ export const Sidebar = () => {
         ) : (
           <Button
             size='lg'
-            className='rounded-lg bg-primary-dark text-lg font-semibold hover:bg-primary-dark/90'
+            className='rounded-lg bg-primary-dark text-lg font-bold hover:bg-primary-dark/90'
             onClick={openConnectModal}
           >
             Connect Wallet
@@ -76,8 +76,8 @@ export const SidebarNavLink = ({ title, link, icon }: NavbarRoute) => {
         href={link}
         activeStyles={({ isActive }) =>
           isActive
-            ? 'text-primary-default pl-4 font-bold text-lg'
-            : 'hover:font-normal'
+            ? 'text-primary-default pl-4 font-bold text-xl text-xl'
+            : 'hover:font-normal text-lg'
         }
         className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-100'
       >

@@ -14,7 +14,7 @@ export const NAVBARROUTES: NavbarRoute[] = [
   {
     title: 'Campaigns',
     link: '/campaigns',
-    icon: MdOutlineCampaign({ size: 20 }),
+    icon: MdOutlineCampaign({ size: 25 }),
   },
   {
     title: 'How to Donate',

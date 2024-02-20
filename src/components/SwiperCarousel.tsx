@@ -14,7 +14,7 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
   // const AnimImage = motion(Image);
 
   return (
-    <div className='container h-80 sm:h-96 lg:h-[450px]'>
+    <div className='container h-80 overflow-hidden rounded-lg bg-[#f6f8fc] sm:h-96 lg:h-[450px]'>
       <Swiper
         className='h-full'
         modules={[Navigation, Pagination]}

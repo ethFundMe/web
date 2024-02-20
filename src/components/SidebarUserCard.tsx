@@ -3,20 +3,14 @@
 import { getUser } from '@/actions';
 import { useSiwe } from '@/lib/hook';
 import { formatWalletAddress } from '@/lib/utils';
-import { useModalStore } from '@/store';
 import { User } from '@/types';
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaPen, FaUnlink } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import ImageWithFallback from './ImageWithFallback';
-import { Button } from './ui/button';
 
 export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
-  const { openConnectModal } = useConnectModal();
+  // const { openConnectModal } = useConnectModal();
 
   useSiwe();
 
@@ -38,16 +32,7 @@ export const SidebarUserCard = () => {
   return view;
 };
 
-const View = ({
-  address,
-  image,
-}: {
-  address?: `0x${string}`;
-  image?: string;
-}) => {
-  const { closeModal } = useModalStore();
-  const { openAccountModal } = useAccountModal();
-
+const View = ({ address }: { address?: `0x${string}` }) => {
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<User | null>(null);
 
@@ -79,54 +64,17 @@ const View = ({
           </div>
 
           <div>
-            <p className='text-lg font-bold text-primary-default'>
+            <p className='text-xl font-bold text-primary-default'>
               {userDetails?.fullName}
             </p>
             {userDetails?.ethAddress && (
-              <p>{formatWalletAddress(userDetails?.ethAddress)}</p>
+              <p className='text-primary-dark'>
+                {formatWalletAddress(userDetails?.ethAddress)}
+              </p>
             )}
           </div>
         </>
       )}
-
-      <div className='hidden items-start justify-between'>
-        <div className='space-y-2'>
-          <Image
-            priority
-            className='h-12 w-12 flex-shrink-0 rounded-full bg-slate-200 md:h-20 md:w-20'
-            src={image ?? '/images/pfp.svg'}
-            width={50}
-            height={50}
-            alt='...'
-          />
-
-          <div>
-            <p className='line-clamp-1 text-lg font-bold'>
-              Bernard Eyram Franz{' '}
-            </p>
-            {address && <p>{formatWalletAddress(address)}</p>}
-          </div>
-
-          <Button
-            size='sm'
-            variant='dark'
-            className='flex w-full items-center gap-2 rounded-md py-1 text-xs text-red-400 hover:bg-slate-900 hover:bg-opacity-50'
-            onClick={openAccountModal}
-          >
-            <FaUnlink />
-            Disconnect
-          </Button>
-        </div>
-
-        <Link
-          href={`/dashboard/${address}/update-profile`}
-          title='Update profile'
-          className='w-fit rounded-md p-2 hover:bg-slate-900 hover:bg-opacity-50'
-          onClick={closeModal}
-        >
-          <FaPen />
-        </Link>
-      </div>
     </div>
   );
 };
