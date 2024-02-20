@@ -1,30 +1,24 @@
 import { User } from '@/types';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type UserState = {
-  user: User;
+  user: User | null;
   setUser: (user: User) => void;
+  resetUser: () => void;
 };
 
-export const userStore = create<UserState>()((set) => ({
-  user: {
-    bio: '',
-    campaigns: [],
-    fundings: [],
-    bannerUrl: '',
-    createdAt: new Date(Date.now()),
-    creatorFee: 0,
-    email: '',
-    ethAddress: '0x00',
-    fullName: '',
-    id: '',
-    isBanned: false,
-    isVerified: false,
-    profileUrl: '',
-    role: 'beneficiary',
-    updatedAt: new Date(Date.now()),
-  },
-  setUser(user) {
-    set(() => ({ user }));
-  },
-}));
+export const userStore = create<UserState>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser(user) {
+        set(() => ({ user }));
+      },
+      resetUser() {
+        set(() => ({ user: null }));
+      },
+    }),
+    { name: 'efm_user' }
+  )
+);

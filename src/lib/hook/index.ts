@@ -1,1 +1,1 @@
-export * from './useSiwe';
+export * from './useAuth';

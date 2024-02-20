@@ -3,14 +3,12 @@
 import { NAVBARROUTES } from '@/lib/constants';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store/modal';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { ConnectWallet } from './ConnectWallet';
-import { useSiwe } from '@/lib/hook';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { hasCookie } from 'cookies-next';
-import { ChevronDown } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -22,8 +20,6 @@ const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-
-  useSiwe();
 
   return (
     <motion.nav
@@ -56,7 +52,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {isConnected && address && hasCookie('efmToken') ? (
+          {isConnected && address && getCookie('efmToken') ? (
             <AuthNavbarMenu>
               <div className='flex cursor-pointer items-center gap-x-3'>
                 <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>

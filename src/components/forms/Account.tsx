@@ -1,13 +1,12 @@
 'use client';
 
 import { userStore } from '@/store';
-import { ErrorResponse, User } from '@/types';
+import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { SiweMessage } from 'siwe';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Button, Input } from '../inputs';
 
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
@@ -22,7 +21,6 @@ export const AccountForm = () => {
 
   const { setUser } = userStore();
   const { address, connector, chainId } = useAccount();
-  const { signMessageAsync } = useSignMessage();
   const router = useRouter();
 
   const { handleSubmit, register } = useForm<TAccount>({
@@ -64,55 +62,7 @@ export const AccountForm = () => {
       const user = create_user.user;
       if (user.ethAddress) {
         setUser(user);
-
-        const nonce_res = await fetch(
-          `${efm_endpoint}/api/nonce/${user.ethAddress}`,
-          {
-            credentials: 'include',
-          }
-        );
-        if (!nonce_res.ok) {
-          const err: { error: ErrorResponse } = await nonce_res.json();
-          throw err;
-        }
-        const nonce = await nonce_res.text();
-        const message = new SiweMessage({
-          domain: window.location.host,
-          address,
-          chainId: chainId,
-          statement:
-            'Welcome to EthFundMe. I accept the EthFundMe terms of service: https://ethfund.me',
-          uri: window.location.origin,
-          version: '1',
-          nonce,
-        }).prepareMessage();
-
-        const signature = await signMessageAsync({
-          message,
-        });
-        if (signature) {
-          const verify_res = await fetch(
-            `${efm_endpoint}/api/verify/${user.ethAddress}`,
-            {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ message, signature }),
-            }
-          );
-
-          if (!verify_res.ok) {
-            const err: ErrorResponse = await verify_res.json();
-            throw err;
-          } else {
-            await verify_res.json();
-            setIsLoading(false);
-            toast.success('Account has been successfully created!');
-            router.push('/');
-          }
-        }
+        router.push('/');
       }
     } catch (error) {
       setIsLoading(false);
