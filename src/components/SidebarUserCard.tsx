@@ -1,5 +1,6 @@
 'use client';
 
+import { getUser } from '@/actions';
 import { formatWalletAddress } from '@/lib/utils';
 import { User } from '@/types';
 import { useEffect, useState } from 'react';
@@ -8,7 +9,6 @@ import ImageWithFallback from './ImageWithFallback';
 
 export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
-  const { openConnectModal } = useConnectModal();
 
   const view = (
     <div className='border-b border-gray-300 py-6'>
