@@ -7,11 +7,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
+import ImageWithFallback from '@/components/ImageWithFallback';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import type { Metadata } from 'next';
@@ -82,6 +82,7 @@ export default async function CampaignPage({
   const campaign = await getCampaign(parseInt(slug));
   const campaignsData = await getCampaigns();
   const { campaigns } = campaignsData;
+  const user = await getUser(campaign.creator as `0x${string}`);
 
   if (!campaign) notFound();
 
@@ -120,8 +121,9 @@ export default async function CampaignPage({
                 className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
               >
                 <div className='relative h-[50px] w-[50px] flex-shrink-0'>
-                  <Image
-                    src={campaign.user.profileUrl ?? '/images/pfp.svg'}
+                  <ImageWithFallback
+                    src={user.profileUrl ?? ''}
+                    fallback='/images/pfp.svg'
                     className='block rounded-full bg-slate-50'
                     fill
                     alt='...'
@@ -131,7 +133,7 @@ export default async function CampaignPage({
                 <div className='pr-2'>
                   <p className={TextSizeStyles.caption}>Organizer</p>
                   <p className='font-semibold'>
-                    {campaign.user.fullName ??
+                    {user?.fullName ??
                       formatWalletAddress(campaign.creator as `0x${string}`)}
                   </p>
                 </div>

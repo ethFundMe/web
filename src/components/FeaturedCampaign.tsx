@@ -1,7 +1,7 @@
 'use client';
 
 import { REGEX_CODES } from '@/lib/constants';
-import { Campaign } from '@/types';
+import { Campaign, User } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,9 +14,11 @@ import { Button } from './ui/button';
 export default function FeaturedCampaign({
   // images = ['/images/family.jpg', '/images/pets.jpg', '/images/accident.webp'],
   campaign,
+  user,
 }: {
   images?: string[];
   campaign: Campaign;
+  user: User;
 }) {
   const [index, setIndex] = useState(0);
 
@@ -51,7 +53,7 @@ export default function FeaturedCampaign({
       >
         <div className='relative z-20 mx-auto flex max-w-2xl flex-col items-center text-center text-white'>
           <p className='mb-3 text-xs font-semibold text-slate-300 md:text-base'>
-            {campaign.user.fullName}
+            {user.fullName}
           </p>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
             {campaign.title}
