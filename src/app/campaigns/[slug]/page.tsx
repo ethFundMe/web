@@ -1,4 +1,4 @@
-import { getCampaign, getCampaigns } from '@/actions';
+import { getCampaign, getCampaigns, getUser } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
@@ -29,6 +29,7 @@ export async function generateMetadata(
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
+  const user = await getUser(campaign.creator as `0x${string}`);
 
   return {
     title: `${campaign.title}`,
@@ -42,7 +43,7 @@ export async function generateMetadata(
       images: [
         {
           url: seoCampaign(
-            campaign.user.fullName,
+            user.fullName,
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
@@ -59,7 +60,7 @@ export async function generateMetadata(
       images: [
         {
           url: seoCampaign(
-            campaign.user.fullName,
+            user.fullName,
             parseFloat(formatEther(BigInt(campaign.goal))),
             campaign.title,
             campaign.description,
