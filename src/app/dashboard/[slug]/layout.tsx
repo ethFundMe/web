@@ -23,7 +23,7 @@ export default async function DashboardLayout({
   if (!user) redirect('/');
 
   return (
-    <div className='min-h-[calc(100vh-269px)]'>
+    <div className='min-h-[calc(100dvh-269px)]'>
       <Navbar />
 
       <Container className='h-full'>

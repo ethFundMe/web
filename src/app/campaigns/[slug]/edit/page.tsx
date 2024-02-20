@@ -15,7 +15,7 @@ export default async function EditCampaign({
   if (!campaign) notFound();
 
   return (
-    <div className='min-h-[calc(100vh-260px)]'>
+    <div className='min-h-[calc(100dvh-269px)]'>
       <Container>
         <div className='pb-3 text-center sm:py-5'>
           <h1 className={TextSizeStyles.h1}>Edit Campaign</h1>
