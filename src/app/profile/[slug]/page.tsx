@@ -2,7 +2,6 @@ import { getUser } from '@/actions';
 import Navbar from '@/components/Navbar';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
-import { seoProfile } from '@/lib/seoBannerUrl';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -29,15 +28,6 @@ export async function generateMetadata(
       title: `${user.fullName}`,
       description: `${user.bio}`,
       url: process.env.NEXT_PUBLIC_WEB_URL,
-      images: [
-        {
-          url: seoProfile(
-            user.fullName,
-            user.bio || '',
-            user.campaigns.length.toString()
-          ),
-        },
-      ],
     },
     twitter: {
       title: `${user.fullName}`,
@@ -45,15 +35,6 @@ export async function generateMetadata(
       description: `${user.bio}`,
       site: '@ethfundme',
       creator: '@ethfundme',
-      images: [
-        {
-          url: seoProfile(
-            user.fullName,
-            user.bio || '',
-            user.campaigns.length.toString()
-          ),
-        },
-      ],
     },
   };
 }

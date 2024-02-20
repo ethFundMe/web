@@ -1,14 +1,14 @@
-import { getCampaigns } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import { HowToDonateCard } from '@/components/HowToDonateCard';
 import Navbar from '@/components/Navbar';
+import { getCampaigns } from '@/lib/api';
 import { DONATIONSTEPS } from '@/lib/constants';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 export default async function HowToDonatePage() {
-  const { campaigns } = await getCampaigns();
+  const campaigns = await getCampaigns();
 
   return (
     <div className='min-h-[calc(100vh-260px)]'>
@@ -38,10 +38,9 @@ export default async function HowToDonatePage() {
           </div>
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {campaigns.length > 0 &&
-              campaigns
-                .slice(0, 4)
-                .map((_, idx) => <CampaignCard key={idx} campaign={_} />)}
+            {campaigns.slice(0, 4).map((_, idx) => (
+              <CampaignCard key={idx} campaign={_} />
+            ))}
           </div>
         </div>
       </Container>

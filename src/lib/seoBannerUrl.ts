@@ -4,7 +4,7 @@
 //   title: string;
 //   description: string;
 // }
-export function seoCampaign(
+export function seoBannerURL(
   name: string,
   goal: number,
   title: string,
@@ -65,64 +65,6 @@ export function seoCampaign(
     link4 +
     encodeURIComponent(encodeURIComponent(description)) +
     link5;
-  // console.log(combinedMessage);
-  return combinedMessage;
-}
-
-export function seoProfile(name: string, bio: string, campaigns: string) {
-  const isVerified = false;
-  let number = 0;
-
-  if (name.length < 14) {
-    number = name.length * 13;
-  }
-  if (name.length > 16) {
-    number = name.length * (name.length - 8);
-  }
-
-  // // Ensure name does not exceed 27 characters
-  // if (name.length > 28) {
-  //     let words = name.split(' ');
-  //     while (name.length > 28 && words.length > 1) {
-  //         words.pop();
-  //         name = words.join(' ') + ". . .";
-  //     }
-  // }
-
-  if (bio.length > 121) {
-    const words = bio.split(' ');
-    while (bio.length > 121 && words.length > 1) {
-      words.pop();
-      bio = words.join(' ') + '. . .';
-    }
-  }
-
-  if (campaigns == '0') {
-    campaigns = 'NO ';
-  }
-
-  const link1 =
-    'https://res.cloudinary.com/dg68lnbnq/image/upload/co_rgb:FFFFFF,w_1300,c_fit,l_text:Mona-sans-BoldWide.ttf_83_bold_normal_left:' +
-    encodeURIComponent(name);
-  const link2 =
-    '/fl_layer_apply,g_west,x_106,y_254/co_rgb:FFFFFF,w_900,c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left:' +
-    encodeURIComponent(bio);
-  const link3 =
-    '/fl_layer_apply,g_west,x_108,y_352/co_rgb:a6a6a6,w_900,c_fit,l_text:Mona-sans-BoldWide.ttf_29_normal_left:' +
-    encodeURIComponent(campaigns + 'ACTIVE CAMPAIGNS');
-  let link4 = ' ';
-
-  if (isVerified) {
-    link4 =
-      '/fl_layer_apply,g_west,x_158,y_395/l_verified_xcic9g/c_scale,w_88/e_mask,fl_layer_apply,g_center,y_250,x_' +
-      number.toString() +
-      '/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_70/SEO-USER_BG_yurvdq.jpg';
-  } else {
-    link4 =
-      '/fl_layer_apply,g_west,x_158,y_395/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_70/SEO-USER_BG_yurvdq.jpg';
-  }
-
-  const combinedMessage = link1 + link2 + link3 + link4;
   // console.log(combinedMessage);
   return combinedMessage;
 }
