@@ -69,13 +69,9 @@ const Navbar = () => {
               </div>
             </AuthNavbarMenu>
           ) : (
-            <>
-              {openConnectModal && (
-                <Button onClick={openConnectModal} type='button'>
-                  Connect Wallet
-                </Button>
-              )}
-            </>
+            <Button onClick={openConnectModal} type='button'>
+              Connect Wallet
+            </Button>
           )}
         </ul>
 

@@ -9,7 +9,7 @@ export default async function HowToDonatePage() {
   // const { campaigns } = await getCampaigns();
 
   return (
-    <div className='min-h-[calc(100vh-260px)]'>
+    <div className='min-h-[calc(100dvh-269px)]'>
       {/* Move navbar to /how-to-donate/layout.tsx if file is created */}
       <Navbar />
 

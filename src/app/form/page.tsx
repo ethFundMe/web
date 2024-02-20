@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { uploadToCloudinary2 } from '@/lib/utils';
+import { uploadToCloudinary } from '@/lib/utils';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -12,7 +12,7 @@ export default function FormPage() {
 
   const handleUpload = () => {
     setUploading(true);
-    uploadToCloudinary2(images as FileList)
+    uploadToCloudinary(images as FileList)
       .then(() => {
         setUploading(false);
         toast.success('Uploaded');

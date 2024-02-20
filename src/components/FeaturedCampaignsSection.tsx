@@ -6,6 +6,8 @@ import FeaturedCampaign from './FeaturedCampaign';
 
 export const FeaturedCampaignsSection = async () => {
   const { campaigns } = await getCampaigns();
+  if (!campaigns[0]) return;
+
   const user = await getUser(campaigns[0].creator as `0x${string}`);
 
   return campaigns[0] ? (

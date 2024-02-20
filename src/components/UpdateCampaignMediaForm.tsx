@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
 import { z } from 'zod';
-import DnDUpload from './DnDUpload';
+import { Button } from './ui/button';
 import {
   Form,
   FormControl,
@@ -214,9 +214,11 @@ export default function UpdateCampaignMediaForm({
           )}
         />
 
-        <div className='relative min-h-80'>
+        <Button className='w-full'>Upload files</Button>
+
+        {/* <div className='relative min-h-80'>
           <DnDUpload handleUpload={() => console.log('hi')} />
-        </div>
+        </div> */}
       </form>
     </Form>
   );

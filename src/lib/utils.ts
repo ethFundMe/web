@@ -32,48 +32,6 @@ export async function fetchUrlData(url: string) {
 
 export async function uploadToCloudinary(files: FileList | string[]) {
   const formData = new FormData();
-  const urls: string[] = [];
-
-  for (let i = 0; i < files.length; i++) {
-    const image = files[i];
-
-    formData.append('file', image);
-    formData.append(
-      'upload_preset',
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
-    );
-    formData.append('folder', 'campaign_media');
-
-    const resolve = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data?.error) {
-          urls.push(data?.url);
-        } else {
-          throw new Error('Failed to upload image');
-        }
-      })
-      .then(() => {
-        return urls;
-      })
-      .catch(() => {
-        throw new Error('Failed to upload image');
-      });
-
-    return resolve;
-  }
-}
-
-export async function uploadToCloudinary2(files: FileList | string[]) {
-  const formData = new FormData();
 
   const upload: (file: File) => Promise<string> = async (file) => {
     formData.append('file', file);

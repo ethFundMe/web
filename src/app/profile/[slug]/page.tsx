@@ -18,6 +18,9 @@ export async function generateMetadata(
   const id = params.slug;
 
   const user = await getUser(id as `0x${string}`);
+
+  if (!user) notFound();
+
   const campaigns = await getCampaigns(1, user.ethAddress);
 
   return {
