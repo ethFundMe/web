@@ -1,5 +1,3 @@
-import { getCampaigns } from '@/actions';
-import { CampaignCard } from '@/components/CampaignCard';
 import { Container } from '@/components/Container';
 import { HowToDonateCard } from '@/components/HowToDonateCard';
 import Navbar from '@/components/Navbar';
@@ -8,7 +6,7 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 export default async function HowToDonatePage() {
-  const { campaigns } = await getCampaigns();
+  // const { campaigns } = await getCampaigns();
 
   return (
     <div className='min-h-[calc(100vh-260px)]'>
@@ -29,7 +27,7 @@ export default async function HowToDonatePage() {
           ))}
         </div>
 
-        <div className='mt-28 space-y-10 py-10'>
+        {/* <div className='mt-28 space-y-10 py-10'>
           <div className='text-center'>
             <h2 className={cn(TextSizeStyles.h2)}>Ready to donate?</h2>
             <p className='text-lg font-medium'>
@@ -43,7 +41,7 @@ export default async function HowToDonatePage() {
                 .slice(0, 4)
                 .map((_, idx) => <CampaignCard key={idx} campaign={_} />)}
           </div>
-        </div>
+        </div> */}
       </Container>
     </div>
   );

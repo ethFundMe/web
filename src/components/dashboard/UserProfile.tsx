@@ -2,7 +2,7 @@
 
 import { updateUser } from '@/actions';
 import { formatWalletAddress } from '@/lib/utils';
-import { User } from '@/types';
+import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,7 +22,13 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 
-export const UserProfile = ({ user }: { user: User }) => {
+export const UserProfile = ({
+  user,
+  campaigns,
+}: {
+  user: User;
+  campaigns: Campaign[];
+}) => {
   const { address } = useAccount();
   const router = useRouter();
   const [closeBannerRef, closePfpRef] = useRefs<HTMLButtonElement>(null);
@@ -192,7 +198,7 @@ export const UserProfile = ({ user }: { user: User }) => {
                   )}
                 </div>
 
-                {!user.isVerified && (
+                {!user.isVerified && address === user.ethAddress && (
                   <Button variant='secondary'>
                     <Link href='/verify'>Get verified</Link>
                   </Button>
@@ -208,11 +214,10 @@ export const UserProfile = ({ user }: { user: User }) => {
           </Container>
 
           <Container className='mt-8 space-y-6'>
-            <h2 className='text-xl font-bold'>My campaigns</h2>
-            {/* Replace with campaigns returned from fetchUserCampaigns */}
-            {user?.campaigns?.length ? (
+            <h2 className='text-xl font-bold'>Campaigns</h2>
+            {campaigns.length ? (
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {user.campaigns.map((_) => (
+                {campaigns.map((_) => (
                   <UserCampaignCard
                     campaign={_}
                     variant={

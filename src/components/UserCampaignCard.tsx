@@ -1,5 +1,5 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
-import { SimpleCampaign } from '@/types';
+import { Campaign } from '@/types';
 import Link from 'next/link';
 import { FaPen } from 'react-icons/fa';
 import { DonateBtn } from './DonateBtn';
@@ -11,14 +11,14 @@ export default function UserCampaignCard({
   campaign,
   variant = 'user',
 }: {
-  campaign: SimpleCampaign;
+  campaign: Campaign;
   variant?: 'user' | 'viewer';
 }) {
   return (
     <div className='group overflow-hidden rounded-md border border-slate-300'>
       <Link href={`/campaigns/${campaign.campaign_id}`}>
         <ImageWithFallback
-          className='h-[250px] w-full bg-slate-50 object-cover'
+          className='h-[80vw] w-full bg-slate-50 object-cover sm:h-[250px]'
           src={campaign.media_links[0]}
           width={400}
           height={400}
@@ -34,7 +34,9 @@ export default function UserCampaignCard({
 
         <div className='space-y-1'>
           <p className='font-bold'>{campaign.title}</p>
-          {variant === 'viewer' && <p>{campaign.description}</p>}
+          {variant === 'viewer' && (
+            <p className='line-clamp-4'>{campaign.description}</p>
+          )}
         </div>
 
         <div className='grid grid-cols-2 gap-4'>
@@ -50,11 +52,9 @@ export default function UserCampaignCard({
             </Button>
           )}
 
-          {variant === 'viewer' && (
-            <DonateBtn campaign={campaign as SimpleCampaign} />
-          )}
+          {variant === 'viewer' && <DonateBtn campaign={campaign} />}
 
-          <ShareLinkBtn campaign={campaign as SimpleCampaign} />
+          <ShareLinkBtn campaign={campaign} />
         </div>
       </div>
     </div>
