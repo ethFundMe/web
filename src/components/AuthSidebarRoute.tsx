@@ -13,7 +13,7 @@ export const AuthSidebarRoute = () => {
     <SidebarNavLink
       link={`/dashboard/${address}`}
       title='Dashboard'
-      icon={<LiaUserCogSolid />}
+      icon={<LiaUserCogSolid size={20} />}
     />
   );
 };

@@ -1,36 +1,34 @@
+'use client';
+
 import { NAVBARROUTES } from '@/lib/constants';
 import { NavbarRoute } from '@/lib/types';
 import { useModalStore } from '@/store';
+import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { HiX } from 'react-icons/hi';
+import { useAccount } from 'wagmi';
 import { AuthSidebarRoute } from './AuthSidebarRoute';
 import { NavLink } from './NavLink';
 import { SidebarUserCard } from './SidebarUserCard';
+import { Button } from './ui/button';
 
 export const Sidebar = () => {
-  const { closeModal } = useModalStore();
+  const { openConnectModal } = useConnectModal();
+  const { isConnected, address } = useAccount();
+  const { openAccountModal } = useAccountModal();
+  // const { closeModal } = useModalStore();
 
   return (
     <motion.div
       animate={{ right: ['-100%', '0%'] }}
       exit={{ right: '-100%' }}
-      className='fixed right-0 top-0 h-screen w-full bg-white p-4 sm:w-[400px] sm:rounded-l-2xl'
+      className='fixed right-0 top-0 h-screen w-[80%] bg-white p-4 sm:w-[400px] sm:rounded-l-2xl'
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto'
+        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto px-6 sm:px-6'
       >
-        <div className='space-y-4'>
-          <div
-            className='mx-auto h-10 w-10 cursor-pointer rounded-full p-2 text-2xl text-red-500 hover:bg-slate-100'
-            onClick={closeModal}
-          >
-            <HiX />
-          </div>
-
-          <SidebarUserCard />
-        </div>
+        <SidebarUserCard />
 
         <ul className='flex-1 space-y-2'>
           <AuthSidebarRoute />
@@ -38,6 +36,24 @@ export const Sidebar = () => {
             <SidebarNavLink key={route.title} {...route} />
           ))}
         </ul>
+
+        {isConnected && address ? (
+          <Button
+            className='rounded-lg bg-red-900 text-lg font-semibold text-white hover:bg-red-900/90'
+            onClick={openAccountModal}
+            size='lg'
+          >
+            Disconnect
+          </Button>
+        ) : (
+          <Button
+            size='lg'
+            className='rounded-lg bg-primary-dark text-lg font-semibold hover:bg-primary-dark/90'
+            onClick={openConnectModal}
+          >
+            Connect Wallet
+          </Button>
+        )}
 
         <Image
           alt='efm-logo'
@@ -60,10 +76,10 @@ export const SidebarNavLink = ({ title, link, icon }: NavbarRoute) => {
         href={link}
         activeStyles={({ isActive }) =>
           isActive
-            ? 'bg-primary-dark text-white hover:bg-primary-default pl-4 font-semibold'
+            ? 'text-primary-default pl-4 font-bold text-lg'
             : 'hover:font-normal'
         }
-        className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-200'
+        className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-100'
       >
         {icon}
 

@@ -19,7 +19,7 @@ export const NAVBARROUTES: NavbarRoute[] = [
   {
     title: 'How to Donate',
     link: '/how-to-donate',
-    icon: FaRegQuestionCircle({ size: 20 }),
+    icon: FaRegQuestionCircle({ size: 20, strokeWidth: 0.5 }),
   },
   {
     title: 'Create Campaign',

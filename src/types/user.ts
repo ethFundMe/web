@@ -39,6 +39,5 @@ export interface User {
   bannerUrl: string | null;
   createdAt: Date;
   updatedAt: Date;
-  campaigns: SimpleCampaign[];
   fundings: Funding[];
 }
