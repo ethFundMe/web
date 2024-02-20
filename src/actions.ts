@@ -38,17 +38,23 @@ export async function urlPreview(url: string) {
   }
 }
 
-export const getCampaigns = async (page?: number) => {
-  const res = await fetch(
-    `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/?page=${page ?? 1}`,
-    { cache: 'no-store' }
-  );
+export const getCampaigns = async (
+  page?: number,
+  ethAddress?: `0x${string}`
+) => {
+  const url = ethAddress
+    ? `${
+        process.env.ETH_FUND_ENDPOINT
+      }/api/campaigns/?creator=${ethAddress}&page=${page ?? 1}`
+    : `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/?page=${page ?? 1}`;
+
+  const res = await fetch(url, { cache: 'no-store' });
   const data = await res.json();
 
   const campaigns: Campaign[] = data.campaigns;
   const totalCampaigns: number = data.meta.totalCampaigns;
 
-  return { campaigns: campaigns as Campaign[], totalCampaigns };
+  return { campaigns, totalCampaigns };
 };
 
 export const getCampaign = async (id: number) => {

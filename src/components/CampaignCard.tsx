@@ -1,12 +1,14 @@
 'use client';
 
+import { getUser } from '@/actions';
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
+import { User } from '@/types';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
@@ -15,11 +17,17 @@ export const CampaignCard = ({
   inSidebar = false,
 }: {
   campaign: Campaign;
+
   full?: boolean;
   inSidebar?: boolean;
 }) => {
   const router = usePRouter();
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    getUser(campaign.creator as `0x${string}`).then((res) => setUser(res));
+  }, [campaign.creator]);
 
   return (
     <div
@@ -59,8 +67,9 @@ export const CampaignCard = ({
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
           <div className='relative h-[48px] w-[48px] flex-shrink-0'>
-            <Image
-              src={campaign.user.profileUrl ?? '/images/pfp.svg'}
+            <ImageWithFallback
+              src={(user && user.profileUrl) ?? ''}
+              fallback='/images/pfp.svg'
               className='rounded-full bg-slate-200 object-cover'
               fill
               sizes='48px'
@@ -71,8 +80,8 @@ export const CampaignCard = ({
           <div>
             <p className={TextSizeStyles.small}>Organizer</p>
             <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {campaign.user?.fullName ??
-                formatWalletAddress(campaign.creator as `0x${string}`)}{' '}
+              {(user && user.fullName) ??
+                formatWalletAddress(campaign.creator as `0x${string}`)}
             </p>
           </div>
         </div>

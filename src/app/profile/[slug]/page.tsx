@@ -1,4 +1,4 @@
-import { getUser } from '@/actions';
+import { getCampaigns, getUser } from '@/actions';
 import Navbar from '@/components/Navbar';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
@@ -18,6 +18,7 @@ export async function generateMetadata(
   const id = params.slug;
 
   const user = await getUser(id as `0x${string}`);
+  const campaigns = await getCampaigns(1, user.ethAddress);
 
   return {
     title: `${user.fullName}`,
@@ -34,7 +35,8 @@ export async function generateMetadata(
           url: seoProfile(
             user.fullName,
             user.bio || '',
-            user.campaigns.length.toString()
+            String(campaigns.totalCampaigns)
+            // user.campaigns.length.toString()
           ),
         },
       ],
@@ -50,7 +52,7 @@ export async function generateMetadata(
           url: seoProfile(
             user.fullName,
             user.bio || '',
-            user.campaigns.length.toString()
+            String(campaigns.totalCampaigns)
           ),
         },
       ],
@@ -65,11 +67,12 @@ export default async function UserProfilePage({
 }) {
   if (!REGEX_CODES.walletAddress.test(slug)) return notFound();
   const user = await getUser(slug as `0x${string}`);
+  const { campaigns } = await getCampaigns(1, user.ethAddress);
 
   return (
     <>
       <Navbar />
-      <UserProfile user={user} />
+      <UserProfile user={user} campaigns={campaigns} />
     </>
   );
 }

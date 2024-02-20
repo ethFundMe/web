@@ -25,7 +25,7 @@ export default function ImageWithFallback({
   return (
     <Image
       className={cn(
-        loading && 'animate-pulse bg-slate-500',
+        loading && 'animate-pulse bg-slate-200',
         error && 'grayscale'
       )}
       src={error ? fallback : src}

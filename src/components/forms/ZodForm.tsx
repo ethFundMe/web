@@ -131,7 +131,7 @@ export default function CreateCampaignForm() {
         if (bannerUploadUrl && bannerUploadUrl.length > 0) {
           setSubmitStatus(null);
           setImagesUploaded([true, imagesUploaded[1]]);
-          toast.success('Banner uploaded');
+          // toast.success('Banner uploaded');
           return bannerUploadUrl;
         } else {
           setSubmitStatus(null);
@@ -153,7 +153,7 @@ export default function CreateCampaignForm() {
         if (OIUploadUrl && OIUploadUrl.length > 0) {
           setSubmitStatus(null);
           setImagesUploaded([imagesUploaded[0], true]);
-          toast.success('Other images uploaded');
+          // toast.success('Other images uploaded');
           return OIUploadUrl;
         } else {
           setSubmitStatus(null);
