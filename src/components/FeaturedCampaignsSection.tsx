@@ -18,7 +18,7 @@ export const FeaturedCampaignsSection = async () => {
         </div>
       </Container>
 
-      <FeaturedCampaign campaign={campaigns[0]} user={user} />
+      {user && <FeaturedCampaign campaign={campaigns[0]} user={user} />}
     </section>
   ) : null;
 };

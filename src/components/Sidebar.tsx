@@ -22,7 +22,7 @@ export const Sidebar = () => {
     <motion.div
       animate={{ right: ['-100%', '0%'] }}
       exit={{ right: '-100%' }}
-      className='fixed right-0 top-0 h-[100dvh] w-[80%] bg-white p-4 sm:w-[400px] sm:rounded-l-2xl'
+      className='fixed right-0 top-0 h-[100dvh] w-[80%] rounded-l-2xl bg-white p-2 py-4 sm:w-[400px] sm:p-4'
     >
       <div
         onClick={(e) => e.stopPropagation()}

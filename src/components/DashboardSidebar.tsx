@@ -1,13 +1,28 @@
 'use client';
 
 import { NavbarRoute } from '@/lib/types';
+import { userStore } from '@/store';
+import { useRouter } from 'next/navigation';
 import { BiUser } from 'react-icons/bi';
+import { FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline, IoTrashBin } from 'react-icons/io5';
 import { useAccount } from 'wagmi';
 import { NavLink } from './NavLink';
 
 export const DashboardSidebar = () => {
   const { address } = useAccount();
+  const { user } = userStore();
+  const { push } = useRouter();
+
+  if (!user) {
+    push('/');
+    return;
+  }
+
+  if (user.ethAddress !== address) {
+    push('/');
+    return;
+  }
 
   return (
     <aside className=' w-60 flex-shrink-0 p-4 pl-0'>
@@ -27,6 +42,11 @@ export const DashboardSidebar = () => {
             link={`/dashboard/${address}/delete-account`}
             title='Delete account'
             icon={<IoTrashBin />}
+          />
+          <SidebarNavLink
+            link={`/dashboard/${address}/earnings`}
+            title='Earnings'
+            icon={<FaEthereum />}
           />
         </ul>
       </div>

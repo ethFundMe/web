@@ -11,7 +11,7 @@ export const SidebarUserCard = () => {
   const { isConnected, address } = useAccount();
 
   const view = (
-    <div className='border-b border-gray-300 py-6'>
+    <div className='border-b border-gray-300 py-4 sm:py-6'>
       {isConnected && address ? (
         <View address={address} />
       ) : (
@@ -49,15 +49,14 @@ const View = ({ address }: { address?: `0x${string}` }) => {
     <div className='flex items-center gap-4'>
       {!loading && (
         <>
-          <div className='h-20 w-20 overflow-hidden rounded-full bg-slate-100'>
-            <ImageWithFallback
-              src={userDetails?.profileUrl ?? ''}
-              fallback='/images/pfp.svg'
-              width={300}
-              height={300}
-              alt={userDetails?.fullName ?? ''}
-            />
-          </div>
+          <ImageWithFallback
+            className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-slate-100 object-cover'
+            src={userDetails?.profileUrl ?? ''}
+            fallback='/images/pfp.svg'
+            width={300}
+            height={300}
+            alt={userDetails?.fullName ?? ''}
+          />
 
           <div>
             <p className='text-xl font-bold text-primary-default'>
