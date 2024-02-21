@@ -14,7 +14,7 @@ import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
 import { seoCampaign } from '@/lib/seoBannerUrl';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { formatEther } from 'viem';
 
 type Props = {
@@ -22,56 +22,66 @@ type Props = {
 };
 
 export async function generateMetadata(
-  { params }: Props
-  // parent: ResolvingMetadata
+  { params }: Props,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
-  const user = await getUser(campaign.creator as `0x${string}`);
+  if (!campaign) notFound();
 
-  return {
-    title: `${campaign.title}`,
-    description: `${campaign.description}`,
-    keywords:
-      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
-    openGraph: {
-      type: 'website',
-      title: `${campaign.title}`,
-      description: `${campaign.description}`,
-      images: [
-        {
-          url: seoCampaign(
-            user.fullName,
-            parseFloat(formatEther(BigInt(campaign.goal))),
-            campaign.title,
-            campaign.description,
-            campaign?.media_links[0] || ''
-          ),
+  const user = await getUser(campaign.creator as `0x${string}`);
+  if (!user) notFound();
+
+  const previousMetaData = await parent;
+
+  return user
+    ? {
+        title: `${campaign.title}`,
+        description: `${campaign.description}`,
+        keywords:
+          'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+        openGraph: {
+          type: 'website',
+          title: `${campaign.title}`,
+          description: `${campaign.description}`,
+          images: [
+            {
+              url: seoCampaign(
+                user.fullName,
+                parseFloat(formatEther(BigInt(campaign.goal))),
+                campaign.title,
+                campaign.description,
+                campaign?.media_links[0] || ''
+              ),
+            },
+          ],
+          url: 'https://ethfund.me',
         },
-      ],
-      url: 'https://ethfund.me',
-    },
-    twitter: {
-      title: `${campaign.title}`,
-      card: 'summary_large_image',
-      description: `${campaign.description}`,
-      images: [
-        {
-          url: seoCampaign(
-            user.fullName,
-            parseFloat(formatEther(BigInt(campaign.goal))),
-            campaign.title,
-            campaign.description,
-            campaign?.media_links[0] || ''
-          ),
+        twitter: {
+          title: `${campaign.title}`,
+          card: 'summary_large_image',
+          description: `${campaign.description}`,
+          images: [
+            {
+              url: seoCampaign(
+                user.fullName,
+                parseFloat(formatEther(BigInt(campaign.goal))),
+                campaign.title,
+                campaign.description,
+                campaign?.media_links[0] || ''
+              ),
+            },
+          ],
+          site: '@ethfundme',
+          creator: '@ethfundme',
         },
-      ],
-      site: '@ethfundme',
-      creator: '@ethfundme',
-    },
-  };
+      }
+    : {
+        title: previousMetaData.title,
+        description: previousMetaData.description,
+      };
 }
 
 export default async function CampaignPage({
@@ -82,9 +92,10 @@ export default async function CampaignPage({
   const campaign = await getCampaign(parseInt(slug));
   const campaignsData = await getCampaigns();
   const { campaigns } = campaignsData;
+  if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
 
-  if (!campaign) notFound();
+  if (!user) return;
 
   const campaignsToShow = campaigns
     .filter((_) => _.campaign_id !== campaign.campaign_id)

@@ -16,7 +16,7 @@ export default async function UpdateUserProfilePage({
         Update your profile
       </h1>
 
-      <UpdateProfileForm user={user} />
+      {user && <UpdateProfileForm user={user} />}
     </div>
   );
 }
