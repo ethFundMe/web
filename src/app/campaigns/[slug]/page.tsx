@@ -50,7 +50,7 @@ export async function generateMetadata(
             {
               url: seoCampaign(
                 user.fullName,
-                parseFloat(formatEther(BigInt(campaign.goal))),
+                parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
                 campaign?.media_links[0] || ''
@@ -67,7 +67,7 @@ export async function generateMetadata(
             {
               url: seoCampaign(
                 user.fullName,
-                parseFloat(formatEther(BigInt(campaign.goal))),
+                parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
                 campaign?.media_links[0] || ''
