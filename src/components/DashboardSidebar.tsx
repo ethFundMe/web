@@ -39,14 +39,14 @@ export const DashboardSidebar = () => {
             icon={<IoPencilOutline />}
           />
           <SidebarNavLink
-            link={`/dashboard/${address}/delete-account`}
-            title='Delete account'
-            icon={<IoTrashBin />}
-          />
-          <SidebarNavLink
             link={`/dashboard/${address}/earnings`}
             title='Earnings'
             icon={<FaEthereum />}
+          />
+          <SidebarNavLink
+            link={`/dashboard/${address}/delete-account`}
+            title='Delete account'
+            icon={<IoTrashBin />}
           />
         </ul>
       </div>

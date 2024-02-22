@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatWalletAddress(address: `0x${string}`) {
-  const shortAddress = address.slice(0, 3) + '...' + address.slice(-5);
+  const shortAddress = address.slice(0, 7) + '...' + address.slice(-5);
   return shortAddress;
 }
 
