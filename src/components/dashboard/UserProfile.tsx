@@ -84,9 +84,9 @@ export const UserProfile = ({
           <div
             className='banner group flex h-[calc(100vw*0.5)] max-h-[500px] flex-col items-end overflow-hidden md:h-72 md:max-h-max'
             style={{
-              background: `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%), url(${
-                user.bannerUrl ?? '/images/efm-header.png'
-              }) center center/cover no-repeat`,
+              background: user.bannerUrl
+                ? `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%),url(${user.bannerUrl}) center center/cover no-repeat`
+                : '#8c929a',
             }}
           >
             {user.ethAddress === address && (
@@ -203,7 +203,7 @@ export const UserProfile = ({
                 </div>
 
                 {!user.isVerified && address === user.ethAddress && (
-                  <Button variant='secondary'>
+                  <Button>
                     <Link href='/verify'>Get verified</Link>
                   </Button>
                 )}
