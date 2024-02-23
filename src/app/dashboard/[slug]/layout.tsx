@@ -28,9 +28,7 @@ export default async function DashboardLayout({
 
       <Container className='h-full'>
         <div className='flex items-start'>
-          <div className='hidden md:block'>
-            <DashboardSidebar />
-          </div>
+          <DashboardSidebar />
 
           {children}
         </div>
