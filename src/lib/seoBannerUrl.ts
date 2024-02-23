@@ -118,59 +118,75 @@ export function seoCampaign(
   return refinedcombMessage;
 }
 
-export function seoProfile(name: string, bio: string, campaigns: string) {
-  const isVerified = false;
-  let number = 0;
+export function seoProfile(fullName: string, bio: string, campaigns: string) {
+  const name = fullName.toUpperCase();
+  const isVerified = true;
+  let isVerifX = 20;
+  const isVeriff = 251;
+  const nameY = '250';
+  const profileY = '70';
+  const descripY = '842';
+  const descripWidth = '1200';
 
-  if (name.length < 14) {
-    number = name.length * 13;
-  }
-  if (name.length > 16) {
-    number = name.length * (name.length - 8);
-  }
-
-  // // Ensure name does not exceed 27 characters
-  // if (name.length > 28) {
-  //     let words = name.split(' ');
-  //     while (name.length > 28 && words.length > 1) {
-  //         words.pop();
-  //         name = words.join(' ') + ". . .";
-  //     }
-  // }
-
-  if (bio.length > 121) {
+  if (bio.length > 188) {
     const words = bio.split(' ');
-    while (bio.length > 121 && words.length > 1) {
+    while (bio.length > 188 && words.length > 1) {
       words.pop();
-      bio = words.join(' ') + '. . .';
+      bio = words.join(' ') + ' .  .  .';
     }
   }
-
   if (campaigns == '0') {
     campaigns = 'NO ';
   }
 
   const link1 =
-    'https://res.cloudinary.com/dg68lnbnq/image/fetch/co_rgb:FFFFFF,w_1300,c_fit,l_text:Mona-sans-BoldWide.ttf_83_bold_normal_left:' +
-    encodeURIComponent(name);
+    'https://res.cloudinary.com/dg68lnbnq/image/upload/co_rgb:FFFFFF,c_fit,l_text:Mona-Sans-BoldWide.ttf_83_bold_normal_left_line_spacing_14:' +
+    encodeURIComponent(encodeURIComponent(cutAndAddEllipsis(name)));
   const link2 =
-    '/fl_layer_apply,g_west,x_106,y_254/co_rgb:FFFFFF,w_900,c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left:' +
-    encodeURIComponent(bio);
+    ',$lineHeight_h/fl_layer_apply,g_west,x_106,y_' +
+    nameY +
+    '/co_rgb:FFFFFF,w_' +
+    descripWidth +
+    ',c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left_line_spacing_5:' +
+    encodeURIComponent(encodeURIComponent(bio));
   const link3 =
-    '/fl_layer_apply,g_west,x_108,y_352/co_rgb:a6a6a6,w_900,c_fit,l_text:Mona-sans-BoldWide.ttf_29_normal_left:' +
-    encodeURIComponent(campaigns + 'ACTIVE CAMPAIGNS');
+    '/fl_layer_apply,g_north_west,x_108,y_' +
+    descripY +
+    '/co_rgb:a6a6a6,w_900,c_fit,l_text:Mona-sans-BoldWide.ttf_29_normal_left:' +
+    encodeURIComponent(encodeURIComponent(campaigns + ' ACTIVE CAMPAIGNS'));
   let link4 = ' ';
 
-  if (isVerified) {
+  if (isVerified == true) {
     link4 =
-      '/fl_layer_apply,g_west,x_158,y_395/l_verified_xcic9g/c_scale,w_88/e_mask,fl_layer_apply,g_center,y_250,x_' +
-      number.toString() +
-      '/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_70/SEO-USER_BG_yurvdq.jpg';
-  } else {
+      '/fl_layer_apply,g_west,x_158,y_399/l_verified_xcic9g/c_scale,w_88/e_mask,fl_layer_apply,g_west,y_' +
+      isVeriff +
+      ',x_' +
+      isVerifX +
+      '/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_' +
+      profileY +
+      '/SEO-USER_BG_yurvdq.jpg';
+  } else if (isVerified == false) {
     link4 =
-      '/fl_layer_apply,g_west,x_158,y_395/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_70/SEO-USER_BG_yurvdq.jpg';
+      '/fl_layer_apply,g_west,x_158,y_399/l_gaffvubpchmdfgimfhdw/c_scale,w_200/fl_layer_apply,g_west,x_100,y_' +
+      profileY +
+      '/SEO-USER_BG_yurvdq.jpg';
   }
 
+  function cutAndAddEllipsis(str: string) {
+    if (str.length <= 20) {
+      isVerifX = 61 + name.length * 60;
+
+      return str;
+    } else {
+      // Slice the array to get the first 51 words
+      const slicedTitle = str.slice(0, 20);
+      // Join the sliced words back into a string and add ellipsis
+      isVerifX = 1380;
+      /*(name.length * 56)*/
+      console.log('More than 20' + name.length);
+      return slicedTitle + ' .  .  .';
+    }
+  }
   const combinedMessage = link1 + link2 + link3 + link4;
   // console.log(combinedMessage);
   return combinedMessage;

@@ -39,7 +39,7 @@ export async function generateMetadata(
             {
               url: seoProfile(
                 user.fullName,
-                user.bio || '',
+                'redd',
                 String(campaigns.totalCampaigns)
                 // user.campaigns.length.toString()
               ),
@@ -56,7 +56,7 @@ export async function generateMetadata(
             {
               url: seoProfile(
                 user.fullName,
-                user.bio || '',
+                'Test Bio',
                 String(campaigns.totalCampaigns)
               ),
             },
