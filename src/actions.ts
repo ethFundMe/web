@@ -52,7 +52,7 @@ export const getCampaigns = async (
   const data = await res.json();
 
   const campaigns: Campaign[] = data.campaigns;
-  const totalCampaigns: number = data.meta.totalCampaigns;
+  const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
 };

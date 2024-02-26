@@ -7,7 +7,7 @@ import { Button, Input, Textarea } from '../inputs';
 
 export const Footer = () => {
   return (
-    <footer className='bg-primary-dark text-white'>
+    <footer className='relative bg-primary-dark text-white'>
       <Container className='py-16 text-sm'>
         <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>
           <Link

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
-import DashboardMobileMenu from './DashboardMobileMenu';
+import DashboardMobileSidebar from './DashboardMobileSidebar';
 import { NavLink } from './NavLink';
 
 export const DashboardSidebar = () => {
@@ -43,7 +43,9 @@ export const DashboardSidebar = () => {
         </div>
       </aside>
 
-      <DashboardMobileMenu routes={routes} />
+      <DashboardMobileSidebar routes={routes} />
+      {/* <DashboardBottomTabs routes={routes} /> */}
+      {/* <DashboardMobileMenu routes={routes} /> */}
     </>
   );
 };

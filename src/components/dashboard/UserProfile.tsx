@@ -82,7 +82,7 @@ export const UserProfile = ({
       <div className='flex-1 rounded-md'>
         <div className='header'>
           <div
-            className='banner group flex h-[calc(100vw*0.5)] max-h-[500px] flex-col items-end overflow-hidden md:h-72 md:max-h-max'
+            className='banner group flex h-[calc(100vw*0.5)] max-h-[400px] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
             style={{
               background: user.bannerUrl
                 ? `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%),url(${user.bannerUrl}) center center/cover no-repeat`
@@ -122,7 +122,13 @@ export const UserProfile = ({
             )}
           </div>
 
-          <Container className='flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'>
+          <Container
+            className='-mt-20 flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'
+            style={{
+              background:
+                'linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%, rgba(255,255,255, 1) 100%)',
+            }}
+          >
             <Dialog>
               <DialogTrigger className='group relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                 <Image
