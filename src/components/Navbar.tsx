@@ -1,5 +1,6 @@
 'use client';
 
+import { getUser } from '@/actions';
 import { NAVBARROUTES } from '@/lib/constants';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { useModalStore } from '@/store/modal';
@@ -9,6 +10,7 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -20,6 +22,15 @@ const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+
+  useEffect(() => {
+    (async function () {
+      if (address && isConnected) {
+        const a = await getUser(address);
+        console.log({ a });
+      }
+    })();
+  }, [address, isConnected]);
 
   return (
     <motion.nav

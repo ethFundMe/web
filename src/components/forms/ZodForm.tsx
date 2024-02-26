@@ -9,6 +9,7 @@ import {
   createUrl,
   uploadToCloudinary,
 } from '@/lib/utils';
+import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
@@ -59,6 +60,8 @@ export default function CreateCampaignForm() {
   const { address } = useAccount();
   const router = useRouter();
 
+  const { user } = userStore();
+
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
   const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
     false,
@@ -74,7 +77,9 @@ export default function CreateCampaignForm() {
   };
 
   const campaignType = getCampaignType();
-  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(false);
+  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(
+    user ? user.isVerified : false
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {

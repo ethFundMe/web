@@ -67,8 +67,7 @@ export const AccountForm = () => {
     } catch (error) {
       setIsLoading(false);
       console.error(error);
-      // eslint-disable-next-line quotes
-      toast.error("We couldn't create your account.");
+      toast.error('We could not create your account.');
       router.refresh();
     }
   };
