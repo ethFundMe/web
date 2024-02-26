@@ -11,6 +11,9 @@ export default async function UserProfilePage({
   if (!REGEX_CODES.walletAddress.test(slug)) return notFound();
 
   const user = await getUser(slug as `0x${string}`);
+
+  if (!user) return;
+
   const { campaigns } = await getCampaigns(1, user.ethAddress);
 
   return <UserProfile user={user} campaigns={campaigns} />;

@@ -15,7 +15,7 @@ export default function UserCampaignCard({
   variant?: 'user' | 'viewer';
 }) {
   return (
-    <div className='group overflow-hidden rounded-md border border-slate-300'>
+    <div className='group flex flex-col overflow-hidden rounded-md border border-slate-300'>
       <Link href={`/campaigns/${campaign.campaign_id}`}>
         <ImageWithFallback
           className='h-[80vw] w-full bg-slate-50 object-cover sm:h-[250px]'
@@ -26,20 +26,20 @@ export default function UserCampaignCard({
         />
       </Link>
 
-      <div className='space-y-2 border-t border-slate-300 px-4 py-3'>
+      <div className='flex flex-1 flex-col gap-3 border-t border-slate-300 px-4 py-3'>
         <DonationObjectiveIndicator
           currentAmount={campaign.total_accrued}
           seekingAmount={campaign.goal}
         />
 
-        <div className='space-y-1'>
+        <div className='h-full space-y-2'>
           <p className='font-bold'>{campaign.title}</p>
           {variant === 'viewer' && (
-            <p className='line-clamp-4'>{campaign.description}</p>
+            <p className='line-clamp-3'>{campaign.description}</p>
           )}
         </div>
 
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 gap-x-4'>
           {variant === 'user' && (
             <Button asChild variant='outline'>
               <Link

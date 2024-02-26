@@ -52,7 +52,7 @@ export const getCampaigns = async (
   const data = await res.json();
 
   const campaigns: Campaign[] = data.campaigns;
-  const totalCampaigns: number = data.meta.totalCampaigns;
+  const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
 };
@@ -76,9 +76,9 @@ export const getUser = async (userId: `0x${string}`) => {
   );
   const data = await res.json();
 
-  const user: User = data;
+  const user = data;
 
-  return user ?? null;
+  return user?.error ? null : (user as User);
 };
 
 export const updateUser = async (userDetails: {
@@ -106,6 +106,7 @@ export const updateUser = async (userDetails: {
   const data = await res.json();
 
   const resData: User = data;
+
   if (data.error) {
     toast.error('Failed to update profile');
     throw new Error('Failed to update profile');

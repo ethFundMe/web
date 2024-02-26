@@ -5,7 +5,7 @@ import { TextSizeStyles } from '@/lib/styles';
 
 export default function VerifyPage() {
   return (
-    <div className='min-h-[calc(100vh-260px)]'>
+    <div className='min-h-[calc(100dvh-269px)]'>
       <Navbar />
 
       <Container>

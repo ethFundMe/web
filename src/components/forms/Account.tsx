@@ -101,8 +101,8 @@ export const AccountForm = () => {
           placeholder='Enter your email'
         />
       </fieldset>
-      <Button type='submit' disabled={isLoading}>
-        {isLoading ? 'Loading...' : 'Create'}
+      <Button type='submit' disabled={isLoading} className='w-full'>
+        {isLoading ? 'Loading...' : 'Create account'}
       </Button>
     </form>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { updateUser } from '@/actions';
-import { formatWalletAddress } from '@/lib/utils';
+import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -13,6 +13,7 @@ import useRefs from 'react-use-refs';
 import { useAccount } from 'wagmi';
 import { Container } from '../Container';
 import DnDUpload from '../DnDUpload';
+import EarningsCard from '../EarningsCard';
 import UserCampaignCard from '../UserCampaignCard';
 import { Button } from '../ui/button';
 import {
@@ -73,16 +74,19 @@ export const UserProfile = ({
       });
   };
 
+  // if (address === user.ethAddress)
+  //   return router.push(`/dashboard/${user.ethAddress}`);
+
   return (
     <div className='mb-20 w-full'>
       <div className='flex-1 rounded-md'>
         <div className='header'>
           <div
-            className='banner group flex h-[calc(100vw*0.5)] max-h-[500px] flex-col items-end overflow-hidden md:h-72 md:max-h-max'
+            className='banner group flex h-[calc(100vw*0.5)] max-h-[400px] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
             style={{
-              background: `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%), url(${
-                user.bannerUrl ?? '/images/efm-header.png'
-              }) center center/cover no-repeat`,
+              background: user.bannerUrl
+                ? `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%),url(${user.bannerUrl}) center center/cover no-repeat`
+                : '#8c929a',
             }}
           >
             {user.ethAddress === address && (
@@ -118,7 +122,13 @@ export const UserProfile = ({
             )}
           </div>
 
-          <Container className='flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'>
+          <Container
+            className='-mt-20 flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'
+            style={{
+              background:
+                'linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%, rgba(255,255,255, 1) 100%)',
+            }}
+          >
             <Dialog>
               <DialogTrigger className='group relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                 <Image
@@ -199,7 +209,7 @@ export const UserProfile = ({
                 </div>
 
                 {!user.isVerified && address === user.ethAddress && (
-                  <Button variant='secondary'>
+                  <Button>
                     <Link href='/verify'>Get verified</Link>
                   </Button>
                 )}
@@ -213,29 +223,41 @@ export const UserProfile = ({
             </div>
           </Container>
 
-          <Container className='mt-8 space-y-6'>
-            <h2 className='text-xl font-bold'>Campaigns</h2>
-            {campaigns.length ? (
-              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {campaigns.map((_) => (
-                  <UserCampaignCard
-                    campaign={_}
-                    variant={
-                      user.ethAddress && user.ethAddress === address
-                        ? 'user'
-                        : 'viewer'
-                    }
-                    key={_.id}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className='grid min-h-[10rem]  w-full place-content-center'>
-                <p className={'mb-4 text-center text-xl text-gray-400'}>
-                  No campaigns started yet
-                </p>
-              </div>
+          <Container
+            className={cn(
+              'mt-8 space-y-6',
+              address === user.ethAddress && 'grid'
             )}
+          >
+            <div className='space-y-6 lg:col-span-9'>
+              <h2 className='text-xl font-bold'>Campaigns</h2>
+              {campaigns.length ? (
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                  {campaigns.map((_) => (
+                    <UserCampaignCard
+                      campaign={_}
+                      variant={
+                        user.ethAddress && user.ethAddress === address
+                          ? 'user'
+                          : 'viewer'
+                      }
+                      key={_.id}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className='grid min-h-[10rem]  w-full place-content-center'>
+                  <p className={'mb-4 text-center text-xl text-gray-400'}>
+                    No campaigns started yet
+                  </p>
+                </div>
+              )}
+            </div>
+            <div
+              className={cn(user.ethAddress !== address && 'hidden', 'hidden')}
+            >
+              <EarningsCard />
+            </div>
           </Container>
         </div>
       </div>

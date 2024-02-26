@@ -4,10 +4,10 @@ import { TextSizeStyles } from '@/lib/styles';
 
 export default function Account() {
   return (
-    <>
+    <div className='flex min-h-[calc(100dvh-269px)] flex-col'>
       <Navbar />
 
-      <main>
+      <main className='flex-1'>
         <div className='my-4 py-5 text-center md:py-0'>
           <h1 className={TextSizeStyles.h1}>Welcome to EthFundMe</h1>
           <p className='font-edium text-sm md:text-base'>
@@ -16,6 +16,6 @@ export default function Account() {
         </div>
         <AccountForm />
       </main>
-    </>
+    </div>
   );
 }
