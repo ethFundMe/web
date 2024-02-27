@@ -14,13 +14,16 @@ import {
   useWriteContract,
   type BaseError,
 } from 'wagmi';
-import { Button, Input } from '../inputs';
+import { Input } from '../inputs';
+import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
+import { Textarea } from '../ui/textarea';
 import { DonateFormProps } from './types';
 
 type DonateFormValues = {
   campaignID: number;
   amount: number;
+  comment?: string;
 };
 
 export default function DonateForm({
@@ -127,12 +130,23 @@ export default function DonateForm({
         step={0.01}
       />
 
+      <div>
+        <Textarea placeholder='Add a comment' {...register('comment')} />
+        {errors.comment && (
+          <p className='text-sm text-red-500'>{errors.comment.message}</p>
+        )}
+      </div>
+
       {customClose ?? address ? (
-        <Button wide disabled={isLoadingTxn}>
+        <Button
+          size='lg'
+          disabled={isLoadingTxn || isConfirmingTxn || isPending}
+          className='w-full disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-opacity-90'
+        >
           {isLoadingTxn ? 'Donating...' : 'Donate'}
         </Button>
       ) : (
-        <Button wide onClick={openConnectModal}>
+        <Button size='lg' className='w-full' onClick={openConnectModal}>
           Donate
         </Button>
       )}
