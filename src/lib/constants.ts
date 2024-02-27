@@ -140,7 +140,7 @@ export const FAQS = [
   {
     question: 'How can I start a campaign on EthFundMe?',
     answer:
-      "To start a campaign, you'll need to sign up for an account, complete any required verification processes, and then you can create a new project from your dashboard. Provide detailed information about your project, including your funding goal, timeline, and how the funds will be utilized. Once submitted, our team will review your project for approval.",
+      'To start a campaign, you will need to sign up for an account, complete any required verification processes, and then you can create a new project from your dashboard. Provide detailed information about your project, including your funding goal, timeline, and how the funds will be utilized. Once submitted, our team will review your project for approval.',
   },
   {
     question: 'Is there a fee to use EthFundMe?',
@@ -150,7 +150,7 @@ export const FAQS = [
   {
     question: 'How secure is EthFundMe?',
     answer:
-      "Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users' information.",
+      'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect the information of our users.',
   },
   {
     question: 'How can I contribute to a project on EthFundMe?',
