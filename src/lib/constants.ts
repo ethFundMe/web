@@ -153,11 +153,6 @@ question: 'How secure is EthFundMe?',
 	'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
 },
 {
-question: 'How can I contribute to a project on EthFundMe?',
-    answer:
-	'Once you\'ve found a project you want to support, you can contribute by clicking the "Donate" button on the project page. You\'ll be prompted to connect your Ethereum wallet and specify the amount of ETH you wish to contribute.',
-},
-{
 question: 'Do I get any rewards from using the platform?',
     answer:
 	'Both campaign creators and contributors are rewarded with the $FUNDER tokens depending on activity. Users are also rewarded by validating the contracts to keep them running smoothly.',
