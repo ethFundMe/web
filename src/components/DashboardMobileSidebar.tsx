@@ -1,3 +1,5 @@
+'use client';
+
 import { NavLink } from './NavLink';
 
 export default function DashboardMobileSidebar({
@@ -15,7 +17,7 @@ export default function DashboardMobileSidebar({
                 href={route.link}
                 activeStyles={({ isActive }) =>
                   isActive
-                    ? 'bg-primary-default text-white font-semibold'
+                    ? 'bg-primary-default hover:bg-opacity-80 text-white font-semibold'
                     : 'hover:bg-slate-200'
                 }
                 className='flex items-center justify-center rounded-md p-3 text-center'
