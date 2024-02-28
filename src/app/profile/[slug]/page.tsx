@@ -38,8 +38,9 @@ export async function generateMetadata(
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'redd',
+                user.bio || '',
                 String(campaigns.totalCampaigns)
                 // user.campaigns.length.toString()
               ),
@@ -55,8 +56,9 @@ export async function generateMetadata(
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'Test Bio',
+                user.bio || '',
                 String(campaigns.totalCampaigns)
               ),
             },

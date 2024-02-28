@@ -29,6 +29,8 @@ export async function generateMetadata(
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
+  console.log(campaign);
+
   if (!campaign) notFound();
 
   const user = await getUser(campaign.creator as `0x${string}`);
@@ -53,7 +55,8 @@ export async function generateMetadata(
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
-                campaign?.media_links[0] || ''
+                campaign?.media_links[0],
+                campaign.user.profileUrl
               ),
             },
           ],
@@ -70,7 +73,8 @@ export async function generateMetadata(
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
-                campaign?.media_links[0] || ''
+                campaign?.media_links[0],
+                campaign.user.profileUrl
               ),
             },
           ],
@@ -90,6 +94,8 @@ export default async function CampaignPage({
   params: { slug: string };
 }) {
   const campaign = await getCampaign(parseInt(slug));
+  // console.log(campaign);
+
   const campaignsData = await getCampaigns();
   const { campaigns } = campaignsData;
   if (!campaign) return;
