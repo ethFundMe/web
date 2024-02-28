@@ -13,8 +13,12 @@ import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import type { Metadata, ResolvingMetadata } from 'next';
+import Image from 'next/image';
+import { FaEthereum, FaTelegramPlane } from 'react-icons/fa';
 import { formatEther } from 'viem';
 
 type Props = {
@@ -101,10 +105,55 @@ export default async function CampaignPage({
     .filter((_) => _.campaign_id !== campaign.campaign_id)
     .slice(0, 3);
 
+  const chats = [
+    {
+      user: {
+        fullname: 'John Smith',
+      },
+      date: '2024-02-26T18:52:42.185Z',
+      // text: 'Thank you all for your incredible support! Every contribution means the world to us and brings us closer to our goal.',
+      text: '',
+      amt: 100000000000000000,
+    },
+    {
+      user: {
+        fullname: 'Emily Johnson',
+      },
+      date: '2024-02-26T19:30:00.000Z',
+      text: 'I just donated what I could. Let us keep spreading the word and helping those in need!',
+      amt: 5000000000000000,
+    },
+    {
+      user: {
+        fullname: 'David Rodriguez',
+      },
+      date: '2024-02-26T20:15:00.000Z',
+      text: 'This campaign is truly inspiring. I am proud to be a part of this community that comes together to support each other.',
+      // amt: 2500000000000000000,
+      amt: 0,
+    },
+    {
+      user: {
+        fullname: 'Sarah Thompson',
+      },
+      date: '2024-02-26T21:00:00.000Z',
+      text: 'It is heartwarming to see the impact we can make when we join forces. Let us keep the momentum going!',
+      amt: 100000000000000000,
+    },
+    {
+      user: {
+        fullname: 'Michael Nguyen',
+      },
+      date: '2024-02-26T22:00:00.000Z',
+      text: 'Small acts of kindness can create big changes. Proud to support this cause.',
+      amt: 200000000000000000,
+    },
+  ];
+
   return (
-    <>
-      <Container className='relative grid grid-cols-1 gap-4 py-10 sm:gap-8 lg:grid-cols-3 lg:items-start lg:py-12'>
-        <div className='space-y-5 md:col-span-2 lg:space-y-8'>
+    <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
+      <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
+        <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
           <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
             {campaign.title}
           </h2>
@@ -160,7 +209,75 @@ export default async function CampaignPage({
             <DonateXShareButtons campaign={campaign} />
           </div>
         </div>
-        <aside className='mt-16 space-y-4 pb-4'>
+
+        <aside className='mt-16 space-y-8'>
+          {/* Chats */}
+          <div className='chats flex flex-col space-y-4 pb-4'>
+            <h2
+              className={cn(
+                TextSizeStyles.h5,
+                'font-light text-primary-default'
+              )}
+            >
+              Comments & Donations
+            </h2>
+
+            <ScrollArea className='h-[500px] pr-4'>
+              <div className='space-y-4'>
+                {chats.map(({ user: { fullname }, date, amt, text }, j) => (
+                  <div
+                    key={j}
+                    className='rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm'
+                  >
+                    <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
+                      <div className='flex items-center gap-2'>
+                        <div className='relative h-8 w-8 flex-shrink-0'>
+                          <Image
+                            className='block flex-shrink-0 rounded-full object-cover'
+                            src='/images/pets.jpg'
+                            fill
+                            sizes='50px'
+                            alt='...'
+                          />
+                        </div>
+
+                        <div>
+                          <p>{fullname}</p>
+                          <small>
+                            {dayjs(date)
+                              .subtract(2, 'minute')
+                              .format('DD MMM, YYYY . HH : mm a')}
+                          </small>
+                        </div>
+                      </div>
+
+                      {!!amt && (
+                        <div className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'>
+                          <FaEthereum />
+                          <span>{formatEther(BigInt(amt))}</span>
+                        </div>
+                      )}
+                    </div>
+                    <p className='font-medium'>{text}</p>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+
+            <form className='relative space-y-4 rounded-md'>
+              <Textarea
+                placeholder='Enter your comments'
+                className='max-h-52'
+              />
+              <Button className='absolute bottom-2 right-2 p-0 px-2'>
+                <FaTelegramPlane size={20} />
+              </Button>
+            </form>
+          </div>
+        </aside>
+      </Container>
+      <Container>
+        <div className='space-y-4'>
           <h2
             className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
           >
@@ -169,27 +286,26 @@ export default async function CampaignPage({
               : 'No related campaigns'}
           </h2>
 
-          {campaignsToShow.length > 0 && (
-            <ScrollArea
-              className={cn(
-                'rounded-md border-primary-default lg:max-h-[800px] lg:border',
-                campaignsToShow.length > 1 ? 'h-[780px]' : 'h-[610px]'
-              )}
-            >
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
-                {campaignsToShow.map((_, idx) => (
-                  <>
-                    <CampaignCard inSidebar campaign={_} key={idx} />
-                    {idx !== 2 && (
-                      <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                    )}
-                  </>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-        </aside>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+            {campaignsToShow.map((_, idx) => (
+              <>
+                <div key={idx}>
+                  <CampaignCard campaign={_} />
+                  {campaignsToShow.length > 1 && idx !== 2 && (
+                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
+                  )}
+                </div>
+                <div key={idx}>
+                  <CampaignCard campaign={_} />
+                  {campaignsToShow.length > 1 && idx !== 2 && (
+                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
+                  )}
+                </div>
+              </>
+            ))}
+          </div>
+        </div>
       </Container>
-    </>
+    </div>
   );
 }
