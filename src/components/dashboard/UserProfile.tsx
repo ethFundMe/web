@@ -82,7 +82,7 @@ export const UserProfile = ({
       <div className='flex-1 rounded-md'>
         <div className='header'>
           <div
-            className='banner group flex h-[calc(100vw*0.5)] max-h-[400px] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
+            className='banner group flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
             style={{
               background: user.bannerUrl
                 ? `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%),url(${user.bannerUrl}) center center/cover no-repeat`
@@ -122,76 +122,78 @@ export const UserProfile = ({
             )}
           </div>
 
-          <Container
-            className='-mt-20 flex flex-col gap-4 py-4 lg:flex-row lg:items-start lg:py-8'
-            style={{
-              background:
-                'linear-gradient(rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%, rgba(255,255,255, 1) 100%)',
-            }}
-          >
-            <Dialog>
-              <DialogTrigger className='group relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
-                <Image
-                  className='h-full w-full object-cover'
-                  src={user.profileUrl ?? '/images/pfp.svg'}
-                  height={500}
-                  width={500}
-                  alt='user-pfp'
-                />
-                <div className='absolute left-0 top-0 grid h-full w-full place-content-center bg-black/50 text-center text-sm text-white opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100'>
-                  <span className='mx-auto block'>
-                    <Eye />
-                  </span>
-                  View
-                </div>
-              </DialogTrigger>
-              <DialogContent className='p-0.5'>
-                <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
+          <Container className='flex flex-col gap-4 py-4 lg:py-8'>
+            <div className='flex justify-between'>
+              <Dialog>
+                <DialogTrigger className='group relative -mt-24 h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-white bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                   <Image
-                    className='my-auto w-full object-cover'
+                    className='h-full w-full object-cover'
                     src={user.profileUrl ?? '/images/pfp.svg'}
                     height={500}
                     width={500}
-                    alt={user.fullName ?? 'profile-picture'}
+                    alt='user-pfp'
                   />
+                  <div className='absolute left-0 top-0 grid h-full w-full place-content-center bg-black/50 text-center text-sm text-white opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100'>
+                    <span className='mx-auto block'>
+                      <Eye />
+                    </span>
+                    View
+                  </div>
+                </DialogTrigger>
+                <DialogContent className='p-0.5'>
+                  <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
+                    <Image
+                      className='my-auto w-full object-cover'
+                      src={user.profileUrl ?? '/images/pfp.svg'}
+                      height={500}
+                      width={500}
+                      alt={user.fullName ?? 'profile-picture'}
+                    />
 
-                  {user.ethAddress === address && (
-                    <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
-                      <span
-                        title='Change image'
-                        className='cursor-pointer'
-                        onClick={() => setShowPfpUpload(true)}
-                      >
-                        <RefreshCcw />
-                      </span>
-
-                      {user.profileUrl && (
+                    {user.ethAddress === address && (
+                      <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
                         <span
-                          title='Remove image'
-                          className='cursor-pointer text-red-500'
+                          title='Change image'
+                          className='cursor-pointer'
+                          onClick={() => setShowPfpUpload(true)}
                         >
-                          <Trash />
+                          <RefreshCcw />
                         </span>
-                      )}
-                    </div>
+
+                        {user.profileUrl && (
+                          <span
+                            title='Remove image'
+                            className='cursor-pointer text-red-500'
+                          >
+                            <Trash />
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {showPfpUpload && (
+                    <DnDUpload handleUpload={handlePfpUpdate} maxFiles={1} />
                   )}
-                </div>
 
-                {showPfpUpload && (
-                  <DnDUpload handleUpload={handlePfpUpdate} maxFiles={1} />
-                )}
+                  <DialogClose
+                    ref={closePfpRef}
+                    className='pointer-events-none absolute opacity-0'
+                  >
+                    Close
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
 
-                <DialogClose
-                  ref={closePfpRef}
-                  className='pointer-events-none absolute opacity-0'
-                >
-                  Close
-                </DialogClose>
-              </DialogContent>
-            </Dialog>
+              {!user.isVerified && address === user.ethAddress && (
+                <Button>
+                  <Link href='/verify'>Get verified</Link>
+                </Button>
+              )}
+            </div>
 
-            <div className='w-full'>
-              <div className='flex justify-between'>
+            <div className='flex w-full justify-between'>
+              <div>
                 <div className='flex items-center gap-1'>
                   <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
                     {user.fullName}
@@ -208,18 +210,14 @@ export const UserProfile = ({
                   )}
                 </div>
 
-                {!user.isVerified && address === user.ethAddress && (
-                  <Button>
-                    <Link href='/verify'>Get verified</Link>
-                  </Button>
+                <p className='text-slate-500'>
+                  {formatWalletAddress(user.ethAddress)}
+                </p>
+
+                {user.bio && (
+                  <p className='max-w-[700px] text-sm'>{user.bio}</p>
                 )}
               </div>
-
-              <p className='text-slate-500'>
-                {formatWalletAddress(user.ethAddress)}
-              </p>
-
-              {user.bio && <p className='max-w-[700px] text-sm'>{user.bio}</p>}
             </div>
           </Container>
 
