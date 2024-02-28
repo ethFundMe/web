@@ -6,7 +6,6 @@ import {
   BiLogoInstagram,
   BiLogoTwitter,
 } from 'react-icons/bi';
-import { FaRegQuestionCircle } from 'react-icons/fa';
 import { MdOutlineCampaign } from 'react-icons/md';
 import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
@@ -15,11 +14,6 @@ export const NAVBARROUTES: NavbarRoute[] = [
     title: 'Campaigns',
     link: '/campaigns',
     icon: MdOutlineCampaign({ size: 25 }),
-  },
-  {
-    title: 'How to Donate',
-    link: '/how-to-donate',
-    icon: FaRegQuestionCircle({ size: 20, strokeWidth: 0.5 }),
   },
   {
     title: 'Create Campaign',

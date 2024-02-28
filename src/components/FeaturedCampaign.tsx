@@ -52,9 +52,12 @@ export default function FeaturedCampaign({
         style={{ background: 'linear-gradient(#004f6c96 60%,#004f6c)' }}
       >
         <div className='relative z-20 mx-auto flex max-w-2xl flex-col items-center text-center text-white'>
-          <p className='mb-3 text-xs font-semibold text-slate-300 md:text-base'>
-            {user.fullName} presents
-          </p>
+          <div className='mb-3 text-slate-300'>
+            <p className='font-semibold leading-[0]  md:text-lg md:leading-[1]'>
+              {user.fullName}
+            </p>
+            <span className='text-xs leading-[0] md:text-sm'>presents</span>
+          </div>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
             {campaign.title}
           </p>
