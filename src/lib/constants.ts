@@ -138,11 +138,6 @@ question: 'How does EthFundMe work?',
 	'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
 },
 {
-question: 'How can I start a campaign on EthFundMe?',
-    answer:
-	'To start a campaign, you\'ll need to sign up for an account, complete any required verification processes, and then you can create a new project from your dashboard. Provide detailed information about your project, including your funding goal, timeline, and how the funds will be utilized. Once submitted, our team will review your project for approval.',
-},
-{
 question: 'Is there a fee to use EthFundMe?',
     answer:
 	'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
@@ -153,9 +148,14 @@ question: 'How secure is EthFundMe?',
 	'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
 },
 {
+question: 'How can I contribute to a project on EthFundMe?',
+    answer:
+	'Once you\'ve found a project you want to support, you can contribute by clicking the "Donate" button on the project page. You\'ll be prompted to connect your Ethereum wallet and specify the amount of ETH you wish to contribute.',
+},
+{
 question: 'Do I get any rewards from using the platform?',
     answer:
-	'Both campaign creators and contributors are rewarded with the $FUNDER tokens depending on activity. Users are also rewarded by validating the contracts to keep them running smoothly.',
+	'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our system\'s reliability to enhance operational efficiency also earn $FUNDER tokens.',
 },
 ];
 
