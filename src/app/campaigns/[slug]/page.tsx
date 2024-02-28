@@ -29,7 +29,6 @@ export async function generateMetadata(
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
-  console.log(campaign);
 
   if (!campaign) notFound();
 
