@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     images: '/images/seo-common.jpg',
   },
   openGraph: {
+    title: 'Create Campaign',
     type: 'website',
     url: 'https://ethfund.me',
-    title: 'Campaigns',
     images: '/images/seo-common.jpg',
     description:
       'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
