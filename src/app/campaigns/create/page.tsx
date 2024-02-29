@@ -6,13 +6,13 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },
-  title: 'Create',
+  title: 'Create Campaign',
   description:
     'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
   keywords:
     'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
   twitter: {
-    title: 'Create',
+    title: 'Create Campaign',
     card: 'summary_large_image',
     description:
       'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
