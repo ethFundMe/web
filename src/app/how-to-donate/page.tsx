@@ -4,6 +4,34 @@ import Navbar from '@/components/Navbar';
 import { DONATIONSTEPS } from '@/lib/constants';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  // viewport: { width: 'device-width', initialScale: 1 },
+  title: 'How to Donate',
+  description:
+    'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+  keywords:
+    'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+  twitter: {
+    title: 'How to Donate',
+    card: 'summary_large_image',
+    description:
+      'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+    site: '@ethfundme',
+    creator: '@ethfundme',
+    images: '/images/seo-common.jpg',
+  },
+  openGraph: {
+    type: 'website',
+    url: 'https://ethfund.me',
+    title: 'How to Donate',
+    images: '/images/seo-common.jpg',
+    description:
+      'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+    siteName: 'EthFundMe',
+  },
+};
 
 export default async function HowToDonatePage() {
   // const { campaigns } = await getCampaigns();
