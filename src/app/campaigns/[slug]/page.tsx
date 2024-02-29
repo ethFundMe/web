@@ -188,8 +188,8 @@ export default async function CampaignPage({
                 <div className='relative h-[50px] w-[50px] flex-shrink-0'>
                   <ImageWithFallback
                     src={user.profileUrl ?? ''}
-                    fallback='/images/pfp.svg'
-                    className='block rounded-full bg-slate-50'
+                    fallback='/images/user-pfp.png'
+                    className='block rounded-full bg-slate-50 object-cover'
                     fill
                     alt='...'
                   />
@@ -257,10 +257,14 @@ export default async function CampaignPage({
                       </div>
 
                       {!!amt && (
-                        <div className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'>
+                        <Link
+                          href='/'
+                          target='_blank'
+                          className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
+                        >
                           <FaEthereum />
                           <span>{formatEther(BigInt(amt))}</span>
-                        </div>
+                        </Link>
                       )}
                     </div>
                     <p className='font-medium'>{text}</p>
@@ -293,20 +297,7 @@ export default async function CampaignPage({
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
             {campaignsToShow.map((_, idx) => (
-              <>
-                <div key={idx}>
-                  <CampaignCard campaign={_} />
-                  {campaignsToShow.length > 1 && idx !== 2 && (
-                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                  )}
-                </div>
-                <div key={idx}>
-                  <CampaignCard campaign={_} />
-                  {campaignsToShow.length > 1 && idx !== 2 && (
-                    <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                  )}
-                </div>
-              </>
+              <CampaignCard campaign={_} key={idx} />
             ))}
           </div>
         </div>
