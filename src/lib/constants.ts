@@ -122,34 +122,29 @@ export const CAMPAIGNTYPES: CampaignType[] = [
 
 export const FAQS = [
   {
-    question: 'What is EthFundMe?',
+    question: 'What is EthFundMe❓',
     answer:
-      'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives., families, and communities in need. It is a simple click to change lives',
+       'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives., families, and communities in need. It is a simple click to change lives',
   },
   {
-    question: 'How does EthFundMe work?',
+question: 'How does EthFundMe work🏋️?',
     answer:
-      'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
+	'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
 },
 {
-    question: 'Is there a fee to use EthFundMe?',
+question: 'Is there a fee💲 to use EthFundMe?',
     answer:
-      'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
+	'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
 },
 {
-    question: 'How secure is EthFundMe?',
+question: 'How secure🔒 is EthFundMe?',
     answer:
-      'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
+	'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
 },
 {
-    question: 'How can I contribute to a project on EthFundMe?',
+question: 'Do I get any rewards🎁 from using the platform?',
     answer:
-      'Once you\'ve found a project you want to support, you can contribute by clicking the "Donate" button on the project page. You\'ll be prompted to connect your Ethereum wallet and specify the amount of ETH you wish to contribute.',
-},
-{
-    question: 'Do I get any rewards from using the platform?',
-    answer:
-      'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our system\'s reliability to enhance operational efficiency also earn $FUNDER tokens.',
+	'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our system\'s reliability to enhance operational efficiency also earn $FUNDER tokens.',
 },
 ];
 
