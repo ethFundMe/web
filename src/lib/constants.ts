@@ -139,12 +139,12 @@ export const FAQS = [
   {
     question: 'How secure🔒 is EthFundMe?',
     answer:
-      "Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users' information.",
+      'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect the information of our users.',
   },
   {
     question: 'Do I get any rewards🎁 from using the platform?',
     answer:
-      "Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our system's reliability to enhance operational efficiency also earn $FUNDER tokens.",
+      'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining the reliability of our system to enhance operational efficiency also earn $FUNDER tokens.',
   },
 ];
 
