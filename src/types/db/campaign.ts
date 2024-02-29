@@ -14,6 +14,7 @@ export interface CampaignsTable {
   media_links: Array<string>;
   title: string;
   total_accrued: number;
+  user: UserTable;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }

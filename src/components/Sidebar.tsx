@@ -27,7 +27,7 @@ export const Sidebar = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto px-6 sm:px-6'
+        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-4 overflow-auto px-6 sm:px-6'
       >
         <SidebarUserCard />
 

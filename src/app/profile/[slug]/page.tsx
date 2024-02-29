@@ -27,19 +27,20 @@ export async function generateMetadata(
   return user
     ? {
         title: `${user.fullName}`,
-        description: `${user.bio}`,
+        description: `${user.bio ? user.bio : 'No Bio'}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
         openGraph: {
           type: 'website',
           title: `${user.fullName}`,
-          description: `${user.bio}`,
+          description: `${user.bio ? user.bio : 'No Bio'}`,
           url: process.env.NEXT_PUBLIC_WEB_URL,
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'redd',
+                user.bio || '',
                 String(campaigns.totalCampaigns)
                 // user.campaigns.length.toString()
               ),
@@ -49,14 +50,15 @@ export async function generateMetadata(
         twitter: {
           title: `${user.fullName}`,
           card: 'summary_large_image',
-          description: `${user.bio}`,
+          description: `${user.bio ? user.bio : 'No Bio'}`,
           site: '@ethfundme',
           creator: '@ethfundme',
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'Test Bio',
+                user.bio || '',
                 String(campaigns.totalCampaigns)
               ),
             },

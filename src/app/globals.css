@@ -99,10 +99,10 @@ body {
 
 /* Accordion styles */
 :root {
-  --primary: #dedede;
-  --secondary: #eeeeee;
-  --background: #eee;
-  --highlight: #ffda79;
+  --primary: #ededed;
+  --secondary: #f5f6f6;
+  --background: #eeeeee;
+  --highlight: #ffe092;
   /* Theme color */
   --theme: var(--primary);
 }
