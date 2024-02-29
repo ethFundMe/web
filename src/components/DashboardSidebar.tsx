@@ -5,25 +5,23 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
 import DashboardMobileSidebar from './DashboardMobileSidebar';
 import { NavLink } from './NavLink';
 
-export const DashboardSidebar = () => {
-  const { address } = useAccount();
+export const DashboardSidebar = ({
+  userAddress,
+}: {
+  userAddress: `0x${string}`;
+}) => {
   const { user } = userStore();
   const { push } = useRouter();
 
-  if (!user) {
-    return;
-  }
-
-  if (user.ethAddress !== address) {
+  if (!user || userAddress !== user.ethAddress) {
     push('/');
     return;
   }
 
-  const routes = getDashboardRoutes(address);
+  const routes = getDashboardRoutes(userAddress);
 
   return (
     <>

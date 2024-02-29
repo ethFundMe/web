@@ -10,7 +10,7 @@ export const FaqsSection = () => {
         <div className='py-5 text-center'>
           <h2 className={TextSizeStyles.h2}>Frequently Asked Questions</h2>
           <p className='text-lg'>
-            You may share the following concerns on using EthFundMe
+            You may share the following concerns about using EthFundMe
           </p>
         </div>
 
