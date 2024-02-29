@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     images: '/images/seo-common.jpg',
     description:
-      'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
+      'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
     site: '@ethfundme',
     creator: '@ethfundme',
   },
