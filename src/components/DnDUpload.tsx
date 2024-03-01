@@ -30,8 +30,6 @@ export default function DnDUpload({
     idle: 'bg-slate-100',
   };
 
-  // file.size > 1024 ** 2 * 2
-
   const fileSizeValidator = (file: File) => {
     if (file.size > 1024 ** 2 * 2) {
       setDropStatus('rejected');
@@ -103,7 +101,7 @@ export default function DnDUpload({
       return (
         <li key={file.name} className='w-full basis-20 text-sm'>
           <Image
-            className='h-auto w-full object-cover'
+            className='mx-auto h-52 w-auto object-cover'
             src={URL.createObjectURL(file)}
             width={800}
             height={800}
@@ -121,24 +119,34 @@ export default function DnDUpload({
           'absolute border-dashed overflow-hidden outline-2 outline-transparent rounded-md outline-dashed transition-all duration-150 ease-in-out left-0 top-0 h-full w-full cursor-pointer',
           (isDragActive || isDragAccept) && 'outline-blue-200 bg-slate-200',
           dropStatusStyles[dropStatus],
+          uploadStatus === 'uploading'
+            ? 'pointer-events-none'
+            : 'pointer-events-auto',
           className
         ),
       })}
     >
-      <div className='absolute left-1/2 top-1/2 flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center'>
-        {isDragActive ? (
-          <div className='flex flex-col items-center'>
-            <Download size={50} strokeWidth={1.2} />
-            <span className='mt-2'>Drop files here</span>
-          </div>
-        ) : (
-          <div className='flex flex-col items-center'>
-            <UploadCloud size={50} strokeWidth={1.2} />
-            <span className='mt-2 max-w-xl text-center'>
-              Drag files here or click to upload
-            </span>
-          </div>
+      <div
+        className={cn(
+          'absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center',
+          !!acceptedFiles || !!fileRejections ? 'h-fit py-4' : 'h-full'
         )}
+      >
+        <div className='flex h-full flex-col items-center justify-center'>
+          {isDragActive ? (
+            <>
+              <Download size={50} strokeWidth={1.2} />
+              <span className='mt-2'>Drop files here</span>
+            </>
+          ) : (
+            <>
+              <UploadCloud size={50} strokeWidth={1.2} />
+              <span className='mt-2 max-w-xl text-center'>
+                Drag files here or click to upload
+              </span>
+            </>
+          )}
+        </div>
 
         {!!dndAcceptedFiles.length && dndErrors.length === 0 && (
           <>
@@ -176,16 +184,7 @@ export default function DnDUpload({
         )}
       </div>
 
-      <div className='hidden h-full flex-col items-end'>
-        <Image
-          className='mt-auto opacity-10'
-          src='/images/efm-logo.svg'
-          width={800}
-          height={800}
-          alt='logo'
-        />
-      </div>
-      <input {...getInputProps()} />
+      <input {...getInputProps({ disabled: uploadStatus === 'uploading' })} />
     </div>
   );
 }

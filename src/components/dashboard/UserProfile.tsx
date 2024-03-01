@@ -128,7 +128,7 @@ export const UserProfile = ({
                 <DialogTrigger className='group relative -mt-24 h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-white bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
                   <Image
                     className='h-full w-full object-cover'
-                    src={user.profileUrl ?? '/images/pfp.svg'}
+                    src={user.profileUrl || '/images/user-pfp.png'}
                     height={500}
                     width={500}
                     alt='user-pfp'
@@ -144,7 +144,7 @@ export const UserProfile = ({
                   <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
                     <Image
                       className='my-auto w-full object-cover'
-                      src={user.profileUrl ?? '/images/pfp.svg'}
+                      src={user.profileUrl ?? '/images/user-pfp.png'}
                       height={500}
                       width={500}
                       alt={user.fullName ?? 'profile-picture'}
