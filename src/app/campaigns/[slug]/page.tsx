@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import { FaEthereum, FaTelegramPlane } from 'react-icons/fa';
 import { formatEther } from 'viem';
 
