@@ -69,14 +69,14 @@ const Navbar = () => {
           {isConnected && address && getCookie('efmToken') ? (
             <AuthNavbarMenu>
               <div className='flex cursor-pointer items-center gap-x-3'>
-                <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
+                <div className='relative h-9 w-9 overflow-hidden rounded-full bg-slate-200'>
                   <ImageWithFallback
                     className='flex-shrink-0 object-cover'
                     src={user?.profileUrl || ''}
                     fallback='/images/user-pfp.png'
                     alt='ENS Avatar'
-                    width={70}
-                    height={70}
+                    fill
+                    sizes='100px'
                   />
                 </div>
                 <p className='font-semibold'>{formatWalletAddress(address)}</p>
