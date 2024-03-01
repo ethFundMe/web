@@ -53,7 +53,7 @@ export default async function EarningsPage({
             </h2>
             <p>Tokens earned from all activities</p>
 
-            <p className='my-4 text-2xl font-bold lg:text-4xl'>1350 FUNDER</p>
+            <p className='my-4 text-2xl font-bold lg:text-4xl'>1350 FUNDME</p>
 
             <Button className='w-full max-w-72 text-lg font-bold'>
               Claim Tokens

@@ -6,6 +6,7 @@ import {
   BiLogoInstagram,
   BiLogoTwitter,
 } from 'react-icons/bi';
+import { FaRegQuestionCircle } from 'react-icons/fa';
 import { MdOutlineCampaign } from 'react-icons/md';
 import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
@@ -14,6 +15,11 @@ export const NAVBARROUTES: NavbarRoute[] = [
     title: 'Campaigns',
     link: '/campaigns',
     icon: MdOutlineCampaign({ size: 25 }),
+  },
+  {
+    title: 'How to Donate',
+    link: '/how-to-donate',
+    icon: FaRegQuestionCircle({ size: 20, strokeWidth: 0.5 }),
   },
   {
     title: 'Create Campaign',
@@ -121,31 +127,31 @@ export const CAMPAIGNTYPES: CampaignType[] = [
 ];
 
 export const FAQS = [
-  {
-    question: '❓ What is EthFundMe',
-    answer:
+{
+  question: '❓ What is EthFundMe',
+  answer:
       'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives., families, and communities in need. It is a simple click to change lives',
-  },
-  {
-    question: '🏋️ How does EthFundMe work?',
+},
+{
+question: '🏋️ How does EthFundMe work?',
     answer:
-	    'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
-  },
-  {
-     question: '💲 Is there a fee to use EthFundMe?',
-     answer:
-       'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
-  },
-  {
-     question: '🔒 How secure is EthFundMe?',
-     answer:
-       'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
-  },
-  {
-     question: '🎁 Do I get any rewards from using the platform?',
-     answer:
-       'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDER tokens.',
-    },
+	'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
+},
+{
+question: '💲 Is there a fee to use EthFundMe?',
+    answer:
+	'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
+},
+{
+question: '🔒 How secure is EthFundMe?',
+    answer:
+	'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect our users\' information.',
+},
+{
+question: '🎁 Do I get any rewards from using the platform?',
+    answer:
+	'Both campaign creators and contributors are rewarded with the $FUNDME tokens relative to their engagement levels. Moreover, users who contribute to maintaining our system\'s reliability to enhance operational efficiency also earn $FUNDME tokens.',
+},
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
