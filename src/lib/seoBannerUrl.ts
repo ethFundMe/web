@@ -168,7 +168,7 @@ export function seoProfile(
   }
 
   if (!bio) {
-    bio = 'no bio yet';
+    bio = '~';
   }
 
   if (!campaigns) {
@@ -207,7 +207,7 @@ export function seoProfile(
     '/co_rgb:a6a6a6,w_900,c_fit,l_text:Mona-sans-BoldWide.ttf_29_normal_left:' +
     encodeURIComponent(
       encodeURIComponent(
-        campaigns + ` ACTIVE CAMPAIGN${campaigns == '1' ? 'S' : ''}`
+        campaigns + ` ACTIVE CAMPAIGN${campaigns == '1' ? '' : 'S'}`
       )
     );
   let link4 = ' ';

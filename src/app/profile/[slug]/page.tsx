@@ -27,13 +27,13 @@ export async function generateMetadata(
   return user
     ? {
         title: `${user.fullName}`,
-        description: `${user.bio ? user.bio : 'No Bio'}`,
+        description: `${user.bio ? user.bio : '~'}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
         openGraph: {
           type: 'website',
           title: `${user.fullName}`,
-          description: `${user.bio ? user.bio : 'No Bio'}`,
+          description: `${user.bio ? user.bio : '~'}`,
           url: process.env.NEXT_PUBLIC_WEB_URL,
           images: [
             {
@@ -51,7 +51,7 @@ export async function generateMetadata(
         twitter: {
           title: `${user.fullName}`,
           card: 'summary_large_image',
-          description: `${user.bio ? user.bio : 'No Bio'}`,
+          description: `${user.bio ? user.bio : '~'}`,
           site: '@ethfundme',
           creator: '@ethfundme',
           images: [
