@@ -107,7 +107,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             name='fullName'
             render={({ field }) => (
               <FormItem className='col-span-2'>
-                <FormLabel>Fullname</FormLabel>
+                <FormLabel>Full name</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter your fullName' {...field} />
                 </FormControl>
@@ -141,7 +141,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             name='creatorFee'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Creator Fees</FormLabel>
+                <FormLabel>Creator fee</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
