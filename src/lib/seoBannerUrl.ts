@@ -39,12 +39,12 @@ export function seoCampaign(
     wordCount = 0;
 
   let Background = 'SEO-Background_ffveye',
-    DescripSpacing = '888',
+    descripSpacing = '888',
     goalPosition = '110',
     titlePosition = '696';
   if (title.length <= 25) {
     (Background = 'SEO-SINGLE-LINE_ujj2ir'),
-      (DescripSpacing = '912'),
+      (descripSpacing = '912'),
       (goalPosition = '242'),
       (titlePosition = '820');
   }
@@ -93,7 +93,7 @@ export function seoCampaign(
     link2 = '/fl_layer_apply,g_west,x_165,y_-260';
     link5 =
       '/fl_layer_apply,g_north_west,x_120,y_' +
-      DescripSpacing +
+      descripSpacing +
       '/l_fetch:' +
       encodedUrl +
       '/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_142/l_verified_xcic9g/c_scale,w_40/e_mask,fl_layer_apply,g_north_west,x_' +
@@ -101,12 +101,12 @@ export function seoCampaign(
       ',y_250/';
   } else if (isVerified == false) {
     link2 = '/fl_layer_apply,g_west,x_115,y_-260';
-    link5 =
+    link5 ==
       '/fl_layer_apply,g_north_west,x_120,y_' +
-      DescripSpacing +
-      '/l_fetch:' +
-      encodedUrl +
-      '/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_142/';
+        descripSpacing +
+        '/l_fetch:' +
+        encodedUrl +
+        '/t_Profile,w_87/fl_layer_apply,g_north_west,x_120,y_142/';
   }
 
   function descriptionSlice(descript: string) {
@@ -154,6 +154,7 @@ export function seoProfile(
   const isVeriff = 251;
   const nameY = '250';
   const profileY = '70';
+  let nameX = '186';
   const descripY = '842';
   const descripWidth = '1200';
   let encodedUrl = btoa(profileImage);
@@ -181,15 +182,20 @@ export function seoProfile(
       bio = words.join(' ') + ' .  .  .';
     }
   }
+
   if (campaigns == '0') {
     campaigns = 'NO ';
   }
 
+  let link2;
+
   const link1 =
     'https://res.cloudinary.com/dg68lnbnq/image/upload/co_rgb:FFFFFF,c_fit,l_text:Mona-Sans-BoldWide.ttf_83_bold_normal_left_line_spacing_14:' +
     encodeURIComponent(encodeURIComponent(cutAndAddEllipsis(name)));
-  const link2 =
-    ',$lineHeight_h/fl_layer_apply,g_west,x_186,y_' +
+  link2 =
+    ',$lineHeight_h/fl_layer_apply,g_west,x_' +
+    nameX +
+    ',y_' +
     nameY +
     '/co_rgb:FFFFFF,w_' +
     descripWidth +
@@ -199,10 +205,14 @@ export function seoProfile(
     '/fl_layer_apply,g_north_west,x_108,y_' +
     descripY +
     '/co_rgb:a6a6a6,w_900,c_fit,l_text:Mona-sans-BoldWide.ttf_29_normal_left:' +
-    encodeURIComponent(encodeURIComponent(campaigns + ' ACTIVE CAMPAIGNS'));
+    encodeURIComponent(
+      encodeURIComponent(
+        campaigns + ` ACTIVE CAMPAIGN${campaigns == '1' ? 'S' : ''}`
+      )
+    );
   let link4 = ' ';
 
-  if (isVerified == true) {
+  if (isVerified) {
     link4 =
       '/fl_layer_apply,g_west,x_158,y_399/l_verified_xcic9g/c_scale,w_88/e_mask,fl_layer_apply,g_west,y_' +
       isVeriff +
@@ -213,7 +223,17 @@ export function seoProfile(
       '/t_Profile,w_200/fl_layer_apply,g_west,x_100,y_' +
       profileY +
       '/SEO-USER_BG_yurvdq.jpg';
-  } else if (isVerified == false) {
+  } else {
+    nameX = '108';
+    link2 =
+      ',$lineHeight_h/fl_layer_apply,g_west,x_' +
+      nameX +
+      ',y_' +
+      nameY +
+      '/co_rgb:FFFFFF,w_' +
+      descripWidth +
+      ',c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left_line_spacing_5:' +
+      encodeURIComponent(encodeURIComponent(bio));
     link4 =
       '/fl_layer_apply,g_west,x_158,y_399/l_fetch:' +
       encodedUrl +
