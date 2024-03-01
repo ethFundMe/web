@@ -10,7 +10,8 @@ export function seoCampaign(
   titlee: string,
   description: string,
   imageURL: string,
-  profileImage: string
+  profileImage: string,
+  isVerified: boolean
 ) {
   const title = titlee.toUpperCase(),
     name = namee.toUpperCase();
@@ -47,11 +48,10 @@ export function seoCampaign(
       (goalPosition = '242'),
       (titlePosition = '820');
   }
-  const isVerified = true,
-    link1 =
-      'https://res.cloudinary.com/dg68lnbnq/image/fetch/c_fill,h_1062,w_1653/l_' +
-      Background +
-      '/c_fill,h_1062,w_1653/fl_layer_apply/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_29_bold_normal_left:';
+  const link1 =
+    'https://res.cloudinary.com/dg68lnbnq/image/fetch/c_fill,h_1062,w_1653/l_' +
+    Background +
+    '/c_fill,h_1062,w_1653/fl_layer_apply/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_29_bold_normal_left:';
   const link3 =
       '/co_rgb:a6a6a6,l_text:Mona-Sans-BoldWide.ttf_46_bold_normal_left:',
     linkk =
@@ -145,10 +145,11 @@ export function seoProfile(
   profileImage: string,
   fullName: string,
   bio: string,
-  campaigns: string
+  campaigns: string,
+  isVerified: boolean
 ) {
   const name = fullName.toUpperCase();
-  const isVerified = true;
+  // const isVerified = true;
   const isVerifX = 98;
   const isVeriff = 251;
   const nameY = '250';

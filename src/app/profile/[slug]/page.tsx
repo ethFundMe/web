@@ -41,7 +41,8 @@ export async function generateMetadata(
                 user.profileUrl || '',
                 user.fullName,
                 user.bio || '',
-                String(campaigns.totalCampaigns)
+                String(campaigns.totalCampaigns),
+                user.isVerified
                 // user.campaigns.length.toString()
               ),
             },
@@ -59,7 +60,8 @@ export async function generateMetadata(
                 user.profileUrl || '',
                 user.fullName,
                 user.bio || '',
-                String(campaigns.totalCampaigns)
+                String(campaigns.totalCampaigns),
+                user.isVerified
               ),
             },
           ],
