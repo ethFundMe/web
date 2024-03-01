@@ -2,6 +2,7 @@
 
 import { NAVBARROUTES } from '@/lib/constants';
 import { NavbarRoute } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
@@ -26,7 +27,7 @@ export const Sidebar = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto px-6 sm:px-6'
+        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-4 overflow-auto px-6 sm:px-6'
       >
         <SidebarUserCard />
 
@@ -67,19 +68,40 @@ export const Sidebar = () => {
   );
 };
 
-export const SidebarNavLink = ({ title, link, icon }: NavbarRoute) => {
+export const SidebarNavLink = ({
+  title,
+  link,
+  icon,
+  activeStyles,
+  className,
+  onClick,
+}: NavbarRoute & {
+  activeStyles?: string;
+  className?: string;
+  onClick?: VoidFunction;
+}) => {
   const { closeModal } = useModalStore();
 
   return (
-    <li onClick={closeModal}>
+    <li
+      onClick={() => {
+        closeModal();
+        if (onClick) {
+          onClick();
+        }
+      }}
+    >
       <NavLink
         href={link}
         activeStyles={({ isActive }) =>
           isActive
-            ? 'text-primary-default pl-4 font-bold text-xl text-xl'
+            ? cn('text-primary-default pl-4 font-bold text-xl', activeStyles)
             : 'hover:font-normal text-lg'
         }
-        className='flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-100'
+        className={cn(
+          'flex items-center gap-4 rounded-md py-2 pl-4 transition-all duration-100 ease-in hover:bg-slate-100',
+          className
+        )}
       >
         {icon}
 

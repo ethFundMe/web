@@ -1,7 +1,9 @@
 'use client';
 
+import { getUser } from '@/actions';
 import { NAVBARROUTES } from '@/lib/constants';
 import { cn, formatWalletAddress } from '@/lib/utils';
+import { userStore } from '@/store';
 import { useModalStore } from '@/store/modal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getCookie } from 'cookies-next';
@@ -9,9 +11,11 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
+import ImageWithFallback from './ImageWithFallback';
 import { NavLink } from './NavLink';
 import { Sidebar } from './Sidebar';
 import { Button } from './ui/button';
@@ -20,13 +24,23 @@ const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { user } = userStore();
+
+  useEffect(() => {
+    (async function () {
+      if (address && isConnected) {
+        const a = await getUser(address);
+        console.log({ a });
+      }
+    })();
+  }, [address, isConnected]);
 
   return (
     <motion.nav
       className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
     >
       <Container className='flex h-full items-center justify-between gap-4'>
-        <Link href='/' className='mb-2 h-4/5 sm:h-1/2 sm:w-auto'>
+        <Link href='/' className='h-4/5 sm:h-1/2 sm:w-auto'>
           <Image
             className='h-[70%] w-auto sm:h-full'
             src='/images/efm-logo.svg'
@@ -55,13 +69,14 @@ const Navbar = () => {
           {isConnected && address && getCookie('efmToken') ? (
             <AuthNavbarMenu>
               <div className='flex cursor-pointer items-center gap-x-3'>
-                <div className='grid h-9 w-9 place-content-center rounded-full bg-slate-200'>
-                  <Image
+                <div className='relative h-9 w-9 overflow-hidden rounded-full bg-slate-200'>
+                  <ImageWithFallback
                     className='flex-shrink-0 object-cover'
-                    src={'/images/pfp.svg'}
+                    src={user?.profileUrl || ''}
+                    fallback='/images/user-pfp.png'
                     alt='ENS Avatar'
-                    width={70}
-                    height={70}
+                    fill
+                    sizes='100px'
                   />
                 </div>
                 <p className='font-semibold'>{formatWalletAddress(address)}</p>

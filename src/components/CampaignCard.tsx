@@ -69,7 +69,7 @@ export const CampaignCard = ({
           <div className='relative h-[48px] w-[48px] flex-shrink-0'>
             <ImageWithFallback
               src={(user && user.profileUrl) ?? ''}
-              fallback='/images/pfp.svg'
+              fallback='/images/user-pfp.png'
               className='rounded-full bg-slate-200 object-cover'
               fill
               sizes='48px'

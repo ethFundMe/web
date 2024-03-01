@@ -25,7 +25,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           {children}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent>
+        <DropdownMenuContent className='space-y-1.5'>
           <DropdownMenuItem
             className='flex items-center gap-2'
             onClick={() => router.push(`/dashboard/${address}`)}
