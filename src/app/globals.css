@@ -192,7 +192,7 @@ body {
 
 .swiper:hover .swiper-button-prev,
 .swiper:hover .swiper-button-next {
-  @apply block;
+  @apply lg:block;
 }
 
 .swiper .swiper-button-prev,

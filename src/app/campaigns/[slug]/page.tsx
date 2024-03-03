@@ -158,152 +158,157 @@ export default async function CampaignPage({
   ];
 
   return (
-    <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
-      <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
-        <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
-          <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-            {campaign.title}
-          </h2>
+    <>
+      <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
+        <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
+          <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
+            <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
+              {campaign.title}
+            </h2>
 
-          <SwiperCarousel images={campaign.media_links} />
+            <SwiperCarousel images={campaign.media_links} />
 
-          <div className='space-y-7 pb-5'>
-            <div className='flex flex-col gap-4 sm:flex-row'>
-              <DonationObjectiveIndicator
-                seekingAmount={campaign.goal}
-                currentAmount={campaign.total_accrued}
-              />
-              <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
-                {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
-                <DonateBtn
-                  text='Donate Now'
-                  className='w-full whitespace-nowrap sm:mt-1'
-                  campaign={campaign}
+            <div className='space-y-7 pb-5'>
+              <div className='flex flex-col gap-4 sm:flex-row'>
+                <DonationObjectiveIndicator
+                  seekingAmount={campaign.goal}
+                  currentAmount={campaign.total_accrued}
                 />
-              </div>
-            </div>
-            <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
-              <Link
-                href={`/profile/${campaign.creator}`}
-                className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
-              >
-                <div className='relative h-[50px] w-[50px] flex-shrink-0'>
-                  <ImageWithFallback
-                    src={user.profileUrl ?? ''}
-                    fallback='/images/user-pfp.png'
-                    className='block rounded-full bg-slate-50 object-cover'
-                    fill
-                    alt='...'
+                <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
+                  {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
+                  <DonateBtn
+                    text='Donate Now'
+                    className='w-full whitespace-nowrap sm:mt-1'
+                    campaign={campaign}
                   />
                 </div>
+              </div>
+              <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
+                <Link
+                  href={`/profile/${campaign.creator}`}
+                  className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
+                >
+                  <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                    <ImageWithFallback
+                      src={user.profileUrl ?? ''}
+                      fallback='/images/user-pfp.png'
+                      className='block rounded-full bg-slate-50 object-cover'
+                      fill
+                      alt='...'
+                    />
+                  </div>
 
-                <div className='pr-2'>
-                  <p className={TextSizeStyles.caption}>Organizer</p>
+                  <div className='pr-2'>
+                    <p className={TextSizeStyles.caption}>Organizer</p>
+                    <p className='font-semibold'>
+                      {user?.fullName ??
+                        formatWalletAddress(campaign.creator as `0x${string}`)}
+                    </p>
+                  </div>
+                </Link>
+                <div>
+                  <p className={TextSizeStyles.caption}>Organized On</p>
                   <p className='font-semibold'>
-                    {user?.fullName ??
-                      formatWalletAddress(campaign.creator as `0x${string}`)}
+                    {dayjs(campaign.created_at).format('DD MMM, YYYY')}
                   </p>
                 </div>
-              </Link>
-              <div>
-                <p className={TextSizeStyles.caption}>Organized On</p>
-                <p className='font-semibold'>
-                  {dayjs(campaign.created_at).format('DD MMM, YYYY')}
-                </p>
               </div>
+              <div className='space-y-4'>{campaign.description}</div>
+              <DonateXShareButtons campaign={campaign} />
             </div>
-            <div className='space-y-4'>{campaign.description}</div>
-            <DonateXShareButtons campaign={campaign} />
           </div>
-        </div>
 
-        <aside className='mt-16 space-y-8'>
-          {/* Chats */}
-          <div className='chats flex flex-col space-y-4 pb-4'>
+          <aside className='mt-16 space-y-8'>
+            {/* Chats */}
+            <div className='chats flex flex-col space-y-4 pb-4'>
+              <h2
+                className={cn(
+                  TextSizeStyles.h5,
+                  'font-light text-primary-default'
+                )}
+              >
+                Comments & Donations
+              </h2>
+
+              <ScrollArea className='h-[500px] pr-4'>
+                <div className='space-y-4'>
+                  {chats.map(({ user: { fullname }, date, amt, text }, j) => (
+                    <div
+                      key={j}
+                      className='rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm'
+                    >
+                      <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
+                        <div className='flex items-center gap-2'>
+                          <div className='relative h-8 w-8 flex-shrink-0'>
+                            <Image
+                              className='block flex-shrink-0 rounded-full object-cover'
+                              src='/images/pets.jpg'
+                              fill
+                              sizes='50px'
+                              alt='...'
+                            />
+                          </div>
+
+                          <div>
+                            <p>{fullname}</p>
+                            <small>
+                              {dayjs(date)
+                                .subtract(2, 'minute')
+                                .format('DD MMM, YYYY . HH : mm a')}
+                            </small>
+                          </div>
+                        </div>
+
+                        {!!amt && (
+                          <Link
+                            href='/'
+                            target='_blank'
+                            className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
+                          >
+                            <FaEthereum />
+                            <span>{formatEther(BigInt(amt))}</span>
+                          </Link>
+                        )}
+                      </div>
+                      <p className='font-medium'>{text}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              <form className='relative space-y-4 rounded-md'>
+                <Textarea
+                  placeholder='Enter your comments'
+                  className='max-h-52'
+                />
+                <Button className='absolute bottom-2 right-2 p-0 px-2'>
+                  <FaTelegramPlane size={20} />
+                </Button>
+              </form>
+            </div>
+          </aside>
+        </Container>
+        <Container>
+          <div className='space-y-4'>
             <h2
               className={cn(
                 TextSizeStyles.h5,
                 'font-light text-primary-default'
               )}
             >
-              Comments & Donations
+              {campaignsToShow.length > 0
+                ? 'Related campaigns'
+                : 'No related campaigns'}
             </h2>
 
-            <ScrollArea className='h-[500px] pr-4'>
-              <div className='space-y-4'>
-                {chats.map(({ user: { fullname }, date, amt, text }, j) => (
-                  <div
-                    key={j}
-                    className='rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm'
-                  >
-                    <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
-                      <div className='flex items-center gap-2'>
-                        <div className='relative h-8 w-8 flex-shrink-0'>
-                          <Image
-                            className='block flex-shrink-0 rounded-full object-cover'
-                            src='/images/pets.jpg'
-                            fill
-                            sizes='50px'
-                            alt='...'
-                          />
-                        </div>
-
-                        <div>
-                          <p>{fullname}</p>
-                          <small>
-                            {dayjs(date)
-                              .subtract(2, 'minute')
-                              .format('DD MMM, YYYY . HH : mm a')}
-                          </small>
-                        </div>
-                      </div>
-
-                      {!!amt && (
-                        <Link
-                          href='/'
-                          target='_blank'
-                          className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
-                        >
-                          <FaEthereum />
-                          <span>{formatEther(BigInt(amt))}</span>
-                        </Link>
-                      )}
-                    </div>
-                    <p className='font-medium'>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-
-            <form className='relative space-y-4 rounded-md'>
-              <Textarea
-                placeholder='Enter your comments'
-                className='max-h-52'
-              />
-              <Button className='absolute bottom-2 right-2 p-0 px-2'>
-                <FaTelegramPlane size={20} />
-              </Button>
-            </form>
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+              {campaignsToShow.map((_, idx) => (
+                <CampaignCard campaign={_} key={idx} />
+              ))}
+            </div>
           </div>
-        </aside>
-      </Container>
-      <Container>
-        <div className='space-y-4'>
-          <h2
-            className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
-          >
-            {campaignsToShow.length > 0
-              ? 'Related campaigns'
-              : 'No related campaigns'}
-          </h2>
-
-          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {campaignsToShow.map((_, idx) => (
-              <CampaignCard campaign={_} key={idx} />
-            ))}
-          </div>
-        </div>
-      </Container>
-    </div>
+        </Container>
+      </div>
+    </>
   );
 }

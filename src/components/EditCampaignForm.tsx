@@ -5,6 +5,7 @@ import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
+import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -50,10 +51,11 @@ import {
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { address } = useAccount();
   const router = useRouter();
+  const { user } = userStore();
 
   useEffect(() => {
-    if (!address) redirect('/');
-  }, [address]);
+    if (!user) redirect('/');
+  }, [user]);
 
   const {
     data: hash,
@@ -99,10 +101,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
     form.watch('banner') !== campaign.media_links[0];
 
-  console.log(form.watch());
-
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    console.log(data);
     const { description, goal, title, beneficiaryAddress } = data;
     const { campaign_id } = campaign;
 
@@ -116,9 +115,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         title,
         description,
         parseEther(goal.toString()),
-        [
-          'https://images.unsplash.com/photo-1527788263495-3518a5c1c42d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnVuZHJhaXNpbmd8ZW58MHx8MHx8fDA%3D',
-        ],
+        campaign.media_links,
         beneficiaryAddress as `0x${string}`,
       ],
     });
@@ -127,14 +124,11 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   useEffect(() => {
     if (isError && error) {
       toast.error((error as BaseError).shortMessage || error.message);
-      return;
-    }
-
-    if (isConfirmedTxn) {
+    } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
-      return router.push(`/campaigns/${campaign.id}`);
+      router.push(`/campaigns/${campaign.campaign_id}`);
     }
-  }, [campaign.id, error, isConfirmedTxn, isError, router]);
+  }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 
   return (
     <Form {...form}>
@@ -192,7 +186,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               <FormControl>
                 <Input
                   type='number'
-                  step={0.00001}
+                  step={0.01}
                   defaultValue={field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
@@ -331,8 +325,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         <Button
           type='submit'
           size='default'
-          className='col-span-2 disabled:cursor-not-allowed'
-          disabled={!editMade}
+          className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
+          disabled={!editMade || isConfirmingTxn || isPending}
         >
           {isPending || isConfirmingTxn ? 'Loading...' : 'Update campaign'}
         </Button>

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import crypto, { BinaryLike } from 'crypto';
 import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -39,7 +40,10 @@ export async function uploadToCloudinary(files: FileList | string[]) {
       'upload_preset',
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
     );
-    formData.append('folder', 'campaign_media');
+    formData.append(
+      'folder',
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER as string
+    );
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -55,7 +59,7 @@ export async function uploadToCloudinary(files: FileList | string[]) {
       throw new Error('Failed to upload file');
     }
 
-    return data?.url;
+    return data?.secure_url;
   };
 
   const itu = Array.from(files as FileList).map(async (file) => {
@@ -66,6 +70,69 @@ export async function uploadToCloudinary(files: FileList | string[]) {
   const tromise = await Promise.all(itu);
 
   return tromise;
+}
+
+export async function deleteFromCloudinary(image: string) {
+  const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/destroy`;
+
+  const getPublicIdFromUrl = (src: string) => {
+    const parts = src.split('/');
+    const filename = parts[parts.length - 1];
+
+    const final = filename?.split('.')[0];
+    return final
+      ? `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER as string}/${final}`
+      : null;
+  };
+
+  const publicId = getPublicIdFromUrl(image);
+
+  if (!publicId) throw new Error('Public ID not found');
+
+  const generateSHA1 = (data: BinaryLike) => {
+    const hash = crypto.createHash('sha1');
+    hash.update(data);
+    return hash.digest('hex');
+  };
+
+  const generateSignature = (publicId: string, apiSecret: string) => {
+    const timestamp = new Date().getTime();
+    return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  };
+
+  const config = {
+    public_id: publicId as string,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string,
+    timestamp: new Date().getTime(),
+    resource_type: 'image',
+    signature: generateSHA1(
+      generateSignature(
+        publicId,
+        process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET as string
+      )
+    ),
+  };
+
+  const formData = new FormData();
+
+  Object.entries(config).forEach((item) =>
+    formData.append(item[0], String(item[1]))
+  );
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: formData,
+  });
+
+  const data = await res.json();
+
+  const erroredOut = data.result === 'not found' || data.errors;
+
+  if (erroredOut) {
+    throw new Error('Failed to delete image');
+  }
+
+  return { ok: !erroredOut };
 }
 
 export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(

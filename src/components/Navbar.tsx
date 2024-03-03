@@ -1,6 +1,5 @@
 'use client';
 
-import { getUser } from '@/actions';
 import { NAVBARROUTES } from '@/lib/constants';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
@@ -29,8 +28,7 @@ const Navbar = () => {
   useEffect(() => {
     (async function () {
       if (address && isConnected) {
-        const a = await getUser(address);
-        console.log({ a });
+        // const a = await getUser(address);
       }
     })();
   }, [address, isConnected]);

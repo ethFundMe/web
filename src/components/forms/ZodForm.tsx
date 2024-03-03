@@ -223,14 +223,6 @@ export default function CreateCampaignForm() {
     }
   }, [error, form, isConfirmedTxn, isError, router]);
 
-  // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
-  //   console.error(errors);
-  // };
-
-  // function onError(errors: z.infer<typeof formSchema>) {
-  //   console.error(errors);
-  // }
-
   function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,
     type: 'banner' | 'others'
