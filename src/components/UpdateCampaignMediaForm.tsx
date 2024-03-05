@@ -39,11 +39,8 @@ export default function UpdateCampaignMediaForm({
     },
   });
 
-  const {
-    isLoading: isConfirmingTxn,
-    isPending: isPendingTxn,
-    isSuccess: isConfirmedTxn,
-  } = useWaitForTransactionReceipt({ hash });
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
   const {
     campaign_id,
