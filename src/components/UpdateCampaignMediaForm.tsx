@@ -118,7 +118,7 @@ export default function UpdateCampaignMediaForm({
         <div className={cn(labelVariants(), 'text-base')}>Campaign banner</div>
 
         <DnDUploadSmall
-          disabled={isConfirmingTxn}
+          disabled={isConfirmingTxn || isPending}
           preview={[campaign.media_links[0]]}
           handleUpload={handleBannerUpload}
         />
@@ -133,7 +133,7 @@ export default function UpdateCampaignMediaForm({
         </div>
 
         <DnDUploadSmall
-          disabled={isConfirmingTxn || isPending || isPendingTxn}
+          disabled={isConfirmingTxn || isPending}
           preview={preparedImages}
           maxFiles={6 - preparedImages.length}
           handleUpload={handleUpload}
