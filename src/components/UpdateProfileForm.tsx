@@ -101,16 +101,13 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     mode: 'onChange',
   });
 
+  const creatorFeeEditMade = form.watch('creatorFee') !== user.creatorFee;
   const editMade =
     form.watch('fullName').trim() !== user.fullName ||
     form.watch('email') !== user.email ||
     !!form.watch('bio')?.trim() !== !!user.bio ||
-    form.watch('bio')?.trim() !== user.bio;
-
-  const creatorFeeEditMade = form.watch('creatorFee') !== user.creatorFee;
-  console.log(creatorFeeEditMade);
-  console.log(form.watch('creatorFee'));
-  console.log(user.creatorFee);
+    form.watch('bio')?.trim() !== user.bio ||
+    creatorFeeEditMade;
 
   const router = useRouter();
 
