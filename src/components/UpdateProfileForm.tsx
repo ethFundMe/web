@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { updateUser } from '@/actions';
@@ -10,6 +11,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,8 +20,15 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { parseEther } from 'viem';
+import {
+  // BaseError,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 import * as z from 'zod';
 import { Button } from './inputs';
+import { Slider } from './ui/slider';
 import { Textarea } from './ui/textarea';
 
 type FormStatus =
@@ -41,16 +51,49 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .optional(),
     // ethAddress: z.string().regex(REGEX_CODES.walletAddress).optional(),
     creatorFee: z
-      .number({ required_error: 'Enter amount in ETH' })
-      .min(0, { message: 'Enter a fee of 0 or greater' })
-      .max(user.isVerified ? 100000 : 2, {
-        message: user.isVerified
-          ? 'Enter an amount less than 1000000 ETH'
-          : 'Verify your creator account to exceed 2ETH limit',
+      .number({ required_error: 'Enter amount in percentage' })
+      .min(0, { message: 'Enter a minimum value of 0 or greater' })
+      .max(30, {
+        message: 'Enter a maximum value of 30% or less',
       })
       .optional(),
   });
+  const {
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled update CreatorFee', { data, error });
+      },
+    },
+  });
 
+  const {
+    isLoading: isConfirmingTxn,
+    isPending: isPendingTxn,
+    isSuccess: isConfirmedTxn,
+  } = useWaitForTransactionReceipt({ hash });
+
+  // console.log(parseEther('4'));
+
+  const handleWriteContract = (creatorFeePercent: number) => {
+    const creatorFee = parseEther(creatorFeePercent.toString());
+
+    console.log(creatorFee);
+    // console.log(creatorFee);
+
+    return writeContract({
+      abi: EthFundMe,
+      address: ethFundMeContractAddress,
+      functionName: 'setCreatorFeePercentage',
+      chainId: ethChainId,
+      args: [creatorFee],
+    });
+  };
   const [formStatus, setFormStatus] = useState<FormStatus | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,27 +116,58 @@ export default function UpdateProfileForm({ user }: { user: User }) {
 
   const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log({ values });
-    setFormStatus('Saving changes');
+  function updateUserProfile(values: z.infer<typeof formSchema>) {
     updateUser({
       bio: values.bio,
-      // creatorFee: values.creatorFee,
       email: values.email,
       ethAddress: user.ethAddress,
       fullName: values.fullName,
     })
       .then((data) => {
+        // Reset form and navigate to the dashboard
         setFormStatus(null);
         form.reset();
         toast.success('Profile updated successfully');
         router.push(`/dashboard/${data.ethAddress}`);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log('Failed to update profile', error);
         setFormStatus(null);
         toast.error('Failed to update profile');
       });
   }
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log({ values });
+    setFormStatus('Saving changes');
+    if (user.creatorFee !== values.creatorFee) {
+      handleWriteContract(values.creatorFee as number);
+      // if (isConfirmedTxn) {
+      //   toast.success('Creator fee updated');
+      // }
+      updateUserProfile(values);
+    } else {
+      updateUserProfile(values);
+    }
+    // updateUser({
+    //   bio: values.bio,
+    //   // creatorFee: values.creatorFee,
+    //   email: values.email,
+    //   ethAddress: user.ethAddress,
+    //   fullName: values.fullName,
+    // })
+    //   .then((data) => {
+    //     setFormStatus(null);
+    //     form.reset();
+    //     toast.success('Profile updated successfully');
+    //     router.push(`/dashboard/${data.ethAddress}`);
+    //   })
+    //   .catch(() => {
+    //     setFormStatus(null);
+    //     toast.error('Failed to update profile');
+    //   });
+  }
+  const watchedAmount: number = form.watch('creatorFee') as number;
 
   return (
     <Form {...form}>
@@ -139,16 +213,28 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           <FormField
             control={form.control}
             name='creatorFee'
-            render={({ field }) => (
+            render={() => (
               <FormItem>
-                <FormLabel>Creator fee</FormLabel>
+                <FormLabel>Creator fee (%)</FormLabel>
                 <FormControl>
-                  <Input
+                  {/* <Input
                     type='number'
                     placeholder='Enter your creator fee'
                     {...field}
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
+                  /> */}
+                  <div className='flex items-center gap-x-3'>
+                    <p className='w-14 text-sm'>{watchedAmount}%</p>
+                    <Slider
+                      onValueChange={(e) => {
+                        form.setValue('creatorFee', e[0] as number);
+                      }}
+                      value={[watchedAmount as unknown as number]}
+                      min={0}
+                      max={30}
+                      step={0.1}
+                    />
+                  </div>
                 </FormControl>
 
                 <FormMessage />
@@ -156,7 +242,6 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             )}
           />
         </div>
-
         <FormField
           control={form.control}
           name='bio'

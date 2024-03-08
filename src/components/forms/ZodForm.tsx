@@ -61,6 +61,7 @@ export default function CreateCampaignForm() {
   const router = useRouter();
 
   const { user } = userStore();
+  console.log(user);
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
   const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
@@ -389,8 +390,8 @@ export default function CreateCampaignForm() {
                       type='number'
                       step={0.1}
                       disabled
-                      // value={User.creatorFee}
-                      value={0.02}
+                      value={user?.creatorFee}
+                      // value={0.02}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>
