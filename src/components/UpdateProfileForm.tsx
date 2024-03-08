@@ -78,14 +78,8 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     isSuccess: isConfirmedTxn,
   } = useWaitForTransactionReceipt({ hash });
 
-  // console.log(parseEther('4'));
-
   const handleWriteContract = (creatorFeePercent: number) => {
     const creatorFee = parseEther(creatorFeePercent.toString());
-
-    console.log(creatorFee);
-    // console.log(creatorFee);
-
     return writeContract({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
@@ -109,10 +103,14 @@ export default function UpdateProfileForm({ user }: { user: User }) {
 
   const editMade =
     form.watch('fullName').trim() !== user.fullName ||
-    form.watch('creatorFee') !== user.creatorFee ||
     form.watch('email') !== user.email ||
     !!form.watch('bio')?.trim() !== !!user.bio ||
     form.watch('bio')?.trim() !== user.bio;
+
+  const creatorFeeEditMade = form.watch('creatorFee') !== user.creatorFee;
+  console.log(creatorFeeEditMade);
+  console.log(form.watch('creatorFee'));
+  console.log(user.creatorFee);
 
   const router = useRouter();
 
@@ -138,34 +136,20 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ values });
+    // console.log({ values });
     setFormStatus('Saving changes');
-    if (user.creatorFee !== values.creatorFee) {
+    if (creatorFeeEditMade && !editMade) {
       handleWriteContract(values.creatorFee as number);
-      // if (isConfirmedTxn) {
-      //   toast.success('Creator fee updated');
-      // }
-      updateUserProfile(values);
-    } else {
+    }
+    if (editMade && creatorFeeEditMade) {
+      handleWriteContract(values.creatorFee as number);
+      if (isConfirmedTxn) {
+        updateUserProfile(values);
+      }
+    }
+    if (!creatorFeeEditMade && editMade) {
       updateUserProfile(values);
     }
-    // updateUser({
-    //   bio: values.bio,
-    //   // creatorFee: values.creatorFee,
-    //   email: values.email,
-    //   ethAddress: user.ethAddress,
-    //   fullName: values.fullName,
-    // })
-    //   .then((data) => {
-    //     setFormStatus(null);
-    //     form.reset();
-    //     toast.success('Profile updated successfully');
-    //     router.push(`/dashboard/${data.ethAddress}`);
-    //   })
-    //   .catch(() => {
-    //     setFormStatus(null);
-    //     toast.error('Failed to update profile');
-    //   });
   }
   const watchedAmount: number = form.watch('creatorFee') as number;
 
@@ -261,7 +245,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         />
 
         <Button
-          disabled={!!formStatus || !editMade}
+          disabled={!!formStatus || !editMade || !creatorFeeEditMade}
           className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50 md:w-52'
         >
           {formStatus ?? 'Save'}

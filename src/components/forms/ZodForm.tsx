@@ -61,7 +61,6 @@ export default function CreateCampaignForm() {
   const router = useRouter();
 
   const { user } = userStore();
-  console.log(user);
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
   const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
@@ -365,7 +364,7 @@ export default function CreateCampaignForm() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (ETH)</span>
+                            <span>Creator fees (%)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
                           <TooltipContent>
