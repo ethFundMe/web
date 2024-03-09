@@ -364,7 +364,7 @@ export default function CreateCampaignForm() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (ETH)</span>
+                            <span>Creator fees (%)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
                           <TooltipContent>
@@ -389,8 +389,8 @@ export default function CreateCampaignForm() {
                       type='number'
                       step={0.1}
                       disabled
-                      // value={User.creatorFee}
-                      value={0.02}
+                      value={user?.creatorFee}
+                      // value={0.02}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>
