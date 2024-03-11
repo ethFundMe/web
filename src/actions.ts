@@ -1,7 +1,6 @@
 'use server';
 
 import parse from 'node-html-parser';
-import toast from 'react-hot-toast';
 import { Campaign, User } from './types';
 
 export async function urlPreview(url: string) {
@@ -108,7 +107,6 @@ export const updateUser = async (userDetails: {
   const resData: User = data;
 
   if (data.error) {
-    toast.error('Failed to update profile');
     throw new Error('Failed to update profile');
   }
   return resData;
