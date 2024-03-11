@@ -2,6 +2,7 @@
 
 import { getCampaigns } from '@/actions';
 import { CampaignTags } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { Search, X } from 'lucide-react';
 import Image from 'next/image';
@@ -73,12 +74,34 @@ export default function InfiniteScroll({
 
   return (
     <div className='space-y-10'>
-      <div className='flex flex-wrap items-center gap-4 filter'>
+      <div className='flex flex-wrap items-center justify-start gap-2 md:gap-4'>
+        <form
+          className='search relative flex w-full items-center gap-2.5 sm:basis-96'
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const searchTerm = formData.get('searchTerm');
+            if (typeof searchTerm === 'string' && !searchTerm.trim()) return;
+            filterBySearchTerm(searchTerm as string);
+          }}
+        >
+          <Input
+            required
+            placeholder='Search for campaign'
+            name='searchTerm'
+            className='pr-20'
+          />
+          <Button className='absolute right-1 h-4/5'>
+            <Search />
+          </Button>
+        </form>
+
+        {/* <div className='hidden flex-1 md:block'></div> */}
         <Select
           onValueChange={(e: CampaignTags) => filterByTag(e)}
           // defaultValue={field.value}
         >
-          <SelectTrigger className='min-w-96 flex-1'>
+          <SelectTrigger className='w-full sm:basis-96'>
             <SelectValue
               placeholder='Filter by campaign type'
               // defaultValue={form.getValues('type')}
@@ -93,31 +116,17 @@ export default function InfiniteScroll({
           </SelectContent>
         </Select>
 
-        <div className='hidden flex-1 md:block'></div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const searchTerm = formData.get('searchTerm');
-            if (typeof searchTerm === 'string' && !searchTerm.trim()) return;
-            filterBySearchTerm(searchTerm as string);
-          }}
-          className='search flex min-w-96 flex-1 items-center gap-2.5'
-        >
-          <Input required placeholder='Search for campaign' name='searchTerm' />
-          <Button>
-            <Search />
-          </Button>
-        </form>
-
         <Button
           onClick={() => {
             setCampaignsToShow(campaigns);
             setCampaignsFiltered(false);
           }}
+          disabled={!campaignsFiltered}
           variant='outline'
-          className='flex items-center gap-1 hover:text-red-500'
+          className={cn(
+            'flex items-center gap-1 disabled:pointer-events-auto  lg:ml-auto',
+            campaignsFiltered && 'hover:text-red-500'
+          )}
         >
           Clear Filters
           <X size={16} />
