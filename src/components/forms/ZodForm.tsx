@@ -119,8 +119,7 @@ export default function CreateCampaignForm() {
   >(null);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const { description, goal, title, banner, beneficiaryAddress, ytLink } =
-      data;
+    const { description, goal, title, banner, beneficiaryAddress } = data;
     if (isPending || isConfirmingTxn) return;
 
     if (!isAddress(String(beneficiaryAddress))) {

@@ -73,7 +73,7 @@ export default function DonateForm({
       return;
     }
     const camp = parseEther(campaignID.toString());
-    const commentId = parseEther('-1');
+    const commentId = parseEther('0');
     return writeContract({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
