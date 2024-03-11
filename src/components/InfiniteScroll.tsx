@@ -76,7 +76,7 @@ export default function InfiniteScroll({
     <div className='space-y-10'>
       <div className='flex flex-wrap items-center justify-start gap-2 md:gap-4'>
         <form
-          className='search flex w-full items-center gap-2.5 sm:basis-96'
+          className='search relative flex w-full items-center gap-2.5 sm:basis-96'
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
@@ -85,8 +85,13 @@ export default function InfiniteScroll({
             filterBySearchTerm(searchTerm as string);
           }}
         >
-          <Input required placeholder='Search for campaign' name='searchTerm' />
-          <Button>
+          <Input
+            required
+            placeholder='Search for campaign'
+            name='searchTerm'
+            className='pr-20'
+          />
+          <Button className='absolute right-1 h-4/5'>
             <Search />
           </Button>
         </form>
