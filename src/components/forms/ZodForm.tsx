@@ -187,7 +187,7 @@ export default function CreateCampaignForm() {
         setSubmitStatus(null);
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
-          const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
+          // const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
           writeContract({
             abi: EthFundMe,
             address: ethFundMeContractAddress,
@@ -196,7 +196,7 @@ export default function CreateCampaignForm() {
               title,
               description,
               parseEther(goal.toString()),
-              mediaLinks,
+              [BigInt(23424)],
               beneficiaryAddress as `0x${string}`,
             ],
             chainId: ethChainId,
