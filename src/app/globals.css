@@ -151,6 +151,8 @@ body {
 }
 .tab__content {
   background-color: white;
+  overflow: auto;
+  max-height: 0.05rem;
 }
 .tab__label::after {
   content: '\276F';

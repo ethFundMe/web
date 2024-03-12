@@ -17,7 +17,7 @@ export const Footer = () => {
           alt='logo'
         />
 
-        <div className='relative'>
+        <div className='relative space-y-8'>
           <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>
             <Link
               href='/'
@@ -41,6 +41,18 @@ export const Footer = () => {
                     <FooterLink link={link} title={title} />
                   </li>
                 ))}
+                <li>
+                  <FooterLink
+                    link='/legal/privacy-policy'
+                    title='Privacy Policy'
+                  />
+                </li>
+                <li>
+                  <FooterLink
+                    link='/legal/terms-and-conditions'
+                    title='Terms and Conditions'
+                  />
+                </li>
               </ul>
             </div>
 
@@ -66,7 +78,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className='my-7 h-[1px] bg-neutral-400' />
+          <div className='h-[1px] bg-neutral-400' />
 
           <div className='flex justify-between'>
             <p>
@@ -83,6 +95,8 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
+
+          <div className='flex flex-wrap justify-center gap-4 md:justify-start'></div>
         </div>
       </Container>
     </footer>
