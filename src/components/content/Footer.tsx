@@ -42,12 +42,16 @@ export const Footer = () => {
                   </li>
                 ))}
                 <li>
-                  <Link href='/legal/privacy-policy'>Privacy Policy</Link>
+                  <FooterLink
+                    link='/legal/privacy-policy'
+                    title='Privacy Policy'
+                  />
                 </li>
                 <li>
-                  <Link href='/legal/terms-and-conditions'>
-                    Terms and Conditions
-                  </Link>
+                  <FooterLink
+                    link='/legal/terms-and-conditions'
+                    title='Terms and Conditions'
+                  />
                 </li>
               </ul>
             </div>
