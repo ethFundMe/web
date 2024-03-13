@@ -72,14 +72,18 @@ export default function DonateForm({
       toast.error('Fund more than 0 ETH');
       return;
     }
-    const camp = parseEther(campaignID.toString());
-    const commentId = parseEther('-1');
+
+    const campId = BigInt(campaignID);
+    const commentId = BigInt(1);
+    const donationAmt = parseEther(amount.toString() || '0');
+    console.log(campaignID, campId, commentId, donationAmt, donationAmt);
+
     return writeContract({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
       functionName: 'fundCampaign',
-      args: [camp, commentId],
-      value: parseEther(amount.toString() || '0'),
+      args: [campId, commentId],
+      value: donationAmt,
       chainId: ethChainId,
     });
   };
