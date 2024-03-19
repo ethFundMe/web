@@ -73,12 +73,13 @@ export default function DonateForm({
       return;
     }
     const camp = parseEther(campaignID.toString());
-    const commentId = parseEther('0');
+    // const commentId = parseEther('0');
     return writeContract({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
       functionName: 'fundCampaign',
-      args: [camp, commentId],
+      // args: [camp, commentId],
+      args: [camp],
       value: parseEther(amount.toString() || '0'),
       chainId: ethChainId,
     });
@@ -131,7 +132,7 @@ export default function DonateForm({
         step={0.01}
       />
 
-      <div>
+      <div className='hidden'>
         <Textarea placeholder='Add a comment' {...register('comment')} />
         {errors.comment && (
           <p className='text-sm text-red-500'>{errors.comment.message}</p>
