@@ -10,8 +10,8 @@ export const Footer = () => {
     <footer className='relative bg-primary-dark text-white'>
       <Container className='relative py-16 text-sm'>
         <Image
-          className='absolute left-1/2 top-1/2 -z-0 h-[70%] w-auto -translate-x-1/2 -translate-y-1/2 opacity-10 grayscale sm:h-full'
-          src='/images/efm-logo.svg'
+          className='absolute left-1/2 top-1/2 -z-0 h-[70%] w-auto -translate-x-1/2 -translate-y-1/2 grayscale sm:h-full'
+          src='/images/Footer_Easter_Egg.png'
           width={50}
           height={200}
           alt='logo'
