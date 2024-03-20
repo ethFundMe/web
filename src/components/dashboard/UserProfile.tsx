@@ -2,6 +2,7 @@
 
 import { updateUser } from '@/actions';
 import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
+import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -37,10 +38,7 @@ export const UserProfile = ({
   const [showPfpUpload, setShowPfpUpload] = useState(false);
   const [updatingImage, setUpdatingImage] = useState([false, false]);
 
-  // const { setUser } = userStore();
-
-  // setUser(user);
-  // console.log(user);
+  const { setUser } = userStore();
 
   const handlePfpUpdate = (profileUrl: string[]) => {
     updateUser({
