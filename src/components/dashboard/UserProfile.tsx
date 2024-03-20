@@ -1,8 +1,8 @@
 'use client';
 
 import { updateUser } from '@/actions';
-import { cn, formatWalletAddress } from '@/lib/utils';
-// import { userStore } from '@/store';
+import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
+import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -38,8 +38,8 @@ export const UserProfile = ({
   const [showPfpUpload, setShowPfpUpload] = useState(false);
   const [updatingImage, setUpdatingImage] = useState([false, false]);
 
-  // const { setUser } = userStore();
-  // if (user) setUser(user);
+  const { setUser } = userStore();
+  if (user) setUser(user);
 
   const handlePfpUpdate = (profileUrl: string[]) => {
     updateUser({
