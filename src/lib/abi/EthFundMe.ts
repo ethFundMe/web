@@ -80,29 +80,19 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string',
+            name: 'ipfsHash',
+            type: 'string',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
           },
           {
-            internalType: 'string',
-            name: 'title',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'description',
-            type: 'string',
-          },
-          {
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
-          },
-          {
-            internalType: 'int256[]',
-            name: 'mediaIDs',
-            type: 'int256[]',
           },
           {
             internalType: 'uint256',
@@ -200,29 +190,19 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string',
+            name: 'ipfsHash',
+            type: 'string',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
           },
           {
-            internalType: 'string',
-            name: 'title',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'description',
-            type: 'string',
-          },
-          {
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
-          },
-          {
-            internalType: 'int256[]',
-            name: 'mediaIDs',
-            type: 'int256[]',
           },
           {
             internalType: 'uint256',
@@ -306,29 +286,19 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string',
+            name: 'ipfsHash',
+            type: 'string',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
           },
           {
-            internalType: 'string',
-            name: 'title',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'description',
-            type: 'string',
-          },
-          {
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
-          },
-          {
-            internalType: 'int256[]',
-            name: 'mediaIDs',
-            type: 'int256[]',
           },
           {
             internalType: 'uint256',
@@ -650,23 +620,13 @@ export const EthFundMe = [
     inputs: [
       {
         internalType: 'string',
-        name: '_title',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_desc',
+        name: '_ipfsHash',
         type: 'string',
       },
       {
         internalType: 'uint256',
         name: '_goal',
         type: 'uint256',
-      },
-      {
-        internalType: 'int256[]',
-        name: '_mediaIDs',
-        type: 'int256[]',
       },
       {
         internalType: 'address',
@@ -760,16 +720,6 @@ export const EthFundMe = [
         internalType: 'uint256',
         name: '_campaignID',
         type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: '_title',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_desc',
-        type: 'string',
       },
       {
         internalType: 'uint256',
@@ -1067,29 +1017,19 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string',
+            name: 'ipfsHash',
+            type: 'string',
+          },
+          {
             internalType: 'address',
             name: 'creator',
             type: 'address',
           },
           {
-            internalType: 'string',
-            name: 'title',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'description',
-            type: 'string',
-          },
-          {
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
-          },
-          {
-            internalType: 'int256[]',
-            name: 'mediaIDs',
-            type: 'int256[]',
           },
           {
             internalType: 'uint256',
@@ -1186,19 +1126,14 @@ export const EthFundMe = [
         type: 'uint256',
       },
       {
+        internalType: 'string',
+        name: 'ipfsHash',
+        type: 'string',
+      },
+      {
         internalType: 'address',
         name: 'creator',
         type: 'address',
-      },
-      {
-        internalType: 'string',
-        name: 'title',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'description',
-        type: 'string',
       },
       {
         internalType: 'uint256',
