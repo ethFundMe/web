@@ -48,11 +48,6 @@ export default function DonateForm({
 
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
-  // const [ethPrice, setEthPrice] = useState(useEthPrice());
-
-  // useEffect(() => {
-  //     setEthPrice
-  // }, []);
 
   const {
     data: hash,
@@ -80,10 +75,15 @@ export default function DonateForm({
       toast.error('Fund more than 0 ETH');
       return;
     }
+    const fiatToETH = parseEther(
+      parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
+    );
 
     const campId = BigInt(campaignID);
     const commentId = BigInt(1);
-    const donationAmt = parseEther(amount.toString() || '0');
+    const donationAmt = fiatMode
+      ? fiatToETH
+      : parseEther(amount.toString() || '0');
     console.log(campaignID, campId, commentId, donationAmt, donationAmt);
 
     return writeContract({
@@ -109,22 +109,21 @@ export default function DonateForm({
     }
   }, [error, isError]);
 
-  const watchedETHAmount: number = watch('amount');
+  const watchedAmount: number = watch('amount');
 
-  const ethPrice = useEthPrice();
-  const usdConverted = parseFloat(
-    ((ethPrice as number) * watchedETHAmount).toString()
+  const ethPriceInUSD = useEthPrice();
+  const ethToUSD = parseFloat(
+    ((ethPriceInUSD as number) * watchedAmount).toString()
   ).toFixed(2);
-
-  const ethConverted = +usdConverted / (ethPrice as number);
 
   return (
     <form
       className='w-full space-y-4 bg-white'
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div>
+      <div className=' space-x-3'>
         <button
+          type='button'
           onClick={() => setFiatMode(false)}
           className={`rounded-md px-2 py-1.5 ${
             !fiatMode
@@ -135,6 +134,7 @@ export default function DonateForm({
           ETH
         </button>
         <button
+          type='button'
           onClick={() => setFiatMode(true)}
           className={`rounded-md px-2 py-1.5 ${
             fiatMode
@@ -156,7 +156,7 @@ export default function DonateForm({
               !fiatMode
                 ? parseFloat(formatEther(BigInt(campaign.goal)))
                 : parseFloat(formatEther(BigInt(campaign.goal))) *
-                  (ethPrice as number)
+                  (ethPriceInUSD as number)
             }
             {...register('amount', {
               required: 'Amount is required',
@@ -167,82 +167,47 @@ export default function DonateForm({
             })}
             error={errors.amount?.message}
             defaultValue={
-              !fiatMode ? amount : (amount as number) * (ethPrice as number)
+              !fiatMode
+                ? amount
+                : (amount as number) * (ethPriceInUSD as number)
             }
             placeholder='Enter an amount in ETH'
           />
-          <img
+          {/* <img
             src='https://cryptologos.cc/logos/thumbs/ethereum.png?v=030'
             alt='eth-logo'
             className='absolute right-10 top-1/2 h-6 -translate-y-1/2'
-          />
+          /> */}
         </div>
-        <p>(${!fiatMode ? ethConverted : usdConverted})</p>
+        <p>
+          (≈{' '}
+          {!fiatMode
+            ? `$${ethToUSD}`
+            : `${parseFloat(
+                (watchedAmount / (ethPriceInUSD as number)).toString()
+              ).toFixed(2)} ETH`}
+          )
+        </p>
 
         <Slider
           onValueChange={(e) => {
             setValue(
               'amount',
-              !fiatMode ? (e[0] as number) : e[0] * (ethPrice as number)
+              !fiatMode ? (e[0] as number) : e[0] * (ethPriceInUSD as number)
             );
           }}
-          value={[watchedETHAmount as unknown as number]}
+          value={[
+            fiatMode
+              ? (watchedAmount as unknown as number)
+              : (watchedAmount as unknown as number) /
+                (ethPriceInUSD as number),
+          ]}
           min={parseFloat(formatEther(BigInt(campaign.total_accrued)))}
           max={
             !fiatMode
               ? parseFloat(formatEther(BigInt(campaign.goal)))
               : parseFloat(formatEther(BigInt(campaign.goal))) *
-                (ethPrice as number)
-          }
-          step={0.01}
-        />
-      </>
-      {/* USD TO ETH */}
-      <>
-        <div className='relative'>
-          <Input
-            type='number'
-            step={0.01}
-            min={0}
-            max={
-              parseFloat(formatEther(BigInt(campaign.goal))) *
-              (ethPrice as number)
-            }
-            {...register('amount', {
-              required: 'Amount is required',
-              min: {
-                value: 0,
-                message: 'Enter an amount larger than 0.001 ETH',
-              },
-            })}
-            error={errors.amount?.message}
-            defaultValue={(amount as number) * (ethPrice as number)}
-            placeholder='Enter an amount in USD'
-          />
-          <p className='absolute right-10 top-1/2 h-6 -translate-y-1/2'>
-            &#36;
-          </p>
-        </div>
-        <p>
-          (
-          {parseFloat(
-            (watchedETHAmount / (ethPrice as number)).toString()
-          ).toFixed(2)}{' '}
-          ETH)
-        </p>
-
-        <Slider
-          onValueChange={(e) => {
-            setValue('amount', e[0] * (ethPrice as number));
-          }}
-          value={[watchedETHAmount as unknown as number]}
-          min={
-            parseFloat(formatEther(BigInt(campaign.total_accrued))) *
-            (ethPrice as number)
-          }
-          max={
-            parseFloat(formatEther(BigInt(campaign.goal))) *
-            (ethPrice as number)
+                (ethPriceInUSD as number)
           }
           step={0.01}
         />
