@@ -8,6 +8,7 @@ export interface CampaignsTable {
   creator: string;
   date_created: number;
   description: string;
+  discontinued: boolean;
   flagged: boolean;
   goal: number;
   is_closed: boolean;

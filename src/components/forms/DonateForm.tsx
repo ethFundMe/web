@@ -78,6 +78,9 @@ export default function DonateForm({
     const fiatToETH = parseEther(
       parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
     );
+    console.log(
+      parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
+    );
 
     const campId = BigInt(campaignID);
     const commentId = BigInt(1);
@@ -90,7 +93,8 @@ export default function DonateForm({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
       functionName: 'fundCampaign',
-      args: [campId, commentId],
+      // args: [camp, commentId],
+      args: [BigInt(campaignID)],
       value: donationAmt,
       chainId: ethChainId,
     });
@@ -213,7 +217,7 @@ export default function DonateForm({
         />
       </>
 
-      <div>
+      <div className='hidden'>
         <Textarea placeholder='Add a comment' {...register('comment')} />
         {errors.comment && (
           <p className='text-sm text-red-500'>{errors.comment.message}</p>

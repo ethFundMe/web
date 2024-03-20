@@ -115,8 +115,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         title,
         description,
         parseEther(goal.toString()),
-        campaign.media_links,
         beneficiaryAddress as `0x${string}`,
+        // campaign.media_links,
       ],
     });
   };

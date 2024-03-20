@@ -95,6 +95,11 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string[]',
+            name: 'mediaLinks',
+            type: 'string[]',
+          },
+          {
             internalType: 'uint256',
             name: 'dateCreated',
             type: 'uint256',
@@ -127,14 +132,8 @@ export const EthFundMe = [
       },
       {
         indexed: false,
-        internalType: 'bool',
-        name: 'isAutoToken',
-        type: 'bool',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'reward',
+        name: 'tokenRewardAmount',
         type: 'uint256',
       },
     ],
@@ -205,6 +204,11 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
+            internalType: 'string[]',
+            name: 'mediaLinks',
+            type: 'string[]',
+          },
+          {
             internalType: 'uint256',
             name: 'dateCreated',
             type: 'uint256',
@@ -243,15 +247,15 @@ export const EthFundMe = [
       },
       {
         indexed: false,
-        internalType: 'int256',
-        name: 'commentID',
-        type: 'int256',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
         name: 'amountFundedAfterFees',
         type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'creatorFunded',
+        type: 'bool',
       },
       {
         indexed: false,
@@ -261,14 +265,8 @@ export const EthFundMe = [
       },
       {
         indexed: false,
-        internalType: 'bool',
-        name: 'isAutoToken',
-        type: 'bool',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
-        name: 'reward',
+        name: 'tokenRewardAmount',
         type: 'uint256',
       },
     ],
@@ -299,6 +297,11 @@ export const EthFundMe = [
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
+          },
+          {
+            internalType: 'string[]',
+            name: 'mediaLinks',
+            type: 'string[]',
           },
           {
             internalType: 'uint256',
@@ -468,31 +471,6 @@ export const EthFundMe = [
     type: 'event',
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'receiver',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'enum EthFundMe.RewardType',
-        name: 'rewardType',
-        type: 'uint8',
-      },
-    ],
-    name: 'TokensTransferred',
-    type: 'event',
-  },
-  {
     inputs: [
       {
         internalType: 'uint256',
@@ -629,6 +607,11 @@ export const EthFundMe = [
         type: 'uint256',
       },
       {
+        internalType: 'string[]',
+        name: '_mediaLinks',
+        type: 'string[]',
+      },
+      {
         internalType: 'address',
         name: '_beneficiary',
         type: 'address',
@@ -673,28 +656,10 @@ export const EthFundMe = [
         name: '_campaignID',
         type: 'uint256',
       },
-      {
-        internalType: 'int256',
-        name: '_commentID',
-        type: 'int256',
-      },
     ],
     name: 'fundCampaign',
     outputs: [],
     stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bool',
-        name: '_state',
-        type: 'bool',
-      },
-    ],
-    name: 'setAutoToken',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -727,6 +692,11 @@ export const EthFundMe = [
         type: 'uint256',
       },
       {
+        internalType: 'string[]',
+        name: '_mediaLinks',
+        type: 'string[]',
+      },
+      {
         internalType: 'address',
         name: '_beneficiary',
         type: 'address',
@@ -741,20 +711,7 @@ export const EthFundMe = [
     inputs: [
       {
         internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'updateCreatorReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_seconds',
+        name: '_days',
         type: 'uint256',
       },
     ],
@@ -790,19 +747,6 @@ export const EthFundMe = [
         internalType: 'address',
         name: 'M2',
         type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'AUTO_TOKEN',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -1030,6 +974,11 @@ export const EthFundMe = [
             internalType: 'uint256',
             name: 'goal',
             type: 'uint256',
+          },
+          {
+            internalType: 'string[]',
+            name: 'mediaLinks',
+            type: 'string[]',
           },
           {
             internalType: 'uint256',

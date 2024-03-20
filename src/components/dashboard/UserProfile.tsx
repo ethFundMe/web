@@ -1,8 +1,7 @@
 'use client';
 
 import { updateUser } from '@/actions';
-import { cn, formatWalletAddress } from '@/lib/utils';
-// import { userStore } from '@/store';
+import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
 import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -15,6 +14,7 @@ import { useAccount } from 'wagmi';
 import { Container } from '../Container';
 import DnDUpload from '../DnDUpload';
 import EarningsCard from '../EarningsCard';
+import ImageWithFallback from '../ImageWithFallback';
 import UserCampaignCard from '../UserCampaignCard';
 import { Button } from '../ui/button';
 import {
@@ -35,9 +35,12 @@ export const UserProfile = ({
   const router = useRouter();
   const [closeBannerRef, closePfpRef] = useRefs<HTMLButtonElement>(null);
   const [showPfpUpload, setShowPfpUpload] = useState(false);
+  const [updatingImage, setUpdatingImage] = useState([false, false]);
 
   // const { setUser } = userStore();
-  // if (user) setUser(user);
+
+  // setUser(user);
+  // console.log(user);
 
   const handlePfpUpdate = (profileUrl: string[]) => {
     updateUser({
@@ -89,7 +92,7 @@ export const UserProfile = ({
             className='banner group flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
             style={{
               background: user.bannerUrl
-                ? `linear-gradient(rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,1) 100%),url(${user.bannerUrl}) center center/cover no-repeat`
+                ? `url(${user.bannerUrl}) center center/cover no-repeat`
                 : '#8c929a',
             }}
           >
@@ -146,15 +149,25 @@ export const UserProfile = ({
                 </DialogTrigger>
                 <DialogContent className='p-0.5'>
                   <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
-                    <Image
-                      className='my-auto w-full object-cover'
-                      src={user.profileUrl ?? '/images/user-pfp.png'}
+                    <ImageWithFallback
+                      className={cn(
+                        'my-auto w-full object-cover',
+                        updatingImage[0] && 'opacity-60'
+                      )}
+                      src={user.profileUrl ?? ''}
+                      fallback='/images/user-pfp.png'
                       height={500}
                       width={500}
                       alt={user.fullName ?? 'profile-picture'}
                     />
 
-                    {user.ethAddress === address && (
+                    {updatingImage[0] && (
+                      <span className='absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2'>
+                        <div className='h-8 w-8 animate-spin rounded-full border-2 border-t-0 border-slate-700'></div>
+                      </span>
+                    )}
+
+                    {!updatingImage[0] && user.ethAddress === address && (
                       <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
                         <span
                           title='Change image'
@@ -168,6 +181,55 @@ export const UserProfile = ({
                           <span
                             title='Remove image'
                             className='cursor-pointer text-red-500'
+                            onClick={async () => {
+                              try {
+                                setUpdatingImage((prev) => [true, prev[1]]);
+                                const res = await deleteFromCloudinary(
+                                  user.profileUrl as string
+                                );
+
+                                if (res.ok) {
+                                  updateUser({
+                                    ethAddress: user.ethAddress,
+                                    email: user.email,
+                                    fullName: user.fullName,
+                                    profileUrl: undefined,
+                                  })
+                                    .then((res) => {
+                                      setUser(res);
+                                      toast.success('Profile updated', {
+                                        position: 'top-right',
+                                      });
+                                      setUpdatingImage((prev) => [
+                                        false,
+                                        prev[1],
+                                      ]);
+
+                                      if (closePfpRef.current) {
+                                        closePfpRef.current.click();
+                                      }
+                                      router.refresh();
+                                    })
+                                    .catch(() => {
+                                      toast.error('Failed to update profile', {
+                                        position: 'top-right',
+                                      });
+                                      setUpdatingImage((prev) => [
+                                        false,
+                                        prev[1],
+                                      ]);
+                                    });
+                                } else {
+                                  throw new Error('Failed to update image');
+                                }
+                              } catch (err) {
+                                console.log(err);
+                                toast.error('Failed to update image', {
+                                  position: 'top-right',
+                                });
+                                setUpdatingImage((prev) => [false, prev[1]]);
+                              }
+                            }}
                           >
                             <Trash />
                           </span>
