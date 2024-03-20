@@ -166,7 +166,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Discord',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://discord.gg/9kac2FFMWe',
     icon: BiLogoDiscordAlt({ size: 20 }),
   },
 ];

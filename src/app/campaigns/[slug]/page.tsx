@@ -279,7 +279,7 @@ export default async function CampaignPage({
               <form className='relative space-y-4 rounded-md'>
                 <Textarea
                   placeholder='Enter your comments'
-                  className='max-h-52'
+                  className='max-h-52 pr-12 md:pr-[70px]'
                 />
                 <Button className='absolute bottom-2 right-2 p-0 px-2'>
                   <FaTelegramPlane size={20} />

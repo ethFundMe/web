@@ -74,7 +74,7 @@ export default function DonateForm({
     }
 
     const campId = BigInt(campaignID);
-    const commentId = BigInt(1);
+    const commentId = BigInt('0');
     const donationAmt = parseEther(amount.toString() || '0');
     console.log(campaignID, campId, commentId, donationAmt, donationAmt);
 

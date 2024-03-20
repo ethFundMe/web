@@ -1,14 +1,11 @@
 'use client';
 
-import { getUser } from '@/actions';
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
-import { User } from '@/types';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
@@ -23,11 +20,7 @@ export const CampaignCard = ({
 }) => {
   const router = usePRouter();
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUser(campaign.creator as `0x${string}`).then((res) => setUser(res));
-  }, [campaign.creator]);
+  const user = campaign.user;
 
   return (
     <div
