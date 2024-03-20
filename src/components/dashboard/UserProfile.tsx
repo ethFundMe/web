@@ -40,9 +40,6 @@ export const UserProfile = ({
 
   const { setUser } = userStore();
 
-  setUser(user);
-  console.log(user);
-
   const handlePfpUpdate = (profileUrl: string[]) => {
     updateUser({
       ethAddress: user.ethAddress,

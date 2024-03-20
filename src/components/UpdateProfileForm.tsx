@@ -17,7 +17,7 @@ import { REGEX_CODES } from '@/lib/constants';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { parseEther } from 'viem';
@@ -94,61 +94,83 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: user.fullName ?? '',
-      creatorFee: user.creatorFee ?? 0,
+      creatorFee: Number(user.creatorFee) ?? 0,
       bio: user.bio ?? '',
       email: user.email ?? '',
     },
     mode: 'onChange',
   });
 
-  const creatorFeeEditMade = form.watch('creatorFee') !== user.creatorFee;
+  const watchedAmount: number = form.watch('creatorFee') as number;
+  const creatorFeeEditMade =
+    form.watch('creatorFee') !== Number(user.creatorFee);
+
   const editMade =
+    form.watch('creatorFee') !== Number(user.creatorFee) ||
     form.watch('fullName').trim() !== user.fullName ||
     form.watch('email') !== user.email ||
     !!form.watch('bio')?.trim() !== !!user.bio ||
-    form.watch('bio')?.trim() !== user.bio ||
-    creatorFeeEditMade;
+    form.watch('bio')?.trim() !== user.bio;
 
+  console.log(creatorFeeEditMade, editMade);
   const router = useRouter();
 
   function updateUserProfile(values: z.infer<typeof formSchema>) {
-    updateUser({
-      bio: values.bio,
-      email: values.email,
-      ethAddress: user.ethAddress,
-      fullName: values.fullName,
-    })
-      .then((data) => {
-        // Reset form and navigate to the dashboard
-        setFormStatus(null);
-        form.reset();
-        toast.success('Profile updated successfully');
-        router.push(`/dashboard/${data.ethAddress}`);
-      })
-      .catch((error) => {
-        console.log('Failed to update profile', error);
-        setFormStatus(null);
-        toast.error('Failed to update profile');
-      });
-  }
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log({ values });
-    setFormStatus('Saving changes');
     if (creatorFeeEditMade && !editMade) {
       handleWriteContract(values.creatorFee as number);
     }
     if (editMade && creatorFeeEditMade) {
-      handleWriteContract(values.creatorFee as number);
-      if (isConfirmedTxn) {
-        updateUserProfile(values);
-      }
+      updateUser({
+        bio: values.bio,
+        email: values.email,
+        ethAddress: user.ethAddress,
+        fullName: values.fullName,
+      })
+        .then((data) => {
+          handleWriteContract(values.creatorFee as number);
+          // Reset form and navigate to the dashboard
+          setFormStatus(null);
+          form.reset();
+          toast.success('Profile updated successfully');
+          router.push(`/dashboard/${data.ethAddress}`);
+        })
+        .catch((error) => {
+          console.log('Failed to update profile', error);
+          setFormStatus(null);
+          toast.error('Failed to update profile');
+        });
     }
     if (!creatorFeeEditMade && editMade) {
-      updateUserProfile(values);
+      updateUser({
+        bio: values.bio,
+        email: values.email,
+        ethAddress: user.ethAddress,
+        fullName: values.fullName,
+      })
+        .then((data) => {
+          // Reset form and navigate to the dashboard
+          setFormStatus(null);
+          form.reset();
+          toast.success('Profile updated successfully');
+          router.push(`/dashboard/${data.ethAddress}`);
+        })
+        .catch((error) => {
+          console.log('Failed to update profile', error);
+          setFormStatus(null);
+          toast.error('Failed to update profile');
+        });
     }
   }
-  const watchedAmount: number = form.watch('creatorFee') as number;
+  useEffect(() => {
+    if (isConfirmingTxn) {
+      toast.success('Creator fee updated succesfully');
+    }
+  }, [isConfirmingTxn]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // console.log({ values });
+    updateUserProfile(values);
+  }
 
   return (
     <Form {...form}>
@@ -242,7 +264,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         />
 
         <Button
-          disabled={!!formStatus || !editMade || !creatorFeeEditMade}
+          disabled={!!formStatus || !editMade}
           className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50 md:w-52'
         >
           {formStatus ?? 'Save'}
