@@ -79,7 +79,7 @@ export default function DonateForm({
       address: ethFundMeContractAddress,
       functionName: 'fundCampaign',
       // args: [camp, commentId],
-      args: [camp],
+      args: [BigInt(campaignID)],
       value: parseEther(amount.toString() || '0'),
       chainId: ethChainId,
     });
