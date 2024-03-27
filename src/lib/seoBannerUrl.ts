@@ -3,6 +3,9 @@
 //   goal: string;
 //   title: string;
 //   description: string;
+
+import { devlog } from './utils';
+
 // }
 export function seoCampaign(
   namee: string,
@@ -245,7 +248,7 @@ export function seoProfile(
       return str;
     } else {
       const slicedTitle = str.slice(0, 20);
-      console.log('More than 20' + name.length);
+      devlog('More than 20' + name.length);
       return slicedTitle + ' .  .  .';
     }
   }

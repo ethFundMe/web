@@ -2,7 +2,7 @@
 
 import { getCampaigns } from '@/actions';
 import { CampaignTags } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, devlog } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { Search, X } from 'lucide-react';
 import Image from 'next/image';
@@ -54,7 +54,7 @@ export default function InfiniteScroll({
 
   function filterByTag(tag: CampaignTags) {
     // setCampaignsToShow((prev)=>prev.filter((camp) => camp?.tag === tag));
-    console.log(tag);
+    devlog(tag);
 
     setCampaignsFiltered(true);
   }

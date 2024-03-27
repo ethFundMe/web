@@ -1,7 +1,12 @@
 'use client';
 
 import { updateUser } from '@/actions';
-import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
+import {
+  cn,
+  deleteFromCloudinary,
+  devlog,
+  formatWalletAddress,
+} from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
@@ -221,7 +226,7 @@ export const UserProfile = ({
                                   throw new Error('Failed to update image');
                                 }
                               } catch (err) {
-                                console.log(err);
+                                devlog(err);
                                 toast.error('Failed to update image', {
                                   position: 'top-right',
                                 });

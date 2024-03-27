@@ -128,7 +128,7 @@ export async function deleteFromCloudinary(image: string) {
 
   const erroredOut = data.errors;
 
-  console.log({ publicId, data });
+  devlog({ publicId, data });
 
   if (erroredOut) {
     throw new Error('Failed to delete image');
@@ -267,4 +267,9 @@ export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
 export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
+};
+
+export const devlog = (message: unknown) => {
+  if (process.env.NODE_ENV !== 'development') return;
+  console.log(message);
 };
