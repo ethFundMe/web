@@ -7,6 +7,7 @@ import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   createUrl,
+  devlog,
   uploadToCloudinary,
 } from '@/lib/utils';
 import { userStore } from '@/store';
@@ -100,7 +101,7 @@ export default function CreateCampaignForm() {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log('Settled addCampaign', { data, error });
+        devlog(`Settled addCampaign, ${{ data, error }}`);
       },
     },
   });
@@ -187,20 +188,66 @@ export default function CreateCampaignForm() {
         setSubmitStatus(null);
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
-          const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
-          writeContract({
-            abi: EthFundMe,
-            address: ethFundMeContractAddress,
-            functionName: 'addCampaign',
-            args: [
-              title,
-              description,
-              parseEther(goal.toString()),
-              mediaLinks,
-              beneficiaryAddress as `0x${string}`,
-            ],
-            chainId: ethChainId,
-          });
+          // const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
+
+          const handleIPFSPush = async function () {
+            try {
+              const res = await fetch(
+                `${
+                  process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
+                }/api/campaign/ipfs`,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  method: 'POST',
+                  body: JSON.stringify({
+                    title,
+                    description,
+                    youtubeLink: ytLink,
+                    bannerUrl: uploaded[0],
+                    mediaLinks: uploaded.filter((_, id) => id !== 0),
+                  }),
+                }
+              );
+              return res.json();
+            } catch (e) {
+              throw new Error();
+            }
+          };
+
+          handleIPFSPush()
+            .then((res) => {
+              writeContract({
+                abi: EthFundMe,
+                address: ethFundMeContractAddress,
+                functionName: 'addCampaign',
+                args: [
+                  res.uri,
+                  parseEther(String(goal)),
+                  beneficiaryAddress as `0x${string}`,
+                ],
+                chainId: ethChainId,
+              });
+            })
+            .catch((e) => {
+              toast.error('Failed to create campaign');
+              devlog({ e });
+            });
+
+          // writeContract({
+          //   abi: EthFundMe,
+          //   address: ethFundMeContractAddress,
+          //   functionName: 'addCampaign',
+          //   args: [
+          //     title,
+          //     description,
+          //     parseEther(goal.toString()),
+          //     mediaLinks,
+          //     beneficiaryAddress as `0x${string}`,
+          //   ],
+          //   chainId: ethChainId,
+          // });
         }
       })
       .catch((e) => toast.error(e));

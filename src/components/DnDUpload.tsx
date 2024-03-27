@@ -1,6 +1,11 @@
 'use client';
 
-import { cn, deleteFromCloudinary, uploadToCloudinary } from '@/lib/utils';
+import {
+  cn,
+  deleteFromCloudinary,
+  devlog,
+  uploadToCloudinary,
+} from '@/lib/utils';
 import { Download, Trash, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -468,7 +473,7 @@ const ImagePreview = ({
               if (deletable) {
                 try {
                   const res = await deleteFromCloudinary(src);
-                  console.log(
+                  devlog(
                     res.ok
                       ? 'Deleted from Cloudinary'
                       : 'Not found on Cloudinary'

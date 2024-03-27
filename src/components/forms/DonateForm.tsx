@@ -4,6 +4,7 @@
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
+import { devlog } from '@/lib/utils';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -58,7 +59,7 @@ export default function DonateForm({
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log('Settled fundCampaign', { data, error });
+        devlog(`Settled fundCampaign, ${{ data, error }}`);
       },
     },
   });
@@ -78,7 +79,7 @@ export default function DonateForm({
     const fiatToETH = parseEther(
       parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
     );
-    console.log(
+    devlog(
       parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
     );
 
@@ -87,7 +88,7 @@ export default function DonateForm({
     const donationAmt = fiatMode
       ? fiatToETH
       : parseEther(amount.toString() || '0');
-    console.log(campaignID, campId, commentId, donationAmt, donationAmt);
+    devlog({ campaignID, campId, commentId, donationAmt });
 
     return writeContract({
       abi: EthFundMe,

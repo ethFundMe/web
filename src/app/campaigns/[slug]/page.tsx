@@ -99,7 +99,7 @@ export default async function CampaignPage({
   params: { slug: string };
 }) {
   const campaign = await getCampaign(parseInt(slug));
-  // console.log(campaign);
+  // devlog(campaign);
 
   const campaignsData = await getCampaigns();
   const { campaigns } = campaignsData;
