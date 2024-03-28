@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
-import { devlog } from '@/lib/utils';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -68,7 +67,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`Settled update CreatorFee, ${{ data, error }}`);
+        console.log(`Settled update CreatorFee, ${{ data, error }}`);
       },
     },
   });
@@ -113,7 +112,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     !!form.watch('bio')?.trim() !== !!user.bio ||
     form.watch('bio')?.trim() !== user.bio;
 
-  devlog(`${{ creatorFeeEditMade, editMade }}`);
+  console.log(`${{ creatorFeeEditMade, editMade }}`);
   const router = useRouter();
 
   function updateUserProfile(values: z.infer<typeof formSchema>) {
@@ -136,7 +135,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           router.push(`/dashboard/${data.ethAddress}`);
         })
         .catch((error) => {
-          devlog(`Failed to update profile, ${error}`);
+          console.log(`Failed to update profile, ${error}`);
           setFormStatus(null);
           toast.error('Failed to update profile');
         });
@@ -156,7 +155,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           router.push(`/dashboard/${data.ethAddress}`);
         })
         .catch((error) => {
-          devlog(`Failed to update profile, ${error}`);
+          console.log(`Failed to update profile, ${error}`);
           setFormStatus(null);
           toast.error('Failed to update profile');
         });

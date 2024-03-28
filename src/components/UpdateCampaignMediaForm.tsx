@@ -3,7 +3,7 @@
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
-import { cn, devlog } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -34,7 +34,7 @@ export default function UpdateCampaignMediaForm({
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`'Settled updateCampaign', ${{ data, error }}`);
+        console.log(`'Settled updateCampaign', ${{ data, error }}`);
       },
     },
   });
@@ -73,7 +73,7 @@ export default function UpdateCampaignMediaForm({
   };
 
   const handleDelete = (url: string) => {
-    devlog({ url });
+    console.log({ url });
 
     const newMediaLinks = campaign.media_links.filter((src) => src !== url);
 

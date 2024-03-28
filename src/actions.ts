@@ -111,3 +111,33 @@ export const updateUser = async (userDetails: {
   }
   return resData;
 };
+
+export const handlePushComment = async ({
+  userID,
+  campaignID,
+  comment,
+}: {
+  userID: string;
+  campaignID: string;
+  comment: string;
+}) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/comments`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          comment,
+          userID,
+          campaignID,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return res.json();
+  } catch (e) {
+    throw new Error('Failed to add comment');
+  }
+};

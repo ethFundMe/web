@@ -4,7 +4,7 @@ import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
-import { GET_EDIT_CAMPAIGN_FORM_SCHEMA, devlog } from '@/lib/utils';
+import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -66,7 +66,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`'Settled updateCampaign', ${{ data, error }}`);
+        console.log(`'Settled updateCampaign', ${{ data, error }}`);
       },
     },
   });

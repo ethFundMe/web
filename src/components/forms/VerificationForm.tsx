@@ -1,7 +1,6 @@
 'use client';
 
 import { REGEX_CODES } from '@/lib/constants';
-import { devlog } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -41,7 +40,7 @@ export default function VerificationForm() {
         setSelectedCountry(response.country ?? 'GH');
       })
       .catch((data) => {
-        devlog(`Request failed:, ${{ data }}`);
+        console.log(`Request failed:, ${{ data }}`);
       });
   }, [selectedCountry]);
 
@@ -77,7 +76,7 @@ export default function VerificationForm() {
       </pre>,
       { position: 'top-right' }
     );
-    devlog({ data });
+    console.log({ data });
   };
 
   return (

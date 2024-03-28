@@ -128,7 +128,7 @@ export async function deleteFromCloudinary(image: string) {
 
   const erroredOut = data.errors;
 
-  devlog({ publicId, data });
+  console.log({ publicId, data });
 
   if (erroredOut) {
     throw new Error('Failed to delete image');

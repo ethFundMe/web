@@ -13,12 +13,11 @@ import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { CommentForm } from '@/components/forms/CommentForm';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
-import { FaEthereum, FaTelegramPlane } from 'react-icons/fa';
+import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
 
 type Props = {
@@ -99,7 +98,7 @@ export default async function CampaignPage({
   params: { slug: string };
 }) {
   const campaign = await getCampaign(parseInt(slug));
-  // devlog(campaign);
+  // console.log(campaign);
 
   const campaignsData = await getCampaigns();
   const { campaigns } = campaignsData;
@@ -157,6 +156,9 @@ export default async function CampaignPage({
     },
   ];
 
+  const media_links = campaign.youtube_link
+    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
+    : [campaign.banner_url, ...campaign.media_links];
   return (
     <>
       <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
@@ -166,7 +168,7 @@ export default async function CampaignPage({
               {campaign.title}
             </h2>
 
-            <SwiperCarousel images={campaign.media_links} />
+            <SwiperCarousel images={media_links} />
 
             <div className='space-y-7 pb-5'>
               <div className='flex flex-col gap-4 sm:flex-row'>
@@ -235,7 +237,10 @@ export default async function CampaignPage({
                   {chats.map(({ user: { fullname }, date, amt, text }, j) => (
                     <div
                       key={j}
-                      className='rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm'
+                      className={cn(
+                        'rounded-lg border border-transparent p-2 text-sm',
+                        amt && 'border-slate-300 bg-slate-50'
+                      )}
                     >
                       <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
                         <div className='flex items-center gap-2'>
@@ -270,21 +275,13 @@ export default async function CampaignPage({
                           </Link>
                         )}
                       </div>
-                      <p className='font-medium'>{text}</p>
+                      <p className=''>{text}</p>
                     </div>
                   ))}
                 </div>
               </ScrollArea>
 
-              <form className='relative space-y-4 rounded-md'>
-                <Textarea
-                  placeholder='Enter your comments'
-                  className='max-h-52 pr-12 md:pr-[70px]'
-                />
-                <Button className='absolute bottom-2 right-2 p-0 px-2'>
-                  <FaTelegramPlane size={20} />
-                </Button>
-              </form>
+              <CommentForm campaignID={campaign.campaign_id} />
             </div>
           </aside>
         </Container>

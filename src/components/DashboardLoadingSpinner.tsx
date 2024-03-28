@@ -1,3 +1,4 @@
+import { Loader } from 'lucide-react';
 import Image from 'next/image';
 
 export default function DashboardLoadingSpinner() {
@@ -11,7 +12,9 @@ export default function DashboardLoadingSpinner() {
         alt='logo'
       />
 
-      <div className='mx-auto mt-6 h-8 w-8 animate-spin rounded-full border-2 border-r-0 border-primary-default' />
+      <div className='mx-auto mt-8 w-fit'>
+        <Loader className='animate-spin text-primary-default' />
+      </div>
     </div>
   );
 }
