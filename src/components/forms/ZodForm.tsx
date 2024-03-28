@@ -7,7 +7,6 @@ import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   createUrl,
-  devlog,
   uploadToCloudinary,
 } from '@/lib/utils';
 import { userStore } from '@/store';
@@ -101,7 +100,7 @@ export default function CreateCampaignForm() {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`Settled addCampaign, ${{ data, error }}`);
+        console.log(`Settled addCampaign, ${{ data, error }}`);
       },
     },
   });
@@ -188,7 +187,6 @@ export default function CreateCampaignForm() {
         setSubmitStatus(null);
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
-          // const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
 
           const handleIPFSPush = async function () {
             try {
@@ -232,7 +230,7 @@ export default function CreateCampaignForm() {
             })
             .catch((e) => {
               toast.error('Failed to create campaign');
-              devlog({ e });
+              console.log({ e });
             });
 
           // writeContract({

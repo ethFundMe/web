@@ -3,7 +3,6 @@ import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
-import { devlog } from '@/lib/utils';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { parseEther } from 'viem';
@@ -22,7 +21,7 @@ export default function TestPage() {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`Settled addCampaign, ${{ data, error }}`);
+        console.log(`Settled addCampaign, ${{ data, error }}`);
       },
     },
   });

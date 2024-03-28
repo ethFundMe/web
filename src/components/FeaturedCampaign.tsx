@@ -1,11 +1,10 @@
 'use client';
 
-import { REGEX_CODES } from '@/lib/constants';
 import { Campaign, User } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonateBtn } from './DonateBtn';
@@ -22,8 +21,9 @@ export default function FeaturedCampaign({
 }) {
   const [index, setIndex] = useState(0);
 
-  const images = campaign.media_links.filter(
-    (media) => !REGEX_CODES.ytLink.test(media)
+  const images = useMemo(
+    () => [campaign.banner_url, ...campaign.media_links],
+    [campaign]
   );
 
   const AnimImage = motion(Image);

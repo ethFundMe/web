@@ -1,24 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { handlePushComment } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
-import { devlog } from '@/lib/utils';
+import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { redirect } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { formatEther, parseEther } from 'viem';
 import {
-  useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
   type BaseError,
 } from 'wagmi';
 import { Input } from '../inputs';
 import { Button } from '../ui/button';
+import { DialogClose } from '../ui/dialog';
 import { Slider } from '../ui/slider';
 import { Textarea } from '../ui/textarea';
 import { DonateFormProps } from './types';
@@ -47,8 +48,11 @@ export default function DonateForm({
     },
   });
 
-  const { address } = useAccount();
+  // const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { user } = userStore();
+  const router = useRouter();
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const {
     data: hash,
@@ -59,7 +63,7 @@ export default function DonateForm({
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        devlog(`Settled fundCampaign, ${{ data, error }}`);
+        console.log(`Settled fundCampaign, ${{ data, error }}`);
       },
     },
   });
@@ -72,7 +76,8 @@ export default function DonateForm({
   const isLoadingTxn = isPending || isConfirmingTxn;
 
   const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
-    const { amount, campaignID } = data;
+    const { amount, campaignID, comment } = data;
+    // eslint-disable-next-line no-extra-boolean-cast
     if (amount <= 0) {
       toast.error('Fund more than 0 ETH');
       return;
@@ -80,34 +85,61 @@ export default function DonateForm({
     const fiatToETH = parseEther(
       parseFloat((usdInput / (ethPriceInUSD ?? 0)).toString()).toFixed(2)
     );
-    devlog(
-      parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
-    );
+    // console.log(
+    //   parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
+    // );
 
-    const campId = BigInt(campaignID);
-    const commentId = BigInt(1);
     const donationAmt = fiatMode
       ? fiatToETH
       : parseEther(amount.toString() || '0');
-    devlog({ campaignID, campId, commentId, donationAmt });
+    // devlog({ campaignID, campId, commentId, donationAmt });
 
-    return writeContract({
+    if (!user) {
+      if (closeBtnRef.current && openConnectModal) {
+        closeBtnRef.current.click();
+        openConnectModal();
+      }
+    }
+
+    if (comment && user) {
+      handlePushComment({
+        campaignID: campaign.id,
+        comment,
+        userID: user.id,
+      }).then((res) => {
+        writeContract({
+          abi: EthFundMe,
+          address: ethFundMeContractAddress,
+          functionName: 'fundCampaign',
+          args: [campaignID, res.commentID],
+          value: donationAmt,
+          chainId: ethChainId,
+        });
+      });
+
+      return;
+    }
+
+    writeContract({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
       functionName: 'fundCampaign',
-      // args: [camp, commentId],
-      args: [BigInt(campaignID)],
+      args: [BigInt(campaignID), -1],
       value: donationAmt,
       chainId: ethChainId,
     });
+    return;
   };
 
   useEffect(() => {
     if (isConfirmedTxn) {
       toast.success('Successfully funded campaign');
-      return redirect(`/campaigns/${campaign.campaign_id}`);
+      if (!closeBtnRef.current) return;
+      closeBtnRef.current.click();
+      // return router.push(`/campaigns/${campaign.campaign_id}`);
+      return router.refresh();
     }
-  }, [campaign.campaign_id, isConfirmedTxn]);
+  }, [campaign.campaign_id, isConfirmedTxn, router]);
 
   useEffect(() => {
     if (isError && error) {
@@ -229,24 +261,22 @@ export default function DonateForm({
         </p>
       </>
 
-      <div className='hidden'>
+      <div>
         <Textarea placeholder='Add a comment' {...register('comment')} />
         {errors.comment && (
           <p className='text-sm text-red-500'>{errors.comment.message}</p>
         )}
       </div>
 
-      {customClose ?? address ? (
+      <DialogClose className='hidden' ref={closeBtnRef} />
+
+      {customClose ?? (
         <Button
           size='lg'
           disabled={isLoadingTxn || isConfirmingTxn || isPending}
           className='w-full disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-opacity-90'
         >
           {isLoadingTxn ? 'Donating...' : 'Donate'}
-        </Button>
-      ) : (
-        <Button size='lg' className='w-full' onClick={openConnectModal}>
-          Donate
         </Button>
       )}
     </form>

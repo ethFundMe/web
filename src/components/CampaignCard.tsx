@@ -34,7 +34,7 @@ export const CampaignCard = ({
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src={campaign?.media_links[0] ?? '/images/broken.jpg'}
+          src={campaign.banner_url ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
