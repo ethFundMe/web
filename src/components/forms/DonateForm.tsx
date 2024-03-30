@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { handlePushComment } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
@@ -11,8 +10,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 import { formatEther, parseEther } from 'viem';
 import {
+  useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
   type BaseError,
@@ -48,7 +49,7 @@ export default function DonateForm({
     },
   });
 
-  // const { address } = useAccount();
+  const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
   const router = useRouter();
@@ -63,7 +64,7 @@ export default function DonateForm({
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log(`Settled fundCampaign, ${{ data, error }}`);
+        console.log('Settled fundCampaign', { data, error });
       },
     },
   });
@@ -92,33 +93,47 @@ export default function DonateForm({
     const donationAmt = fiatMode
       ? fiatToETH
       : parseEther(amount.toString() || '0');
-    // devlog({ campaignID, campId, commentId, donationAmt });
+    // console.log({ campaignID, campId, commentId, donationAmt });
 
-    if (!user) {
+    if (!user || !address) {
       if (closeBtnRef.current && openConnectModal) {
         closeBtnRef.current.click();
         openConnectModal();
       }
     }
+    const prettyComment = comment?.trim();
 
-    if (comment && user) {
-      handlePushComment({
-        campaignID: campaign.id,
-        comment,
+    if (prettyComment && user) {
+      const socket = io(process.env.NEXT_PUBLIC_WEB_URL);
+
+      socket.emit('sendComment', {
+        commentID: prettyComment,
         userID: user.id,
-      }).then((res) => {
-        writeContract({
-          abi: EthFundMe,
-          address: ethFundMeContractAddress,
-          functionName: 'fundCampaign',
-          args: [campaignID, res.commentID],
-          value: donationAmt,
-          chainId: ethChainId,
-        });
+        campaignID,
       });
 
       return;
+    } else {
+      alert('hi');
     }
+    // if (prettyComment && user) {
+    //   handlePushComment({
+    //     campaignID: campaign.id,
+    //     comment: prettyComment,
+    //     userID: user.id,
+    //   }).then((res) => {
+    //     writeContract({
+    //       abi: EthFundMe,
+    //       address: ethFundMeContractAddress,
+    //       functionName: 'fundCampaign',
+    //       args: [campaignID, res.commentID],
+    //       value: donationAmt,
+    //       chainId: ethChainId,
+    //     });
+    //   });
+
+    //   return;
+    // }
 
     writeContract({
       abi: EthFundMe,

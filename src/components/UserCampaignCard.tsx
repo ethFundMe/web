@@ -1,6 +1,9 @@
+'use client';
+
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { Campaign } from '@/types';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FaPen } from 'react-icons/fa';
 import { DonateBtn } from './DonateBtn';
 import ImageWithFallback from './ImageWithFallback';
@@ -14,12 +17,20 @@ export default function UserCampaignCard({
   campaign: Campaign;
   variant?: 'user' | 'viewer';
 }) {
+  const { push } = useRouter();
+
   return (
-    <div className='group flex flex-col overflow-hidden rounded-md border border-slate-300'>
-      <Link href={`/campaigns/${campaign.campaign_id}`}>
+    <div
+      className='group group flex flex-col overflow-hidden rounded-md border border-slate-300'
+      onClick={() => push(`/campaigns/${campaign.campaign_id}`)}
+    >
+      <Link
+        href={`/campaigns/${campaign.campaign_id}`}
+        className='block h-[80vw] overflow-hidden sm:h-[250px]'
+      >
         <ImageWithFallback
-          className='h-[80vw] w-full bg-slate-50 object-cover sm:h-[250px]'
-          src={campaign.media_links[0]}
+          className='duration-250 h-[80vw] w-full bg-slate-50 object-cover transition-all group-hover:scale-105 sm:h-[250px] '
+          src={campaign.banner_url}
           width={400}
           height={400}
           alt={campaign.title}
@@ -39,7 +50,12 @@ export default function UserCampaignCard({
           )}
         </div>
 
-        <div className='grid grid-cols-2 gap-x-4'>
+        <div
+          className='grid grid-cols-2 gap-x-4'
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
           {variant === 'user' && (
             <Button asChild variant='outline'>
               <Link

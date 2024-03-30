@@ -61,3 +61,15 @@ export enum CampaignTags {
   'Science and Research' = 'Science and Research',
   'Others' = 'Others',
 }
+
+export type Comment = {
+  commentID: number;
+  comment: string;
+  amount: string;
+  createdAt: Date;
+  user: {
+    fullname: string;
+    bannerUrl: string | null;
+    profileUrl: string | null;
+  };
+};

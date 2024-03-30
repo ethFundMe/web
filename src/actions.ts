@@ -122,22 +122,23 @@ export const handlePushComment = async ({
   comment: string;
 }) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/comments`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          comment,
-          userID,
-          campaignID,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return res.json();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/comment`, {
+      method: 'POST',
+      body: JSON.stringify({
+        comment,
+        userID,
+        campaignID,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await res.json();
+
+    return data;
   } catch (e) {
+    console.log(e);
+
     throw new Error('Failed to add comment');
   }
 };

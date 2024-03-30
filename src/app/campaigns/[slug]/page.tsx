@@ -1,24 +1,20 @@
 import { getCampaign, getCampaigns, getUser } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
+import { CampaignComments } from '@/components/CampaignComments';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { SwiperCarousel } from '@/components/SwiperCarousel';
+import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
-
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { SwiperCarousel } from '@/components/SwiperCarousel';
-import { CommentForm } from '@/components/forms/CommentForm';
-import { seoCampaign } from '@/lib/seoBannerUrl';
-import type { Metadata, ResolvingMetadata } from 'next';
-import Image from 'next/image';
-import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
+import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 type Props = {
   params: { slug: string };
@@ -111,51 +107,6 @@ export default async function CampaignPage({
     .filter((_) => _.campaign_id !== campaign.campaign_id)
     .slice(0, 3);
 
-  const chats = [
-    {
-      user: {
-        fullname: 'John Smith',
-      },
-      date: '2024-02-26T18:52:42.185Z',
-      // text: 'Thank you all for your incredible support! Every contribution means the world to us and brings us closer to our goal.',
-      text: '',
-      amt: 100000000000000000,
-    },
-    {
-      user: {
-        fullname: 'Emily Johnson',
-      },
-      date: '2024-02-26T19:30:00.000Z',
-      text: 'I just donated what I could. Let us keep spreading the word and helping those in need!',
-      amt: 5000000000000000,
-    },
-    {
-      user: {
-        fullname: 'David Rodriguez',
-      },
-      date: '2024-02-26T20:15:00.000Z',
-      text: 'This campaign is truly inspiring. I am proud to be a part of this community that comes together to support each other.',
-      // amt: 2500000000000000000,
-      amt: 0,
-    },
-    {
-      user: {
-        fullname: 'Sarah Thompson',
-      },
-      date: '2024-02-26T21:00:00.000Z',
-      text: 'It is heartwarming to see the impact we can make when we join forces. Let us keep the momentum going!',
-      amt: 100000000000000000,
-    },
-    {
-      user: {
-        fullname: 'Michael Nguyen',
-      },
-      date: '2024-02-26T22:00:00.000Z',
-      text: 'Small acts of kindness can create big changes. Proud to support this cause.',
-      amt: 200000000000000000,
-    },
-  ];
-
   const media_links = campaign.youtube_link
     ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
     : [campaign.banner_url, ...campaign.media_links];
@@ -220,70 +171,7 @@ export default async function CampaignPage({
             </div>
           </div>
 
-          <aside className='mt-16 space-y-8'>
-            {/* Chats */}
-            <div className='chats flex flex-col space-y-4 pb-4'>
-              <h2
-                className={cn(
-                  TextSizeStyles.h5,
-                  'font-light text-primary-default'
-                )}
-              >
-                Comments & Donations
-              </h2>
-
-              <ScrollArea className='h-[500px] pr-4'>
-                <div className='space-y-4'>
-                  {chats.map(({ user: { fullname }, date, amt, text }, j) => (
-                    <div
-                      key={j}
-                      className={cn(
-                        'rounded-lg border border-transparent p-2 text-sm',
-                        amt && 'border-slate-300 bg-slate-50'
-                      )}
-                    >
-                      <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
-                        <div className='flex items-center gap-2'>
-                          <div className='relative h-8 w-8 flex-shrink-0'>
-                            <Image
-                              className='block flex-shrink-0 rounded-full object-cover'
-                              src='/images/pets.jpg'
-                              fill
-                              sizes='50px'
-                              alt='...'
-                            />
-                          </div>
-
-                          <div>
-                            <p>{fullname}</p>
-                            <small>
-                              {dayjs(date)
-                                .subtract(2, 'minute')
-                                .format('DD MMM, YYYY . HH : mm a')}
-                            </small>
-                          </div>
-                        </div>
-
-                        {!!amt && (
-                          <Link
-                            href='/'
-                            target='_blank'
-                            className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
-                          >
-                            <FaEthereum />
-                            <span>{formatEther(BigInt(amt))}</span>
-                          </Link>
-                        )}
-                      </div>
-                      <p className=''>{text}</p>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-
-              <CommentForm campaignID={campaign.campaign_id} />
-            </div>
-          </aside>
+          <CampaignComments campaign={campaign} />
         </Container>
         <Container>
           <div className='space-y-4'>
