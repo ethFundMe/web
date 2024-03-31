@@ -16,10 +16,17 @@ import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { parseEther } from 'viem';
 import {
   // BaseError,
@@ -215,31 +222,53 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           <FormField
             control={form.control}
             name='creatorFee'
-            render={() => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Creator fee (%)</FormLabel>
-                <FormControl>
-                  {/* <Input
-                    type='number'
-                    placeholder='Enter your creator fee'
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  /> */}
-                  <div className='flex items-center gap-x-3'>
-                    <p className='w-14 text-sm'>{watchedAmount}%</p>
-                    <Slider
-                      onValueChange={(e) => {
-                        form.setValue('creatorFee', e[0] as number);
-                      }}
-                      value={[watchedAmount as unknown as number]}
-                      min={0}
-                      max={30}
-                      step={0.01}
-                    />
-                  </div>
-                </FormControl>
-
-                <FormMessage />
+                <>
+                  <FormLabel>
+                    <>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='flex items-center gap-2 pb-2'>
+                            <span>Creator fees (%)</span>
+                            <AiOutlineExclamationCircle />
+                          </TooltipTrigger>
+                          <TooltipContent className='flex justify-center'>
+                            <p className='w-1/2 rounded-md border bg-red-400 p-3 text-xs text-white'>
+                              Earn a percentage of the funds raised through
+                              campaigns you create for others.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </>
+                  </FormLabel>
+                  <FormControl>
+                    <>
+                      <Input
+                        type='number'
+                        placeholder='Enter your creator fee'
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        className='py'
+                      />
+                      <div className='flex items-center gap-x-3'>
+                        <p className='w-14 text-sm'>{watchedAmount}%</p>
+                        <Slider
+                          onValueChange={(e) => {
+                            form.setValue('creatorFee', e[0] as number);
+                          }}
+                          value={[watchedAmount as unknown as number]}
+                          min={0}
+                          max={30}
+                          step={0.01}
+                        />
+                        <p className='w-14 text-sm'>30%</p>
+                      </div>
+                    </>
+                  </FormControl>
+                  <FormMessage />
+                </>
               </FormItem>
             )}
           />
