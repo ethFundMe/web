@@ -13,11 +13,12 @@ export default function PrivacyPolicy() {
       <PGroup>
         <Heading>INTRODUCTION</Heading>
         <p>
-          EthFundMe ("we," "our," or "us") is committed to protecting the
-          privacy and security of your personal information. This Privacy Policy
-          outlines how we collect, use, disclose, and protect the information
-          you provide to us through our website, mobile application, and related
-          services (collectively, the "Services").
+          EthFundMe (&ldquo;We&rdquo; &ldquo;our&rdquo; or &ldquo;us&rdquo;) is
+          committed to protecting the privacy and security of your personal
+          information. This Privacy Policy outlines how we collect, use,
+          disclose, and protect the information you provide to us through our
+          website, mobile application, and related services (collectively, the
+          &ldquo;Services&rdquo;).
         </p>
       </PGroup>
 
@@ -138,7 +139,7 @@ export default function PrivacyPolicy() {
       </PGroup>
 
       <PGroup>
-        <Heading>CHILDREN'S PRIVACY</Heading>
+        <Heading>CHILDREN&apos;S PRIVACY</Heading>
         <p>
           Our Services are not intended for individuals under the age of 18. We
           do not knowingly collect personal information from children. If you

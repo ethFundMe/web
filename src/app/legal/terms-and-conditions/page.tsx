@@ -12,10 +12,10 @@ export default function TermsAndConditionsPage() {
 
       <PGroup>
         <p>
-          Welcome to EthFundMe! These Terms of Service ("Terms") govern your
-          access to and use of the EthFundMe platform and services (the
-          "Services"). By accessing or using the Services, you agree to be bound
-          by these Terms.
+          Welcome to EthFundMe! These Terms of Service (&ldquo;Terms&rdquo;)
+          govern your access to and use of the EthFundMe platform and services
+          (the &ldquo;Services&rdquo;). By accessing or using the Services, you
+          agree to be bound by these Terms.
         </p>
       </PGroup>
 
@@ -112,10 +112,11 @@ export default function TermsAndConditionsPage() {
         <ol className='space-y-2'>
           <li>
             <b>User Content:</b> You may submit content, including text, images,
-            and other materials, to the Services ("User Content"). By submitting
-            User Content, you grant EthFundMe a worldwide, non-exclusive,
-            royalty-free, sublicensable license to use, reproduce, modify,
-            adapt, publish, translate, distribute, and display the User Content.
+            and other materials, to the Services (&ldquo;User Content&rdquo;).
+            By submitting User Content, you grant EthFundMe a worldwide,
+            non-exclusive, royalty-free, sublicensable license to use,
+            reproduce, modify, adapt, publish, translate, distribute, and
+            display the User Content.
           </li>
           <li>
             <b>Prohibited Content:</b> You agree not to submit any User Content
@@ -143,11 +144,12 @@ export default function TermsAndConditionsPage() {
       <PGroup>
         <Heading>6. DISCLAIMER OF WARRANTIES</Heading>
         <p>
-          THE SERVICES ARE PROVIDED ON AN "AS-IS" AND "AS-AVAILABLE" BASIS
-          WITHOUT WARRANTIES OF ANY KIND. ETHFUNDME DISCLAIMS ALL WARRANTIES,
-          WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT
-          LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-          PURPOSE, AND NON-INFRINGEMENT.
+          THE SERVICES ARE PROVIDED ON AN &ldquo;AS-IS&rdquo; AND
+          &ldquo;AS-AVAILABLE&rdquo; BASIS WITHOUT WARRANTIES OF ANY KIND.
+          ETHFUNDME DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED,
+          STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+          MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+          NON-INFRINGEMENT.
         </p>
       </PGroup>
 
@@ -167,8 +169,8 @@ export default function TermsAndConditionsPage() {
           You agree to indemnify, defend, and hold harmless EthFundMe and its
           affiliates, officers, directors, employees, and agents from any and
           all claims, liabilities, damages, losses, costs, or expenses,
-          including reasonable attorneys' fees, arising out of or in connection
-          with your use of the Services or violation of these Terms.
+          including reasonable attorneys&apos; fees, arising out of or in
+          connection with your use of the Services or violation of these Terms.
         </p>
       </PGroup>
 
