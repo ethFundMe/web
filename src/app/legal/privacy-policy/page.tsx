@@ -11,117 +11,149 @@ export default function PrivacyPolicy() {
       </div>
 
       <PGroup>
-        <Heading>WHO ARE WE?</Heading>
+        <Heading>INTRODUCTION</Heading>
         <p>
-          EthFundMe is a platform Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit. In obcaecati recusandae omnis asperiores cum, qui
-          ducimus non nisi deleniti maxime possimus voluptatem illum eveniet
-          magnam. Quam laboriosam exercitationem iste deserunt!
-        </p>
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste cumque
-          at debitis libero cum earum blanditiis? Ipsam temporibus, expedita
-          obcaecati voluptas rerum eos nihil reiciendis delectus illum, maxime
-          animi neque?
+          EthFundMe ("we," "our," or "us") is committed to protecting the
+          privacy and security of your personal information. This Privacy Policy
+          outlines how we collect, use, disclose, and protect the information
+          you provide to us through our website, mobile application, and related
+          services (collectively, the "Services").
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>DATA USAGE</Heading>
+        <Heading>INFORMATION WE COLLECT</Heading>
 
         <ol className='space-y-2'>
           <li>
-            <b>Verification:</b> To verify user identities and ensure the
-            legitimacy of accounts.
+            <b>Personal Information:</b> When you use our Services, we may
+            collect personal information such as your name, email address,
+            mailing address, and phone number.
           </li>
           <li>
-            <b>Credit Checks:</b> In cases where financial transactions or
-            credit-related services are involved, we may conduct credit checks
-            to assess creditworthiness.
+            <b>Transactional Information:</b> We collect information related to
+            your transactions on our platform, including donation amounts,
+            cryptocurrency wallet addresses, and transaction histories.
           </li>
           <li>
-            <b>Monitor and improve services:</b> Analyzing user data helps us
-            understand how our platform is used and allows us to enhance and
-            optimize our services.
+            <b>Device Information:</b> We may collect information about the
+            device you use to access our Services, including IP address, browser
+            type, operating system, and device identifiers.
           </li>
           <li>
-            <b>Marketing:</b> With your consent, we may use your data for
-            marketing purposes to provide relevant information about our
-            services and promotions.
-          </li>
-          <li>
-            <b>Customer Services:</b> To provide effective customer support and
-            address any inquiries or issues you may have.
-          </li>
-          <li>
-            <b>Compliances:</b> To comply with legal and regulatory
-            requirements, including anti-money laundering (AML) and
-            know-your-customer (KYC) regulations.
+            <b>Usage Information:</b> We may gather data about how you interact
+            with our Services, such as the pages you visit, the features you
+            use, and the actions you take.
           </li>
         </ol>
       </PGroup>
 
       <PGroup>
-        <Heading>DATA COLLECTION FOR PROFILING</Heading>
+        <Heading>HOW WE USE YOUR INFORMATION</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Provide and Improve Services:</b> We use your information to
+            deliver, maintain, and enhance our Services, including processing
+            donations, verifying transactions, and improving user experience.
+          </li>
+          <li>
+            <b>Communications:</b> We may send you service-related
+            communications, such as transaction confirmations, account
+            notifications, and updates about our Services.
+          </li>
+          <li>
+            <b>Marketing:</b> With your consent, we may send you promotional
+            communications about our products, services, and features. You can
+            opt-out of these communications at any time.
+          </li>
+          <li>
+            <b>Security:</b> We use your information to maintain the security
+            and integrity of our platform, detect and prevent fraud, and protect
+            against unauthorized access.
+          </li>
+          <li>
+            <b>Tokens:</b> We may collect and process information related to
+            $FUNDME tokens distributed to individuals and/or organizations who
+            create campaigns on our platform, as well as to
+            individuals/organizations who donate. This may include transactional
+            data, wallet addresses, and distribution history.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>HOW WE SHARE YOUR INFORMATION</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Service Providers:</b> We may share your information with
+            third-party service providers who assist us in operating our
+            platform, processing payments, and delivering services.
+          </li>
+          <li>
+            <b>Legal Compliance:</b> We may disclose your information to comply
+            with applicable laws, regulations, legal processes, or government
+            requests.
+          </li>
+          <li>
+            <b>Device Information:</b> If EthFundMe is involved in a merger,
+            acquisition, or sale of assets, your information may be transferred
+            as part of the transaction.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>YOUR CHOICES</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Opt-Out:</b> You can opt-out of receiving promotional
+            communications from us by following the instructions provided in the
+            communication or contacting us directly.
+          </li>
+          <li>
+            <b>Account Information:</b> You can review and update your account
+            information by logging into your EthFundMe account settings.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>DATA SECURITY</Heading>
         <p>
-          We may collect data for user profiling to enhance your experience on
-          our platform. This may include preferences, usage patterns, and
-          interactions with our services. Profiling helps us tailor our
-          offerings to better meet your needs and interests.
+          We implement technical and organizational measures to safeguard the
+          confidentiality, integrity, and availability of your information.
+          However, no method of transmission over the internet or electronic
+          storage is 100% secure, and we cannot guarantee absolute security.
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>SECURITY MEASURES</Heading>
+        <Heading>INTERNATIONAL TRANSFERS</Heading>
         <p>
-          Ensuring the security of your data is our top priority. We implement
-          advanced security measures, including encryption, firewalls, and
-          access controls, to safeguard your information against unauthorized
-          access or misuse.
+          Your information may be transferred to and processed in countries
+          other than your own, where data protection laws may differ. By using
+          our Services, you consent to the transfer of your information to these
+          countries.
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>BUSINESS VERIFICATION</Heading>
+        <Heading>CHILDREN'S PRIVACY</Heading>
         <p>
-          In certain instances, we may collect and verify business information
-          to maintain a secure and trustworthy environment for our users.
+          Our Services are not intended for individuals under the age of 18. We
+          do not knowingly collect personal information from children. If you
+          believe that we have inadvertently collected information from a child,
+          please contact us immediately.
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>SUPPORT LINE</Heading>
+        <Heading>UPDATES TO THIS PRIVACY POLICY</Heading>
         <p>
-          Our support team is dedicated to assisting you. For security purposes,
-          we may request specific information to verify your identity before
-          providing assistance.
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>PERSONAL DATA PROTECTION</Heading>
-        <p>
-          Your personal data is treated with the utmost confidentiality. We do
-          not sell or share your personal information with third parties without
-          your explicit consent.
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>FINANCIAL DATA SECURITY</Heading>
-        <p>
-          For financial transactions, we employ stringent security measures to
-          protect your financial data. This includes encryption and compliance
-          with industry standards.
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>ETHICAL PRACTICES</Heading>
-        <p>
-          Hustlebean is committed to ethical business practices. We do not
-          engage in unethical data collection or usage. Our policies align with
-          legal and regulatory requirements.
+          We may update this Privacy Policy from time to time to reflect changes
+          in our practices or legal requirements. We will notify you of any
+          material changes by posting the updated policy on our website or
+          through other appropriate channels.
         </p>
       </PGroup>
 
@@ -135,43 +167,21 @@ export default function PrivacyPolicy() {
       </PGroup>
 
       <PGroup>
-        <Heading>CONTACT INFORMATION</Heading>
+        <Heading>CONTACT US</Heading>
         <p>
-          If you have any questions or concerns regarding our Privacy Policy,
-          please contact us at{' '}
-          <Link
-            href='mailto:contact@ethfundme.com'
-            className='text-primary-default'
-          >
-            contact@ethfundme.com
+          If you have any questions, concerns, or complaints about this Privacy
+          Policy or our data practices, please contact us at{' '}
+          <Link href='mailto:team@ethfund.me' className='text-primary-default'>
+            team@ethfund.me
           </Link>{' '}
-          or visit our website at{' '}
+          or via our{' '}
           <Link
-            href='http://www.ethfundme.com'
+            href='https://discord.gg/9kac2FFMWe'
             className='text-primary-default'
           >
-            www.ethfundme.com
+            Discord
           </Link>
         </p>
-      </PGroup>
-
-      <PGroup>
-        Thank you for choosing EthFundMe. We are committed to protecting your
-        privacy and ensuring the security of your information. This Privacy
-        Policy outlines the principles and practices we follow to safeguard your
-        personal and financial data. By using our services, you agree to the
-        terms outlined below.
-      </PGroup>
-
-      <PGroup>
-        We respect your right to privacy; it is very important to us, and we
-        take the protection of your privacy and ensuring the security of your
-        Personal Data very seriously. We are committed to the fair and
-        transparent Processing of your Personal Data. This Privacy Notice
-        describes how we Process your Personal Data, explains your rights in
-        relation to the Personal Data we Process, and states our commitment when
-        Processing your Personal Data in a compliant, ethical, and secure
-        manner.
       </PGroup>
     </div>
   );
