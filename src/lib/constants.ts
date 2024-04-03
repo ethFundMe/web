@@ -144,7 +144,7 @@ export const FAQS = [
   {
     question: '🎁 Do I get any rewards from using the platform?',
     answer:
-      'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDER tokens.',
+      'Both campaign creators and contributors are rewarded with the $FUNDME tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDME tokens.',
   },
 ];
 
