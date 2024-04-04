@@ -94,15 +94,14 @@ export default function TermsAndConditionsPage() {
           <li>
             <b>Payment Processing Fee:</b> When making a donation through our
             platform, please be aware that a payment processing fee of 2.9% may
-            be applied. This fee covers the costs associated with payment
-            processing services and is deducted from the donated amount before
-            distribution to the campaign creator. Additionally, users may be
-            required to pay gas fees associated with blockchain transactions,
-            such as creating of campaigns, donations to campaigns, and the
-            transfer of $FUNDME tokens. Gas fees vary based on network
-            congestion and transaction complexity and are determined by the
-            underlying blockchain protocol. Users are responsible for paying any
-            applicable gas fees associated with their transactions.
+            be applied. This fee covers the costs associated with the smooth
+            operation of the platform and the delivery of the Services.
+            Additionally, users may be required to pay gas fees associated with
+            blockchain transactions, such as creating of campaigns, donations to
+            campaigns, and the transfer of $FUNDME tokens. Gas fees vary based
+            on network congestion and transaction complexity and are determined
+            by the underlying blockchain protocol. Users are responsible for
+            paying any applicable gas fees associated with their transactions.
           </li>
         </ol>
       </PGroup>
@@ -183,7 +182,7 @@ export default function TermsAndConditionsPage() {
       </PGroup>
 
       <PGroup>
-        <Heading>10. 3. MISCELLANEOUS</Heading>
+        <Heading>10. MISCELLANEOUS</Heading>
         <ol className='space-y-2'>
           <li>
             <b>Severability:</b> If any provision of these Terms is found to be
