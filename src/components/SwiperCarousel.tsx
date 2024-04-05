@@ -1,8 +1,7 @@
 'use client';
 
-import YouTubePlayer from 'react-player/youtube';
-
 import { REGEX_CODES } from '@/lib/constants';
+import YouTubePlayer from 'react-player/youtube';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -36,10 +35,10 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
             ) : (
               <ImageWithFallback
                 className='h-full flex-shrink-0 object-contain'
-                src={mediaLink}
+                src={mediaLink || ''}
                 width={800}
                 height={800}
-                alt='...'
+                alt={mediaLink}
               />
             )}
           </SwiperSlide>

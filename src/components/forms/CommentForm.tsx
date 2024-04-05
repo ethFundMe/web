@@ -1,25 +1,19 @@
 'use client';
 
-import { handlePushComment } from '@/actions';
-import { EthFundMe } from '@/lib/abi';
-import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
+import { socket } from '@/lib/socketConfig';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { Loader } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { FaTelegramPlane } from 'react-icons/fa';
-import {
-  BaseError,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
 export const CommentForm = ({ campaignID }: { campaignID: number }) => {
   const { user } = userStore();
+  const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const {
@@ -28,76 +22,21 @@ export const CommentForm = ({ campaignID }: { campaignID: number }) => {
     handleSubmit,
   } = useForm<{ comment: string }>();
 
-  const {
-    data: hash,
-    isPending,
-    error,
-    isError,
-    writeContract,
-  } = useWriteContract({
-    mutation: {
-      onSettled(data, error) {
-        console.log(`Settled fundCampaign, ${{ data, error }}`);
-      },
-    },
-  });
-
-  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
-    useWaitForTransactionReceipt({ hash });
-
-  const isLoadingTxn = isPending || isConfirmingTxn;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commenting, setCommenting] = useState(false);
 
   const onSubmit: SubmitHandler<{ comment: string }> = ({ comment }) => {
-    if (!user) {
+    toast.success('Submitting', { position: 'top-right' });
+    if (!user || !address) {
       openConnectModal && openConnectModal();
-    }
-
-    if (user) {
-      setCommenting(true);
-      const userID = user.id;
-
-      handlePushComment({
-        campaignID: String(campaignID),
-        comment,
-        userID,
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.error) throw new Error(res.error);
-
-          writeContract({
-            abi: EthFundMe,
-            address: ethFundMeContractAddress,
-            functionName: 'fundCampaign',
-            args: [campaignID, res.commentID],
-            value: BigInt(0),
-            chainId: ethChainId,
-          });
-          setCommenting(false);
-        })
-        .catch((e) => {
-          if (e instanceof Error) console.log(e.message);
-          console.log(e);
-
-          // toast.error('Failed to add comment');
-          setCommenting(false);
-        });
       return;
     }
+
+    setCommenting(true);
+    socket.emit('add:comment', {
+      data: { userID: user.id, campaignID, comment },
+    });
   };
-
-  useEffect(() => {
-    if (isConfirmedTxn) {
-      toast.success('Successfully funded campaign');
-    }
-  }, [campaignID, isConfirmedTxn]);
-
-  useEffect(() => {
-    if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error?.message);
-    }
-  }, [error, isError]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-2 rounded-md'>
@@ -114,13 +53,15 @@ export const CommentForm = ({ campaignID }: { campaignID: number }) => {
 
         <Button
           className='absolute bottom-2 right-2 p-0 px-2 disabled:pointer-events-auto'
-          disabled={isLoadingTxn || isConfirmingTxn || isPending || commenting}
+          // disabled={commenting}
         >
-          {isLoadingTxn || commenting ? (
-            <Loader className='animate-spin text-white' />
+          {/* <div className='h-5 w-5 animate-spin rounded-full border border-t-0 border-white'></div> */}
+          {/* {commenting ? (
+            <div className='h-5 w-5 animate-spin rounded-full border border-t-0 border-white'></div>
           ) : (
             <FaTelegramPlane size={20} />
-          )}
+            )} */}
+          <FaTelegramPlane size={20} />
         </Button>
       </div>
       {errors.comment && (
