@@ -84,10 +84,10 @@ export default function DonateForm({
       return;
     }
     const fiatToETH = parseEther(
-      parseFloat((usdInput / (ethPriceInUSD ?? 0)).toString()).toFixed(2)
+      parseFloat((usdInput / (ethPriceInUSD ?? 0)).toString()).toFixed(4)
     );
     // console.log(
-    //   parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(2)
+    //   parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(4)
     // );
 
     const donationAmt = fiatMode
@@ -167,7 +167,7 @@ export default function DonateForm({
   const ethPriceInUSD = useEthPrice();
   const ethToUSD = parseFloat(
     ((ethPriceInUSD ?? 0) * watchedAmount).toString()
-  ).toFixed(2);
+  ).toFixed(4);
 
   return (
     <form
@@ -204,7 +204,7 @@ export default function DonateForm({
           <div className='relative'>
             <Input
               type='number'
-              step={0.01}
+              step={0.0001}
               min={0}
               max={parseFloat(formatEther(BigInt(campaign.goal)))}
               {...register('amount', {
@@ -229,7 +229,7 @@ export default function DonateForm({
               ]}
               min={0}
               max={parseFloat(formatEther(BigInt(campaign.goal)))}
-              step={0.01}
+              step={0.0001}
               className='my-5'
             />
           </div>
@@ -237,7 +237,7 @@ export default function DonateForm({
           <div>
             <input
               type='number'
-              step={0.01}
+              step={0.0001}
               min={0}
               max={
                 parseFloat(formatEther(BigInt(campaign.goal))) *
@@ -260,7 +260,7 @@ export default function DonateForm({
                 parseFloat(formatEther(BigInt(campaign.goal))) *
                 (ethPriceInUSD ?? 0)
               }
-              step={0.01}
+              step={0.0001}
               className='my-5'
             />
           </div>
@@ -271,7 +271,7 @@ export default function DonateForm({
             ? `$${ethToUSD}`
             : `${parseFloat(
                 (usdInput / (ethPriceInUSD ?? 0)).toString()
-              ).toFixed(2)} ETH`}
+              ).toFixed(4)} ETH`}
           )
         </p>
       </>

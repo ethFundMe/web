@@ -59,6 +59,7 @@
     "react-phone-input-2": "^2.15.1",
     "react-player": "^2.14.1",
     "react-use-refs": "^1.0.1",
+    "recharts": "^2.12.3",
     "siwe": "^2.1.4",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",

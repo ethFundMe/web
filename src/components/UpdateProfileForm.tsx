@@ -234,7 +234,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                       value={[watchedAmount as unknown as number]}
                       min={0}
                       max={30}
-                      step={0.1}
+                      step={0.01}
                     />
                   </div>
                 </FormControl>

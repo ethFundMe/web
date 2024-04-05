@@ -11,82 +11,66 @@ export default function TermsAndConditionsPage() {
       </div>
 
       <PGroup>
+        <p>
+          Welcome to EthFundMe! These Terms of Service (&ldquo;Terms&rdquo;)
+          govern your access to and use of the EthFundMe platform and services
+          (the &ldquo;Services&rdquo;). By accessing or using the Services, you
+          agree to be bound by these Terms.
+        </p>
+      </PGroup>
+
+      <PGroup>
         <Heading>1. ACCEPTANCE OF TERMS</Heading>
-        <p>
-          By accessing or using the EthFundMe, you agree to be bound by these
-          Terms. If you do not agree to these Terms, please do not use the App.
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>2. DESCRIPTION OF APP</Heading>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis
-          praesentium nobis doloribus quam eaque, repudiandae asperiores
-          possimus nesciunt, a iure accusantium distinctio quis commodi
-          voluptatem et reiciendis quas. Repellendus, iste!
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>3. ELIGIBILITY</Heading>
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo
-          dolore corrupti tempora consectetur, dolorum ipsam, nihil molestiae,
-          labore laboriosam accusantium vel repudiandae repellat saepe aut.
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>4. REGISTRATION</Heading>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam eum
-          officiis necessitatibus atque fugiat, expedita molestiae voluptas
-          reiciendis doloribus, veniam illo quas repudiandae facere cumque
-          libero tempora magni. Eligendi, quidem!
-        </p>
-      </PGroup>
-
-      <PGroup>
-        <Heading>5. USE OF APP</Heading>
-
-        <ol className='ml-4 list-[lower-alpha] space-y-4'>
+        <ol className='space-y-2'>
           <li>
-            <span>Aque delectus? Nobis, consequatur doloremque.</span>
-            <ol className='ml-4 mt-2 list-[lower-roman] space-y-2'>
-              <li>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Dolorem, aspernatur.
-              </li>
-              <li>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Perferendis enim optio amet corporis deleniti fugit omnis eum
-                quae porro consequuntur ex, maiores doloremque, labore dolor quo
-                rerum rem veritatis voluptatibus!
-              </li>
-              <li>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Suscipit provident dignissimos obcaecati necessitatibus sed
-              </li>
-            </ol>
+            <b>Agreement:</b> By accessing or using the Services, you agree to
+            be bound by these Terms and our Privacy Policy. If you do not agree
+            to these Terms, you may not access or use the Services.
           </li>
-
           <li>
-            <span>
-              Employers using the App must adhere to the following code of
-              conduct
-            </span>
+            <b>Changes:</b> EthFundMe may update or modify these Terms from time
+            to time without prior notice. Your continued use of the Services
+            after any changes constitutes your acceptance of the updated Terms.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>2. USE OF SERVICES</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Eligibility:</b> You must be at least 18 years old to use the
+            Services. By using the Services, you represent and warrant that you
+            are of legal age and have the legal capacity to enter into these
+            Terms. If you are under the age of majority in your jurisdiction
+            (typically 18 or 19 years of age), you may use the Services, with or
+            without registering, only with the approval of your parent or
+            guardian.
+          </li>
+          <li>
+            <b>User Accounts:</b> You may be required to create/verify an
+            account to access certain features of the Services. You are
+            responsible for maintaining the confidentiality of your account
+            credentials and for any activities that occur under your account.
+          </li>
+          <li>
+            <b>Prohibited Activities:</b> You agree not to engage in any of the
+            following activities:
             <ol className='ml-4 mt-2 list-[lower-roman] space-y-2'>
-              <li>Daddy Zaddy or orem ipsum dolor sit amet consectetur.</li>
+              <li>Violating any laws or regulations;</li>
               <li>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error.
+                Impersonating any person or entity, or falsely stating or
+                misrepresenting your affiliation with a person or entity;
               </li>
               <li>
-                Consectetur adipisicing elit. Eveniet, unde! Lorem ipsum dolor
-                sit amet
+                Interfering with or disrupting the operation of the Services;
               </li>
               <li>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error.
+                Attempting to gain unauthorized access to any part of the
+                Services or bypassing security measures;
+              </li>
+              <li>
+                Engaging in any fraudulent, deceptive, or unlawful conduct.
               </li>
             </ol>
           </li>
@@ -94,47 +78,147 @@ export default function TermsAndConditionsPage() {
       </PGroup>
 
       <PGroup>
-        <Heading>6. USE OF CONTENT</Heading>
+        <Heading>3. DONATIONS</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>General:</b> EthFundMe facilitates donations to charitable causes
+            and projects. When you make a donation through the Services, you
+            agree to the terms and conditions of the specific fundraising
+            campaign.
+          </li>
+          <li>
+            <b>Refunds:</b> Donations made through the Services are final and
+            non-refundable, except as required by law or as stated in the
+            fundraising campaign terms.
+          </li>
+          <li>
+            <b>Payment Processing Fee:</b> When making a donation through our
+            platform, please be aware that a payment processing fee of 2.9% may
+            be applied. This fee covers the costs associated with the smooth
+            operation of the platform and the delivery of the Services.
+            Additionally, users may be required to pay gas fees associated with
+            blockchain transactions, such as creating of campaigns, donations to
+            campaigns, and the transfer of $FUNDME tokens. Gas fees vary based
+            on network congestion and transaction complexity and are determined
+            by the underlying blockchain protocol. Users are responsible for
+            paying any applicable gas fees associated with their transactions.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>4. CONTENT</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>User Content:</b> You may submit content, including text, images,
+            and other materials, to the Services (&ldquo;User Content&rdquo;).
+            By submitting User Content, you grant EthFundMe a worldwide,
+            non-exclusive, royalty-free, sublicensable license to use,
+            reproduce, modify, adapt, publish, translate, distribute, and
+            display the User Content.
+          </li>
+          <li>
+            <b>Prohibited Content:</b> You agree not to submit any User Content
+            that is unlawful, offensive, harmful, or violates the rights of
+            others
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>5. INTELLECTUAL PROPERTY</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Ownership:</b> EthFundMe owns all rights, title, and interest in
+            and to the Services, including all intellectual property rights.
+          </li>
+          <li>
+            <b>Trademarks:</b> The EthFundMe name, logo, and other trademarks
+            and service marks are the property of EthFundMe. You may not use
+            these marks without our prior written consent.
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>6. DISCLAIMER OF WARRANTIES</Heading>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non optio,
-          aperiam ratione nostrum velit explicabo ex illum omnis alias expedita
-          ipsam ipsa assumenda similique laudantium fuga porro? Esse, magni
-          amet!
+          THE SERVICES ARE PROVIDED ON AN &ldquo;AS-IS&rdquo; AND
+          &ldquo;AS-AVAILABLE&rdquo; BASIS WITHOUT WARRANTIES OF ANY KIND.
+          ETHFUNDME DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED,
+          STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+          MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+          NON-INFRINGEMENT.
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>7. PRIVACY</Heading>
+        <Heading>7. LIMITATION OF LIABILITY</Heading>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde!
-          <Link href='/legal/privacy-policy' className='text-primary-default'>
-            Privacy Policy page.{' '}
-          </Link>
-          By using the App, you consent to the collection, use, and sharing of
-          your information as described in the Privacy Policy.
+          IN NO EVENT SHALL ETHFUNDME BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
+          SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, ARISING OUT OF OR IN
+          CONNECTION WITH YOUR USE OF THE SERVICES, WHETHER BASED ON WARRANTY,
+          CONTRACT, TORT (INCLUDING NEGLIGENCE), OR ANY OTHER LEGAL THEORY.
         </p>
       </PGroup>
 
       <PGroup>
-        <Heading>13. CONTACT US</Heading>
+        <Heading>8. INDEMNIFICATION</Heading>
         <p>
-          If you have any questions or concerns about these Terms, please
-          contact us at{' '}
+          You agree to indemnify, defend, and hold harmless EthFundMe and its
+          affiliates, officers, directors, employees, and agents from any and
+          all claims, liabilities, damages, losses, costs, or expenses,
+          including reasonable attorneys&apos; fees, arising out of or in
+          connection with your use of the Services or violation of these Terms.
+        </p>
+      </PGroup>
+
+      <PGroup>
+        <Heading>9. GOVERNING LAW</Heading>
+        <p>
+          These Terms shall be governed by and construed in accordance with the
+          laws of Ghana, without regard to its conflict of law provisions.
+        </p>
+      </PGroup>
+
+      <PGroup>
+        <Heading>10. MISCELLANEOUS</Heading>
+        <ol className='space-y-2'>
+          <li>
+            <b>Severability:</b> If any provision of these Terms is found to be
+            invalid or unenforceable, the remaining provisions shall remain in
+            full force and effect.
+          </li>
+          <li>
+            <b>Waiver:</b> The failure of EthFundMe to enforce any right or
+            provision of these Terms shall not constitute a waiver of such right
+            or provision.
+          </li>
+          <li>
+            <b>Entire Agreement:</b> These Terms constitute the entire agreement
+            between you and EthFundMe regarding the Services and supersede all
+            prior or contemporaneous agreements and understandings
+          </li>
+        </ol>
+      </PGroup>
+
+      <PGroup>
+        <Heading>11. CONTACT US</Heading>
+        <p>
+          If you have any questions, concerns, or feedback about these Terms,
+          please contact us at{' '}
+          <Link href='team@ethfund.me' className='text-primary-default'>
+            team@ethfund.me
+          </Link>{' '}
+          or via our{' '}
           <Link
-            href='mailto:contact@ethfundme.com'
+            href='https://discord.gg/9kac2FFMWe'
             className='text-primary-default'
           >
-            contact@ethfundme.com
+            Discord
           </Link>
         </p>
       </PGroup>
-
-      <PGroup>
-        By using the EthFundMe, you acknowledge that you have read, understood,
-        and agree to be bound by these Terms and Conditions.
-      </PGroup>
-
-      <PGroup>Thank you for using EthFundMe!</PGroup>
     </div>
   );
 }
