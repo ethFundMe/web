@@ -269,7 +269,7 @@ export const createUrl = (file: File) => {
   return newURL;
 };
 
-export const devlog = (message: unknown) => {
-  if (process.env.NODE_ENV !== 'development') return;
-  console.log(message);
-};
+// export const devlog = (message: unknown) => {
+//   if (process.env.NODE_ENV !== 'development') return;
+//   console.log(message);
+// };

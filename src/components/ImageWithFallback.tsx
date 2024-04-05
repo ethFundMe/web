@@ -28,6 +28,8 @@ export default function ImageWithFallback({
         loading && 'animate-pulse bg-slate-200',
         error && 'grayscale'
       )}
+      blurDataURL='/images/efm-logo.svg'
+      placeholder='blur'
       src={error ? fallback : src}
       onLoad={() => setLoading(false)}
       onError={() => {
