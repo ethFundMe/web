@@ -9,10 +9,10 @@ export const Footer = () => {
   return (
     <footer className='relative bg-primary-dark text-white'>
       <Image
-        className='absolute bottom-0 left-1/2 -z-0 h-[70%] w-auto -translate-x-1/2 grayscale sm:h-full'
-        src='/images/Footer_Easter_Egg.png'
-        width={50}
-        height={200}
+        className='absolute bottom-0 left-1/2 -z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
+        src='/images/logo-outline.png'
+        width={1200}
+        height={1200}
         alt='logo'
       />
       <Container className='relative py-16 text-sm'>

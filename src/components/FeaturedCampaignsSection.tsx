@@ -12,14 +12,18 @@ export const FeaturedCampaignsSection = async () => {
   const user = await getUser(campaigns[0].creator as `0x${string}`);
 
   return campaigns[0] ? (
-    <section className='flex h-[calc(100dvh-2rem)] max-h-[1200px] min-h-[600px] flex-col lg:h-[100dvh-2rem]'>
+    <section className='flex flex-col'>
       <Container>
         <div className='py-5 text-center'>
           <h2 className={cn(TextSizeStyles.h2)}>Featured Campaign</h2>
         </div>
       </Container>
 
-      {user && <FeaturedCampaign campaign={campaigns[0]} user={user} />}
+      {user && (
+        <div className='relative h-screen max-h-[500px] min-h-[400px] sm:min-h-[600px] md:max-h-[700px]'>
+          <FeaturedCampaign campaign={campaigns[0]} user={user} />
+        </div>
+      )}
     </section>
   ) : null;
 };

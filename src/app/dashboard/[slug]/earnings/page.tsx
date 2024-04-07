@@ -121,7 +121,11 @@ export default async function EarningsPage({
                         <p className='capitalize'>{earning.type}</p>
                       </div>
 
-                      <small>{dayjs(earning.date).format('DD/MM/YYYY')}</small>
+                      <small>
+                        {dayjs(earning.date)
+                          .subtract(2, 'minute')
+                          .format('DD MMM, YYYY . HH : mm a')}
+                      </small>
                     </div>
                   </Link>
                 </li>
