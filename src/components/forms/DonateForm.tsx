@@ -114,7 +114,7 @@ export default function DonateForm({
 
       return;
     } else {
-      alert('hi');
+      // alert('hi');
     }
     // if (prettyComment && user) {
     //   handlePushComment({
