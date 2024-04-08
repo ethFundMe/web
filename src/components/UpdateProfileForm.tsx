@@ -39,7 +39,7 @@ type FormStatus =
 export default function UpdateProfileForm({ user }: { user: User }) {
   const formSchema = z.object({
     fullName: z
-      .string({ required_error: 'Fullname is required' })
+      .string({ required_error: 'Full name is required' })
       .min(2)
       .max(250),
     email: z
