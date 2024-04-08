@@ -32,8 +32,6 @@ export const Footer = () => {
             </Link>
 
             <div className='space-y-4'>
-              {/* <h3 className='text-base font-semibold'>Useful links</h3> */}
-
               <ul className='flex flex-wrap gap-4 md:gap-8'>
                 {NAVBARROUTES.map(({ title, link }) => (
                   <li key={title}>
