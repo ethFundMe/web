@@ -1,9 +1,7 @@
 'use client';
 
-import { socket } from '@/lib/socketConfig';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -11,7 +9,11 @@ import { useAccount } from 'wagmi';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
-export const CommentForm = ({ campaignID }: { campaignID: number }) => {
+export const CommentForm = ({
+  handleAddComment,
+}: {
+  handleAddComment: (comment: string) => void;
+}) => {
   const { user } = userStore();
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -23,7 +25,7 @@ export const CommentForm = ({ campaignID }: { campaignID: number }) => {
   } = useForm<{ comment: string }>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [commenting, setCommenting] = useState(false);
+  // const [commenting, setCommenting] = useState(false);
 
   const onSubmit: SubmitHandler<{ comment: string }> = ({ comment }) => {
     toast.success('Submitting', { position: 'top-right' });
@@ -32,10 +34,7 @@ export const CommentForm = ({ campaignID }: { campaignID: number }) => {
       return;
     }
 
-    setCommenting(true);
-    socket.emit('add:comment', {
-      data: { userID: user.id, campaignID, comment },
-    });
+    handleAddComment(comment);
   };
 
   return (
