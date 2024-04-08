@@ -183,18 +183,27 @@ export default function VerificationForm() {
 
                 <FormDescription className='text-xs'>
                   I have read and agreed to the{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/terms-and-conditions'
+                    className='text-primary-default'
+                  >
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/privacy-policy'
+                    className='text-primary-default'
+                  >
                     Privacy Policy
                   </Link>
                 </FormDescription>
               </FormItem>
             )}
           />
-          <Button className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'>
+          <Button
+            disabled={!form.watch('agree')}
+            className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
+          >
             Submit
           </Button>
         </form>
