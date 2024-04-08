@@ -182,14 +182,14 @@ export default function VerificationForm() {
                 <FormDescription className='text-xs'>
                   I have read and agreed to the{' '}
                   <Link
-                    href='https://sepolia.ethfundme.com/legal/terms-and-conditions'
+                    href='legal/terms-and-conditions'
                     className='text-primary-default'
                   >
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
                   <Link
-                    href='https://sepolia.ethfundme.com/legal/privacy-policy'
+                    href='legal/privacy-policy'
                     className='text-primary-default'
                   >
                     Privacy Policy
