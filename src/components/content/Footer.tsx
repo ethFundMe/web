@@ -9,13 +9,13 @@ export const Footer = () => {
   return (
     <footer className='relative bg-primary-dark text-white'>
       <Image
-        className='absolute bottom-0 left-1/2 -z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
+        className='absolute bottom-0 left-1/2 z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
         src='/images/logo-outline.png'
         width={1200}
         height={1200}
         alt='logo'
       />
-      <Container className='relative py-16 text-sm'>
+      <Container className='relative z-10 py-16 text-sm'>
         <div className='relative space-y-8'>
           <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>
             <Link
@@ -32,8 +32,6 @@ export const Footer = () => {
             </Link>
 
             <div className='space-y-4'>
-              {/* <h3 className='text-base font-semibold'>Useful links</h3> */}
-
               <ul className='flex flex-wrap gap-4 md:gap-8'>
                 {NAVBARROUTES.map(({ title, link }) => (
                   <li key={title}>

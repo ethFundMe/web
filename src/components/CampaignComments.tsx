@@ -24,19 +24,18 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
 
     function onConnect() {
       setIsConnected(true);
-      console.log('Socket connected 🔥');
-
-      // Emit 'comment:join' event after the socket connection is established
       socket.emit('comment:join', joinData, onJoin);
     }
 
-    function onComment() {
-      console.log('His');
+    function onComment(response: { data: Comment; totalComments: number }) {
+      if (!response.data) return;
+      // console.log('Listening', response);
+      setComments((prev) => [...prev, response.data]);
     }
 
     function onDisonnect() {
       setIsConnected(false);
-      console.log('Socket disconnected ❌');
+      // console.log('Socket disconnected ❌');
     }
 
     const joinData = {
@@ -48,27 +47,21 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     };
 
     const onJoin = (response: { data: Comment[]; totalComments: number }) => {
-      console.log('Joined room', response);
+      // console.log('Joined room', response);
       if (!response.data) return;
       setComments(response.data.reverse());
-    };
-
-    const onAdd = (response: unknown) => {
-      console.log('Added comment', response);
-      // if (!response) return;
-      // setComments(response.data.reverse());
     };
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisonnect);
     socket.on('comment:join', onJoin);
     socket.on('campaign:comment', onComment);
-    socket.on('add:comment', onAdd);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisonnect);
       socket.off('comment:join', onJoin);
+      socket.on('campaign:comment', onComment);
       socket.disconnect();
     };
   }, [user?.id, campaign.id]);
@@ -122,20 +115,22 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           type='button'
           className=''
           disabled={!isConnected}
-          onClick={() => {
-            socket.emit('add:comment', {
-              data: {
-                userID: user?.id,
-                campaignID: campaign.id,
-                comment: 'another comment a',
-              },
-            });
-          }}
+          onClick={() => {}}
         >
           Send comment
         </Button> */}
 
-        <CommentForm campaignID={campaign.campaign_id} />
+        <CommentForm
+          handleAddComment={(comment) => {
+            socket.emit('add:comment', {
+              data: {
+                userID: user?.id,
+                campaignID: campaign.id,
+                comment,
+              },
+            });
+          }}
+        />
       </div>
     </aside>
   );
