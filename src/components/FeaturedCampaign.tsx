@@ -96,10 +96,23 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <div className='mt-4 flex items-center gap-2'>
-          <DonateBtn campaign={campaign} />
-          <Button asChild variant='secondary' className='w-full max-w-[10rem]'>
-            <Link href={`/campaigns/${campaign.campaign_id}`}>Read more</Link>
+        <div className='mt-4 flex flex-wrap items-center gap-2'>
+          <DonateBtn
+            text='Help now'
+            size='lg'
+            campaign={campaign}
+            className='text-md'
+          />
+
+          <Button
+            asChild
+            variant='secondary'
+            className='text-md w-full max-w-[10rem] flex-shrink-0 px-8'
+            size='lg'
+          >
+            <Link href={`/campaigns/${campaign.campaign_id}`}>
+              <span>View campaign</span>
+            </Link>
           </Button>
         </div>
       </div>

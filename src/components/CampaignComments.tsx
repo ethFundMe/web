@@ -92,11 +92,24 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           className='h-[500px] overflow-y-auto scroll-smooth pr-4'
           ref={scrollContainerRef}
         >
-          <div className='space-y-4'>
+          <div className='space-y-2'>
             <AnimatePresence>
               {comments.length > 0 ? (
                 comments.map((comment, idx) => (
                   <CommentCard
+                    handleDelete={
+                      user?.fullName === comment.user.fullname
+                        ? (userID) => {
+                            socket.emit('delete:comment', {
+                              data: {
+                                userID,
+                                campaignID: campaign.id,
+                                commentID: comment.commentID,
+                              },
+                            });
+                          }
+                        : null
+                    }
                     key={comment.commentID}
                     comment={comment}
                     ref={idx === comments.length - 1 ? scrollItemRef : null}
