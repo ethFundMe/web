@@ -151,9 +151,9 @@ export default function LiveDonations() {
                   <FaEthereum size={20} />
                 </span>
                 <span>
-                  {formatWalletAddress(i.address as `0x${string}`, 'short')}{' '}
+                  {formatWalletAddress(i.address as `0x${string}`)}{' '}
                   <span className='hidden sm:inline'>donated</span>{' '}
-                  <span className='inline sm:hidden'> - </span>{' '}
+                  <span className='inline sm:hidden'> — </span>{' '}
                   {format(i.amount)}ETH
                 </span>
                 <span className='ml-auto text-xs sm:text-sm'>{i.time}</span>
