@@ -16,9 +16,9 @@ export const HomepageHeader = () => {
       return setGreeting('Good Morning');
     }
     if (time >= 12 && time < 16) {
-      return setGreeting('Good afternoon');
+      return setGreeting('Good Afternoon,');
     }
-    return setGreeting('Good evening');
+    return setGreeting('Good Evening,');
   };
 
   const splitName = (name: string) => {
@@ -31,7 +31,7 @@ export const HomepageHeader = () => {
     const greetArr = [
       `Welcome, ${name}`,
       `Hello 👋 ${name}`,
-      `${greeting} ${name}`,
+      `${greeting} ${name}!`,
     ];
     const randomNum = Math.round(Math.random() * 10);
 
@@ -41,7 +41,7 @@ export const HomepageHeader = () => {
     if (randomNum >= 4 && randomNum < 7) {
       return greetArr[1];
     }
-    if (randomNum >= 7 && randomNum < 10) {
+    if (randomNum >= 7 && randomNum <= 10) {
       return greetArr[2];
     }
   };
