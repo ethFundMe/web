@@ -34,7 +34,7 @@ export const CampaignCard = ({
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src={campaign.banner_url ?? '/images/broken.jpg'}
+          src={campaign.metadata.banner_url ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -47,8 +47,12 @@ export const CampaignCard = ({
       />
 
       <div className='flex-1'>
-        <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
-        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+        <p className='line-clamp-1 text-xl font-semibold'>
+          {campaign.metadata.title}
+        </p>
+        <p className='line-clamp-2 text-neutral-700'>
+          {campaign.metadata.description}
+        </p>
       </div>
 
       <div

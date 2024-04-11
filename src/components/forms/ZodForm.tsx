@@ -193,7 +193,7 @@ export default function CreateCampaignForm() {
               const res = await fetch(
                 `${
                   process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-                }/api/campaign/ipfs`,
+                }/api/campaign/metadata`,
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ export default function CreateCampaignForm() {
                 address: ethFundMeContractAddress,
                 functionName: 'addCampaign',
                 args: [
-                  res.uri,
+                  res.id,
                   parseEther(String(goal)),
                   beneficiaryAddress as `0x${string}`,
                 ],
@@ -248,7 +248,10 @@ export default function CreateCampaignForm() {
           // });
         }
       })
-      .catch((e) => toast.error(e));
+      .catch((e) => {
+        setSubmitStatus(null);
+        toast.error(e);
+      });
   };
 
   useEffect(() => {

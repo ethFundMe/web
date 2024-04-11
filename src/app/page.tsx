@@ -42,10 +42,10 @@ export default function Home() {
       <Navbar />
 
       <HomepageHeader />
-      <AboutSection />
       <ActiveStatsSection />
       <FeaturedCampaignsSection />
       <CampaignTypeSection />
+      <AboutSection />
       <FaqsSection />
     </>
   );
