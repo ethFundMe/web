@@ -59,7 +59,7 @@
   animation-delay: 1s;
 }
 .stars:nth-child(3) {
-  background-position: -20% -30%;
+  background-position: -22% -30%;
   animation-delay: 2s;
 }
 .stars:nth-child(4) {
