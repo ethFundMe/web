@@ -63,8 +63,8 @@ export default function InfiniteScroll({
     const lowercasedTerm = term.toLowerCase();
     const filteredCampaigns = campaigns.filter(
       (camp) =>
-        camp.title.toLowerCase().includes(lowercasedTerm) ||
-        camp.description.toLowerCase().includes(lowercasedTerm) ||
+        camp.metadata.title.toLowerCase().includes(lowercasedTerm) ||
+        camp.metadata.description.toLowerCase().includes(lowercasedTerm) ||
         camp.user.fullName.toLowerCase().includes(lowercasedTerm)
     );
 

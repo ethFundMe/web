@@ -38,22 +38,22 @@ export async function generateMetadata(
 
   return user
     ? {
-        title: `${campaign.title}`,
-        description: `${campaign.description}`,
+        title: `${campaign.metadata.title}`,
+        description: `${campaign.metadata.description}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
         openGraph: {
           type: 'website',
-          title: `${campaign.title}`,
-          description: `${campaign.description}`,
+          title: `${campaign.metadata.title}`,
+          description: `${campaign.metadata.description}`,
           images: [
             {
               url: seoCampaign(
                 user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
-                campaign.title,
-                campaign.description,
-                campaign?.media_links[0],
+                campaign.metadata.title,
+                campaign.metadata.description,
+                campaign.metadata.banner_url,
                 campaign.user.profileUrl,
                 user.isVerified
               ),
@@ -62,17 +62,17 @@ export async function generateMetadata(
           url: 'https://ethfund.me',
         },
         twitter: {
-          title: `${campaign.title}`,
+          title: `${campaign.metadata.title}`,
           card: 'summary_large_image',
-          description: `${campaign.description}`,
+          description: `${campaign.metadata.description}`,
           images: [
             {
               url: seoCampaign(
                 user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
-                campaign.title,
-                campaign.description,
-                campaign?.media_links[0],
+                campaign.metadata.title,
+                campaign.metadata.description,
+                campaign.metadata.banner_url,
                 campaign.user.profileUrl,
                 user.isVerified
               ),
@@ -107,16 +107,20 @@ export default async function CampaignPage({
     .filter((_) => _.campaign_id !== campaign.campaign_id)
     .slice(0, 3);
 
-  const media_links = campaign.youtube_link
-    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
-    : [campaign.banner_url, ...campaign.media_links];
+  const media_links = campaign.metadata.youtube_link
+    ? [
+        campaign.metadata.banner_url,
+        ...campaign.metadata.media_links,
+        campaign.metadata.youtube_link,
+      ]
+    : [campaign.metadata.banner_url, ...campaign.metadata.media_links];
   return (
     <>
       <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
         <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
           <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
             <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-              {campaign.title}
+              {campaign.metadata.title}
             </h2>
 
             <SwiperCarousel images={media_links} />
@@ -166,7 +170,7 @@ export default async function CampaignPage({
                   </p>
                 </div>
               </div>
-              <div className='space-y-4'>{campaign.description}</div>
+              <div className='space-y-4'>{campaign.metadata.description}</div>
               <DonateXShareButtons campaign={campaign} />
             </div>
           </div>
