@@ -1,7 +1,13 @@
 import { FAQS } from '@/lib/constants';
 import { TextSizeStyles } from '@/lib/styles';
-import { FaCaretUp } from 'react-icons/fa';
+import { cn } from '@/lib/utils';
 import { Container } from '../Container';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../ui/accordion';
 
 export const FaqsSection = () => {
   return (
@@ -14,18 +20,15 @@ export const FaqsSection = () => {
           </p>
         </div>
 
-        <section className='accordion accordion--radio mx-auto w-full max-w-4xl'>
+        <Accordion
+          type='single'
+          collapsible
+          className='mx-auto w-full max-w-4xl rounded-md'
+        >
           {FAQS.map((item, idx) => (
-            <FaqTab key={idx} {...item} checked={!!(idx === 0)} />
+            <FaqTab key={idx} {...item} checked={!!(idx % 2)} />
           ))}
-
-          <div className='tab'>
-            <input type='radio' name='accordion-2' id='close' />
-            <label htmlFor='close' className='tab__close'>
-              <FaCaretUp size={18} />
-            </label>
-          </div>
-        </section>
+        </Accordion>
       </Container>
     </section>
   );
@@ -40,18 +43,12 @@ const FaqTab = ({
   answer: string;
   checked?: boolean;
 }) => (
-  <div className='tab'>
-    <input
-      type='radio'
-      name='accordion-2'
-      defaultChecked={checked}
-      id={question}
-    />
-    <label htmlFor={question} className='tab__label'>
+  <AccordionItem value={question}>
+    <AccordionTrigger className='bg-[var(--theme)] [&:nth-child(even)]:bg-[red]'>
       {question}
-    </label>
-    <div className='tab__content'>
-      <p>{answer}</p>
-    </div>
-  </div>
+    </AccordionTrigger>
+    <AccordionContent className={cn(checked && 'bg-blue-300')}>
+      {answer}
+    </AccordionContent>
+  </AccordionItem>
 );
