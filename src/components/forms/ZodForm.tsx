@@ -248,7 +248,10 @@ export default function CreateCampaignForm() {
           // });
         }
       })
-      .catch((e) => toast.error(e));
+      .catch((e) => {
+        setSubmitStatus(null);
+        toast.error(e);
+      });
   };
 
   useEffect(() => {

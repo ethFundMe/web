@@ -23,7 +23,7 @@ export const FaqsSection = () => {
         <Accordion
           type='single'
           collapsible
-          className='mx-auto w-full max-w-4xl rounded-md'
+          className='mx-auto w-full max-w-4xl overflow-hidden rounded-md'
         >
           {FAQS.map((item, idx) => (
             <FaqTab key={idx} {...item} checked={!!(idx % 2)} />
@@ -44,11 +44,11 @@ const FaqTab = ({
   checked?: boolean;
 }) => (
   <AccordionItem value={question}>
-    <AccordionTrigger className='bg-[var(--theme)] [&:nth-child(even)]:bg-[red]'>
+    <AccordionTrigger
+      className={cn(checked ? 'bg-[var(--secondary)]' : 'bg-[var(--theme)]')}
+    >
       {question}
     </AccordionTrigger>
-    <AccordionContent className={cn(checked && 'bg-blue-300')}>
-      {answer}
-    </AccordionContent>
+    <AccordionContent>{answer}</AccordionContent>
   </AccordionItem>
 );
