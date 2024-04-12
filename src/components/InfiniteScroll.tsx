@@ -30,9 +30,10 @@ export default function InfiniteScroll({
   const [campaignsFiltered, setCampaignsFiltered] = useState(false);
   const [page, setPage] = useState(1);
   const [ref, inView] = useInView({ rootMargin: '50px' });
-  const [selectedTag, setSelectedTag] = useState<CampaignTags | undefined>(
-    undefined
-  );
+  const [filterValues, setFilterValues] = useState<{
+    tag: CampaignTags | undefined;
+    searchTerm: string;
+  }>({ tag: undefined, searchTerm: '' });
 
   const { campaigns, updateCampaigns, filterCampaigns, filteredCampaigns } =
     campaignStore();
@@ -64,7 +65,6 @@ export default function InfiniteScroll({
 
   function filterByTag(tag: CampaignTags) {
     filterCampaigns(campaigns.filter((camp) => camp.metadata.tag.name === tag));
-    console.log(tag);
 
     setCampaignsFiltered(true);
   }
@@ -82,6 +82,11 @@ export default function InfiniteScroll({
     setCampaignsFiltered(true);
   };
 
+  const handleTagChange = (tag: CampaignTags) => {
+    filterByTag(tag);
+    setFilterValues((prev) => ({ ...prev, tag }));
+  };
+
   return (
     <div className='space-y-10'>
       <div className='flex flex-wrap items-center justify-start gap-2 md:gap-4'>
@@ -96,6 +101,13 @@ export default function InfiniteScroll({
           }}
         >
           <Input
+            value={filterValues.searchTerm}
+            onChange={(e) => {
+              setFilterValues((prev) => ({
+                ...prev,
+                searchTerm: e.target.value,
+              }));
+            }}
             required
             placeholder='Search for campaign'
             name='searchTerm'
@@ -107,16 +119,10 @@ export default function InfiniteScroll({
         </form>
 
         {/* <div className='hidden flex-1 md:block'></div> */}
-        <Select
-          onValueChange={(e: CampaignTags) => {
-            filterByTag(e);
-            setSelectedTag(e);
-          }}
-          value={selectedTag}
-        >
+        <Select onValueChange={handleTagChange} value={filterValues.tag}>
           <SelectTrigger className='w-full sm:basis-96'>
             <SelectValue
-              defaultValue={selectedTag}
+              defaultValue={filterValues.tag}
               placeholder='Filter by campaign type'
             />
           </SelectTrigger>
@@ -132,10 +138,12 @@ export default function InfiniteScroll({
         <Button
           onClick={() => {
             filterCampaigns(campaigns);
-            setSelectedTag(undefined);
+            setFilterValues({ tag: undefined, searchTerm: '' });
+            console.log({ filterValues });
+
             setCampaignsFiltered(false);
           }}
-          disabled={!campaignsFiltered}
+          // disabled={!campaignsFiltered}
           variant='outline'
           className={cn(
             'flex items-center gap-1 disabled:pointer-events-auto  lg:ml-auto',
