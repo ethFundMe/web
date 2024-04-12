@@ -155,7 +155,6 @@ export default function DonateForm({
 
     function onDisonnect() {
       setIsConnected(false);
-      // console.log('Socket disconnected ❌');
     }
 
     const joinData = {

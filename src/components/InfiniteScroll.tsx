@@ -3,6 +3,7 @@
 import { getCampaigns } from '@/actions';
 import { CampaignTags } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { campaignStore } from '@/store/campaignStore';
 import { Campaign } from '@/types';
 import { Search, X } from 'lucide-react';
 import Image from 'next/image';
@@ -26,11 +27,20 @@ export default function InfiniteScroll({
   initialCampaigns: Campaign[];
   totalCampaigns: number;
 }) {
-  const [campaigns, setCampaigns] = useState(initialCampaigns);
-  const [campaignsToShow, setCampaignsToShow] = useState(campaigns);
   const [campaignsFiltered, setCampaignsFiltered] = useState(false);
   const [page, setPage] = useState(1);
   const [ref, inView] = useInView({ rootMargin: '50px' });
+  const [selectedTag, setSelectedTag] = useState<CampaignTags | undefined>(
+    undefined
+  );
+
+  const { campaigns, updateCampaigns, filterCampaigns, filteredCampaigns } =
+    campaignStore();
+
+  useEffect(
+    () => filterCampaigns(initialCampaigns),
+    [initialCampaigns, filterCampaigns]
+  );
 
   const loadMoreCampaigns = useCallback(
     async function () {
@@ -40,10 +50,10 @@ export default function InfiniteScroll({
 
       if (c.length && !(campaigns.length === totalCampaigns)) {
         setPage(next);
-        setCampaigns((prev) => [...prev, ...c]);
+        updateCampaigns([...campaigns, ...c]);
       }
     },
-    [page, campaigns.length, totalCampaigns]
+    [page, campaigns, updateCampaigns, totalCampaigns]
   );
 
   useEffect(() => {
@@ -53,7 +63,7 @@ export default function InfiniteScroll({
   }, [inView, loadMoreCampaigns]);
 
   function filterByTag(tag: CampaignTags) {
-    // setCampaignsToShow((prev)=>prev.filter((camp) => camp?.tag === tag));
+    filterCampaigns(campaigns.filter((camp) => camp.metadata.tag.name === tag));
     console.log(tag);
 
     setCampaignsFiltered(true);
@@ -61,14 +71,14 @@ export default function InfiniteScroll({
 
   const filterBySearchTerm = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
-    const filteredCampaigns = campaigns.filter(
+    const _ = campaigns.filter(
       (camp) =>
         camp.metadata.title.toLowerCase().includes(lowercasedTerm) ||
         camp.metadata.description.toLowerCase().includes(lowercasedTerm) ||
         camp.user.fullName.toLowerCase().includes(lowercasedTerm)
     );
 
-    setCampaignsToShow(filteredCampaigns);
+    filterCampaigns(_);
     setCampaignsFiltered(true);
   };
 
@@ -98,13 +108,16 @@ export default function InfiniteScroll({
 
         {/* <div className='hidden flex-1 md:block'></div> */}
         <Select
-          onValueChange={(e: CampaignTags) => filterByTag(e)}
-          // defaultValue={field.value}
+          onValueChange={(e: CampaignTags) => {
+            filterByTag(e);
+            setSelectedTag(e);
+          }}
+          value={selectedTag}
         >
           <SelectTrigger className='w-full sm:basis-96'>
             <SelectValue
+              defaultValue={selectedTag}
               placeholder='Filter by campaign type'
-              // defaultValue={form.getValues('type')}
             />
           </SelectTrigger>
           <SelectContent>
@@ -118,7 +131,8 @@ export default function InfiniteScroll({
 
         <Button
           onClick={() => {
-            setCampaignsToShow(campaigns);
+            filterCampaigns(campaigns);
+            setSelectedTag(undefined);
             setCampaignsFiltered(false);
           }}
           disabled={!campaignsFiltered}
@@ -134,7 +148,7 @@ export default function InfiniteScroll({
       </div>
 
       <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
-        {campaignsToShow.map((i) => (
+        {filteredCampaigns.map((i) => (
           <CampaignCard key={i.id} campaign={i} />
         ))}
 
@@ -144,7 +158,7 @@ export default function InfiniteScroll({
               ref={ref}
               className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
             ></div>
-          ) : campaignsFiltered && !campaignsToShow.length ? (
+          ) : campaignsFiltered && !filteredCampaigns.length ? (
             <div className='flex flex-col items-center gap-4 pt-8'>
               <Image
                 className='opacity-50'
