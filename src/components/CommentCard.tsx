@@ -1,3 +1,5 @@
+'use client';
+
 import { Comment } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';

@@ -1,6 +1,7 @@
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { Button } from '@/components/ui/button';
+import { REGEX_CODES } from '@/lib/constants';
 import dayjs from 'dayjs';
 import { History } from 'lucide-react';
 import Link from 'next/link';
@@ -13,6 +14,11 @@ export default async function EarningsPage({
   params: { slug: string };
 }) {
   // Fetch user earnings
+
+  console.log({ slug, test: REGEX_CODES.walletAddress.test(slug) });
+
+  // const earning = await fetchUserEarnings(slug as `0x${string}`);
+  // const tags = await fetchCampaignTags();
 
   const earnings: {
     type: EarningVariant;

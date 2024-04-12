@@ -1,7 +1,7 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { Campaign, User } from './types';
+import { Campaign, CampaignTag, User } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -140,5 +140,32 @@ export const handlePushComment = async ({
     console.log(e);
 
     throw new Error('Failed to add comment');
+  }
+};
+
+export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`
+    );
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log('Failed to fetch', e);
+  }
+};
+
+export const fetchCampaignTags = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/tags`
+    );
+    const data = await res.json();
+
+    return data?.tags ? (data.tags as CampaignTag[]) : [];
+  } catch (e) {
+    console.log('Failed to get tags', e);
+    return [];
   }
 };
