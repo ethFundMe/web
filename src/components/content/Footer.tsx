@@ -20,9 +20,6 @@ export const Footer = () => {
         <div className='stars'></div>
         <div className='stars'></div>
         <div className='stars'></div>
-        <div className='stars'></div>
-        <div className='stars'></div>
-        <div className='stars'></div>
       </div>
       <Container className='relative z-10 py-16 text-sm'>
         <div className='relative space-y-8'>

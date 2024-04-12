@@ -13,12 +13,12 @@ export const HomepageHeader = () => {
   const [greeting, setGreeting] = useState('');
   const getGreeting = (time: number) => {
     if (time >= 0 && time < 12) {
-      return setGreeting('Good Morning');
+      return setGreeting('Good Morning,');
     }
     if (time >= 12 && time < 16) {
-      return setGreeting('Good afternoon');
+      return setGreeting('Good Afternoon,');
     }
-    return setGreeting('Good evening');
+    return setGreeting('Good Evening,');
   };
 
   const splitName = (name: string) => {
@@ -31,7 +31,7 @@ export const HomepageHeader = () => {
     const greetArr = [
       `Welcome, ${name}`,
       `Hello 👋 ${name}`,
-      `${greeting} ${name}`,
+      `${greeting} ${name}!`,
     ];
     const randomNum = Math.round(Math.random() * 10);
 
