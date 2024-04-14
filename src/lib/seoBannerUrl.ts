@@ -90,7 +90,7 @@ export function seoCampaign(
   } else {
     truncatedTitle = brokenTitle;
   }
-  if (isVerified == true) {
+  if (isVerified === true) {
     link2 = '/fl_layer_apply,g_west,x_165,y_-260';
     link5 =
       '/fl_layer_apply,g_north_west,x_120,y_' +
@@ -100,14 +100,14 @@ export function seoCampaign(
       '/c_thumb,g_face,h_89,w_87/r_max/f_auto/fl_layer_apply,g_north_west,x_120,y_142/l_verified_xcic9g/c_scale,w_40/e_mask,fl_layer_apply,g_north_west,x_' +
       number +
       ',y_250/';
-  } else if (isVerified == false) {
+  } else {
     link2 = '/fl_layer_apply,g_west,x_115,y_-260';
-    link5 ==
+    link5 =
       '/fl_layer_apply,g_north_west,x_120,y_' +
-        descripSpacing +
-        '/l_fetch:' +
-        encodedUrl +
-        '/t_Profile,w_87/fl_layer_apply,g_north_west,x_120,y_142/';
+      descripSpacing +
+      '/l_fetch:' +
+      encodedUrl +
+      '/t_Profile,w_87/fl_layer_apply,g_north_west,x_120,y_142/';
   }
 
   function descriptionSlice(descript: string) {
@@ -137,6 +137,8 @@ export function seoCampaign(
     return str.replaceAll(charToReplace, '%0A');
   }
   const refinedcombMessage = replaceCharacter(combinedMessage, '%25250A');
+  console.log(refinedcombMessage);
+
   return refinedcombMessage;
 }
 

@@ -28,6 +28,7 @@ export async function generateMetadata(
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
+  console.log(campaign);
 
   if (!campaign) notFound();
 
@@ -36,7 +37,7 @@ export async function generateMetadata(
 
   const previousMetaData = await parent;
 
-  return user
+  return campaign
     ? {
         title: `${campaign.metadata.title}`,
         description: `${campaign.metadata.description}`,
@@ -49,13 +50,13 @@ export async function generateMetadata(
           images: [
             {
               url: seoCampaign(
-                user.fullName,
+                campaign.user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.metadata.title,
                 campaign.metadata.description,
                 campaign.metadata.banner_url,
                 campaign.user.profileUrl,
-                user.isVerified
+                campaign.user.isVerified
               ),
             },
           ],
