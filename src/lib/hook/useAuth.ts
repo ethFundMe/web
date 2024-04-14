@@ -14,7 +14,7 @@ const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT ?? '';
 
 export const useAuth = () => {
   const config = useConfig();
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
   const userEthAddress = useStore(userStore, (state) => state.user?.ethAddress);
   const { setUser, resetUser } = userStore();
   const efmToken = getCookie('efmToken');
@@ -71,7 +71,7 @@ export const useAuth = () => {
       if (userEthAddress) {
         resetUser();
       }
-      push('/');
+      refresh();
     },
   });
 

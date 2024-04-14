@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { updateUser } from '@/actions';
@@ -10,15 +11,24 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { parseEther } from 'viem';
+import {
+  // BaseError,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 import * as z from 'zod';
 import { Button } from './inputs';
+import { Slider } from './ui/slider';
 import { Textarea } from './ui/textarea';
 
 type FormStatus =
@@ -29,7 +39,7 @@ type FormStatus =
 export default function UpdateProfileForm({ user }: { user: User }) {
   const formSchema = z.object({
     fullName: z
-      .string({ required_error: 'Fullname is required' })
+      .string({ required_error: 'Full name is required' })
       .min(2)
       .max(250),
     email: z
@@ -41,58 +51,124 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .optional(),
     // ethAddress: z.string().regex(REGEX_CODES.walletAddress).optional(),
     creatorFee: z
-      .number({ required_error: 'Enter amount in ETH' })
-      .min(0, { message: 'Enter a fee of 0 or greater' })
-      .max(user.isVerified ? 100000 : 2, {
-        message: user.isVerified
-          ? 'Enter an amount less than 1000000 ETH'
-          : 'Verify your creator account to exceed 2ETH limit',
+      .number({ required_error: 'Enter amount in percentage' })
+      .min(0, { message: 'Enter a minimum value of 0 or greater' })
+      .max(30, {
+        message: 'Enter a maximum value of 30% or less',
       })
       .optional(),
   });
+  const {
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log(`Settled update CreatorFee, ${{ data, error }}`);
+      },
+    },
+  });
 
+  const {
+    isLoading: isConfirmingTxn,
+    isPending: isPendingTxn,
+    isSuccess: isConfirmedTxn,
+  } = useWaitForTransactionReceipt({ hash });
+
+  const handleWriteContract = (creatorFeePercent: number) => {
+    const creatorFee = parseEther(creatorFeePercent.toString());
+    return writeContract({
+      abi: EthFundMe,
+      address: ethFundMeContractAddress,
+      functionName: 'setCreatorFeePercentage',
+      chainId: ethChainId,
+      args: [creatorFee],
+    });
+  };
   const [formStatus, setFormStatus] = useState<FormStatus | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: user.fullName ?? '',
-      creatorFee: user.creatorFee ?? 0,
+      creatorFee: Number(user.creatorFee) ?? 0,
       bio: user.bio ?? '',
       email: user.email ?? '',
     },
     mode: 'onChange',
   });
 
+  const watchedAmount: number = form.watch('creatorFee') as number;
+  const creatorFeeEditMade =
+    form.watch('creatorFee') !== Number(user.creatorFee);
+
   const editMade =
+    form.watch('creatorFee') !== Number(user.creatorFee) ||
     form.watch('fullName').trim() !== user.fullName ||
-    form.watch('creatorFee') !== user.creatorFee ||
     form.watch('email') !== user.email ||
     !!form.watch('bio')?.trim() !== !!user.bio ||
     form.watch('bio')?.trim() !== user.bio;
 
+  console.log(`${{ creatorFeeEditMade, editMade }}`);
   const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log({ values });
-    setFormStatus('Saving changes');
-    updateUser({
-      bio: values.bio,
-      // creatorFee: values.creatorFee,
-      email: values.email,
-      ethAddress: user.ethAddress,
-      fullName: values.fullName,
-    })
-      .then((data) => {
-        setFormStatus(null);
-        form.reset();
-        toast.success('Profile updated successfully');
-        router.push(`/dashboard/${data.ethAddress}`);
+  function updateUserProfile(values: z.infer<typeof formSchema>) {
+    if (creatorFeeEditMade && !editMade) {
+      handleWriteContract(values.creatorFee as number);
+    }
+    if (editMade && creatorFeeEditMade) {
+      updateUser({
+        bio: values.bio,
+        email: values.email,
+        ethAddress: user.ethAddress,
+        fullName: values.fullName,
       })
-      .catch(() => {
-        setFormStatus(null);
-        toast.error('Failed to update profile');
-      });
+        .then((data) => {
+          handleWriteContract(values.creatorFee as number);
+          // Reset form and navigate to the dashboard
+          setFormStatus(null);
+          form.reset();
+          toast.success('Profile updated successfully');
+          router.push(`/dashboard/${data.ethAddress}`);
+        })
+        .catch((error) => {
+          console.log(`Failed to update profile, ${error}`);
+          setFormStatus(null);
+          toast.error('Failed to update profile');
+        });
+    }
+    if (!creatorFeeEditMade && editMade) {
+      updateUser({
+        bio: values.bio,
+        email: values.email,
+        ethAddress: user.ethAddress,
+        fullName: values.fullName,
+      })
+        .then((data) => {
+          // Reset form and navigate to the dashboard
+          setFormStatus(null);
+          form.reset();
+          toast.success('Profile updated successfully');
+          router.push(`/dashboard/${data.ethAddress}`);
+        })
+        .catch((error) => {
+          console.log(`Failed to update profile, ${error}`);
+          setFormStatus(null);
+          toast.error('Failed to update profile');
+        });
+    }
+  }
+  useEffect(() => {
+    if (isConfirmingTxn) {
+      toast.success('Creator fee updated succesfully');
+    }
+  }, [isConfirmingTxn]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    updateUserProfile(values);
   }
 
   return (
@@ -139,16 +215,28 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           <FormField
             control={form.control}
             name='creatorFee'
-            render={({ field }) => (
+            render={() => (
               <FormItem>
-                <FormLabel>Creator fee</FormLabel>
+                <FormLabel>Creator fee (%)</FormLabel>
                 <FormControl>
-                  <Input
+                  {/* <Input
                     type='number'
                     placeholder='Enter your creator fee'
                     {...field}
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
+                  /> */}
+                  <div className='flex items-center gap-x-3'>
+                    <p className='w-14 text-sm'>{watchedAmount}%</p>
+                    <Slider
+                      onValueChange={(e) => {
+                        form.setValue('creatorFee', e[0] as number);
+                      }}
+                      value={[watchedAmount as unknown as number]}
+                      min={0}
+                      max={30}
+                      step={0.01}
+                    />
+                  </div>
                 </FormControl>
 
                 <FormMessage />
@@ -156,7 +244,6 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             )}
           />
         </div>
-
         <FormField
           control={form.control}
           name='bio'

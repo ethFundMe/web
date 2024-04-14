@@ -31,7 +31,7 @@ export async function getCampaign(id: number) {
   return campaign[0];
 }
 
-export async function getUserCampaigns(id: string) {
+export async function getUserCampaigns(id: `0x${string}`) {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
 

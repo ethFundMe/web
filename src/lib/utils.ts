@@ -10,8 +10,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatWalletAddress(address: `0x${string}`) {
-  const shortAddress = address.slice(0, 7) + '...' + address.slice(-5);
+export function formatWalletAddress(
+  address: `0x${string}`,
+  type: 'short' | 'long' = 'long'
+) {
+  const shortAddress =
+    type === 'long'
+      ? address.slice(0, 7) + '...' + address.slice(-5)
+      : address.slice(0, 9);
   return shortAddress;
 }
 
@@ -126,7 +132,9 @@ export async function deleteFromCloudinary(image: string) {
 
   const data = await res.json();
 
-  const erroredOut = data.result === 'not found' || data.errors;
+  const erroredOut = data.errors;
+
+  console.log({ publicId, data });
 
   if (erroredOut) {
     throw new Error('Failed to delete image');
@@ -266,3 +274,8 @@ export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
 };
+
+// export const devlog = (message: unknown) => {
+//   if (process.env.NODE_ENV !== 'development') return;
+//   console.log(message);
+// };

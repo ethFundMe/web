@@ -28,6 +28,8 @@ export default function ImageWithFallback({
         loading && 'animate-pulse bg-slate-200',
         error && 'grayscale'
       )}
+      blurDataURL='/images/broken.jpg'
+      placeholder='blur'
       src={error ? fallback : src}
       onLoad={() => setLoading(false)}
       onError={() => {

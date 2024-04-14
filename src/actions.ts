@@ -1,8 +1,7 @@
 'use server';
 
 import parse from 'node-html-parser';
-import toast from 'react-hot-toast';
-import { Campaign, User } from './types';
+import { Campaign, CampaignTag, User } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -51,7 +50,7 @@ export const getCampaigns = async (
   const res = await fetch(url, { cache: 'no-store' });
   const data = await res.json();
 
-  const campaigns: Campaign[] = data.campaigns;
+  const campaigns: Campaign[] = data.campaigns || [];
   const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
@@ -108,8 +107,65 @@ export const updateUser = async (userDetails: {
   const resData: User = data;
 
   if (data.error) {
-    toast.error('Failed to update profile');
     throw new Error('Failed to update profile');
   }
   return resData;
+};
+
+export const handlePushComment = async ({
+  userID,
+  campaignID,
+  comment,
+}: {
+  userID: string;
+  campaignID: string;
+  comment: string;
+}) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/comment`, {
+      method: 'POST',
+      body: JSON.stringify({
+        comment,
+        userID,
+        campaignID,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log(e);
+
+    throw new Error('Failed to add comment');
+  }
+};
+
+export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`
+    );
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log('Failed to fetch', e);
+  }
+};
+
+export const fetchCampaignTags = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/tags`
+    );
+    const data = await res.json();
+
+    return data?.tags ? (data.tags as CampaignTag[]) : [];
+  } catch (e) {
+    console.log('Failed to get tags', e);
+    return [];
+  }
 };

@@ -103,7 +103,7 @@ export const SidebarNavLink = ({
           className
         )}
       >
-        {icon}
+        <div className='w-5'>{icon}</div>
 
         {title}
       </NavLink>

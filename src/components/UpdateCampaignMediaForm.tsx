@@ -21,7 +21,7 @@ export default function UpdateCampaignMediaForm({
 }: {
   campaign: Campaign;
 }) {
-  const preparedImages = campaign.media_links
+  const preparedImages = campaign.metadata.media_links
     .filter((_, idx) => idx !== 0)
     .filter((image) => !REGEX_CODES.ytLink.test(image));
 
@@ -34,7 +34,7 @@ export default function UpdateCampaignMediaForm({
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log('Settled updateCampaign', { data, error });
+        console.log(`'Settled updateCampaign', ${{ data, error }}`);
       },
     },
   });
@@ -43,10 +43,9 @@ export default function UpdateCampaignMediaForm({
     useWaitForTransactionReceipt({ hash });
 
   const {
-    campaign_id,
-    description,
+    metadata: { description, title },
     goal,
-    title,
+    campaign_id,
     beneficiary: beneficiaryAddress,
   } = campaign;
 
@@ -72,24 +71,27 @@ export default function UpdateCampaignMediaForm({
   const handleDelete = (url: string) => {
     console.log({ url });
 
-    const newMediaLinks = campaign.media_links.filter((src) => src !== url);
+    const newMediaLinks = campaign.metadata.media_links.filter(
+      (src) => src !== url
+    );
 
     return handleWriteContract(newMediaLinks);
   };
 
   const handleUpload = (res: string[]) => {
-    const lastItem = campaign.media_links[campaign.media_links.length - 1];
+    const lastItem =
+      campaign.metadata.media_links[campaign.metadata.media_links.length - 1];
     const ytLink = REGEX_CODES.ytLink.test(lastItem);
 
     const newMediaLinks = ytLink
-      ? [campaign.media_links[0], ...preparedImages, ...res, lastItem]
-      : [campaign.media_links[0], ...preparedImages, ...res];
+      ? [campaign.metadata.banner_url, ...preparedImages, ...res, lastItem]
+      : [campaign.metadata.banner_url, ...preparedImages, ...res];
 
     return handleWriteContract(newMediaLinks);
   };
 
   const handleBannerUpload = (url: string[]) => {
-    const newMediaLinks = campaign.media_links.map((item, idx) =>
+    const newMediaLinks = campaign.metadata.media_links.map((item, idx) =>
       idx === 0 ? url[0] : item
     );
     return handleWriteContract(newMediaLinks);
@@ -115,8 +117,8 @@ export default function UpdateCampaignMediaForm({
         <div className={cn(labelVariants(), 'text-base')}>Campaign banner</div>
 
         <DnDUploadSmall
-          disabled={isConfirmingTxn || isPending}
-          preview={[campaign.media_links[0]]}
+          disabled={isConfirmingTxn}
+          preview={[campaign.metadata.banner_url]}
           handleUpload={handleBannerUpload}
         />
       </div>

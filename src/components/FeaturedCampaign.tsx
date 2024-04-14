@@ -1,11 +1,10 @@
 'use client';
 
-import { REGEX_CODES } from '@/lib/constants';
 import { Campaign, User } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonateBtn } from './DonateBtn';
@@ -22,8 +21,9 @@ export default function FeaturedCampaign({
 }) {
   const [index, setIndex] = useState(0);
 
-  const images = campaign.media_links.filter(
-    (media) => !REGEX_CODES.ytLink.test(media)
+  const images = useMemo(
+    () => [campaign.metadata.banner_url, ...campaign.metadata.media_links],
+    [campaign]
   );
 
   const AnimImage = motion(Image);
@@ -59,10 +59,10 @@ export default function FeaturedCampaign({
             <span className='text-xs leading-[0] md:text-sm'>presents</span>
           </div>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
-            {campaign.title}
+            {campaign.metadata.title}
           </p>
           <p className='line-clamp-2 max-w-lg text-xs md:text-sm'>
-            {campaign.description}
+            {campaign.metadata.description}
           </p>
         </div>
 
@@ -96,10 +96,23 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <div className='mt-4 flex items-center gap-2'>
-          <DonateBtn campaign={campaign} />
-          <Button asChild variant='secondary' className='w-full max-w-[10rem]'>
-            <Link href={`/campaigns/${campaign.campaign_id}`}>Read more</Link>
+        <div className='mt-4 flex flex-wrap items-center gap-2'>
+          <DonateBtn
+            text='Help now'
+            size='lg'
+            campaign={campaign}
+            className='text-md'
+          />
+
+          <Button
+            asChild
+            variant='secondary'
+            className='text-md w-full max-w-[10rem] flex-shrink-0 px-8'
+            size='lg'
+          >
+            <Link href={`/campaigns/${campaign.campaign_id}`}>
+              <span>View campaign</span>
+            </Link>
           </Button>
         </div>
       </div>

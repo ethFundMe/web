@@ -14,9 +14,9 @@ export const ShareCampaignLink = ({
     <div className='space-y-4'>
       <LinkPreviewCmp
         params={{
-          title: campaign.title,
-          image: campaign.media_links[0],
-          description: campaign.description,
+          title: campaign.metadata.title,
+          image: campaign.metadata.banner_url,
+          description: campaign.metadata.description,
         }}
       />
       <ShareCampaignLinkBox link={link} />

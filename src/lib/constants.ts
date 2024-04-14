@@ -110,6 +110,7 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Share your dreams, challenges, aspirations and hurdles with personal campaigns and rally community support for your journey.',
     link: '/campaigns/create?campaign-type=personal',
+    ctaBtnText: 'Launch My Campaign',
   },
   {
     image: '/images/Creative team-pana.svg',
@@ -117,6 +118,7 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Support others on their journey with campaigns for friends, family, or strangers facing challenges,  directly impacting the lives of others.',
     link: '/campaigns/create?campaign-type=others',
+    ctaBtnText: 'Start Support Campaign',
   },
 ];
 
@@ -144,7 +146,7 @@ export const FAQS = [
   {
     question: '🎁 Do I get any rewards from using the platform?',
     answer:
-      'Both campaign creators and contributors are rewarded with the $FUNDER tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDER tokens.',
+      'Both campaign creators and contributors are rewarded with the $FUNDME tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDME tokens.',
   },
 ];
 
@@ -166,7 +168,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Discord',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://discord.gg/9kac2FFMWe',
     icon: BiLogoDiscordAlt({ size: 20 }),
   },
 ];
@@ -186,4 +188,49 @@ export const CAROUSEL_IMAGES = [
   'https://picsum.photos/id/132/700',
   'https://picsum.photos/id/13/700',
   'https://picsum.photos/id/113/700',
+];
+
+export const COMMENTS = [
+  {
+    user: {
+      fullname: 'John Smith',
+    },
+    date: '2024-02-26T18:52:42.185Z',
+    // text: 'Thank you all for your incredible support! Every contribution means the world to us and brings us closer to our goal.',
+    text: '',
+    amt: 100000000000000000,
+  },
+  {
+    user: {
+      fullname: 'Emily Johnson',
+    },
+    date: '2024-02-26T19:30:00.000Z',
+    text: 'I just donated what I could. Let us keep spreading the word and helping those in need!',
+    amt: 5000000000000000,
+  },
+  {
+    user: {
+      fullname: 'David Rodriguez',
+    },
+    date: '2024-02-26T20:15:00.000Z',
+    text: 'This campaign is truly inspiring. I am proud to be a part of this community that comes together to support each other.',
+    // amt: 2500000000000000000,
+    amt: 0,
+  },
+  {
+    user: {
+      fullname: 'Sarah Thompson',
+    },
+    date: '2024-02-26T21:00:00.000Z',
+    text: 'It is heartwarming to see the impact we can make when we join forces. Let us keep the momentum going!',
+    amt: 100000000000000000,
+  },
+  {
+    user: {
+      fullname: 'Michael Nguyen',
+    },
+    date: '2024-02-26T22:00:00.000Z',
+    text: 'Small acts of kindness can create big changes. Proud to support this cause.',
+    amt: 200000000000000000,
+  },
 ];

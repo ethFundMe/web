@@ -1,14 +1,11 @@
 'use client';
 
-import { getUser } from '@/actions';
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
-import { User } from '@/types';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
 export const CampaignCard = ({
@@ -23,11 +20,7 @@ export const CampaignCard = ({
 }) => {
   const router = usePRouter();
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUser(campaign.creator as `0x${string}`).then((res) => setUser(res));
-  }, [campaign.creator]);
+  const user = campaign.user;
 
   return (
     <div
@@ -41,7 +34,7 @@ export const CampaignCard = ({
       <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src={campaign?.media_links[0] ?? '/images/broken.jpg'}
+          src={campaign.metadata.banner_url ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -54,8 +47,12 @@ export const CampaignCard = ({
       />
 
       <div className='flex-1'>
-        <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
-        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+        <p className='line-clamp-1 text-xl font-semibold'>
+          {campaign.metadata.title}
+        </p>
+        <p className='line-clamp-2 text-neutral-700'>
+          {campaign.metadata.description}
+        </p>
       </div>
 
       <div

@@ -40,7 +40,7 @@ export default function VerificationForm() {
         setSelectedCountry(response.country ?? 'GH');
       })
       .catch((data) => {
-        console.log('Request failed:', data);
+        console.log(`Request failed:, ${{ data }}`);
       });
   }, [selectedCountry]);
 
@@ -103,7 +103,7 @@ export default function VerificationForm() {
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='col-span-2 sm:col-span-1'>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter your email address' {...field} />
@@ -116,7 +116,7 @@ export default function VerificationForm() {
             control={form.control}
             name='phoneNumber'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='col-span-2 sm:col-span-1'>
                 <>
                   <TooltipProvider>
                     <Tooltip>
@@ -139,10 +139,12 @@ export default function VerificationForm() {
                         border: 'none',
                         margin: 0,
                         marginTop: 5,
+                        width: '100%',
                       }}
                       inputStyle={{
                         border: '1px solid rgb(226,232,240)',
                         height: '2.5rem',
+                        width: '100%',
                       }}
                       buttonStyle={{
                         background: 'rgb(245,245,245)',
@@ -181,18 +183,27 @@ export default function VerificationForm() {
 
                 <FormDescription className='text-xs'>
                   I have read and agreed to the{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/terms-and-conditions'
+                    className='text-primary-default'
+                  >
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/privacy-policy'
+                    className='text-primary-default'
+                  >
                     Privacy Policy
                   </Link>
                 </FormDescription>
               </FormItem>
             )}
           />
-          <Button disabled={!form.watch('agree')} className='col-span-2 w-full'>
+          <Button
+            disabled={!form.watch('agree')}
+            className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
+          >
             Submit
           </Button>
         </form>

@@ -66,7 +66,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log('Settled updateCampaign', { data, error });
+        console.log(`'Settled updateCampaign', ${{ data, error }}`);
       },
     },
   });
@@ -80,26 +80,23 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     defaultValues: {
       type: campaign.beneficiary === campaign.creator ? 'personal' : 'others',
       beneficiaryAddress: campaign.beneficiary,
-      banner: campaign.media_links[0],
-      description: campaign.description,
-      title: campaign.title,
+      banner: campaign.metadata.banner_url,
+      description: campaign.metadata.description,
+      title: campaign.metadata.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
       tag: CampaignTags['Arts and Culture'],
-      ytLink:
-        campaign.media_links.filter((link) =>
-          REGEX_CODES.ytLink.test(link)
-        )[0] ?? undefined,
+      ytLink: campaign.metadata.youtube_link ?? undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   });
 
   const editMade =
-    form.watch('title') !== campaign.title ||
-    form.watch('description') !== campaign.description ||
+    form.watch('title') !== campaign.metadata.title ||
+    form.watch('description') !== campaign.metadata.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.media_links[0];
+    form.watch('banner') !== campaign.metadata.banner_url;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { description, goal, title, beneficiaryAddress } = data;
@@ -115,8 +112,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         title,
         description,
         parseEther(goal.toString()),
-        campaign.media_links,
         beneficiaryAddress as `0x${string}`,
+        // campaign.media_links,
       ],
     });
   };
@@ -250,7 +247,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (ETH)</span>
+                            <span>Creator fees (%)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
                           <TooltipContent>
@@ -275,8 +272,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                       type='number'
                       step={0.00001}
                       disabled
-                      // value={User.creatorFee}
-                      value={0.02}
+                      value={user?.creatorFee}
+                      // value={0.02}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>

@@ -1,11 +1,10 @@
 export interface Funding {
   id: number;
-  campaign_id: string;
+  campaign_id: number;
   funder: `0x${string}`;
   amount: number;
   amt_after_fees: number;
-  creator_funded: boolean;
-  created_at: string;
+  created_at: Date;
 }
 
 export interface SimpleCampaign {
@@ -21,8 +20,8 @@ export interface SimpleCampaign {
   media_links: string[];
   title: string;
   total_accrued: number;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface User {
@@ -39,5 +38,4 @@ export interface User {
   bannerUrl: string | null;
   createdAt: Date;
   updatedAt: Date;
-  fundings: Funding[];
 }
