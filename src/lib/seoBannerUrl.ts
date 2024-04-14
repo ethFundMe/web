@@ -137,8 +137,6 @@ export function seoCampaign(
     return str.replaceAll(charToReplace, '%0A');
   }
   const refinedcombMessage = replaceCharacter(combinedMessage, '%25250A');
-  console.log(refinedcombMessage);
-
   return refinedcombMessage;
 }
 
