@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchCampaignTags } from '@/actions';
+import { fetchCampaignTags, handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
@@ -103,7 +103,7 @@ export default function CreateCampaignForm() {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log(`Settled addCampaign, ${{ data, error }}`);
+        console.log('Settled addCampaign', { data, error });
       },
     },
   });
@@ -201,34 +201,14 @@ export default function CreateCampaignForm() {
           const filterTag = tags.filter((_) => _.name === tag)[0];
           const preparedTag = filterTag || { id: 9, name: CampaignTags.Others };
 
-          const handleIPFSPush = async function () {
-            try {
-              const res = await fetch(
-                `${
-                  process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-                }/api/campaign/metadata`,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  method: 'POST',
-                  body: JSON.stringify({
-                    title,
-                    description,
-                    youtubeLink: ytLink,
-                    bannerUrl: uploaded[0],
-                    mediaLinks: uploaded.filter((_, id) => id !== 0),
-                    tag: preparedTag,
-                  }),
-                }
-              );
-              return res.json();
-            } catch (e) {
-              throw new Error();
-            }
-          };
-
-          handleIPFSPush()
+          handleIPFSPush({
+            title,
+            description,
+            youtubeLink: ytLink,
+            bannerUrl: uploaded[0],
+            mediaLinks: uploaded.filter((_, id) => id !== 0),
+            tag: preparedTag,
+          })
             .then((res) => {
               writeContract({
                 abi: EthFundMe,

@@ -169,3 +169,44 @@ export const fetchCampaignTags = async () => {
     return [];
   }
 };
+
+export const handleIPFSPush = async function ({
+  title,
+  bannerUrl,
+  youtubeLink,
+  mediaLinks,
+  description,
+  tag,
+}: {
+  title: string;
+  description: string;
+  youtubeLink: string | undefined;
+  bannerUrl: string;
+  mediaLinks: string[];
+  tag: CampaignTag;
+}) {
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
+      }/api/campaign/metadata`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          description,
+          youtubeLink,
+          bannerUrl,
+          mediaLinks,
+          tag,
+        }),
+      }
+    );
+    return res.json();
+  } catch (e) {
+    throw new Error();
+  }
+};

@@ -103,7 +103,7 @@ export default async function EarningsPage({
           </div>
         </div>
 
-        <aside className='w-full min-w-max lg:max-w-72'>
+        <aside className='top-24 w-full min-w-max lg:sticky lg:max-w-72'>
           <h2 className='text-xl font-bold text-primary-default'>History</h2>
 
           <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-neutral-100 p-4 lg:min-h-[90%] lg:p-6'>
@@ -140,6 +140,7 @@ export default async function EarningsPage({
           </div>
         </aside>
       </div>
+
       {/* <EarningsCard /> */}
     </div>
   );
