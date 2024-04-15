@@ -9,7 +9,7 @@ import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -53,9 +53,13 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const router = useRouter();
   const { user } = userStore();
 
-  useEffect(() => {
-    if (!user) redirect('/');
-  }, [user]);
+  // useEffect(() => {
+  //   const isWalletConnected = address;
+
+  //   const isActualCreator = user?.ethAddress === address;
+
+  //   if (!user) redirect('/');
+  // }, [user]);
 
   const {
     data: hash,
@@ -66,7 +70,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
-        console.log(`'Settled updateCampaign', ${{ data, error }}`);
+        console.log('Settled updateCampaign', { data, error });
       },
     },
   });
@@ -84,7 +88,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       description: campaign.metadata.description,
       title: campaign.metadata.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
-      tag: CampaignTags['Arts and Culture'],
+      tag: campaign.metadata.tag.name,
       ytLink: campaign.metadata.youtube_link ?? undefined,
     },
     mode: 'onChange',
@@ -99,8 +103,10 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('banner') !== campaign.metadata.banner_url;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    const { description, goal, title, beneficiaryAddress } = data;
+    const { goal, beneficiaryAddress } = data;
     const { campaign_id } = campaign;
+
+    // Handle push data to backend
 
     return writeContract({
       abi: EthFundMe,
@@ -109,11 +115,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       chainId: ethChainId,
       args: [
         BigInt(campaign_id),
-        title,
-        description,
         parseEther(goal.toString()),
         beneficiaryAddress as `0x${string}`,
-        // campaign.media_links,
       ],
     });
   };
@@ -127,6 +130,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     }
   }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 
+  // goal: {formatEther(BigInt(campaign.goal))}
+  // goal: {campaign.goal}
   return (
     <Form {...form}>
       <form
@@ -146,7 +151,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='title'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -174,7 +178,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='type'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -193,7 +196,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='goal'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -221,7 +223,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='tag'
         />
-
         {form.watch('type') === 'others' && (
           <>
             <FormField
@@ -284,7 +285,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             />
           </>
         )}
-
         <FormField
           name='description'
           control={form.control}
@@ -298,7 +298,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             </FormItem>
           )}
         />
-
         <div className='col-span-2 space-y-4'>
           {!!REGEX_CODES.ytLink.test(form.watch('ytLink') as string) && (
             <LinkPreview url={form.watch('ytLink') as string} />
@@ -318,7 +317,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             name='ytLink'
           />
         </div>
-
         <Button
           type='submit'
           size='default'
