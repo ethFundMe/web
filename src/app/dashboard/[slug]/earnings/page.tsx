@@ -1,53 +1,23 @@
+import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { Button } from '@/components/ui/button';
-import { REGEX_CODES } from '@/lib/constants';
 import dayjs from 'dayjs';
 import { History } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { isAddress } from 'viem';
 
-type EarningVariant = 'claim' | 'earn';
+// type EarningVariant = 'claim' | 'earn';
 
 export default async function EarningsPage({
   params: { slug },
 }: {
   params: { slug: string };
 }) {
-  // Fetch user earnings
-
-  console.log({ slug, test: REGEX_CODES.walletAddress.test(slug) });
-
-  // const earning = await fetchUserEarnings(slug as `0x${string}`);
-  // const tags = await fetchCampaignTags();
-
-  const earnings: {
-    type: EarningVariant;
-    amt: number;
-    source?: string;
-    hash: string;
-    date: Date;
-  }[] = [
-    {
-      hash: '/',
-      type: 'claim',
-      amt: 500,
-      date: dayjs().subtract(1, 'h').toDate(),
-    },
-    {
-      hash: '/',
-      type: 'earn',
-      amt: 500,
-      source: 'Create campaign',
-      date: dayjs().subtract(2, 'h').subtract(30, 'minutes').toDate(),
-    },
-    {
-      hash: '/',
-      type: 'earn',
-      amt: 250,
-      source: 'Donation',
-      date: dayjs().subtract(3, 'h').toDate(),
-    },
-  ];
+  if (!isAddress(slug)) notFound();
+  const totalEarnings = await fetchTotalUserEarnings(slug);
+  const earnings = await fetchUserEarnings(slug);
 
   // const earningBadge: Record<EarningVariant, React.ReactNode> = {
   //   claim: <Badge className='bg-red-500'>Claim</Badge>,
@@ -68,10 +38,15 @@ export default async function EarningsPage({
 
             <div className='flex flex-wrap items-center justify-between'>
               <p className='my-4 text-3xl font-bold text-primary-dark'>
-                45,500.02 FUNDME
+                {totalEarnings?.total || 0} FUNDME
               </p>
 
-              <Button className='lg:text-md w-full max-w-44 text-base font-bold'>
+              <Button
+                disabled={
+                  totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
+                }
+                className='lg:text-md w-full max-w-44 text-base font-bold'
+              >
                 Claim Tokens
               </Button>
             </div>
@@ -89,7 +64,11 @@ export default async function EarningsPage({
               distribution by participating in updating our reward system.
             </p>
 
-            <Link href='/' className='my-4 block text-primary-default'>
+            <Link
+              target='_blank'
+              href='/about/validationg-program'
+              className='my-4 block text-primary-default'
+            >
               📖 Learn more
             </Link>
 
@@ -109,34 +88,42 @@ export default async function EarningsPage({
           <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-neutral-100 p-4 lg:min-h-[90%] lg:p-6'>
             <History size={50} className='stroke-1 text-slate-500' />
 
-            <ul className='mt-8 space-y-4'>
-              {earnings.map((earning, idx) => (
-                <li key={idx}>
-                  <Link href={earning.hash}>
-                    <div className='space-y-1.5 text-neutral-700 lg:space-y-2.5'>
-                      {/* {earningBadge[earning.type]} */}
+            {earnings.length > 0 ? (
+              <ul className='mt-8 space-y-4'>
+                {earnings.map((earning, idx) => (
+                  <li key={idx}>
+                    <Link href={'/'}>
+                      <div className='space-y-1.5 text-neutral-700 lg:space-y-2.5'>
+                        {/* {earningBadge[earning.type]} */}
 
-                      <div>
-                        <p className='text-xl font-semibold leading-4'>
-                          {earning.type === 'claim' ? '-' : '+'} {earning.amt}{' '}
-                          Fundme
-                        </p>
+                        <div>
+                          <p className='text-xl font-semibold leading-4'>
+                            {earning.rewardType === 'campaign_creation'
+                              ? '-'
+                              : '+'}{' '}
+                            {earning.amount} Fundme
+                          </p>
 
-                        <p>{earning.source}</p>
+                          <p>{earning.rewardType}</p>
 
-                        <p className='capitalize'>{earning.type}</p>
+                          <p className='capitalize'>{earning.rewardType}</p>
+                        </div>
+
+                        <small>
+                          {dayjs(earning.created_at)
+                            .subtract(2, 'minute')
+                            .format('Do MMM, YYYY . HH : mm a')}
+                        </small>
                       </div>
-
-                      <small>
-                        {dayjs(earning.date)
-                          .subtract(2, 'minute')
-                          .format('DD MMM, YYYY . HH : mm a')}
-                      </small>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className='mt-4 text-slate-500'>
+                Keep creating and funding more campaigns to earn tokens
+              </p>
+            )}
           </div>
         </aside>
       </div>

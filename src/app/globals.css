@@ -29,6 +29,11 @@
   --c2: #042d4205;
 }
 
+* {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1rem;
+}
+
 #space,
 .stars {
   overflow: hidden;

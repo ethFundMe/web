@@ -56,6 +56,29 @@ export interface UserTable {
   updated_at: Generated<Date>;
 }
 
+export interface UserEarning {
+  id: string;
+  creator: {
+    id: string;
+    ethAddress: `0x${string}`;
+    fullName: string;
+    email: string;
+    bio: string;
+    role: string;
+    isBanned: boolean;
+    isVerified: boolean;
+    creatorFee: number;
+    profileUrl?: string;
+    bannerUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  amount: string;
+  rewardType: 'campaign_creation';
+  auto: boolean;
+  created_at: Date;
+}
+
 export type Campaign = Selectable<CampaignsTable>;
 export type NewCampaign = Insertable<CampaignsTable>;
 export type CampaignUpdate = Updateable<CampaignsTable>;

@@ -11,7 +11,7 @@ import {
 
 export const FaqsSection = () => {
   return (
-    <section>
+    <section id='faqs'>
       <Container className='space-y-5 py-10 lg:py-20'>
         <div className='py-5 text-center'>
           <h2 className={TextSizeStyles.h2}>Frequently Asked Questions</h2>
