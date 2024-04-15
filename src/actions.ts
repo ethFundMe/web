@@ -1,7 +1,7 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { Campaign, CampaignTag, User } from './types';
+import { Campaign, CampaignTag, User, UserEarning } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -143,19 +143,6 @@ export const handlePushComment = async ({
   }
 };
 
-export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`
-    );
-    const data = await res.json();
-
-    return data;
-  } catch (e) {
-    console.log('Failed to fetch', e);
-  }
-};
-
 export const fetchCampaignTags = async () => {
   try {
     const res = await fetch(
@@ -165,7 +152,35 @@ export const fetchCampaignTags = async () => {
 
     return data?.tags ? (data.tags as CampaignTag[]) : [];
   } catch (e) {
-    console.log('Failed to get tags', e);
     return [];
+  }
+};
+
+export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`
+    );
+    const data: UserEarning[] | null = await res.json();
+
+    return data || [];
+  } catch (e) {
+    console.log('Failed to get total earnings', e);
+    return [];
+  }
+};
+
+export const fetchTotalUserEarnings = async (ethAddress: `0x${string}`) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token_overview/${ethAddress}`
+    );
+    const data: { total: string; max: string; min: string } | null =
+      await res.json();
+
+    return data;
+  } catch (e) {
+    // console.log('Failed to get total earnings', e);
+    return null;
   }
 };
