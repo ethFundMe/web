@@ -39,11 +39,8 @@ export default function UpdateCampaignMediaForm({
     },
   });
 
-  const {
-    isLoading: isConfirmingTxn,
-    isPending: isPendingTxn,
-    isSuccess: isConfirmedTxn,
-  } = useWaitForTransactionReceipt({ hash });
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
   const {
     metadata: { description, title },
@@ -135,7 +132,7 @@ export default function UpdateCampaignMediaForm({
         </div>
 
         <DnDUploadSmall
-          disabled={isConfirmingTxn || isPending || isPendingTxn}
+          disabled={isConfirmingTxn || isPending}
           preview={preparedImages}
           maxFiles={6 - preparedImages.length}
           handleUpload={handleUpload}

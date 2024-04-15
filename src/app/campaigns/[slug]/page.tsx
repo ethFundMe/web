@@ -49,13 +49,13 @@ export async function generateMetadata(
           images: [
             {
               url: seoCampaign(
-                user.fullName,
+                campaign.user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.metadata.title,
                 campaign.metadata.description,
                 campaign.metadata.banner_url,
                 campaign.user.profileUrl,
-                user.isVerified
+                campaign.user.isVerified
               ),
             },
           ],
