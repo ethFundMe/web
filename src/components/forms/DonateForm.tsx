@@ -4,13 +4,14 @@
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
+import { socket } from '@/lib/socketConfig';
+import { Comment } from '@/lib/types';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { io } from 'socket.io-client';
 import { formatEther, parseEther } from 'viem';
 import {
   useAccount,
@@ -54,6 +55,9 @@ export default function DonateForm({
   const { user } = userStore();
   const router = useRouter();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  // const [commentRes, setCommentRes] = useState<Comment | null>(null);
+  const [amt, setAmt] = useState(parseEther('0'));
 
   const {
     data: hash,
@@ -86,14 +90,11 @@ export default function DonateForm({
     const fiatToETH = parseEther(
       parseFloat((usdInput / (ethPriceInUSD ?? 0)).toString()).toFixed(4)
     );
-    // console.log(
-    //   parseFloat((amount / (ethPriceInUSD as number)).toString()).toFixed(4)
-    // );
 
     const donationAmt = fiatMode
       ? fiatToETH
       : parseEther(amount.toString() || '0');
-    // console.log({ campaignID, campId, commentId, donationAmt });
+    setAmt(donationAmt);
 
     if (!user || !address) {
       if (closeBtnRef.current && openConnectModal) {
@@ -103,48 +104,84 @@ export default function DonateForm({
     }
     const prettyComment = comment?.trim();
 
-    if (prettyComment && user) {
-      const socket = io(process.env.NEXT_PUBLIC_WEB_URL);
-
-      socket.emit('sendComment', {
-        commentID: prettyComment,
-        userID: user.id,
-        campaignID,
+    if (isConnected && prettyComment && user) {
+      socket.emit('add:comment', {
+        data: {
+          userID: user?.id,
+          campaignID: campaign.id,
+          comment: prettyComment,
+        },
       });
-
-      return;
     } else {
-      // alert('hi');
+      writeContract({
+        abi: EthFundMe,
+        address: ethFundMeContractAddress,
+        functionName: 'fundCampaign',
+        args: [BigInt(campaignID), -1],
+        value: donationAmt,
+        chainId: ethChainId,
+      });
     }
-    // if (prettyComment && user) {
-    //   handlePushComment({
-    //     campaignID: campaign.id,
-    //     comment: prettyComment,
-    //     userID: user.id,
-    //   }).then((res) => {
-    //     writeContract({
-    //       abi: EthFundMe,
-    //       address: ethFundMeContractAddress,
-    //       functionName: 'fundCampaign',
-    //       args: [campaignID, res.commentID],
-    //       value: donationAmt,
-    //       chainId: ethChainId,
-    //     });
-    //   });
-
-    //   return;
-    // }
-
-    writeContract({
-      abi: EthFundMe,
-      address: ethFundMeContractAddress,
-      functionName: 'fundCampaign',
-      args: [BigInt(campaignID), -1],
-      value: donationAmt,
-      chainId: ethChainId,
-    });
-    return;
   };
+
+  const writeContractRef = useRef(writeContract);
+
+  const handleWriteComment = useCallback(
+    (commentId: number) => {
+      writeContractRef.current({
+        abi: EthFundMe,
+        address: ethFundMeContractAddress,
+        functionName: 'fundCampaign',
+        args: [campaign.campaign_id, commentId],
+        value: amt,
+        chainId: ethChainId,
+      });
+    },
+    [amt, campaign.campaign_id]
+  );
+
+  useEffect(() => {
+    socket.connect();
+
+    function onConnect() {
+      setIsConnected(true);
+      socket.emit('comment:join', joinData, onJoin);
+    }
+
+    function onComment(response: { data: Comment; totalComments: number }) {
+      if (!response.data) return;
+      handleWriteComment(response.data.commentID);
+    }
+
+    function onDisonnect() {
+      setIsConnected(false);
+    }
+
+    const joinData = {
+      data: {
+        campaignID: campaign.id,
+        userID: user?.id,
+        limit: 24,
+      },
+    };
+
+    const onJoin = (response: { data: Comment[]; totalComments: number }) => {
+      console.log('Joined room', response);
+    };
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisonnect);
+    socket.on('comment:join', onJoin);
+    socket.on('campaign:comment', onComment);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisonnect);
+      socket.off('comment:join', onJoin);
+      socket.on('campaign:comment', onComment);
+      socket.disconnect();
+    };
+  }, [user?.id, campaign.campaign_id, handleWriteComment, campaign.id, amt]);
 
   useEffect(() => {
     if (isConfirmedTxn) {
@@ -288,7 +325,9 @@ export default function DonateForm({
       {customClose ?? (
         <Button
           size='lg'
-          disabled={isLoadingTxn || isConfirmingTxn || isPending}
+          disabled={
+            isLoadingTxn || isConfirmingTxn || isPending || !isConnected
+          }
           className='w-full disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-opacity-90'
         >
           {isLoadingTxn ? 'Donating...' : 'Donate'}

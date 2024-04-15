@@ -1,9 +1,55 @@
+'use client';
+
+import { userStore } from '@/store';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { Container } from './Container';
 import { Button } from './ui/button';
 
 export const HomepageHeader = () => {
+  const { user } = userStore();
+  const time = new Date().getHours();
+  const [greeting, setGreeting] = useState('');
+  const getGreeting = (time: number) => {
+    if (time >= 0 && time < 12) {
+      return setGreeting('Good Morning,');
+    }
+    if (time >= 12 && time < 16) {
+      return setGreeting('Good Afternoon,');
+    }
+    return setGreeting('Good Evening,');
+  };
+
+  const splitName = (name: string) => {
+    const splittedName = name.split(' ');
+    return splittedName[0];
+  };
+
+  const getGreeterHeader = (fullName: string) => {
+    const name = splitName(fullName);
+    const greetArr = [
+      `Welcome, ${name}`,
+      `Hello 👋 ${name}`,
+      `${greeting} ${name}!`,
+    ];
+    const randomNum = Math.round(Math.random() * 10);
+
+    if (randomNum >= 0 && randomNum < 4) {
+      return greetArr[0];
+    }
+    if (randomNum >= 4 && randomNum < 7) {
+      return greetArr[1];
+    }
+    if (randomNum >= 7 && randomNum < 10) {
+      return greetArr[2];
+    }
+  };
+
+  useEffect(() => {
+    getGreeting(time);
+  }, [time]);
+
   return (
     <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
       <div className='absolute top-0 -z-10 h-full w-full'>
@@ -18,9 +64,15 @@ export const HomepageHeader = () => {
       <Container className='flex h-[calc(100dvh-4rem)] max-h-[910px]  items-center justify-center'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
           <div className='space-y-4 md:space-y-5'>
-            <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
-              Welcome to EthFundMe!
-            </h1>
+            {!user ? (
+              <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
+                Welcome to EthFundMe!
+              </h1>
+            ) : (
+              <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
+                {getGreeterHeader(user.fullName)}
+              </h1>
+            )}
 
             <p className='mx-auto max-w-xs text-center text-lg text-white/80 sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
               Support projects and causes you care about with the power of

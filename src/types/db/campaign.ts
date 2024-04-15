@@ -1,3 +1,4 @@
+import { CampaignTags } from '@/lib/types';
 import { Generated, Insertable, Selectable, Updateable } from 'kysely';
 
 export interface FundingsTable {
@@ -16,20 +17,28 @@ export interface CampaignsTable {
   beneficiary: `0x${string}`;
   creator: `0x${string}`;
   date_created: number;
-  description: string;
   flagged: boolean;
   goal: number;
   discontinued: boolean;
-  banner_url: string;
-  media_links: Array<string>;
-  title: string;
   total_accrued: number;
-  youtube_link: string | null;
-  uri: string;
+  metadata: {
+    id: string;
+    title: string;
+    description: string;
+    banner_url: string;
+    youtube_link: string | null;
+    media_links: Array<string>;
+    tag: CampaignTag;
+  };
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
   fundings: Array<FundingsTable>;
   user: UserTable;
+}
+
+export interface CampaignTag {
+  id: number;
+  name: CampaignTags;
 }
 
 export interface UserTable {

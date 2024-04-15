@@ -18,6 +18,7 @@ export type CampaignType = {
   title: 'Yourself' | 'Others';
   description: string;
   link: string;
+  ctaBtnText: string;
 };
 
 export type Campaign = {

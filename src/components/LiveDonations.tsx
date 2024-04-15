@@ -124,7 +124,7 @@ export default function LiveDonations() {
 
       <ul
         ref={ref}
-        className='relative mx-auto h-[210px] max-w-md overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[210px] max-w-sm overflow-hidden overflow-y-hidden text-primary-default'
       >
         <AnimatePresence initial={false}>
           {dts.map((i) => (
@@ -145,16 +145,18 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='flex items-center gap-2 border-b border-slate-600 py-3 transition-all duration-150 ease-in hover:opacity-60'
+                className='flex items-center gap-2 border-b border-slate-600 py-3 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
                 <span>
                   <FaEthereum size={20} />
                 </span>
                 <span>
-                  {formatWalletAddress(i.address as `0x${string}`)} donated{' '}
+                  {formatWalletAddress(i.address as `0x${string}`)}{' '}
+                  <span className='hidden md:inline'>donated</span>{' '}
+                  <span className='inline md:hidden'> — </span>{' '}
                   {format(i.amount)}ETH
                 </span>
-                <span className='ml-auto text-sm'>{i.time}</span>
+                <span className='ml-auto text-xs md:text-sm'>{i.time}</span>
               </Link>
             </motion.li>
           ))}

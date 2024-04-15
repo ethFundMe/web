@@ -1,5 +1,6 @@
 'use client';
 
+import { fetchCampaignTags } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
@@ -10,6 +11,7 @@ import {
   uploadToCloudinary,
 } from '@/lib/utils';
 import { userStore } from '@/store';
+import { CampaignTag } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
@@ -59,6 +61,7 @@ export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const { address } = useAccount();
   const router = useRouter();
+  const [tags, setTags] = useState<CampaignTag[]>([]);
 
   const { user } = userStore();
 
@@ -119,8 +122,15 @@ export default function CreateCampaignForm() {
   >(null);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const { description, goal, title, banner, beneficiaryAddress, ytLink } =
-      data;
+    const {
+      description,
+      goal,
+      title,
+      banner,
+      beneficiaryAddress,
+      tag,
+      ytLink,
+    } = data;
     if (isPending || isConfirmingTxn) return;
 
     if (!isAddress(String(beneficiaryAddress))) {
@@ -188,12 +198,15 @@ export default function CreateCampaignForm() {
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
 
+          const filterTag = tags.filter((_) => _.name === tag)[0];
+          const preparedTag = filterTag || { id: 9, name: CampaignTags.Others };
+
           const handleIPFSPush = async function () {
             try {
               const res = await fetch(
                 `${
                   process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-                }/api/campaign/ipfs`,
+                }/api/campaign/metadata`,
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -205,6 +218,7 @@ export default function CreateCampaignForm() {
                     youtubeLink: ytLink,
                     bannerUrl: uploaded[0],
                     mediaLinks: uploaded.filter((_, id) => id !== 0),
+                    tag: preparedTag,
                   }),
                 }
               );
@@ -221,7 +235,7 @@ export default function CreateCampaignForm() {
                 address: ethFundMeContractAddress,
                 functionName: 'addCampaign',
                 args: [
-                  res.uri,
+                  res.id,
                   parseEther(String(goal)),
                   beneficiaryAddress as `0x${string}`,
                 ],
@@ -248,7 +262,10 @@ export default function CreateCampaignForm() {
           // });
         }
       })
-      .catch((e) => toast.error(e));
+      .catch((e) => {
+        setSubmitStatus(null);
+        toast.error(e);
+      });
   };
 
   useEffect(() => {
@@ -267,6 +284,13 @@ export default function CreateCampaignForm() {
       return;
     }
   }, [error, form, isConfirmedTxn, isError, router]);
+
+  useEffect(() => {
+    fetchCampaignTags().then((res) => {
+      setTags(res);
+      console.log({ res });
+    });
+  }, []);
 
   function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,

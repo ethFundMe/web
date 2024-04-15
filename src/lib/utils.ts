@@ -10,8 +10,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatWalletAddress(address: `0x${string}`) {
-  const shortAddress = address.slice(0, 7) + '...' + address.slice(-5);
+export function formatWalletAddress(
+  address: `0x${string}`,
+  type: 'short' | 'long' = 'long'
+) {
+  const shortAddress =
+    type === 'long'
+      ? address.slice(0, 7) + '...' + address.slice(-5)
+      : address.slice(0, 9);
   return shortAddress;
 }
 

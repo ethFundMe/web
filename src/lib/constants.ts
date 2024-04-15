@@ -110,6 +110,7 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Share your dreams, challenges, aspirations and hurdles with personal campaigns and rally community support for your journey.',
     link: '/campaigns/create?campaign-type=personal',
+    ctaBtnText: 'Launch My Campaign',
   },
   {
     image: '/images/Creative team-pana.svg',
@@ -117,6 +118,7 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Support others on their journey with campaigns for friends, family, or strangers facing challenges,  directly impacting the lives of others.',
     link: '/campaigns/create?campaign-type=others',
+    ctaBtnText: 'Start Support Campaign',
   },
 ];
 

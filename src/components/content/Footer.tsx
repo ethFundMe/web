@@ -8,13 +8,19 @@ import { Button, Input, Textarea } from '../inputs';
 export const Footer = () => {
   return (
     <footer className='relative bg-primary-dark text-white'>
-      <Image
+      {/* <Image
         className='absolute bottom-0 left-1/2 z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
         src='/images/logo-outline.png'
         width={1200}
         height={1200}
         alt='logo'
-      />
+      /> */}
+      <div id='space'>
+        <div className='stars'></div>
+        <div className='stars'></div>
+        <div className='stars'></div>
+        <div className='stars'></div>
+      </div>
       <Container className='relative z-10 py-16 text-sm'>
         <div className='relative space-y-8'>
           <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>

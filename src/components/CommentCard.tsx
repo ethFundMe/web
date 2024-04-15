@@ -1,3 +1,5 @@
+'use client';
+
 import { Comment } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
@@ -5,11 +7,13 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { forwardRef } from 'react';
 import { FaEthereum } from 'react-icons/fa';
+import { IoTrash } from 'react-icons/io5';
 import { formatEther } from 'viem';
 import ImageWithFallback from './ImageWithFallback';
 
 type Props = React.ComponentProps<'div'> & {
   comment: Comment;
+  handleDelete: ((userID: string) => void) | null;
 };
 
 type Ref = HTMLDivElement;
@@ -17,9 +21,11 @@ type Ref = HTMLDivElement;
 export const CommentCard = forwardRef<Ref, Props>(
   (
     {
+      handleDelete,
       comment: {
         comment,
         amount,
+        commentID,
         user: { profileUrl, fullname },
         createdAt,
       },
@@ -40,47 +46,62 @@ export const CommentCard = forwardRef<Ref, Props>(
         ref={ref}
         animate={{ x: [-12, 0] }}
         className={cn(
-          'rounded-lg border-2 border-transparent p-2 text-sm',
+          'flex items-start justify-between gap-2 rounded-lg border-2 border-transparent p-2 text-sm',
           donatedAmt ? 'animated-border  bg-slate-50' : ' border-slate-50'
         )}
       >
-        <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
-          <div className='flex items-center gap-2'>
-            <div className='relative h-8 w-8 flex-shrink-0'>
-              <ImageWithFallback
-                className='block flex-shrink-0 rounded-full object-cover'
-                src={profileUrl || ''}
-                fallback='/images/user-pfp.png'
-                fill
-                sizes='50px'
-                alt='user-pfp'
-              />
+        <div>
+          <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
+            <div className='flex items-center gap-2'>
+              <div className='relative h-8 w-8 flex-shrink-0'>
+                <ImageWithFallback
+                  className='block flex-shrink-0 rounded-full object-cover'
+                  src={profileUrl || ''}
+                  fallback='/images/user-pfp.png'
+                  fill
+                  sizes='50px'
+                  alt='user-pfp'
+                />
+              </div>
+
+              <div>
+                <p>{fullname}</p>
+                <small>
+                  {dayjs(createdAt)
+                    .subtract(2, 'minute')
+                    .format('DD MMM, YYYY . HH : mm a')}
+                </small>
+              </div>
             </div>
 
-            <div>
-              <p>{fullname}</p>
-              <small>
-                {dayjs(createdAt)
-                  .subtract(2, 'minute')
-                  .format('DD MMM, YYYY . HH : mm a')}
-              </small>
-            </div>
+            {donatedAmt && (
+              <Link
+                href='/'
+                target='_blank'
+                className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
+              >
+                <FaEthereum />
+                {/* <span>{formatEther(BigInt(amt))}</span> */}
+
+                <span>{donatedAmt}</span>
+              </Link>
+            )}
           </div>
-
-          {donatedAmt && (
-            <Link
-              href='/'
-              target='_blank'
-              className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
-            >
-              <FaEthereum />
-              {/* <span>{formatEther(BigInt(amt))}</span> */}
-
-              <span>{donatedAmt}</span>
-            </Link>
-          )}
+          <p>{comment}</p>
         </div>
-        <p className=''>{comment}</p>
+
+        {handleDelete && (
+          <button
+            className='p-1 px-2'
+            onClick={() => {
+              if (window.confirm('Sure to delete?')) {
+                handleDelete(String(commentID));
+              }
+            }}
+          >
+            <IoTrash className='text-red-500' />
+          </button>
+        )}
       </motion.div>
     );
   }
