@@ -319,7 +319,7 @@ export function DnDUploadSmall({
 
     if (preview.length > 1) {
       return preview.map((item) => (
-        <li className='h-64 w-full overflow-hidden lg:h-40' key={item}>
+        <li className='h-40 w-full overflow-hidden lg:h-24' key={item}>
           <ImagePreview
             disabled={disabled}
             deletable={deletable}
@@ -330,7 +330,7 @@ export function DnDUploadSmall({
       ));
     } else {
       return (
-        <li className='h-64 w-full'>
+        <li className='h-40 w-full'>
           <ImagePreview
             disabled={disabled}
             deletable={deletable}
@@ -351,7 +351,7 @@ export function DnDUploadSmall({
   const gridViewStyles =
     previewToShow && previewToShow.length === 1
       ? 'lg:grid-cols-1 mx-auto'
-      : 'md:grid-cols-3 lg:grid-cols-2 grid-cols-1 sm:grid-cols-2';
+      : 'md:grid-cols-3 grid-cols-1 lg:grid-col-2';
 
   useEffect(() => {
     if (dndAcceptedFiles && dndAcceptedFiles.length > 0) {
