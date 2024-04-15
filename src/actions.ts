@@ -159,7 +159,12 @@ export const fetchCampaignTags = async () => {
 export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`,
+      {
+        headers: {
+          Accept: '*/*',
+        },
+      }
     );
     const data: UserEarning[] | null = await res.json();
 
