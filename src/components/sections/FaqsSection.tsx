@@ -49,6 +49,6 @@ const FaqTab = ({
     >
       {question}
     </AccordionTrigger>
-    <AccordionContent>{answer}</AccordionContent>
+    <AccordionContent className='text-base'>{answer}</AccordionContent>
   </AccordionItem>
 );

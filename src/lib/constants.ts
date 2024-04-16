@@ -126,7 +126,7 @@ export const FAQS = [
   {
     question: '❓ What is EthFundMe',
     answer:
-      'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives., families, and communities in need. It is a simple click to change lives',
+      'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives, families, and communities in need. It is a simple click to change lives',
   },
   {
     question: '🏋️ How does EthFundMe work?',
