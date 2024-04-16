@@ -1,9 +1,7 @@
 import { Container } from '@/components/Container';
 import { DashboardSidebar } from '@/components/DashboardSidebar';
 import Navbar from '@/components/Navbar';
-import { redirect } from 'next/navigation';
 import React from 'react';
-import { isAddress } from 'viem';
 
 export default async function DashboardLayout({
   params: { slug },
@@ -12,16 +10,6 @@ export default async function DashboardLayout({
   children: React.ReactNode;
   params: { slug: string };
 }) {
-  // fetch user with address
-  const getUser = async () => {
-    // just check if slug matches regex for wallet address
-    return isAddress(slug);
-  };
-
-  const user = await getUser();
-
-  if (!user) redirect('/');
-
   return (
     <div className='min-h-[calc(100dvh-269px)]'>
       <Navbar />

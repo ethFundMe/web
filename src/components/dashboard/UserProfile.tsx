@@ -79,9 +79,6 @@ export const UserProfile = ({
       });
   };
 
-  // if (address === user.ethAddress)
-  //   return router.push(`/dashboard/${user.ethAddress}`);
-
   return (
     <div className='mb-20 w-full'>
       <div className='flex-1 rounded-md'>
