@@ -21,16 +21,16 @@ export const ValidatorCountdown = () => {
               <motion.p
                 key={value}
                 animate={{
-                  y: [-10, 0],
+                  // y: [-10, 0],
                   // opacity: [0, 1],
-                  scale: [0.6, 1],
+                  scale: [0.9, 1],
                   transition: {
                     type: 'spring',
                     damping: 30,
                   },
                 }}
-                exit={{ opacity: 0, y: -100 }}
-                className='origin-bottom-right text-4xl text-primary-default sm:text-5xl'
+                // exit={{ opacity: 0, y: -100 }}
+                className='text-4xl text-primary-default sm:text-5xl'
               >
                 {String(value).padStart(2, '0')}
               </motion.p>

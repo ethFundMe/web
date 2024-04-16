@@ -268,7 +268,6 @@ export default function CreateCampaignForm() {
   useEffect(() => {
     fetchCampaignTags().then((res) => {
       setTags(res);
-      console.log({ res });
     });
   }, []);
 

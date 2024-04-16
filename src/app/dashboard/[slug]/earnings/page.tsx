@@ -1,9 +1,11 @@
 import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
+import { Earnings } from '@/components/Earnings';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import dayjs from 'dayjs';
-import { History } from 'lucide-react';
+import { BellPlus, Coins, History } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
@@ -19,15 +21,8 @@ export default async function EarningsPage({
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
 
-  // const earningBadge: Record<EarningVariant, React.ReactNode> = {
-  //   claim: <Badge className='bg-red-500'>Claim</Badge>,
-  //   earn: <Badge className='bg-green-600'>Earn</Badge>,
-  // };
-
   return (
     <div className='mt-4 flex w-full p-4'>
-      <div className='hidden'>{slug}</div>
-
       <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
@@ -37,9 +32,7 @@ export default async function EarningsPage({
             <p>Tokens earned from all activities</p>
 
             <div className='flex flex-wrap items-center justify-between'>
-              <p className='my-4 text-3xl font-bold text-primary-dark'>
-                {totalEarnings?.total || 0} FUNDME
-              </p>
+              <Earnings user={slug} />
 
               <Button
                 disabled={
@@ -82,48 +75,71 @@ export default async function EarningsPage({
           </div>
         </div>
 
-        <aside className='top-24 w-full min-w-max lg:sticky lg:max-w-72'>
-          <h2 className='text-xl font-bold text-primary-default'>History</h2>
+        <aside className='top-24 w-full lg:sticky lg:max-w-72'>
+          <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-primary-default p-4 lg:min-h-[90%]'>
+            <div className='flex items-center gap-2 text-white'>
+              <History size={40} className='stroke-1' />
+              <h2 className='text-xl font-bold'>History</h2>
+            </div>
 
-          <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-neutral-100 p-4 lg:min-h-[90%] lg:p-6'>
-            <History size={50} className='stroke-1 text-slate-500' />
+            <ScrollArea className='h-96'>
+              {earnings.length > 0 ? (
+                <ul className='mt-4 space-y-4'>
+                  {earnings.map((earning, idx) => (
+                    <li key={idx}>
+                      <Link
+                        href={'/'}
+                        className='block rounded-md bg-white/20 p-2.5 text-white'
+                      >
+                        <div className=''>
+                          {/* {earningBadge[earning.type]} */}
 
-            {earnings.length > 0 ? (
-              <ul className='mt-8 space-y-4'>
-                {earnings.map((earning, idx) => (
-                  <li key={idx}>
-                    <Link href={'/'}>
-                      <div className='space-y-1.5 text-neutral-700 lg:space-y-2.5'>
-                        {/* {earningBadge[earning.type]} */}
+                          <div className='space-y-1.5 lg:space-y-2.5'>
+                            <div className='flex items-end justify-between gap-2'>
+                              <p className='text-xl font-semibold'>
+                                {/* {earning.rewardType === 'campaign_creation'
+                                ? '-'
+                              : '+'}{' '} */}
+                                {earning.amount} Fundme
+                              </p>
 
-                        <div>
-                          <p className='text-xl font-semibold leading-4'>
-                            {earning.rewardType === 'campaign_creation'
-                              ? '-'
-                              : '+'}{' '}
-                            {earning.amount} Fundme
-                          </p>
+                              <p className='text-sm'>
+                                {earning.rewardType === 'campaign_creation' && (
+                                  <span className='flex items-center gap-1'>
+                                    <BellPlus size={16} />
 
-                          <p>{earning.rewardType}</p>
+                                    <span>Create campaign</span>
+                                  </span>
+                                )}
+                                {earning.rewardType === 'campaign_funding' && (
+                                  <span className='flex items-center gap-1'>
+                                    <Coins size={16} />
 
-                          <p className='capitalize'>{earning.rewardType}</p>
+                                    <span>Fund campaign</span>
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+
+                            <p className='capitalize'>{earning.rewardType}</p>
+                          </div>
+
+                          <small>
+                            {dayjs(earning.created_at)
+                              .subtract(2, 'minute')
+                              .format('DD MMM, YYYY . HH : mm a')}
+                          </small>
                         </div>
-
-                        <small>
-                          {dayjs(earning.created_at)
-                            .subtract(2, 'minute')
-                            .format('Do MMM, YYYY . HH : mm a')}
-                        </small>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className='mt-4 text-slate-500'>
-                Keep creating and funding more campaigns to earn tokens
-              </p>
-            )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className='mt-4 rounded-md bg-white/20 p-2 text-white'>
+                  Keep creating and funding more campaigns to earn tokens
+                </p>
+              )}
+            </ScrollArea>
           </div>
         </aside>
       </div>
