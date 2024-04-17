@@ -119,9 +119,12 @@ export default async function CampaignPage({
       <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
         <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
           <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
-            <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-              {campaign.metadata.title}
-            </h2>
+            <div>
+              <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
+                {campaign.metadata.title}
+              </h2>
+              <p className='text-slate-500'>{campaign.metadata.tag.name}</p>
+            </div>
 
             <SwiperCarousel images={media_links} />
 

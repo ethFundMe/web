@@ -230,3 +230,46 @@ export const handleIPFSPush = async function ({
     throw new Error();
   }
 };
+
+export const handleIPFSUpdate = async function ({
+  title,
+  bannerUrl,
+  youtubeLink,
+  mediaLinks,
+  description,
+  tag,
+  metaId,
+}: {
+  bannerUrl: string;
+  description: string;
+  title: string;
+  youtubeLink: string | undefined;
+  mediaLinks: string[];
+  tag: CampaignTag;
+  metaId: string;
+}) {
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
+      }/api/campaign/metadata/${metaId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify({
+          title,
+          description,
+          youtubeLink,
+          bannerUrl,
+          mediaLinks,
+          tag,
+        }),
+      }
+    );
+    return res.json();
+  } catch (e) {
+    throw new Error();
+  }
+};

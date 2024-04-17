@@ -22,9 +22,8 @@ export const campaignStore = create<CampaignStoreType>()(
         set({ campaigns, totalCampaigns });
       },
       filteredCampaigns: [],
-      updateCampaigns: (campaigns) => set(() => ({ campaigns })),
-      filterCampaigns: (filteredCampaigns) =>
-        set(() => ({ filteredCampaigns })),
+      updateCampaigns: (campaigns) => set({ campaigns }),
+      filterCampaigns: (filteredCampaigns) => set({ filteredCampaigns }),
     }),
     { name: 'campaignsStore' }
   )

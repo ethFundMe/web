@@ -21,6 +21,7 @@ export interface CampaignsTable {
   goal: number;
   discontinued: boolean;
   total_accrued: number;
+  transaction_hash: `0x${string}`;
   metadata: {
     id: string;
     title: string;
@@ -59,24 +60,16 @@ export interface UserTable {
 export interface UserEarning {
   id: string;
   creator: {
-    id: string;
     ethAddress: `0x${string}`;
+    id: string;
     fullName: string;
-    email: string;
-    bio: string;
-    role: string;
-    isBanned: boolean;
-    isVerified: boolean;
-    creatorFee: number;
-    profileUrl?: string;
-    bannerUrl?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    profileUrl: string;
   };
   amount: string;
-  rewardType: 'campaign_creation';
+  rewardType: 'campaign_creation' | 'campaign_funding';
   auto: boolean;
-  created_at: Date;
+  transaction_hash: `0x${string}`;
+  created_at: string;
 }
 
 export type Campaign = Selectable<CampaignsTable>;

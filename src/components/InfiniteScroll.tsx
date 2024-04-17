@@ -38,10 +38,10 @@ export default function InfiniteScroll({
   const { campaigns, updateCampaigns, filterCampaigns, filteredCampaigns } =
     campaignStore();
 
-  useEffect(
-    () => filterCampaigns(initialCampaigns),
-    [initialCampaigns, filterCampaigns]
-  );
+  useEffect(() => {
+    updateCampaigns(initialCampaigns);
+    filterCampaigns(initialCampaigns);
+  }, [filterCampaigns, initialCampaigns, updateCampaigns]);
 
   const loadMoreCampaigns = useCallback(
     async function () {
@@ -118,7 +118,6 @@ export default function InfiniteScroll({
           </Button>
         </form>
 
-        {/* <div className='hidden flex-1 md:block'></div> */}
         <Select onValueChange={handleTagChange} value={filterValues.tag}>
           <SelectTrigger className='w-full sm:basis-96'>
             <SelectValue
@@ -137,10 +136,9 @@ export default function InfiniteScroll({
 
         <Button
           onClick={() => {
-            filterCampaigns(campaigns);
+            filterCampaigns(initialCampaigns);
             setFilterValues({ tag: undefined, searchTerm: '' });
-            console.log({ filterValues });
-
+            // fetchCampaigns();
             setCampaignsFiltered(false);
           }}
           // disabled={!campaignsFiltered}
@@ -164,9 +162,9 @@ export default function InfiniteScroll({
           {!campaignsFiltered && campaigns.length !== totalCampaigns ? (
             <div
               ref={ref}
-              className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
+              className='mx-auto mt-8 h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
             ></div>
-          ) : campaignsFiltered && !filteredCampaigns.length ? (
+          ) : campaignsFiltered && filteredCampaigns.length === 0 ? (
             <div className='flex flex-col items-center gap-4 pt-8'>
               <Image
                 className='opacity-50'
@@ -180,7 +178,7 @@ export default function InfiniteScroll({
               </p>
             </div>
           ) : (
-            <p className='py-4 text-center text-slate-500'>
+            <p className='mt-4 py-4 text-center text-slate-500'>
               - End of campaigns -
             </p>
           )}

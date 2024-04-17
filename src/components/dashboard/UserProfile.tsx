@@ -122,6 +122,16 @@ export const UserProfile = ({
                 </span>
               </div>
             )}
+
+            {user.isBanned && (
+              <div
+                className={cn(
+                  'flex h-full w-full items-center justify-center border-2 border-red-700 bg-red-400/90 text-white'
+                )}
+              >
+                <p className='text-3xl font-bold'>User is banned</p>
+              </div>
+            )}
           </div>
 
           <Container className='flex flex-col gap-4 py-4 lg:py-8'>
@@ -253,7 +263,12 @@ export const UserProfile = ({
               )}
             </div>
 
-            <div className='flex w-full justify-between'>
+            <div
+              className={cn(
+                'flex w-full justify-between',
+                user.isBanned && 'text-red-400'
+              )}
+            >
               <div>
                 <div className='flex items-center gap-1'>
                   <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
