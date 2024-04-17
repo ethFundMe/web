@@ -1,8 +1,8 @@
 import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
+import { ClaimTokenBtn } from '@/components/ClaimTokenBtn';
 import { Earnings } from '@/components/Earnings';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import dayjs from 'dayjs';
 import { BellPlus, Coins, History } from 'lucide-react';
@@ -19,8 +19,6 @@ export default async function EarningsPage({
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
 
-  console.log({ earnings });
-
   return (
     <div className='mt-4 flex w-full p-4'>
       <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
@@ -34,14 +32,12 @@ export default async function EarningsPage({
             <div className='flex flex-wrap items-center justify-between'>
               <Earnings user={slug} />
 
-              <Button
+              <ClaimTokenBtn
+                userAddress={slug}
                 disabled={
                   totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
                 }
-                className='lg:text-md w-full max-w-44 text-base font-bold'
-              >
-                Claim Tokens
-              </Button>
+              />
             </div>
           </div>
 
