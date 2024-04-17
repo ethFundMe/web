@@ -254,13 +254,11 @@ export default function CreateCampaignForm() {
       setSubmitStatus(null);
       form.reset();
       router.push('/campaigns');
-
       return;
     }
     if (isError && error) {
       toast.error((error as BaseError).shortMessage || error.message);
       setSubmitStatus(null);
-
       return;
     }
   }, [error, form, isConfirmedTxn, isError, router]);
