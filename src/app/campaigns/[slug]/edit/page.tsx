@@ -25,7 +25,7 @@ export default async function EditCampaign({
           <div>
             <UpdateCampaignMediaForm campaign={campaign} />
           </div>
-          <div className='col-span-2 w-full'>
+          <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
             <EditCampaignForm campaign={campaign} />
           </div>
         </div>

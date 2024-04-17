@@ -1,16 +1,17 @@
 'use client';
 
+import { fetchCampaignTags, handleIPFSUpdate } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
-import { Campaign } from '@/types';
+import { Campaign, CampaignTag } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
@@ -49,6 +50,8 @@ import {
 } from './ui/tooltip';
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
+  const [tags, setTags] = useState<CampaignTag[]>([]);
+  const [isUploadingMetadata, setIsUploadingMetadata] = useState(false);
   const { address } = useAccount();
   const router = useRouter();
   const { user } = userStore();
@@ -100,26 +103,52 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('description') !== campaign.metadata.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.metadata.banner_url;
+    form.watch('banner') !== campaign.metadata.banner_url ||
+    form.watch('tag') !== campaign.metadata.tag.name;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    const { goal, beneficiaryAddress } = data;
+    const { goal, beneficiaryAddress, tag, title, description } = data;
     const { campaign_id } = campaign;
 
     // Handle push data to backend
 
-    return writeContract({
-      abi: EthFundMe,
-      address: ethFundMeContractAddress,
-      functionName: 'updateCampaign',
-      chainId: ethChainId,
-      args: [
-        BigInt(campaign_id),
-        parseEther(goal.toString()),
-        beneficiaryAddress as `0x${string}`,
-      ],
-    });
+    const filterTag = tags.filter((_) => _.name === tag)[0];
+    const preparedTag = filterTag || { id: 9, name: CampaignTags.Others };
+
+    setIsUploadingMetadata(true);
+    handleIPFSUpdate({
+      metaId: campaign.metadata.id,
+      title,
+      description,
+      bannerUrl: campaign.metadata.banner_url,
+      youtubeLink: campaign.metadata.youtube_link || undefined,
+      mediaLinks: campaign.metadata.media_links,
+      tag: preparedTag,
+    })
+      .then(() => {
+        writeContract({
+          abi: EthFundMe,
+          address: ethFundMeContractAddress,
+          functionName: 'updateCampaign',
+          chainId: ethChainId,
+          args: [
+            BigInt(campaign_id),
+            parseEther(goal.toString()),
+            beneficiaryAddress as `0x${string}`,
+          ],
+        });
+        setIsUploadingMetadata(false);
+      })
+      .catch(() => {
+        setIsUploadingMetadata(false);
+      });
   };
+
+  useEffect(() => {
+    fetchCampaignTags().then((res) => {
+      setTags(res);
+    });
+  }, []);
 
   useEffect(() => {
     if (isError && error) {
@@ -210,10 +239,10 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                     <SelectValue placeholder='Choose a campaign tag' />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(CampaignTags).map(([key, value]) => (
-                      <>
-                        <SelectItem value={key}>{value}</SelectItem>
-                      </>
+                    {tags.map((_, idx) => (
+                      <SelectItem key={idx} value={_.name}>
+                        {_.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -323,7 +352,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
           disabled={!editMade || isConfirmingTxn || isPending}
         >
-          {isPending || isConfirmingTxn ? 'Loading...' : 'Update campaign'}
+          {isPending || isConfirmingTxn || isUploadingMetadata
+            ? 'Loading...'
+            : 'Update campaign'}
         </Button>
       </form>
     </Form>

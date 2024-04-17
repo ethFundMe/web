@@ -10,8 +10,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
 
-// type EarningVariant = 'claim' | 'earn';
-
 export default async function EarningsPage({
   params: { slug },
 }: {
@@ -20,6 +18,8 @@ export default async function EarningsPage({
   if (!isAddress(slug)) notFound();
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
+
+  console.log({ earnings });
 
   return (
     <div className='mt-4 flex w-full p-4'>

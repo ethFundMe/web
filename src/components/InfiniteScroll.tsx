@@ -162,7 +162,7 @@ export default function InfiniteScroll({
           {!campaignsFiltered && campaigns.length !== totalCampaigns ? (
             <div
               ref={ref}
-              className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
+              className='mx-auto mt-8 h-10 w-10 animate-spin rounded-full border-2 border-primary-dark border-t-transparent p-4'
             ></div>
           ) : campaignsFiltered && filteredCampaigns.length === 0 ? (
             <div className='flex flex-col items-center gap-4 pt-8'>
