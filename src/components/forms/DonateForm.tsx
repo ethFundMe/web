@@ -186,9 +186,9 @@ export default function DonateForm({
   useEffect(() => {
     if (isConfirmedTxn) {
       toast.success('Successfully funded campaign');
-      if (!closeBtnRef.current) return;
-      closeBtnRef.current.click();
-      // return router.push(`/campaigns/${campaign.campaign_id}`);
+
+      closeBtnRef.current?.click();
+      // router.push(`/campaigns/${campaign.campaign_id}`);
       return router.refresh();
     }
   }, [campaign.campaign_id, isConfirmedTxn, router]);

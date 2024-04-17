@@ -97,7 +97,10 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
         </h2>
 
         <div
-          className='h-[500px] overflow-y-auto scroll-smooth pr-4'
+          className={cn(
+            'h-[500px] overflow-y-auto scroll-smooth pr-4',
+            comments.length < 4 && 'h-32'
+          )}
           ref={scrollContainerRef}
         >
           <div className='space-y-2'>

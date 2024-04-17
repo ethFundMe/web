@@ -124,7 +124,7 @@ export default function LiveDonations() {
 
       <ul
         ref={ref}
-        className='relative mx-auto h-[210px] max-w-sm overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[210px] max-w-md overflow-hidden overflow-y-hidden text-primary-default'
       >
         <AnimatePresence initial={false}>
           {dts.map((i) => (
