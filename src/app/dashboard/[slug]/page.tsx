@@ -2,6 +2,7 @@ import { getCampaigns, getUser } from '@/actions';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
 import { notFound } from 'next/navigation';
+import { isAddress } from 'viem';
 
 export default async function UserProfilePage({
   params: { slug },
@@ -10,9 +11,11 @@ export default async function UserProfilePage({
 }) {
   if (!REGEX_CODES.walletAddress.test(slug)) return notFound();
 
+  if (!isAddress(slug)) notFound();
+
   const user = await getUser(slug as `0x${string}`);
 
-  if (!user) return;
+  if (!user) notFound();
 
   const { campaigns } = await getCampaigns(1, user.ethAddress);
 

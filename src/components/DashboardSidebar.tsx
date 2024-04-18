@@ -5,7 +5,6 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useRouter } from 'next/navigation';
-import { isAddress } from 'viem';
 import DashboardMobileSidebar from './DashboardMobileSidebar';
 import { NavLink } from './NavLink';
 
@@ -17,12 +16,7 @@ export const DashboardSidebar = ({
   const { user } = userStore();
   const { push } = useRouter();
 
-  if (!user || !isAddress(userAddress)) {
-    push('/');
-    return;
-  }
-
-  if (userAddress !== user.ethAddress) {
+  if (userAddress !== user?.ethAddress) {
     push(`/profile/${userAddress}`);
     return;
   }
