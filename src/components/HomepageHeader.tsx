@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { userStore } from '@/store';
@@ -50,16 +51,41 @@ export const HomepageHeader = () => {
     getGreeting(time);
   }, [time]);
 
+  const images = [
+    '/videos/header-video.mp4',
+    'https://res.cloudinary.com/efm/image/upload/v1712748751/homepage/h1.jpg',
+    'https://res.cloudinary.com/efm/image/upload/v1712748749/homepage/h2.jpg',
+    'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h3.jpg',
+    'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h4.jpg',
+    'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h5.jpg',
+  ];
+
+  const currentDate = new Date();
+  const imageIndex = currentDate.getDate() % images.length;
+  const [currentImage, setCurrentImage] = useState(images[imageIndex]);
+  useEffect(() => {
+    setCurrentImage(images[imageIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageIndex]);
+
   return (
     <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
       <div className='absolute top-0 -z-10 h-full w-full'>
-        <video
-          src='/videos/header-video.mp4'
-          muted
-          loop
-          autoPlay
-          className='absolute h-full w-full bg-slate-900 object-cover'
-        />
+        {imageIndex === 0 ? (
+          <video
+            src='/videos/header-video.mp4'
+            muted
+            loop
+            autoPlay
+            className='absolute h-full w-full bg-slate-900 object-cover'
+          />
+        ) : (
+          <img
+            src={currentImage}
+            alt='bg-image'
+            className='absolute h-full w-full bg-slate-900 object-cover'
+          />
+        )}
       </div>
       <Container className='flex h-[calc(100dvh-4rem)] max-h-[910px]  items-center justify-center'>
         <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
