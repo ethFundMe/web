@@ -9,7 +9,6 @@ import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
 
 export const ClaimTokenBtn = ({
-  userAddress,
   disabled,
   ...rest
 }: { userAddress: Address } & React.ComponentProps<'button'>) => {
@@ -54,7 +53,7 @@ export const ClaimTokenBtn = ({
     }
   }, [isConfirmedTxn, isError, writingError]);
 
-  const isDisabled = disabled || isPending || isConfirmingTxn;
+  const isDisabled = disabled || isConfirmingTxn;
 
   return (
     <Button

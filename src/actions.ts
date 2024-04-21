@@ -273,3 +273,25 @@ export const handleIPFSUpdate = async function ({
     throw new Error();
   }
 };
+
+export async function fetchActiveStats() {
+  try {
+    const res = await fetch(
+      `${process.env.ETH_FUND_ENDPOINT}/api/home/statistics`
+    );
+    const data: {
+      activeCampaigns: number;
+      ethFunded: bigint;
+      fundedCampaigns: number;
+    } = await res.json();
+
+    if (!res.ok) throw new Error('Failed to get homepage stats');
+
+    return data;
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+    }
+    return null;
+  }
+}

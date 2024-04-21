@@ -91,7 +91,7 @@ export default async function EarningsPage({
                           {/* {earningBadge[earning.type]} */}
 
                           <div className='space-y-1.5 lg:space-y-2.5'>
-                            <div className='flex items-end justify-between gap-2'>
+                            <div>
                               <p className='text-xl font-semibold'>
                                 {/* {earning.rewardType === 'campaign_creation'
                                 ? '-'
@@ -116,8 +116,6 @@ export default async function EarningsPage({
                                 )}
                               </p>
                             </div>
-
-                            <p className='capitalize'>{earning.rewardType}</p>
                           </div>
 
                           <small>

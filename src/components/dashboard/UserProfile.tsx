@@ -300,42 +300,51 @@ export const UserProfile = ({
             </div>
           </Container>
 
-          <Container
-            className={cn(
-              'mt-8 space-y-6',
-              address === user.ethAddress && 'grid'
-            )}
-          >
-            <div className='space-y-6 lg:col-span-9'>
-              <h2 className='text-xl font-bold'>Campaigns</h2>
-              {campaigns.length ? (
-                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                  {campaigns.map((_) => (
-                    <UserCampaignCard
-                      campaign={_}
-                      variant={
-                        user.ethAddress && user.ethAddress === address
-                          ? 'user'
-                          : 'viewer'
-                      }
-                      key={_.id}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className='grid min-h-[10rem]  w-full place-content-center'>
-                  <p className={'mb-4 text-center text-xl text-gray-400'}>
-                    No campaigns started yet
-                  </p>
-                </div>
+          {!user.isBanned ? (
+            <div className='container flex items-center justify-center'>
+              ⛔ This user is banned
+            </div>
+          ) : (
+            <Container
+              className={cn(
+                'mt-8 space-y-6',
+                address === user.ethAddress && 'grid'
               )}
-            </div>
-            <div
-              className={cn(user.ethAddress !== address && 'hidden', 'hidden')}
             >
-              <EarningsCard />
-            </div>
-          </Container>
+              <div className='space-y-6 lg:col-span-9'>
+                <h2 className='text-xl font-bold'>Campaigns</h2>
+                {campaigns.length ? (
+                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                    {campaigns.map((_) => (
+                      <UserCampaignCard
+                        campaign={_}
+                        variant={
+                          user.ethAddress && user.ethAddress === address
+                            ? 'user'
+                            : 'viewer'
+                        }
+                        key={_.id}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className='grid min-h-[10rem]  w-full place-content-center'>
+                    <p className={'mb-4 text-center text-xl text-gray-400'}>
+                      No campaigns started yet
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div
+                className={cn(
+                  user.ethAddress !== address && 'hidden',
+                  'hidden'
+                )}
+              >
+                <EarningsCard />
+              </div>
+            </Container>
+          )}
         </div>
       </div>
     </div>
