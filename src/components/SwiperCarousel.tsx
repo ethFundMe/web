@@ -20,7 +20,7 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
         spaceBetween={50}
         loop
         slidesPerView={1}
-        navigation
+        navigation={images.length <= 1 ? false : true}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
         // onSwiper={(swiper) => console.log(swiper)}
