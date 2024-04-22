@@ -6,7 +6,10 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import ImageWithFallback from './ImageWithFallback';
+
+dayjs.extend(advancedFormat);
 
 export const CampaignCard = ({
   campaign,
@@ -83,13 +86,21 @@ export const CampaignCard = ({
           </div>
         </div>
 
-        <div>
+        <div className='flex flex-wrap justify-between md:gap-2'>
           <p className={TextSizeStyles.small}>
             Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {dayjs(campaign.created_at).format('DD MMM, YYYY')}
+              {dayjs(campaign.created_at).format('Do MMM, YYYY')}
             </span>
           </p>
+          {campaign.creator !== campaign.beneficiary && (
+            <p className={cn(TextSizeStyles.small, 'text-primary-default')}>
+              Organized for{' '}
+              <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
+                {formatWalletAddress(campaign.beneficiary, 'short')}
+              </span>
+            </p>
+          )}
         </div>
       </div>
 

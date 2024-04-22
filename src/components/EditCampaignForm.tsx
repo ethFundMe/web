@@ -134,7 +134,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           args: [
             BigInt(campaign_id),
             parseEther(goal.toString()),
-            beneficiaryAddress as `0x${string}`,
+            form.watch('type') === 'personal'
+              ? campaign.creator
+              : (beneficiaryAddress as `0x${string}`),
           ],
         });
         setIsUploadingMetadata(false);
@@ -252,68 +254,69 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='tag'
         />
-        {form.watch('type') === 'others' && (
-          <>
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Beneficiary address</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='beneficiaryAddress'
-            />
+        {form.watch('type') === 'others' &&
+          campaign.beneficiary !== campaign.creator && (
+            <>
+              <FormField
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Beneficiary address</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                name='beneficiaryAddress'
+              />
 
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    <>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (%)</span>
-                            <AiOutlineExclamationCircle />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>
-                              Visit your{' '}
-                              <Link
-                                className='italic text-primary-default'
-                                href={`/dashboard/${address}/update-profile`}
-                              >
-                                dashboard
-                              </Link>{' '}
-                              if you wish to change your creator fee
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </>
-                  </FormLabel>
+              <FormField
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger className='flex items-center gap-2 pb-2'>
+                              <span>Creator fees (%)</span>
+                              <AiOutlineExclamationCircle />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Visit your{' '}
+                                <Link
+                                  className='italic text-primary-default'
+                                  href={`/dashboard/${address}/update-profile`}
+                                >
+                                  dashboard
+                                </Link>{' '}
+                                if you wish to change your creator fee
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </>
+                    </FormLabel>
 
-                  <FormControl>
-                    <Input
-                      type='number'
-                      step={0.00001}
-                      disabled
-                      value={user?.creatorFee}
-                      // value={0.02}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='creatorFee'
-            />
-          </>
-        )}
+                    <FormControl>
+                      <Input
+                        type='number'
+                        step={0.00001}
+                        disabled
+                        value={user?.creatorFee}
+                        // value={0.02}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                name='creatorFee'
+              />
+            </>
+          )}
         <FormField
           name='description'
           control={form.control}

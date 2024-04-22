@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 export const ValidatorCountdown = () => {
   const [days, hours, minutes, seconds] = useCountdown(
-    new Date('2024-04-20T11:25:06.296Z')
+    new Date('2024-09-20T11:25:06.296Z')
   );
 
   const Obj = { days, hours, minutes, seconds };
@@ -21,15 +21,12 @@ export const ValidatorCountdown = () => {
               <motion.p
                 key={value}
                 animate={{
-                  // y: [-10, 0],
-                  // opacity: [0, 1],
                   scale: [0.9, 1],
                   transition: {
                     type: 'spring',
                     damping: 30,
                   },
                 }}
-                // exit={{ opacity: 0, y: -100 }}
                 className='text-4xl text-primary-default sm:text-5xl'
               >
                 {String(value).padStart(2, '0')}

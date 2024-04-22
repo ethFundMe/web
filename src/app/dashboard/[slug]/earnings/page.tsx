@@ -1,14 +1,15 @@
 import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
-import { Earnings } from '@/components/Earnings';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { BellPlus, Coins, History } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
+
+dayjs.extend(advancedFormat);
 
 export default async function EarningsPage({
   params: { slug },
@@ -18,8 +19,6 @@ export default async function EarningsPage({
   if (!isAddress(slug)) notFound();
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
-
-  console.log({ earnings });
 
   return (
     <div className='mt-4 flex w-full p-4'>
@@ -32,16 +31,16 @@ export default async function EarningsPage({
             <p>Tokens earned from all activities</p>
 
             <div className='flex flex-wrap items-center justify-between'>
-              <Earnings user={slug} />
+              <p className='my-4 text-3xl font-bold text-primary-dark'>
+                {totalEarnings && totalEarnings.total} FUNDME
+              </p>
 
-              <Button
+              {/* <ClaimTokenBtn
+                userAddress={slug}
                 disabled={
                   totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
                 }
-                className='lg:text-md w-full max-w-44 text-base font-bold'
-              >
-                Claim Tokens
-              </Button>
+              /> */}
             </div>
           </div>
 
@@ -79,7 +78,7 @@ export default async function EarningsPage({
           <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-primary-default p-4 lg:min-h-[90%]'>
             <div className='flex items-center gap-2 text-white'>
               <History size={40} className='stroke-1' />
-              <h2 className='text-xl font-bold'>History</h2>
+              <h2 className='pb-4 text-xl font-bold'>History</h2>
             </div>
 
             <ScrollArea className='h-96'>
@@ -95,7 +94,7 @@ export default async function EarningsPage({
                           {/* {earningBadge[earning.type]} */}
 
                           <div className='space-y-1.5 lg:space-y-2.5'>
-                            <div className='flex items-end justify-between gap-2'>
+                            <div>
                               <p className='text-xl font-semibold'>
                                 {/* {earning.rewardType === 'campaign_creation'
                                 ? '-'
@@ -120,14 +119,12 @@ export default async function EarningsPage({
                                 )}
                               </p>
                             </div>
-
-                            <p className='capitalize'>{earning.rewardType}</p>
                           </div>
 
                           <small>
                             {dayjs(earning.created_at)
                               .subtract(2, 'minute')
-                              .format('DD MMM, YYYY . HH : mm a')}
+                              .format('Do MMM, YYYY . HH : mm a')}
                           </small>
                         </div>
                       </Link>
