@@ -5,10 +5,13 @@ import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { BellPlus, Coins, History } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
+
+dayjs.extend(advancedFormat);
 
 export default async function EarningsPage({
   params: { slug },
@@ -75,7 +78,7 @@ export default async function EarningsPage({
           <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-primary-default p-4 lg:min-h-[90%]'>
             <div className='flex items-center gap-2 text-white'>
               <History size={40} className='stroke-1' />
-              <h2 className='text-xl font-bold'>History</h2>
+              <h2 className='pb-4 text-xl font-bold'>History</h2>
             </div>
 
             <ScrollArea className='h-96'>
@@ -121,7 +124,7 @@ export default async function EarningsPage({
                           <small>
                             {dayjs(earning.created_at)
                               .subtract(2, 'minute')
-                              .format('DD MMM, YYYY . HH : mm a')}
+                              .format('Do MMM, YYYY . HH : mm a')}
                           </small>
                         </div>
                       </Link>

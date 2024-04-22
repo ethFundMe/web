@@ -123,7 +123,9 @@ export default async function CampaignPage({
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
                 {campaign.metadata.title}
               </h2>
-              <p className='text-slate-500'>{campaign.metadata.tag.name}</p>
+              <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                {campaign.metadata.tag.name}
+              </small>
             </div>
 
             <SwiperCarousel images={media_links} />
@@ -143,33 +145,53 @@ export default async function CampaignPage({
                   />
                 </div>
               </div>
-              <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
-                <Link
-                  href={`/profile/${campaign.creator}`}
-                  className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
-                >
-                  <div className='relative h-[50px] w-[50px] flex-shrink-0'>
-                    <ImageWithFallback
-                      src={user.profileUrl ?? ''}
-                      fallback='/images/user-pfp.png'
-                      className='block rounded-full bg-slate-50 object-cover'
-                      fill
-                      alt='...'
-                    />
-                  </div>
+              <div className='flex flex-col-reverse justify-between gap-2 text-sm sm:flex-row sm:items-center sm:text-base md:gap-4'>
+                <div className='flex items-center gap-2'>
+                  <Link
+                    href={`/profile/${campaign.creator}`}
+                    className='flex flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200'
+                  >
+                    <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                      <ImageWithFallback
+                        src={user.profileUrl ?? ''}
+                        fallback='/images/user-pfp.png'
+                        className='block rounded-full bg-slate-50 object-cover'
+                        fill
+                        alt='...'
+                      />
+                    </div>
 
-                  <div className='pr-2'>
-                    <p className={TextSizeStyles.caption}>Organizer</p>
-                    <p className='font-semibold'>
-                      {user?.fullName ??
-                        formatWalletAddress(campaign.creator as `0x${string}`)}
-                    </p>
-                  </div>
-                </Link>
+                    <div className='pr-2'>
+                      <>
+                        <p className={TextSizeStyles.caption}>Organizer</p>
+                        <p className='font-semibold'>
+                          {user?.fullName ??
+                            formatWalletAddress(
+                              campaign.creator as `0x${string}`
+                            )}
+                        </p>
+                      </>
+                    </div>
+                  </Link>
+
+                  {campaign.creator !== campaign.beneficiary && (
+                    <div>
+                      <div className='pr-2'>
+                        <p className={TextSizeStyles.caption}>Organized for</p>
+                        <p className='font-semibold'>
+                          {formatWalletAddress(
+                            campaign.beneficiary as `0x${string}`
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div>
                   <p className={TextSizeStyles.caption}>Organized On</p>
                   <p className='font-semibold'>
-                    {dayjs(campaign.created_at).format('DD MMM, YYYY')}
+                    {dayjs(campaign.created_at).format('Do MMM, YYYY')}
                   </p>
                 </div>
               </div>

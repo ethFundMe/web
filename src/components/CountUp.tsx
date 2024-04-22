@@ -16,8 +16,6 @@ export default function CountUp({
 
   const isDecimal = /[.]/.test(String(end));
 
-  // useEffect(() => {}, [inView, end, isDecimal, duration]);
-
   return (
     <InView
       as='span'

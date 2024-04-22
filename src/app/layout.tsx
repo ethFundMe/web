@@ -5,9 +5,13 @@ import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
 import { WagmiWrapper } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import type { Metadata } from 'next';
 import React from 'react';
 import './globals.css';
+
+dayjs.extend(advancedFormat);
 
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },

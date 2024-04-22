@@ -268,7 +268,11 @@ export const handleIPFSUpdate = async function ({
         }),
       }
     );
-    return res.json();
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+    return data;
   } catch (e) {
     throw new Error();
   }

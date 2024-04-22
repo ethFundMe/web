@@ -76,7 +76,6 @@ export default function VerificationForm() {
       </pre>,
       { position: 'top-right' }
     );
-    console.log({ data });
   };
 
   return (

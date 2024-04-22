@@ -1,8 +1,20 @@
 'use client';
 
+import { handleIPFSUpdate } from '@/actions';
+import {
+  createUrl,
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from '@/lib/utils';
 import { Campaign } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ImagePlus, Trash } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaMinusCircle } from 'react-icons/fa';
+import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -11,69 +23,139 @@ export default function UpdateCampaignMediaForm({
 }: {
   campaign: Campaign;
 }) {
-  // const preparedImages = campaign.metadata.media_links
-  //   .filter((_, idx) => idx !== 0)
-  //   .filter((image) => !REGEX_CODES.ytLink.test(image));
+  const { refresh } = useRouter();
 
-  // const {
-  //   metadata: { description, title },
-  //   goal,
-  //   campaign_id,
-  //   beneficiary: beneficiaryAddress,
-  // } = campaign;
+  const [updating, setUpdating] = useState(false);
 
-  // const { refresh } = useRouter();
+  const [bannerPreview, setBannerPreview] = useState(
+    campaign.metadata.banner_url
+  );
+  const [otherPreview, setOtherPreview] = useState(
+    campaign.metadata.media_links
+  );
 
-  // const handleDelete = (url: string) => {
-  //   console.log({ url });
+  const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
+  const [preparedOtherImages, setPreparedOtherImages] =
+    useState<FileList | null>(null);
 
-  //   const newMediaLinks = campaign.metadata.media_links.filter(
-  //     (src) => src !== url
-  //   );
+  const [uploadedBannerUrl, setUploadedBannerUrl] = useState<string | null>(
+    null
+  );
+  const [uploadedOtherImages, setUploadedOtherImages] = useState<string[]>([]);
 
-  //   return handleWriteContract(newMediaLinks);
-  // };
+  const isPreview = (url: string) => {
+    return /\b(blob)\b/.test(url);
+  };
 
-  // const handleUpload = (res: string[]) => {
-  //   const lastItem =
-  //     campaign.metadata.media_links[campaign.metadata.media_links.length - 1];
-  //   const ytLink = REGEX_CODES.ytLink.test(lastItem);
+  function handleUpdateMedia() {
+    setUpdating(true);
+    handleCloudinaryUpload()
+      .then(() => {
+        handleIPFSUpdate({
+          bannerUrl: uploadedBannerUrl || campaign.metadata.banner_url,
+          title: campaign.metadata.title,
+          tag: campaign.metadata.tag,
+          youtubeLink: campaign.metadata.youtube_link || undefined,
+          description: campaign.metadata.description,
+          metaId: campaign.metadata.id,
+          mediaLinks:
+            uploadedOtherImages.length > 0
+              ? [...campaign.metadata.media_links, ...uploadedOtherImages]
+              : campaign.metadata.media_links,
+        })
+          .then(() => {
+            toast.success('Updated campaign media');
+            setUpdating(false);
+            // push(`/campaigns/${campaign.campaign_id}`);
+            refresh();
+          })
+          .catch(() => {
+            toast.error('Failed to upload campaign media');
+            setUpdating(false);
+          });
+      })
+      .catch(() => {
+        toast.error('Failed to update campaign media');
+        setUpdating(false);
+      });
+  }
 
-  //   const newMediaLinks = ytLink
-  //     ? [campaign.metadata.banner_url, ...preparedImages, ...res, lastItem]
-  //     : [campaign.metadata.banner_url, ...preparedImages, ...res];
+  async function uploadBanner() {
+    if (!preparedBanner) return [];
+    await deleteFromCloudinary(campaign.metadata.banner_url);
+    const bannerUploadUrl = await uploadToCloudinary(preparedBanner);
 
-  //   return handleWriteContract(newMediaLinks);
-  // };
+    return bannerUploadUrl;
+  }
 
-  // const handleBannerUpload = (url: string[]) => {
-  //   const newMediaLinks = campaign.metadata.media_links.map((item, idx) =>
-  //     idx === 0 ? url[0] : item
-  //   );
-  //   return handleWriteContract(newMediaLinks);
-  // };
+  async function uploadOtherImages() {
+    if (!preparedOtherImages) return [];
+    const otherImagesUrl = await uploadToCloudinary(preparedOtherImages);
 
-  // const uploadsRemaining = 6 - preparedImages.length;
+    return otherImagesUrl;
+  }
+
+  async function handleCloudinaryUpload() {
+    const bannerURL = await uploadBanner();
+    const otherImagesURL = await uploadOtherImages();
+
+    setUploadedBannerUrl(bannerURL[0]);
+    setUploadedOtherImages(otherImagesURL);
+
+    return { otherImagesURL, uploadedOtherImages };
+  }
 
   return (
-    <div className='space-y-4'>
-      <div className='mx-auto w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'>
+    <div className='w-full sm:max-w-2xl'>
+      <div className='w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
         <Image
+          className='mx-auto h-[300px] w-auto object-contain'
           width={400}
           height={400}
-          src={campaign.metadata.banner_url}
+          src={bannerPreview}
           alt='campaign-banner'
         />
-        <Input type='file' accept='image/*' />
+        <div className='relative'>
+          <Input
+            type='file'
+            onChange={(e) => {
+              if (!e.target.files) {
+                setPreparedBanner(null);
+                return;
+              }
+              setBannerPreview(createUrl(e.target.files[0]));
+              setPreparedBanner(e.target.files);
+            }}
+            accept='image/*'
+          />
+
+          {isPreview(bannerPreview) && (
+            <div className='pointer-events-none absolute bottom-0 top-0 w-full rounded-md border border-slate-300 bg-white p-1'>
+              <button
+                className='pointer-events-auto flex h-full w-full items-center justify-center gap-2 bg-neutral-100'
+                onClick={() => {
+                  setBannerPreview(campaign.metadata.banner_url);
+                  setPreparedBanner(null);
+                }}
+              >
+                <Trash size={16} />
+                Clear
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className='mx-auto w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'>
-        {campaign.metadata.media_links.length > 0 && (
+      <div className='mx-auto my-4 w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
+        <p className='text-sm text-slate-400'>
+          {6 - otherPreview.length} remaining
+        </p>
+        {otherPreview.length > 0 && (
           <>
             <ScrollArea className='max-h-40'>
               <div className='grid grid-cols-3 gap-2'>
                 <AnimatePresence>
-                  {campaign.metadata.media_links.map((item, idx) => (
+                  {otherPreview.map((item, idx) => (
                     <motion.div
                       animate={{
                         scale: ['0%', '100%'],
@@ -84,7 +166,7 @@ export default function UpdateCampaignMediaForm({
                       className='relative'
                     >
                       <Image
-                        className='h-16 w-full object-cover lg:h-20'
+                        className='h-20 w-full object-cover'
                         // src={createUrl(item as File)}
                         src={item}
                         width={300}
@@ -92,22 +174,33 @@ export default function UpdateCampaignMediaForm({
                         alt='image-preview'
                       />
 
-                      {/* <div
-                              title='Remove image'
-                              onClick={() => {
-                                setOtherImgsPrepared((prev) => {
-                                  return prev
-                                    ? prev.filter(
-                                        (item) =>
-                                          item !== otherImgsPrepared[idx]
-                                      )
-                                    : null;
-                                });
-                              }}
-                              className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
-                            >
-                              <FaMinusCircle color='tomato' />
-                            </div> */}
+                      <div
+                        title='Remove image'
+                        onClick={() => {
+                          console.log(isPreview(item));
+                          if (isPreview(item)) {
+                            setOtherPreview((prev) =>
+                              prev.filter((_) => _ !== item)
+                            );
+                          } else {
+                            if (window.confirm('Sure to delete?')) {
+                              deleteFromCloudinary(item)
+                                .then(() => {
+                                  toast.success('Deleted successfully');
+                                  setOtherPreview((prev) =>
+                                    prev.filter((_) => _ !== item)
+                                  );
+                                })
+                                .catch(() =>
+                                  toast.error('Failed to delete image')
+                                );
+                            }
+                          }
+                        }}
+                        className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                      >
+                        <FaMinusCircle color='tomato' />
+                      </div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -115,7 +208,75 @@ export default function UpdateCampaignMediaForm({
             </ScrollArea>
           </>
         )}
+
+        <div className='relative'>
+          <Input
+            type='file'
+            multiple
+            max={6 - otherPreview.length}
+            onChange={(e) => {
+              const images: FileList | null = e.target.files;
+
+              const getFiles = () => {
+                if (images) {
+                  return [...Array.from(images).map((_) => createUrl(_))].slice(
+                    0,
+                    6 - otherPreview.length
+                  );
+                } else {
+                  return [];
+                }
+              };
+
+              const files = getFiles();
+
+              setOtherPreview((prev) => {
+                if (prev && prev.length > 6 && files && files.length) {
+                  toast('Cannot upload more than 6 images');
+                  return prev;
+                }
+                if (files && prev) return [...prev, ...files];
+                if (files && !prev) return files;
+                return prev;
+              });
+
+              setPreparedOtherImages(images);
+            }}
+            accept='image/*'
+          />
+
+          {otherPreview.some((_) => isPreview(_)) && (
+            <div className='pointer-events-none absolute bottom-0 top-0 grid w-full grid-cols-2 gap-1 rounded-md border border-slate-300 bg-white p-1'>
+              <button
+                className='pointer-events-none flex items-center justify-center gap-2 bg-neutral-100'
+                // onClick={uploadOtherImages}
+              >
+                <ImagePlus size={16} /> Add image
+              </button>
+
+              <button
+                className='pointer-events-auto flex w-full items-center justify-center gap-2 bg-neutral-100'
+                onClick={() => setOtherPreview(campaign.metadata.media_links)}
+              >
+                <Trash size={16} />
+                Clear
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
+      <Button
+        disabled={
+          (bannerPreview === campaign.metadata.banner_url &&
+            otherPreview.length === campaign.metadata.media_links.length) ||
+          updating
+        }
+        className='w-full border border-slate-300 p-3'
+        onClick={handleUpdateMedia}
+      >
+        {updating ? 'Updating...' : 'Save media'}
+      </Button>
     </div>
   );
 }
