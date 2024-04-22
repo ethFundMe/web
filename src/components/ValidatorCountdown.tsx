@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 export const ValidatorCountdown = () => {
   const [days, hours, minutes, seconds] = useCountdown(
-    new Date('2024-04-20T11:25:06.296Z')
+    new Date('2024-09-20T11:25:06.296Z')
   );
 
   const Obj = { days, hours, minutes, seconds };

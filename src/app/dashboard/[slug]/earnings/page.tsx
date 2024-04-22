@@ -1,6 +1,4 @@
 import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
-import { ClaimTokenBtn } from '@/components/ClaimTokenBtn';
-import { Earnings } from '@/components/Earnings';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -33,14 +31,16 @@ export default async function EarningsPage({
             <p>Tokens earned from all activities</p>
 
             <div className='flex flex-wrap items-center justify-between'>
-              <Earnings user={slug} />
+              <p className='my-4 text-3xl font-bold text-primary-dark'>
+                {totalEarnings && totalEarnings.total} FUNDME
+              </p>
 
-              <ClaimTokenBtn
+              {/* <ClaimTokenBtn
                 userAddress={slug}
                 disabled={
                   totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
                 }
-              />
+              /> */}
             </div>
           </div>
 
