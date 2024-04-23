@@ -148,9 +148,9 @@ export function seoProfile(
   isVerified: boolean
 ) {
   const name = fullName.toUpperCase();
-  // const isVerified = true;
+  //isVerified = true;
   const isVerifX = 98;
-  const isVeriff = 251;
+  const isVeriff = 240;
   const nameY = '250';
   const profileY = '70';
   let nameX = '186';
@@ -251,5 +251,6 @@ export function seoProfile(
     }
   }
   const combinedMessage = link1 + link2 + link3 + link4;
+  //console.log(combinedMessage);
   return combinedMessage;
 }
