@@ -60,13 +60,27 @@ export const HomepageHeader = () => {
     'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h5.jpg',
   ];
 
-  const currentDate = new Date();
-  const imageIndex = currentDate.getDate() % images.length;
+  // const currentHour = new Date();
+  const currentHour = new Date().getHours();
+  const imageIndex = currentHour % images.length;
   const [currentImage, setCurrentImage] = useState(images[imageIndex]);
   useEffect(() => {
     setCurrentImage(images[imageIndex]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageIndex]);
+
+  // Update image every hour
+  useEffect(() => {
+    const interval = setInterval(
+      () => {
+        const newHour = new Date().getHours();
+        setCurrentImage(images[newHour % images.length]);
+      },
+      1000 * 60 * 60
+    ); // Change image every hour (1000ms * 60s * 60min)
+
+    return () => clearInterval(interval);
+  }, [images]);
 
   return (
     <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
