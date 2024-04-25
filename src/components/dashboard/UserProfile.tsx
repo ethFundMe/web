@@ -256,7 +256,9 @@ export const UserProfile = ({
 
                 {!user.isVerified && address === user.ethAddress && (
                   <Button>
-                    <Link href='/verify'>Get verified</Link>
+                    <Link href={`/dashboard/${user.ethAddress}/verify`}>
+                      Get verified
+                    </Link>
                   </Button>
                 )}
               </div>

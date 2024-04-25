@@ -29,7 +29,8 @@ export interface CampaignsTable {
     banner_url: string;
     youtube_link: string | null;
     media_links: Array<string>;
-    tag: CampaignTag;
+    tag: number;
+    tags: [CampaignTag];
   };
   created_at: Generated<Date>;
   updated_at: Generated<Date>;

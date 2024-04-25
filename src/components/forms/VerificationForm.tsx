@@ -3,6 +3,7 @@
 import { REGEX_CODES } from '@/lib/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
@@ -31,6 +32,7 @@ import {
 
 export default function VerificationForm() {
   const [selectedCountry, setSelectedCountry] = useState<string>('GH');
+  const { back } = useRouter();
 
   useEffect(() => {
     fetch('https://ipapi.co/json/')
@@ -70,12 +72,10 @@ export default function VerificationForm() {
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    toast(
-      <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>,
-      { position: 'top-right' }
-    );
+    toast.success('Saved', { position: 'top-right' });
+    console.log(data);
+    form.reset();
+    back();
   };
 
   return (

@@ -79,7 +79,12 @@ export const CampaignCard = ({
 
           <div>
             <p className={TextSizeStyles.small}>Organizer</p>
-            <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
+            <p
+              className={cn(
+                TextSizeStyles.caption,
+                'line-clamp-1 w-full font-semibold [word-break:break-all]'
+              )}
+            >
               {(user && user.fullName) ??
                 formatWalletAddress(campaign.creator as `0x${string}`)}
             </p>

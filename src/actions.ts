@@ -37,24 +37,35 @@ export async function urlPreview(url: string) {
   }
 }
 
-export const getCampaigns = async (
-  page?: number,
-  ethAddress?: `0x${string}`
-) => {
-  const url = ethAddress
-    ? `${
-        process.env.ETH_FUND_ENDPOINT
-      }/api/campaigns/?creator=${ethAddress}&page=${page ?? 1}`
-    : `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/?page=${page ?? 1}`;
+export type CampaignUrlParams = {
+  [key: string]: string | number | undefined;
+};
 
-  const res = await fetch(url, { cache: 'no-store' });
+export async function getCampaigns(urlParams: CampaignUrlParams) {
+  const page = urlParams?.page;
+  const ethAddress = urlParams?.ethAddress;
+  const tagId = urlParams?.tagId;
+
+  console.log({ tagId, page, ethAddress });
+
+  const baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
+
+  ethAddress
+    ? `${baseUrl}?creator=${ethAddress}&page=${page ?? 1}`
+    : tagId
+    ? `${baseUrl}?tag_id=${tagId}&page=${page ?? 1}`
+    : `${baseUrl}?page=${page ?? 1}`;
+
+  const res = await fetch(baseUrl, { cache: 'no-store' });
   const data = await res.json();
+
+  console.log({ baseUrl, data });
 
   const campaigns: Campaign[] = data.campaigns || [];
   const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
-};
+}
 
 export const getCampaign = async (id: number) => {
   const res = await fetch(

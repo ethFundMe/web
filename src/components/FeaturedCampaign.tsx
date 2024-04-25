@@ -53,7 +53,7 @@ export default function FeaturedCampaign({
       >
         <div className='relative z-20 mx-auto flex max-w-2xl flex-col items-center text-center text-white'>
           <div className='mb-3 text-slate-300'>
-            <p className='font-semibold leading-[0]  md:text-lg md:leading-[1]'>
+            <p className='line-clamp-1 w-full max-w-xs text-center font-semibold leading-[1] [word-break:break-all] sm:max-w-sm md:text-lg'>
               {user.fullName}
             </p>
             <span className='text-xs leading-[0] md:text-sm'>presents</span>
