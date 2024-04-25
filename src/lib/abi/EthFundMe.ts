@@ -26,6 +26,11 @@ export const EthFundMe = [
   },
   {
     inputs: [],
+    name: 'EthFundMe__DiminishFailed',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'EthFundMe__GoalExceedsNonVerifiedLimit',
     type: 'error',
   },
@@ -81,7 +86,7 @@ export const EthFundMe = [
           },
           {
             internalType: 'string',
-            name: 'ipfsHash',
+            name: 'sid',
             type: 'string',
           },
           {
@@ -124,12 +129,6 @@ export const EthFundMe = [
         internalType: 'struct EthFundMe.Campaign',
         name: 'campaign',
         type: 'tuple',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'isAutoToken',
-        type: 'bool',
       },
       {
         indexed: false,
@@ -191,7 +190,7 @@ export const EthFundMe = [
           },
           {
             internalType: 'string',
-            name: 'ipfsHash',
+            name: 'sid',
             type: 'string',
           },
           {
@@ -261,12 +260,6 @@ export const EthFundMe = [
       },
       {
         indexed: false,
-        internalType: 'bool',
-        name: 'isAutoToken',
-        type: 'bool',
-      },
-      {
-        indexed: false,
         internalType: 'uint256',
         name: 'reward',
         type: 'uint256',
@@ -287,7 +280,7 @@ export const EthFundMe = [
           },
           {
             internalType: 'string',
-            name: 'ipfsHash',
+            name: 'sid',
             type: 'string',
           },
           {
@@ -454,25 +447,6 @@ export const EthFundMe = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'claimer',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'TokensClaimed',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
         name: 'receiver',
         type: 'address',
       },
@@ -552,6 +526,19 @@ export const EthFundMe = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x2_3',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address[]',
         name: '_creators',
         type: 'address[]',
@@ -620,7 +607,7 @@ export const EthFundMe = [
     inputs: [
       {
         internalType: 'string',
-        name: '_ipfsHash',
+        name: '_sid',
         type: 'string',
       },
       {
@@ -635,13 +622,6 @@ export const EthFundMe = [
       },
     ],
     name: 'addCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'claim',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -682,19 +662,6 @@ export const EthFundMe = [
     name: 'fundCampaign',
     outputs: [],
     stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bool',
-        name: '_state',
-        type: 'bool',
-      },
-    ],
-    name: 'setAutoToken',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -741,19 +708,6 @@ export const EthFundMe = [
     inputs: [
       {
         internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'updateCreatorReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
         name: '_seconds',
         type: 'uint256',
       },
@@ -766,11 +720,6 @@ export const EthFundMe = [
   {
     stateMutability: 'payable',
     type: 'fallback',
-  },
-  {
-    inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
   },
   {
     inputs: [],
@@ -797,12 +746,12 @@ export const EthFundMe = [
   },
   {
     inputs: [],
-    name: 'AUTO_TOKEN',
+    name: 'BASE_REWARD',
     outputs: [
       {
-        internalType: 'bool',
+        internalType: 'uint256',
         name: '',
-        type: 'bool',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -867,38 +816,6 @@ export const EthFundMe = [
         internalType: 'bool',
         name: 'isVerified',
         type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'CREATOR_REWARD',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'creator',
-        type: 'address',
-      },
-    ],
-    name: 'creator_tokens',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokens',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -1018,7 +935,7 @@ export const EthFundMe = [
           },
           {
             internalType: 'string',
-            name: 'ipfsHash',
+            name: 'sid',
             type: 'string',
           },
           {
@@ -1060,25 +977,6 @@ export const EthFundMe = [
         internalType: 'struct EthFundMe.Campaign[]',
         name: 'campaigns',
         type: 'tuple[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
-      },
-    ],
-    name: 'goalReached',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: 'isGoalReached',
-        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -1127,7 +1025,7 @@ export const EthFundMe = [
       },
       {
         internalType: 'string',
-        name: 'ipfsHash',
+        name: 'sid',
         type: 'string',
       },
       {
