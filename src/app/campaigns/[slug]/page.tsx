@@ -96,7 +96,7 @@ export default async function CampaignPage({
   const campaign = await getCampaign(parseInt(slug));
   // console.log(campaign);
 
-  const campaignsData = await getCampaigns();
+  const campaignsData = await getCampaigns({});
   const { campaigns } = campaignsData;
   if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
