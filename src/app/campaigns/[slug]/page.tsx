@@ -38,22 +38,22 @@ export async function generateMetadata(
 
   return user
     ? {
-        title: `${campaign.metadata.title}`,
-        description: `${campaign.metadata.description}`,
+        title: `${campaign.title}`,
+        description: `${campaign.description}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
         openGraph: {
           type: 'website',
-          title: `${campaign.metadata.title}`,
-          description: `${campaign.metadata.description}`,
+          title: `${campaign.title}`,
+          description: `${campaign.description}`,
           images: [
             {
               url: seoCampaign(
                 campaign.user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
-                campaign.metadata.title,
-                campaign.metadata.description,
-                campaign.metadata.banner_url,
+                campaign.title,
+                campaign.description,
+                campaign.banner_url,
                 campaign.user.profileUrl,
                 campaign.user.isVerified
               ),
@@ -62,17 +62,17 @@ export async function generateMetadata(
           url: 'https://ethfund.me',
         },
         twitter: {
-          title: `${campaign.metadata.title}`,
+          title: `${campaign.title}`,
           card: 'summary_large_image',
-          description: `${campaign.metadata.description}`,
+          description: `${campaign.description}`,
           images: [
             {
               url: seoCampaign(
                 user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
-                campaign.metadata.title,
-                campaign.metadata.description,
-                campaign.metadata.banner_url,
+                campaign.title,
+                campaign.description,
+                campaign.banner_url,
                 campaign.user.profileUrl,
                 user.isVerified
               ),
@@ -107,13 +107,9 @@ export default async function CampaignPage({
     .filter((_) => _.campaign_id !== campaign.campaign_id)
     .slice(0, 3);
 
-  const media_links = campaign.metadata.youtube_link
-    ? [
-        campaign.metadata.banner_url,
-        ...campaign.metadata.media_links,
-        campaign.metadata.youtube_link,
-      ]
-    : [campaign.metadata.banner_url, ...campaign.metadata.media_links];
+  const media_links = campaign.youtube_link
+    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
+    : [campaign.banner_url, ...campaign.media_links];
   return (
     <>
       <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
@@ -121,10 +117,10 @@ export default async function CampaignPage({
           <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
             <div>
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-                {campaign.metadata.title}
+                {campaign.title}
               </h2>
               <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
-                {/* {campaign.metadata.tags[0].name} */}
+                {campaign.tag}
               </small>
             </div>
 
@@ -164,7 +160,12 @@ export default async function CampaignPage({
                     <div className='pr-2'>
                       <>
                         <p className={TextSizeStyles.caption}>Organizer</p>
-                        <p className='font-semibold'>
+                        <p
+                          className={cn(
+                            'font-semibold',
+                            'line-clamp-2 w-full max-w-[250px] font-semibold [word-break:break-all] sm:max-w-xs'
+                          )}
+                        >
                           {user?.fullName ??
                             formatWalletAddress(
                               campaign.creator as `0x${string}`
@@ -195,7 +196,7 @@ export default async function CampaignPage({
                   </p>
                 </div>
               </div>
-              <div className='space-y-4'>{campaign.metadata.description}</div>
+              <div className='space-y-4'>{campaign.description}</div>
               <DonateXShareButtons campaign={campaign} />
             </div>
           </div>

@@ -11,7 +11,7 @@
 //   if (!campaign) return notFound();
 
 //   return {
-//     title: campaign.metadata.title,
+//     title: campaign.title,
 //     openGraph: {
 //       images:
 //         campaign.media_links[0] ??

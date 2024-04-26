@@ -11,7 +11,6 @@ import {
   uploadToCloudinary,
 } from '@/lib/utils';
 import { userStore } from '@/store';
-import { CampaignTag } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
@@ -61,7 +60,7 @@ export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const { address } = useAccount();
   const router = useRouter();
-  const [tags, setTags] = useState<CampaignTag[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   const { user } = userStore();
 
@@ -199,8 +198,8 @@ export default function CreateCampaignForm() {
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
 
-          const filterTag = tags.filter((_) => _.name === tag)[0];
-          const preparedTag = filterTag || { id: 9, name: CampaignTags.Others };
+          const filterTag = tags.filter((_) => _ === tag)[0];
+          const preparedTag = filterTag || CampaignTags.Others;
 
           handleIPFSPush({
             title,
