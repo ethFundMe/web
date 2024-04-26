@@ -10,7 +10,7 @@ export default async function ActiveStatsSection() {
 
   // if (!stats) return;
 
-  console.log(stats);
+  // console.log(stats);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { campaignStore } from '@/store/campaignStore';
 import { Campaign } from '@/types';
 import { Search, X } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { CampaignCard } from './CampaignCard';
@@ -33,6 +34,8 @@ export default function InfiniteScroll({
     tag: number | undefined;
     searchTerm: string;
   }>({ tag: undefined, searchTerm: '' });
+
+  const router = useRouter();
 
   const { campaigns, updateCampaigns, filterCampaigns, filteredCampaigns } =
     campaignStore();
@@ -119,7 +122,7 @@ export default function InfiniteScroll({
         <Select
           onValueChange={(e) => {
             handleTagChange(parseInt(e));
-            loadMoreCampaigns();
+            router.push(`/campaigns?tagId=${e}`);
           }}
           value={String(filterValues.tag)}
         >
