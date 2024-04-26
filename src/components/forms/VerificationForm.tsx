@@ -1,15 +1,17 @@
 'use client';
 
+import { handleVerificationRequest } from '@/actions';
 import { REGEX_CODES } from '@/lib/constants';
+import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { toast } from 'sonner';
 import * as z from 'zod';
 import { Button } from '../ui/button';
 import {
@@ -31,8 +33,16 @@ import {
 } from '../ui/tooltip';
 
 export default function VerificationForm() {
+  const [submitting, setSubmitting] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>('GH');
-  const { back } = useRouter();
+  const { push } = useRouter();
+  const { user } = userStore();
+
+  useEffect(() => {
+    if (user?.isVerified) {
+      push(`/dashboard/${user.ethAddress}`);
+    }
+  }, [user, push]);
 
   useEffect(() => {
     fetch('https://ipapi.co/json/')
@@ -65,17 +75,42 @@ export default function VerificationForm() {
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
+      fullname: user?.fullName || '',
       agree: false,
       phoneNumber: '',
-      email: '',
+      email: user?.email || '',
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    toast.success('Saved', { position: 'top-right' });
-    console.log(data);
-    form.reset();
-    back();
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async ({
+    fullname,
+    agree,
+    email,
+    phoneNumber,
+  }) => {
+    setSubmitting(true);
+    try {
+      const res = await handleVerificationRequest({
+        fullName: fullname,
+        email,
+        phoneNumber,
+        agree,
+        userId: user?.id as string,
+      });
+      if (res.success) {
+        toast.success(res.message as string);
+        if (user) {
+          push(`/dashboard/${user.ethAddress}`);
+        }
+        setSubmitting(false);
+      } else {
+        toast.error(res.message as string);
+        setSubmitting(false);
+      }
+    } catch (e) {
+      setSubmitting(false);
+      console.log('Error', e);
+    }
   };
 
   return (
@@ -200,10 +235,10 @@ export default function VerificationForm() {
             )}
           />
           <Button
-            disabled={!form.watch('agree')}
+            disabled={!form.watch('agree') || submitting}
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
-            Submit
+            {submitting ? 'Loading...' : 'Submit'}
           </Button>
         </form>
       </Form>

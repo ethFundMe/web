@@ -94,7 +94,7 @@ export default async function CampaignPage({
   params: { slug: string };
 }) {
   const campaign = await getCampaign(parseInt(slug));
-  // console.log(campaign);
+  // console.log(campaign.metadata);
 
   const campaignsData = await getCampaigns({});
   const { campaigns } = campaignsData;
@@ -124,7 +124,7 @@ export default async function CampaignPage({
                 {campaign.metadata.title}
               </h2>
               <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
-                {campaign.metadata.tags[0].name}
+                {/* {campaign.metadata.tags[0].name} */}
               </small>
             </div>
 

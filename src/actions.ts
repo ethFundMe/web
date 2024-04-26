@@ -46,7 +46,7 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
   const ethAddress = urlParams?.ethAddress;
   const tagId = urlParams?.tagId;
 
-  console.log({ tagId, page, ethAddress });
+  // console.log({ tagId, page, ethAddress });
 
   const baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
 
@@ -59,7 +59,7 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
   const res = await fetch(baseUrl, { cache: 'no-store' });
   const data = await res.json();
 
-  console.log({ baseUrl, data });
+  // console.log({ baseUrl, data });
 
   const campaigns: Campaign[] = data.campaigns || [];
   const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
@@ -308,5 +308,40 @@ export async function fetchActiveStats() {
       console.log(e.message);
     }
     return null;
+  }
+}
+
+export async function handleVerificationRequest({
+  userId,
+  fullName,
+  email,
+  phoneNumber,
+  agree,
+}: {
+  userId: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  agree: boolean;
+}) {
+  const body = JSON.stringify({ userId, fullName, email, phoneNumber, agree });
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/verification`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body }
+    );
+    const data = await res.json();
+
+    if ((data?.error as string).includes('Pending request already exists'))
+      throw new Error('Already applied for verification');
+    if (data.error) throw new Error(data.error);
+
+    return { success: true, message: 'Successfully applied for verification' };
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e);
+      return { success: false, message: e.message };
+    }
+    return { success: false, message: e };
   }
 }
