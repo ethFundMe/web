@@ -96,7 +96,7 @@ export default async function CampaignPage({
   const campaign = await getCampaign(parseInt(slug));
   // console.log(campaign);
 
-  const campaignsData = await getCampaigns();
+  const campaignsData = await getCampaigns({});
   const { campaigns } = campaignsData;
   if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
@@ -124,7 +124,7 @@ export default async function CampaignPage({
                 {campaign.metadata.title}
               </h2>
               <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
-                {campaign.metadata.tag.name}
+                {campaign.metadata.tags[0].name}
               </small>
             </div>
 

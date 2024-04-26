@@ -20,7 +20,10 @@ export async function generateMetadata(
   const user = await getUser(id as `0x${string}`);
 
   if (!user) notFound();
-  const campaigns = await getCampaigns(1, user.ethAddress);
+  const campaigns = await getCampaigns({
+    page: 1,
+    ethAddress: user.ethAddress,
+  });
 
   const previousMetaData = await parent;
 
@@ -83,7 +86,10 @@ export default async function UserProfilePage({
 
   if (!user) return;
 
-  const { campaigns } = await getCampaigns(1, user.ethAddress);
+  const { campaigns } = await getCampaigns({
+    page: 1,
+    ethAddress: user.ethAddress,
+  });
 
   return (
     <div className='flex min-h-[calc(100dvh-269px)] flex-col'>

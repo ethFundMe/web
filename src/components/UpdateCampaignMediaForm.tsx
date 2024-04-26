@@ -54,7 +54,7 @@ export default function UpdateCampaignMediaForm({
         handleIPFSUpdate({
           bannerUrl: uploadedBannerUrl || campaign.metadata.banner_url,
           title: campaign.metadata.title,
-          tag: campaign.metadata.tag,
+          tag: campaign.metadata.tags[0],
           youtubeLink: campaign.metadata.youtube_link || undefined,
           description: campaign.metadata.description,
           metaId: campaign.metadata.id,

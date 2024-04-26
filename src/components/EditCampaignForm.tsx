@@ -91,7 +91,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       description: campaign.metadata.description,
       title: campaign.metadata.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
-      tag: campaign.metadata.tag.name,
+      tag: campaign.metadata.tags[0].name,
       ytLink: campaign.metadata.youtube_link ?? undefined,
     },
     mode: 'onChange',
@@ -103,8 +103,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('description') !== campaign.metadata.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.metadata.banner_url ||
-    form.watch('tag') !== campaign.metadata.tag.name;
+    form.watch('banner') !== campaign.metadata.banner_url;
+  // ||
+  // form.watch('tag') !== campaign.metadata.tags[0].id;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { goal, beneficiaryAddress, tag, title, description } = data;

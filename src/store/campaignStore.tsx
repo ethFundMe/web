@@ -18,7 +18,7 @@ export const campaignStore = create<CampaignStoreType>()(
       totalCampaigns: 0,
       campaigns: [],
       fetchCampaigns: async () => {
-        const { campaigns, totalCampaigns } = await getCampaigns();
+        const { campaigns, totalCampaigns } = await getCampaigns({});
         set({ campaigns, totalCampaigns });
       },
       filteredCampaigns: [],

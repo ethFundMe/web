@@ -1,7 +1,6 @@
 'use client';
 
 import { getCampaigns } from '@/actions';
-import { CampaignTags } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { campaignStore } from '@/store/campaignStore';
 import { Campaign } from '@/types';
@@ -31,7 +30,7 @@ export default function InfiniteScroll({
   const [page, setPage] = useState(1);
   const [ref, inView] = useInView({ rootMargin: '50px' });
   const [filterValues, setFilterValues] = useState<{
-    tag: CampaignTags | undefined;
+    tag: number | undefined;
     searchTerm: string;
   }>({ tag: undefined, searchTerm: '' });
 
@@ -47,14 +46,17 @@ export default function InfiniteScroll({
     async function () {
       const next = page + 1;
 
-      const { campaigns: c } = await getCampaigns(next);
+      const { campaigns: c } = await getCampaigns({
+        page: next,
+        tagId: filterValues.tag,
+      });
 
       if (c.length && !(campaigns.length === totalCampaigns)) {
         setPage(next);
         updateCampaigns([...campaigns, ...c]);
       }
     },
-    [page, campaigns, updateCampaigns, totalCampaigns]
+    [page, campaigns, updateCampaigns, filterValues.tag, totalCampaigns]
   );
 
   useEffect(() => {
@@ -62,12 +64,6 @@ export default function InfiniteScroll({
       loadMoreCampaigns();
     }
   }, [inView, loadMoreCampaigns]);
-
-  function filterByTag(tag: CampaignTags) {
-    filterCampaigns(campaigns.filter((camp) => camp.metadata.tag.name === tag));
-
-    setCampaignsFiltered(true);
-  }
 
   const filterBySearchTerm = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
@@ -82,9 +78,11 @@ export default function InfiniteScroll({
     setCampaignsFiltered(true);
   };
 
-  const handleTagChange = (tag: CampaignTags) => {
-    filterByTag(tag);
+  const handleTagChange = async (tag: number) => {
     setFilterValues((prev) => ({ ...prev, tag }));
+    const { campaigns: c } = await getCampaigns({ page: 1, tagId: tag });
+    setCampaignsFiltered(true);
+    filterCampaigns(c);
   };
 
   return (
@@ -118,7 +116,13 @@ export default function InfiniteScroll({
           </Button>
         </form>
 
-        <Select onValueChange={handleTagChange} value={filterValues.tag}>
+        <Select
+          onValueChange={(e) => {
+            handleTagChange(parseInt(e));
+            loadMoreCampaigns();
+          }}
+          value={String(filterValues.tag)}
+        >
           <SelectTrigger className='w-full sm:basis-96'>
             <SelectValue
               defaultValue={filterValues.tag}
@@ -126,9 +130,54 @@ export default function InfiniteScroll({
             />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(CampaignTags).map(([key, value]) => (
-              <SelectItem value={value} key={key}>
-                {value}
+            {[
+              {
+                id: 1,
+                name: 'Arts and Culture',
+              },
+              {
+                id: 2,
+                name: 'Business and Entrepreneurship',
+              },
+              {
+                id: 3,
+                name: 'Community and Social Impact',
+              },
+              {
+                id: 4,
+                name: 'Education and Learning',
+              },
+              {
+                id: 5,
+                name: 'Entertainment and Media',
+              },
+              {
+                id: 6,
+                name: 'Environment and Sustainability',
+              },
+              {
+                id: 7,
+                name: 'Health and Wellness',
+              },
+              {
+                id: 8,
+                name: 'Lifestyle and Hobbies',
+              },
+              {
+                id: 9,
+                name: 'Others',
+              },
+              {
+                id: 10,
+                name: 'Science and Research',
+              },
+              {
+                id: 11,
+                name: 'Technology and Innovation',
+              },
+            ].map(({ id, name }) => (
+              <SelectItem value={String(id)} key={id}>
+                {name}
               </SelectItem>
             ))}
           </SelectContent>

@@ -5,7 +5,7 @@ import { Container } from './Container';
 import FeaturedCampaign from './FeaturedCampaign';
 
 export const FeaturedCampaignsSection = async () => {
-  const { campaigns } = await getCampaigns();
+  const { campaigns } = await getCampaigns({});
 
   if (!campaigns[0]) return;
 

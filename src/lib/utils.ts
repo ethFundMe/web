@@ -191,22 +191,7 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       CampaignTags['Technology and Innovation'],
     ]),
     banner: z.any().refine((file) => file?.length == 1, 'Banner is required.'),
-    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
-    // .refine(
-    //   (files) =>
-    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-    //       files?.[0]?.type
-    //     ),
-    //   '.jpg, .jpeg, .png and .webp files are accepted.')
     otherImages: z.any(),
-    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
-    // .refine(
-    //   (files) =>
-    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-    //       files?.[0]?.type
-    //     ),
-    //   '.jpg, .jpeg, .png and .webp files are accepted.'
-    // )
     ytLink: z
       .string()
       .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })

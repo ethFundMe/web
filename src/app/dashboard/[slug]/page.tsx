@@ -17,7 +17,10 @@ export default async function UserProfilePage({
 
   if (!user) notFound();
 
-  const { campaigns } = await getCampaigns(1, user.ethAddress);
+  const { campaigns } = await getCampaigns({
+    page: 1,
+    ethAddress: user.ethAddress,
+  });
 
   return <UserProfile user={user} campaigns={campaigns} />;
 }
