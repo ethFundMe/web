@@ -22,7 +22,7 @@ export default function FeaturedCampaign({
   const [index, setIndex] = useState(0);
 
   const images = useMemo(
-    () => [campaign.metadata.banner_url, ...campaign.metadata.media_links],
+    () => [campaign.banner_url, ...campaign.media_links],
     [campaign]
   );
 
@@ -59,10 +59,10 @@ export default function FeaturedCampaign({
             <span className='text-xs leading-[0] md:text-sm'>presents</span>
           </div>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
-            {campaign.metadata.title}
+            {campaign.title}
           </p>
           <p className='line-clamp-2 max-w-lg text-xs md:text-sm'>
-            {campaign.metadata.description}
+            {campaign.description}
           </p>
         </div>
 

@@ -7,7 +7,7 @@ import { REGEX_CODES } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
-import { Campaign, CampaignTag } from '@/types';
+import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -50,7 +50,7 @@ import {
 } from './ui/tooltip';
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
-  const [tags, setTags] = useState<CampaignTag[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [isUploadingMetadata, setIsUploadingMetadata] = useState(false);
   const { address } = useAccount();
   const router = useRouter();
@@ -87,25 +87,25 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     defaultValues: {
       type: campaign.beneficiary === campaign.creator ? 'personal' : 'others',
       beneficiaryAddress: campaign.beneficiary,
-      banner: campaign.metadata.banner_url,
-      description: campaign.metadata.description,
-      title: campaign.metadata.title,
+      banner: campaign.banner_url,
+      description: campaign.description,
+      title: campaign.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
-      tag: campaign.metadata.tags[0].name,
-      ytLink: campaign.metadata.youtube_link ?? undefined,
+      tag: campaign.tag as CampaignTags,
+      ytLink: campaign.youtube_link ?? undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   });
 
   const editMade =
-    form.watch('title') !== campaign.metadata.title ||
-    form.watch('description') !== campaign.metadata.description ||
+    form.watch('title') !== campaign.title ||
+    form.watch('description') !== campaign.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.metadata.banner_url;
+    form.watch('banner') !== campaign.banner_url;
   // ||
-  // form.watch('tag') !== campaign.metadata.tags[0].id;
+  // form.watch('tag') !== campaign.tags[0].id;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { goal, beneficiaryAddress, tag, title, description } = data;
@@ -113,17 +113,17 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
 
     // Handle push data to backend
 
-    const filterTag = tags.filter((_) => _.name === tag)[0];
-    const preparedTag = filterTag || { id: 9, name: CampaignTags.Others };
+    const filterTag = tags.filter((_) => _ === tag)[0];
+    const preparedTag = filterTag || CampaignTags.Others;
 
     setIsUploadingMetadata(true);
     handleIPFSUpdate({
-      metaId: campaign.metadata.id,
+      metaId: campaign.id,
       title,
       description,
-      bannerUrl: campaign.metadata.banner_url,
-      youtubeLink: campaign.metadata.youtube_link || undefined,
-      mediaLinks: campaign.metadata.media_links,
+      bannerUrl: campaign.banner_url,
+      youtubeLink: campaign.youtube_link || undefined,
+      mediaLinks: campaign.media_links,
       tag: preparedTag,
     })
       .then(() => {
@@ -243,8 +243,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                   </SelectTrigger>
                   <SelectContent>
                     {tags.map((_, idx) => (
-                      <SelectItem key={idx} value={_.name}>
-                        {_.name}
+                      <SelectItem key={idx} value={_}>
+                        {_}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -11,18 +11,18 @@ export default function ShareCampaignOptions({
     whatsapp:
       'https://wa.me/?text=' +
       encodeURI(
-        `Help Make a Difference! \n\nDonate to '${campaign.metadata.title}' and make an impact. \n\nCheck out the full details of the campaign at \n${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}\n\nEthFundMe`
+        `Help Make a Difference! \n\nDonate to '${campaign.title}' and make an impact. \n\nCheck out the full details of the campaign at \n${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}\n\nEthFundMe`
       ),
     twitter:
       'https://twitter.com/intent/tweet?text=' +
       encodeURI(
-        `Help Make a Difference! \n\nDonate to '${campaign.metadata.title}' and make an impact. \n\nCheck out the full details of the campaign at \n${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}\n\n@EthFundMe`
+        `Help Make a Difference! \n\nDonate to '${campaign.title}' and make an impact. \n\nCheck out the full details of the campaign at \n${process.env.NEXT_PUBLIC_WEB_URL}/campaigns/${campaign.campaign_id}\n\n@EthFundMe`
       ),
     email: `mailto:${
       process.env.NEXT_PUBLIC_EFM_EMAIL
     }/?subject=Make a Difference&body=${encodeURI(
       'Hi there,\n\nI hope this message finds you well. I wanted to reach out to you and share my EthFundMe campaign, "' +
-        campaign.metadata.title +
+        campaign.title +
         '". \nYour support would mean the world to me. \n\nYou can find more details and contribute through the following link: ' +
         process.env.NEXT_PUBLIC_WEB_URL +
         '/campaigns/' +

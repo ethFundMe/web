@@ -1,6 +1,7 @@
 'use client';
 
 import { handleIPFSUpdate } from '@/actions';
+import { CampaignTags } from '@/lib/types';
 import {
   createUrl,
   deleteFromCloudinary,
@@ -27,12 +28,8 @@ export default function UpdateCampaignMediaForm({
 
   const [updating, setUpdating] = useState(false);
 
-  const [bannerPreview, setBannerPreview] = useState(
-    campaign.metadata.banner_url
-  );
-  const [otherPreview, setOtherPreview] = useState(
-    campaign.metadata.media_links
-  );
+  const [bannerPreview, setBannerPreview] = useState(campaign.banner_url);
+  const [otherPreview, setOtherPreview] = useState(campaign.media_links);
 
   const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
   const [preparedOtherImages, setPreparedOtherImages] =
@@ -52,16 +49,16 @@ export default function UpdateCampaignMediaForm({
     handleCloudinaryUpload()
       .then(() => {
         handleIPFSUpdate({
-          bannerUrl: uploadedBannerUrl || campaign.metadata.banner_url,
-          title: campaign.metadata.title,
-          tag: campaign.metadata.tags[0],
-          youtubeLink: campaign.metadata.youtube_link || undefined,
-          description: campaign.metadata.description,
-          metaId: campaign.metadata.id,
+          bannerUrl: uploadedBannerUrl || campaign.banner_url,
+          title: campaign.title,
+          tag: campaign.tag as CampaignTags,
+          youtubeLink: campaign.youtube_link || undefined,
+          description: campaign.description,
+          metaId: campaign.id,
           mediaLinks:
             uploadedOtherImages.length > 0
-              ? [...campaign.metadata.media_links, ...uploadedOtherImages]
-              : campaign.metadata.media_links,
+              ? [...campaign.media_links, ...uploadedOtherImages]
+              : campaign.media_links,
         })
           .then(() => {
             toast.success('Updated campaign media');
@@ -82,7 +79,7 @@ export default function UpdateCampaignMediaForm({
 
   async function uploadBanner() {
     if (!preparedBanner) return [];
-    await deleteFromCloudinary(campaign.metadata.banner_url);
+    await deleteFromCloudinary(campaign.banner_url);
     const bannerUploadUrl = await uploadToCloudinary(preparedBanner);
 
     return bannerUploadUrl;
@@ -134,7 +131,7 @@ export default function UpdateCampaignMediaForm({
               <button
                 className='pointer-events-auto flex h-full w-full items-center justify-center gap-2 bg-neutral-100'
                 onClick={() => {
-                  setBannerPreview(campaign.metadata.banner_url);
+                  setBannerPreview(campaign.banner_url);
                   setPreparedBanner(null);
                 }}
               >
@@ -256,7 +253,7 @@ export default function UpdateCampaignMediaForm({
 
               <button
                 className='pointer-events-auto flex w-full items-center justify-center gap-2 bg-neutral-100'
-                onClick={() => setOtherPreview(campaign.metadata.media_links)}
+                onClick={() => setOtherPreview(campaign.media_links)}
               >
                 <Trash size={16} />
                 Clear
@@ -268,8 +265,8 @@ export default function UpdateCampaignMediaForm({
 
       <Button
         disabled={
-          (bannerPreview === campaign.metadata.banner_url &&
-            otherPreview.length === campaign.metadata.media_links.length) ||
+          (bannerPreview === campaign.banner_url &&
+            otherPreview.length === campaign.media_links.length) ||
           updating
         }
         className='w-full border border-slate-300 p-3'

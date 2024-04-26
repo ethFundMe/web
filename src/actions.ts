@@ -1,7 +1,7 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { Campaign, CampaignTag, User, UserEarning } from './types';
+import { Campaign, User, UserEarning } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -161,7 +161,7 @@ export const fetchCampaignTags = async () => {
     );
     const data = await res.json();
 
-    return data?.tags ? (data.tags as CampaignTag[]) : [];
+    return data?.tags ? data.tags : [];
   } catch (e) {
     return [];
   }
@@ -214,7 +214,7 @@ export const handleIPFSPush = async function ({
   youtubeLink: string | undefined;
   bannerUrl: string;
   mediaLinks: string[];
-  tag: CampaignTag;
+  tag: string;
 }) {
   try {
     const res = await fetch(
@@ -256,7 +256,7 @@ export const handleIPFSUpdate = async function ({
   title: string;
   youtubeLink: string | undefined;
   mediaLinks: string[];
-  tag: CampaignTag;
+  tag: string;
   metaId: string;
 }) {
   try {

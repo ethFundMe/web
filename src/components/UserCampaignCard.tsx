@@ -30,10 +30,10 @@ export default function UserCampaignCard({
       >
         <ImageWithFallback
           className='duration-250 h-[80vw] w-full bg-slate-50 object-cover transition-all group-hover:scale-105 sm:h-[250px] '
-          src={campaign.metadata.banner_url}
+          src={campaign.banner_url}
           width={400}
           height={400}
-          alt={campaign.metadata.title}
+          alt={campaign.title}
         />
       </Link>
 
@@ -44,9 +44,9 @@ export default function UserCampaignCard({
         />
 
         <div className='h-full space-y-2'>
-          <p className='font-bold'>{campaign.metadata.title}</p>
+          <p className='font-bold'>{campaign.title}</p>
           {variant === 'viewer' && (
-            <p className='line-clamp-3'>{campaign.metadata.description}</p>
+            <p className='line-clamp-3'>{campaign.description}</p>
           )}
         </div>
 
