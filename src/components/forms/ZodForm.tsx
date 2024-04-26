@@ -99,6 +99,7 @@ export default function CreateCampaignForm() {
     error,
     isError,
     isPending,
+    isSuccess,
     writeContract,
   } = useWriteContract({
     mutation: {
@@ -249,7 +250,7 @@ export default function CreateCampaignForm() {
   };
 
   useEffect(() => {
-    if (isConfirmedTxn) {
+    if (isConfirmedTxn || isSuccess) {
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
@@ -261,7 +262,7 @@ export default function CreateCampaignForm() {
       setSubmitStatus(null);
       return;
     }
-  }, [error, form, isConfirmedTxn, isError, router]);
+  }, [error, form, isConfirmedTxn, isError, isSuccess, router]);
 
   useEffect(() => {
     fetchCampaignTags().then((res) => {

@@ -189,9 +189,11 @@ export default function InfiniteScroll({
         <Button
           onClick={() => {
             filterCampaigns(initialCampaigns);
-            setFilterValues({ tag: undefined, searchTerm: '' });
+
+            // setFilterValues({ tag: undefined, searchTerm: '' });
             // fetchCampaigns();
             setCampaignsFiltered(false);
+            router.push('/campaigns');
           }}
           // disabled={!campaignsFiltered}
           variant='outline'
