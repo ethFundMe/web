@@ -48,9 +48,9 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
 
   // console.log({ tagId, page, ethAddress });
 
-  const baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
+  let baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
 
-  ethAddress
+  baseUrl = ethAddress
     ? `${baseUrl}?creator=${ethAddress}&page=${page ?? 1}`
     : tagId
     ? `${baseUrl}?tag_id=${tagId}&page=${page ?? 1}`

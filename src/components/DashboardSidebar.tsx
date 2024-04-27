@@ -26,7 +26,7 @@ export const DashboardSidebar = ({
   return (
     <>
       <aside className='hidden w-60 flex-shrink-0 p-4 pl-0 md:block'>
-        <div className='fixed top-16 w-[14rem]'>
+        <div className='fixed top-16 z-20 w-[14rem]'>
           <ul className='space-y-4'>
             {routes.map((route, idx) => (
               <li key={idx}>

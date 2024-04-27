@@ -122,7 +122,7 @@ export default function InfiniteScroll({
         <Select
           onValueChange={(e) => {
             handleTagChange(parseInt(e));
-            router.push(`/campaigns?tagId=${e}`);
+            router.push(`/campaigns?tag_id=${e}`);
           }}
           value={String(filterValues.tag)}
         >
