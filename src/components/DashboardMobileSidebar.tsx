@@ -9,7 +9,7 @@ export default function DashboardMobileSidebar({
 }) {
   return (
     <aside className='-ml-4 w-16 flex-shrink-0 p-4 pl-0 md:hidden'>
-      <div className='fixed top-16 h-full w-16 border-r-2 border-r-slate-300 bg-white'>
+      <div className='fixed top-16 z-20 h-full w-16 border-r-2 border-r-slate-300 bg-white'>
         <ul className='space-y-5 px-2'>
           {routes.map((route, idx) => (
             <li key={idx} title={route.title}>

@@ -62,6 +62,7 @@ export default function DonateForm({
   const {
     data: hash,
     isPending,
+    isSuccess,
     error,
     isError,
     writeContract,
@@ -184,14 +185,14 @@ export default function DonateForm({
   }, [user?.id, campaign.campaign_id, handleWriteComment, campaign.id, amt]);
 
   useEffect(() => {
-    if (isConfirmedTxn) {
+    if (isSuccess || isConfirmedTxn) {
       toast.success('Successfully funded campaign');
 
       closeBtnRef.current?.click();
       // router.push(`/campaigns/${campaign.campaign_id}`);
       return router.refresh();
     }
-  }, [campaign.campaign_id, isConfirmedTxn, router]);
+  }, [campaign.campaign_id, isSuccess, isConfirmedTxn, router]);
 
   useEffect(() => {
     if (isError && error) {
