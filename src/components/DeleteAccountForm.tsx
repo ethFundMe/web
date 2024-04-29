@@ -16,7 +16,9 @@ export const DeleteAccountForm = () => {
   } = useForm<FormSchema>();
 
   const onSubmit: SubmitHandler<FormSchema> = () => {
-    toast.success('Account deleted');
+    if (window.confirm('Confirm delete account?')) {
+      toast.success('Account deleted');
+    }
   };
 
   return (

@@ -44,7 +44,7 @@ export type CampaignUrlParams = {
 export async function getCampaigns(urlParams: CampaignUrlParams) {
   const page = urlParams?.page;
   const ethAddress = urlParams?.ethAddress;
-  const tagId = urlParams?.tagId;
+  const tagId = urlParams?.tag;
 
   // console.log({ tagId, page, ethAddress });
 
@@ -53,7 +53,7 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
   baseUrl = ethAddress
     ? `${baseUrl}?creator=${ethAddress}&page=${page ?? 1}`
     : tagId
-    ? `${baseUrl}?tag_id=${tagId}&page=${page ?? 1}`
+    ? `${baseUrl}?tag=${tagId}&page=${page ?? 1}`
     : `${baseUrl}?page=${page ?? 1}`;
 
   const res = await fetch(baseUrl, { cache: 'no-store' });
@@ -100,12 +100,12 @@ export const updateUser = async (userDetails: {
   profileUrl?: string;
 }) => {
   const userData = {
+    email: userDetails.email,
     eth_address: userDetails.ethAddress,
     full_name: userDetails.fullName,
-    email: userDetails.email,
+    bio: userDetails.bio,
     bannerUrl: userDetails.bannerUrl,
     profileUrl: userDetails.profileUrl,
-    bio: userDetails.bio,
   };
 
   const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/user`, {
@@ -120,6 +120,7 @@ export const updateUser = async (userDetails: {
   if (data.error) {
     throw new Error('Failed to update profile');
   }
+
   return resData;
 };
 
@@ -332,7 +333,10 @@ export async function handleVerificationRequest({
     );
     const data = await res.json();
 
-    if ((data?.error as string).includes('Pending request already exists'))
+    if (
+      (data?.error as string) &&
+      data?.error.includes('Pending request already exists')
+    )
       throw new Error('Already applied for verification');
     if (data.error) throw new Error(data.error);
 

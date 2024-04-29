@@ -1,6 +1,7 @@
 'use client';
 
 import { getCampaigns } from '@/actions';
+import { CampaignTags } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { campaignStore } from '@/store/campaignStore';
 import { Campaign } from '@/types';
@@ -31,7 +32,7 @@ export default function InfiniteScroll({
   const [page, setPage] = useState(1);
   const [ref, inView] = useInView({ rootMargin: '50px' });
   const [filterValues, setFilterValues] = useState<{
-    tag: number | undefined;
+    tag: string | undefined;
     searchTerm: string;
   }>({ tag: undefined, searchTerm: '' });
 
@@ -81,7 +82,7 @@ export default function InfiniteScroll({
     setCampaignsFiltered(true);
   };
 
-  const handleTagChange = async (tag: number) => {
+  const handleTagChange = async (tag: string) => {
     setFilterValues((prev) => ({ ...prev, tag }));
     const { campaigns: c } = await getCampaigns({ page: 1, tagId: tag });
     setCampaignsFiltered(true);
@@ -121,8 +122,8 @@ export default function InfiniteScroll({
 
         <Select
           onValueChange={(e) => {
-            handleTagChange(parseInt(e));
-            router.push(`/campaigns?tag_id=${e}`);
+            handleTagChange(e);
+            router.push(`/campaigns?tag=${e}`);
           }}
           value={String(filterValues.tag)}
         >
@@ -133,54 +134,9 @@ export default function InfiniteScroll({
             />
           </SelectTrigger>
           <SelectContent>
-            {[
-              {
-                id: 1,
-                name: 'Arts and Culture',
-              },
-              {
-                id: 2,
-                name: 'Business and Entrepreneurship',
-              },
-              {
-                id: 3,
-                name: 'Community and Social Impact',
-              },
-              {
-                id: 4,
-                name: 'Education and Learning',
-              },
-              {
-                id: 5,
-                name: 'Entertainment and Media',
-              },
-              {
-                id: 6,
-                name: 'Environment and Sustainability',
-              },
-              {
-                id: 7,
-                name: 'Health and Wellness',
-              },
-              {
-                id: 8,
-                name: 'Lifestyle and Hobbies',
-              },
-              {
-                id: 9,
-                name: 'Others',
-              },
-              {
-                id: 10,
-                name: 'Science and Research',
-              },
-              {
-                id: 11,
-                name: 'Technology and Innovation',
-              },
-            ].map(({ id, name }) => (
-              <SelectItem value={String(id)} key={id}>
-                {name}
+            {Object.keys(CampaignTags).map((tag, idx) => (
+              <SelectItem value={tag} key={idx}>
+                {tag}
               </SelectItem>
             ))}
           </SelectContent>
