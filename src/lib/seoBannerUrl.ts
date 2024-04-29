@@ -246,7 +246,7 @@ export function seoProfile(
       return str;
     } else {
       const slicedTitle = str.slice(0, 20);
-      console.log('More than 20' + name.length);
+      // console.log('More than 20' + name.length);
       return slicedTitle + ' .  .  .';
     }
   }

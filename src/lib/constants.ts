@@ -4,8 +4,8 @@ import {
   BiLogoDiscordAlt,
   BiLogoGithub,
   BiLogoInstagram,
-  BiLogoTwitter,
 } from 'react-icons/bi';
+import { BsTwitterX } from 'react-icons/bs';
 import { MdOutlineCampaign } from 'react-icons/md';
 import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
 
@@ -159,7 +159,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'Twitter',
     href: 'https://twitter.com/ethfundme',
-    icon: BiLogoTwitter({ size: 20 }),
+    icon: BsTwitterX({ size: 20 }),
   },
   {
     name: 'Instagram',

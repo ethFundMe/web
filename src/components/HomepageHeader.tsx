@@ -86,7 +86,7 @@ export const HomepageHeader = () => {
   }, [images]);
 
   return (
-    <div className='relative'>
+    <div className='relative overflow-hidden'>
       <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
         <div className='absolute top-0 -z-10 h-full w-full'>
           {imageIndex === 0 ? (
@@ -161,6 +161,13 @@ export const HomepageHeader = () => {
           ></path>
         </svg>
       </div>
+      {/* <div className="ocean absolute bottom-0 z-10">
+        <div className="wave"></div>
+        <svg className="wave" xmlns="http://www.w3.org/2000/svg" width="1600" height="198">
+          <path fill="#fff" fill-rule="evenodd" d="M.005 121C311 121 409.898-.25 811 0c400 0 500 121 789 121v77H0s.005-48 .005-77z" transform="matrix(-1 0 0 1 1600 0)" />
+        </svg>
+        <div class="wave"></div>
+      </div> */}
     </div>
   );
 };
