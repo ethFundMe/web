@@ -3,7 +3,7 @@
 import { fetchCampaignTags, handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
-import { REGEX_CODES } from '@/lib/constants';
+import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
@@ -199,7 +199,9 @@ export default function CreateCampaignForm() {
           setSubmitStatus('Creating campaign');
 
           const filterTag = tags.filter((_) => _ === tag)[0];
-          const preparedTag = filterTag || CampaignTags.Others;
+          const preparedTag = TagsWithIds.filter(
+            (item) => item.name === (filterTag || CampaignTags.Others)
+          )[0].id;
 
           handleIPFSPush({
             title,
@@ -210,6 +212,7 @@ export default function CreateCampaignForm() {
             tag: preparedTag,
           })
             .then((res) => {
+              if (!res?.id) throw new Error();
               writeContract({
                 abi: EthFundMe,
                 address: ethFundMeContractAddress,
@@ -222,29 +225,16 @@ export default function CreateCampaignForm() {
                 chainId: ethChainId,
               });
             })
-            .catch((e) => {
+            .catch(() => {
               toast.error('Failed to create campaign');
-              console.log({ e });
+              setSubmitStatus(null);
             });
-
-          // writeContract({
-          //   abi: EthFundMe,
-          //   address: ethFundMeContractAddress,
-          //   functionName: 'addCampaign',
-          //   args: [
-          //     title,
-          //     description,
-          //     parseEther(goal.toString()),
-          //     mediaLinks,
-          //     beneficiaryAddress as `0x${string}`,
-          //   ],
-          //   chainId: ethChainId,
-          // });
         }
       })
       .catch((e) => {
         setSubmitStatus(null);
         toast.error(e);
+        toast.error('Failed to create campaign');
       });
   };
 

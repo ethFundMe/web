@@ -7,7 +7,13 @@ import {
   BiLogoTwitter,
 } from 'react-icons/bi';
 import { MdOutlineCampaign } from 'react-icons/md';
-import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
+import {
+  CampaignTags,
+  CampaignType,
+  DonationStep,
+  NavbarRoute,
+  SocialLink,
+} from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
   {
@@ -232,5 +238,52 @@ export const COMMENTS = [
     date: '2024-02-26T22:00:00.000Z',
     text: 'Small acts of kindness can create big changes. Proud to support this cause.',
     amt: 200000000000000000,
+  },
+];
+
+export const TagsWithIds: { id: number; name: CampaignTags }[] = [
+  {
+    id: 1,
+    name: CampaignTags['Arts and Culture'],
+  },
+  {
+    id: 2,
+    name: CampaignTags['Business and Entrepreneurship'],
+  },
+  {
+    id: 3,
+    name: CampaignTags['Community and Social Impact'],
+  },
+  {
+    id: 4,
+    name: CampaignTags['Education and Learning'],
+  },
+  {
+    id: 5,
+    name: CampaignTags['Entertainment and Media'],
+  },
+  {
+    id: 6,
+    name: CampaignTags['Environment and Sustainability'],
+  },
+  {
+    id: 7,
+    name: CampaignTags['Health and Wellness'],
+  },
+  {
+    id: 8,
+    name: CampaignTags['Lifestyle and Hobbies'],
+  },
+  {
+    id: 9,
+    name: CampaignTags['Others'],
+  },
+  {
+    id: 10,
+    name: CampaignTags['Science and Research'],
+  },
+  {
+    id: 11,
+    name: CampaignTags['Technology and Innovation'],
   },
 ];

@@ -3,7 +3,7 @@
 import { fetchCampaignTags, handleIPFSUpdate } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
-import { REGEX_CODES } from '@/lib/constants';
+import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
@@ -114,7 +114,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     // Handle push data to backend
 
     const filterTag = tags.filter((_) => _ === tag)[0];
-    const preparedTag = filterTag || CampaignTags.Others;
+    const preparedTag = TagsWithIds.filter(
+      (i) => i.name === (filterTag || CampaignTags.Others)
+    )[0].id;
 
     setIsUploadingMetadata(true);
     handleIPFSUpdate({
