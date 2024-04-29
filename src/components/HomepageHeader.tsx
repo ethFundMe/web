@@ -2,6 +2,7 @@
 'use client';
 
 import { userStore } from '@/store';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
@@ -28,7 +29,9 @@ export const HomepageHeader = () => {
   };
 
   const getGreeterHeader = (fullName: string) => {
-    const name = splitName(fullName);
+    const _ = splitName(fullName).slice(0, 20);
+    const name =
+      splitName(fullName).length > 20 ? _ + '...' : splitName(fullName);
     const greetArr = [
       `Welcome, ${name}`,
       `Hello 👋 ${name}`,
@@ -113,9 +116,17 @@ export const HomepageHeader = () => {
                   Welcome to EthFundMe!
                 </h1>
               ) : (
-                <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
+                <motion.h1
+                  animate={{
+                    opacity: [0, 1],
+                    scale: [1.2, 1],
+                    transition: { duration: 0.25, ease: 'easeInOut' },
+                  }}
+                  key={greeting}
+                  className='text-5xl font-medium leading-tight md:text-7xl'
+                >
                   {getGreeterHeader(user.fullName)}
-                </h1>
+                </motion.h1>
               )}
 
               <p className='mx-auto max-w-xs text-center text-lg text-white/80 sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
