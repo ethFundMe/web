@@ -57,7 +57,7 @@ export default function UpdateCampaignMediaForm({
           )[0].id,
           youtubeLink: campaign.youtube_link || undefined,
           description: campaign.description,
-          metaId: campaign.id,
+          id: campaign.id,
           mediaLinks:
             uploadedOtherImages.length > 0
               ? [...campaign.media_links, ...uploadedOtherImages]
