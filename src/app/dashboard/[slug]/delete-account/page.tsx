@@ -8,7 +8,11 @@ export default function DeleteAccountPage() {
       <h1 className={cn(TextSizeStyles.h4, 'text-center text-red-500')}>
         Delete your EthFundMe account?
       </h1>
-      <p>This action is not reversible</p>
+
+      <div className='space-y-1'>
+        <p>This action is not reversible.</p>
+        <p>All your campaigns will be discontinued immediately.</p>
+      </div>
 
       <DeleteAccountForm />
     </div>

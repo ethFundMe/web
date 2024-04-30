@@ -44,16 +44,16 @@ export type CampaignUrlParams = {
 export async function getCampaigns(urlParams: CampaignUrlParams) {
   const page = urlParams?.page;
   const ethAddress = urlParams?.ethAddress;
-  const tagId = urlParams?.tagId;
+  const tagId = urlParams?.tag;
 
   // console.log({ tagId, page, ethAddress });
 
-  const baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
+  let baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
 
-  ethAddress
+  baseUrl = ethAddress
     ? `${baseUrl}?creator=${ethAddress}&page=${page ?? 1}`
     : tagId
-    ? `${baseUrl}?tag_id=${tagId}&page=${page ?? 1}`
+    ? `${baseUrl}?tag=${tagId}&page=${page ?? 1}`
     : `${baseUrl}?page=${page ?? 1}`;
 
   const res = await fetch(baseUrl, { cache: 'no-store' });
@@ -100,12 +100,12 @@ export const updateUser = async (userDetails: {
   profileUrl?: string;
 }) => {
   const userData = {
+    email: userDetails.email,
     eth_address: userDetails.ethAddress,
     full_name: userDetails.fullName,
-    email: userDetails.email,
+    bio: userDetails.bio,
     bannerUrl: userDetails.bannerUrl,
     profileUrl: userDetails.profileUrl,
-    bio: userDetails.bio,
   };
 
   const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/user`, {
@@ -120,6 +120,7 @@ export const updateUser = async (userDetails: {
   if (data.error) {
     throw new Error('Failed to update profile');
   }
+
   return resData;
 };
 
@@ -173,7 +174,7 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
       `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`,
       {
         headers: {
-          Accept: '*/*',
+          accept: '*/*',
         },
       }
     );
@@ -189,7 +190,8 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
 export const fetchTotalUserEarnings = async (ethAddress: `0x${string}`) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token_overview/${ethAddress}`
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token_overview/${ethAddress}`,
+      { headers: { accept: '*/*' } }
     );
     const data: { total: string; max: string; min: string } | null =
       await res.json();
@@ -214,7 +216,7 @@ export const handleIPFSPush = async function ({
   youtubeLink: string | undefined;
   bannerUrl: string;
   mediaLinks: string[];
-  tag: string;
+  tag: number;
 }) {
   try {
     const res = await fetch(
@@ -236,9 +238,15 @@ export const handleIPFSPush = async function ({
         }),
       }
     );
-    return res.json();
+    const data: { id?: string; error?: { message: string }[] } =
+      await res.json();
+
+    if (!data?.id && data?.error) throw new Error(data.error[0]?.message);
+
+    return data;
   } catch (e) {
-    throw new Error();
+    console.log(e);
+    return null;
   }
 };
 
@@ -256,7 +264,7 @@ export const handleIPFSUpdate = async function ({
   title: string;
   youtubeLink: string | undefined;
   mediaLinks: string[];
-  tag: string;
+  tag: number;
   metaId: string;
 }) {
   try {
@@ -332,7 +340,10 @@ export async function handleVerificationRequest({
     );
     const data = await res.json();
 
-    if ((data?.error as string).includes('Pending request already exists'))
+    if (
+      (data?.error as string) &&
+      data?.error.includes('Pending request already exists')
+    )
       throw new Error('Already applied for verification');
     if (data.error) throw new Error(data.error);
 

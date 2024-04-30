@@ -8,10 +8,10 @@ export default function DashboardBottomTabs({
   return (
     <div className='bottom-tabs fixed bottom-0 left-0 z-20 w-full bg-primary-dark px-6'>
       <div className='flex justify-between'>
-        {routes.map((route) => (
+        {routes.map((route, idx) => (
           <Link
             href={route.link}
-            key={route.title}
+            key={idx}
             className='flex flex-col items-center gap-1 p-4 text-white sm:px-6 sm:py-6'
             title={route.title}
           >

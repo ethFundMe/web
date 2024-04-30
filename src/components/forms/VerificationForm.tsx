@@ -127,7 +127,11 @@ export default function VerificationForm() {
               <FormItem className='col-span-2'>
                 <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your full name' {...field} />
+                  <Input
+                    disabled
+                    placeholder='Enter your full name'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,7 +144,11 @@ export default function VerificationForm() {
               <FormItem className='col-span-2 sm:col-span-1'>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your email address' {...field} />
+                  <Input
+                    disabled
+                    placeholder='Enter your email address'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -194,7 +202,11 @@ export default function VerificationForm() {
                     />
                   </>
                 </FormControl>
-                <FormMessage />
+                {/* <FormMessage /> */}
+                <span className='text-sm font-medium text-red-500 dark:text-red-900'>
+                  {form.formState.errors.phoneNumber &&
+                    form.formState.errors.phoneNumber.message}
+                </span>
               </FormItem>
             )}
           />

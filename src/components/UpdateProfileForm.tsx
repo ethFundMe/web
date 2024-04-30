@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
+import { userStore } from '@/store';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -71,6 +72,8 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       },
     },
   });
+
+  const { setUser } = userStore();
 
   const {
     isLoading: isConfirmingTxn,
@@ -131,7 +134,9 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           // Reset form and navigate to the dashboard
           setFormStatus(null);
           form.reset();
+          setUser(data);
           toast.success('Profile updated successfully');
+          router.refresh();
           router.push(`/dashboard/${data.ethAddress}`);
         })
         .catch((error) => {
@@ -150,6 +155,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         .then((data) => {
           // Reset form and navigate to the dashboard
           setFormStatus(null);
+          setUser(data);
           form.reset();
           toast.success('Profile updated successfully');
           router.push(`/dashboard/${data.ethAddress}`);

@@ -2,6 +2,7 @@ import { fetchTotalUserEarnings, fetchUserEarnings } from '@/actions';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { BellPlus, Coins, History } from 'lucide-react';
@@ -19,6 +20,17 @@ export default async function EarningsPage({
   if (!isAddress(slug)) notFound();
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
+
+  // console.log(
+  //   earnings.map((i) => ({
+  //     amount: parseFloat(i.amount),
+  //     source:
+  //       i.rewardType === 'campaign_creation'
+  //         ? 'Created campaign'
+  //         : 'Funded campaign',
+  //     dateEarned: new Date(i.created_at),
+  //   }))
+  // );
 
   return (
     <div className='mt-4 flex w-full p-4'>
@@ -45,7 +57,16 @@ export default async function EarningsPage({
           </div>
 
           {/* Chart */}
-          <EarningsChart />
+          <EarningsChart
+            earnings={earnings.map((i) => ({
+              amount: parseFloat(i.amount),
+              source:
+                i.rewardType === 'campaign_creation'
+                  ? 'Created campaign'
+                  : 'Funded campaign',
+              dateEarned: new Date(i.created_at),
+            }))}
+          />
 
           <div>
             <h2 className='text-lg font-bold text-primary-default'>
@@ -58,7 +79,7 @@ export default async function EarningsPage({
 
             <Link
               target='_blank'
-              href='/about/validationg-program'
+              href='/about/validator-program'
               className='my-4 block text-primary-default'
             >
               📖 Learn more
@@ -81,7 +102,7 @@ export default async function EarningsPage({
               <h2 className='pb-4 text-xl font-bold'>History</h2>
             </div>
 
-            <ScrollArea className='h-96'>
+            <ScrollArea className={cn(earnings.length > 2 ? 'h-96' : 'h-fit')}>
               {earnings.length > 0 ? (
                 <ul className='mt-4 space-y-4'>
                   {earnings.map((earning, idx) => (
