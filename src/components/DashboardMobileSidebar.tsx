@@ -8,9 +8,9 @@ export default function DashboardMobileSidebar({
   routes: { link: string; title: string; icon: React.ReactNode }[];
 }) {
   return (
-    <aside className='-ml-4 w-16 flex-shrink-0 p-4 pl-0 md:hidden'>
-      <div className='fixed top-16 h-full w-16 border-r-2 border-r-slate-300 bg-white'>
-        <ul className='space-y-5 px-2'>
+    <aside className='-ml-4 bg-white md:hidden'>
+      <div className='fixed bottom-0 z-50 h-14 w-full bg-white'>
+        <ul className='flex items-center justify-between p-2'>
           {routes.map((route, idx) => (
             <li key={idx} title={route.title}>
               <NavLink
@@ -22,7 +22,7 @@ export default function DashboardMobileSidebar({
                 }
                 className='flex items-center justify-center rounded-md p-3 text-center'
               >
-                <span className='text-2xl font-bold'>{route.icon}</span>
+                <span className='text-3xl font-bold'>{route.icon}</span>
               </NavLink>
             </li>
           ))}
