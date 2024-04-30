@@ -9,6 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import toast from 'react-hot-toast';
 import useRefs from 'react-use-refs';
 import { useAccount } from 'wagmi';
@@ -266,8 +267,10 @@ export const UserProfile = ({
               <div className='flex w-full justify-between'>
                 <div>
                   <div className='flex items-center gap-1'>
-                    <p className='text-xl font-bold md:text-2xl lg:text-3xl'>
-                      {user.fullName}
+                    <p className='text-lg font-bold md:text-2xl lg:text-3xl'>
+                      {user.fullName.length > 25 && isMobile
+                        ? user.fullName.slice(0, 25).concat('...')
+                        : user.fullName}
                     </p>
 
                     {user.isVerified && (

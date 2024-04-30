@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   params: { slug: string };
 }) {
   return (
-    <div className='min-h-[calc(100dvh-269px)]'>
+    <div className='min-h-[calc(100dvh-269px)] '>
       <Navbar />
 
       <Container className='h-full'>
@@ -19,6 +19,7 @@ export default async function DashboardLayout({
           <DashboardSidebar userAddress={slug as `0x${string}`} />
 
           {children}
+          {/* <MobileDashboardMenu userAddress={slug as `0x${string}`} /> */}
         </div>
       </Container>
     </div>
