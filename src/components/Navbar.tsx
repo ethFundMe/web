@@ -49,8 +49,8 @@ const Navbar = () => {
         </Link>
 
         <ul className='hidden items-center gap-8 lg:flex'>
-          {NAVBARROUTES.map((route) => (
-            <li key={route.link}>
+          {NAVBARROUTES.map((route, idx) => (
+            <li key={idx}>
               <NavLink
                 activeStyles={({ isActive }) =>
                   isActive

@@ -9,6 +9,8 @@ export const useSocket = (campaignID: number) => {
   const { user } = userStore();
 
   useEffect(() => {
+    socket.connect();
+
     const joinData = {
       data: {
         campaignID,
@@ -21,13 +23,10 @@ export const useSocket = (campaignID: number) => {
       console.log('Joined room', response);
     };
 
-    socket.connect();
-
     function onConnect() {
       setIsConnected(true);
       console.log('Connected');
       console.log(joinData);
-
       socket.emit('comment:join', joinData, onJoin);
     }
 
@@ -53,7 +52,7 @@ export const useSocket = (campaignID: number) => {
       socket.off('disconnect', onDisonnect);
       socket.disconnect();
     };
-  }, [user?.id, campaignID]);
+  }, [user?.id, campaignID, isConnected]);
 
   const handleAddComment = (comment: string) => {
     socket.emit('add:comment', {

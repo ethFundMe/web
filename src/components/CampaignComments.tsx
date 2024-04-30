@@ -16,7 +16,6 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const { user } = userStore();
 
   const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   const { refresh } = useRouter();
   const { socket, comments, handleAddComment } = useSocket(

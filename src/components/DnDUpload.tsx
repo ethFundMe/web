@@ -78,13 +78,13 @@ export default function DnDUpload({
 
   const dndErrors = useMemo(() => {
     fileRejections.length > 0 && setDropStatus('rejected');
-    return fileRejections.map(({ file, errors }) => {
+    return fileRejections.map(({ file, errors }, idx) => {
       return (
-        <li key={file.name} className='text-sm'>
+        <li key={idx} className='text-sm'>
           {file.name} - {(file.size / 1000000).toFixed(2)} mb
           <ul>
-            {errors.map((e) => (
-              <li key={e.code} className='text-red-500'>
+            {errors.map((e, idx) => (
+              <li key={idx} className='text-red-500'>
                 {e.message}
               </li>
             ))}

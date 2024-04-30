@@ -21,16 +21,16 @@ export default async function EarningsPage({
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
 
-  console.log(
-    earnings.map((i) => ({
-      amount: parseFloat(i.amount),
-      source:
-        i.rewardType === 'campaign_creation'
-          ? 'Created campaign'
-          : 'Funded campaign',
-      dateEarned: new Date(i.created_at),
-    }))
-  );
+  // console.log(
+  //   earnings.map((i) => ({
+  //     amount: parseFloat(i.amount),
+  //     source:
+  //       i.rewardType === 'campaign_creation'
+  //         ? 'Created campaign'
+  //         : 'Funded campaign',
+  //     dateEarned: new Date(i.created_at),
+  //   }))
+  // );
 
   return (
     <div className='mt-4 flex w-full p-4'>

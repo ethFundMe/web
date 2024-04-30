@@ -174,7 +174,7 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
       `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token/${ethAddress}`,
       {
         headers: {
-          Accept: '*/*',
+          accept: '*/*',
         },
       }
     );
@@ -190,7 +190,8 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
 export const fetchTotalUserEarnings = async (ethAddress: `0x${string}`) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token_overview/${ethAddress}`
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/token_overview/${ethAddress}`,
+      { headers: { accept: '*/*' } }
     );
     const data: { total: string; max: string; min: string } | null =
       await res.json();
@@ -215,7 +216,7 @@ export const handleIPFSPush = async function ({
   youtubeLink: string | undefined;
   bannerUrl: string;
   mediaLinks: string[];
-  tag: string;
+  tag: number;
 }) {
   try {
     const res = await fetch(
@@ -237,9 +238,15 @@ export const handleIPFSPush = async function ({
         }),
       }
     );
-    return res.json();
+    const data: { id?: string; error?: { message: string }[] } =
+      await res.json();
+
+    if (!data?.id && data?.error) throw new Error(data.error[0]?.message);
+
+    return data;
   } catch (e) {
-    throw new Error();
+    console.log(e);
+    return null;
   }
 };
 
@@ -257,7 +264,7 @@ export const handleIPFSUpdate = async function ({
   title: string;
   youtubeLink: string | undefined;
   mediaLinks: string[];
-  tag: string;
+  tag: number;
   metaId: string;
 }) {
   try {

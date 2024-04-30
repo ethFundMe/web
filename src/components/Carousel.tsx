@@ -90,7 +90,7 @@ export const Carousel = ({ images }: { images: string[] }) => {
       <div className='flex justify-center gap-4'>
         {images.map((_, idx) => (
           <motion.div
-            key={_}
+            key={idx}
             animate={{
               scale: [0, 1],
               background: [

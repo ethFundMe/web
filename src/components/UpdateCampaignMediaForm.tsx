@@ -1,6 +1,7 @@
 'use client';
 
 import { handleIPFSUpdate } from '@/actions';
+import { TagsWithIds } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import {
   createUrl,
@@ -51,7 +52,9 @@ export default function UpdateCampaignMediaForm({
         handleIPFSUpdate({
           bannerUrl: uploadedBannerUrl || campaign.banner_url,
           title: campaign.title,
-          tag: campaign.tag as CampaignTags,
+          tag: TagsWithIds.filter(
+            (i) => i.name === (campaign.tag as CampaignTags)
+          )[0].id,
           youtubeLink: campaign.youtube_link || undefined,
           description: campaign.description,
           metaId: campaign.id,
