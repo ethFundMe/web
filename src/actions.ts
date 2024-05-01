@@ -160,7 +160,7 @@ export const fetchCampaignTags = async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/tags`
     );
-    const data = await res.json();
+    const data: { tags?: { id: number; name: string }[] } = await res.json();
 
     return data?.tags ? data.tags : [];
   } catch (e) {
@@ -238,10 +238,12 @@ export const handleIPFSPush = async function ({
         }),
       }
     );
-    const data: { id?: string; error?: { message: string }[] } =
+    const data: { hash?: string; error?: { message: string }[] } =
       await res.json();
 
-    if (!data?.id && data?.error) throw new Error(data.error[0]?.message);
+    console.log('ipfs return data', data);
+
+    if (!data?.hash && data?.error) throw new Error(data.error[0]?.message);
 
     return data;
   } catch (e) {
@@ -257,7 +259,7 @@ export const handleIPFSUpdate = async function ({
   mediaLinks,
   description,
   tag,
-  metaId,
+  id,
 }: {
   bannerUrl: string;
   description: string;
@@ -265,16 +267,18 @@ export const handleIPFSUpdate = async function ({
   youtubeLink: string | undefined;
   mediaLinks: string[];
   tag: number;
-  metaId: string;
+  id: string;
 }) {
+  console.log({ id });
   try {
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-      }/api/campaign/metadata/${metaId}`,
+      }/api/campaign/${id}`,
       {
         headers: {
           'Content-Type': 'application/json',
+          accept: '*/*',
         },
         method: 'PUT',
         body: JSON.stringify({
@@ -291,9 +295,13 @@ export const handleIPFSUpdate = async function ({
     if (!res.ok) throw new Error();
 
     const data = await res.json();
-    return data;
+
+    console.log(data, res.ok, id);
+
+    return null;
   } catch (e) {
-    throw new Error();
+    console.log(e);
+    return null;
   }
 };
 

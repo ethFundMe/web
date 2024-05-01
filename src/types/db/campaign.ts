@@ -21,7 +21,7 @@ export interface CampaignsTable {
   discontinued: boolean;
   total_accrued: number;
   transaction_hash: `0x${string}`;
-  metadata: string;
+  md_hash: string;
   title: string;
   description: string;
   banner_url: string;

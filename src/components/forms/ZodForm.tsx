@@ -60,7 +60,7 @@ export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const { address } = useAccount();
   const router = useRouter();
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
 
   const { user } = userStore();
 
@@ -198,9 +198,9 @@ export default function CreateCampaignForm() {
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
 
-          const filterTag = tags.filter((_) => _ === tag)[0];
+          const filterTag = tags.filter((_) => _.name === tag)[0];
           const preparedTag = TagsWithIds.filter(
-            (item) => item.name === (filterTag || CampaignTags.Others)
+            (i) => i.name === (filterTag.name || CampaignTags.Others)
           )[0].id;
 
           handleIPFSPush({
@@ -212,13 +212,13 @@ export default function CreateCampaignForm() {
             tag: preparedTag,
           })
             .then((res) => {
-              if (!res?.id) throw new Error();
+              if (!res?.hash) throw new Error();
               writeContract({
                 abi: EthFundMe,
                 address: ethFundMeContractAddress,
                 functionName: 'addCampaign',
                 args: [
-                  res.id,
+                  res.hash,
                   parseEther(String(goal)),
                   beneficiaryAddress as `0x${string}`,
                 ],

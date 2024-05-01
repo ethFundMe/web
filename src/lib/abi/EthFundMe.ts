@@ -85,9 +85,9 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
-            internalType: 'string',
-            name: 'sid',
-            type: 'string',
+            internalType: 'bytes32',
+            name: 'mdHash',
+            type: 'bytes32',
           },
           {
             internalType: 'address',
@@ -189,9 +189,9 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
-            internalType: 'string',
-            name: 'sid',
-            type: 'string',
+            internalType: 'bytes32',
+            name: 'mdHash',
+            type: 'bytes32',
           },
           {
             internalType: 'address',
@@ -279,9 +279,9 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
-            internalType: 'string',
-            name: 'sid',
-            type: 'string',
+            internalType: 'bytes32',
+            name: 'mdHash',
+            type: 'bytes32',
           },
           {
             internalType: 'address',
@@ -606,9 +606,9 @@ export const EthFundMe = [
   {
     inputs: [
       {
-        internalType: 'string',
-        name: '_sid',
-        type: 'string',
+        internalType: 'bytes32',
+        name: '_mdHash',
+        type: 'bytes32',
       },
       {
         internalType: 'uint256',
@@ -683,6 +683,11 @@ export const EthFundMe = [
   },
   {
     inputs: [
+      {
+        internalType: 'bytes32',
+        name: '_mdHash',
+        type: 'bytes32',
+      },
       {
         internalType: 'uint256',
         name: '_campaignID',
@@ -934,9 +939,9 @@ export const EthFundMe = [
             type: 'uint256',
           },
           {
-            internalType: 'string',
-            name: 'sid',
-            type: 'string',
+            internalType: 'bytes32',
+            name: 'mdHash',
+            type: 'bytes32',
           },
           {
             internalType: 'address',
@@ -1024,9 +1029,9 @@ export const EthFundMe = [
         type: 'uint256',
       },
       {
-        internalType: 'string',
-        name: 'sid',
-        type: 'string',
+        internalType: 'bytes32',
+        name: 'mdHash',
+        type: 'bytes32',
       },
       {
         internalType: 'address',
