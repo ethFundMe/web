@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { socket } from '../socketConfig';
 import { Comment } from '../types';
 
-export const useSocket = (campaignID: number) => {
+export const useSocket = (campaignID: string) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = userStore();
@@ -26,8 +26,9 @@ export const useSocket = (campaignID: number) => {
     function onConnect() {
       setIsConnected(true);
       console.log('Connected');
-      console.log(joinData);
       socket.emit('comment:join', joinData, onJoin);
+      console.log(joinData);
+      // console.log(joinData);
     }
 
     function onComment(response: { data: Comment; totalComments: number }) {
@@ -44,6 +45,7 @@ export const useSocket = (campaignID: number) => {
     socket.on('comment:join', onJoin);
     socket.on('campaign:comment', onComment);
     socket.on('disconnect', onDisonnect);
+    socket.on('error', (res) => console.log(res));
 
     return () => {
       socket.off('connect', onConnect);

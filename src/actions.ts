@@ -147,11 +147,11 @@ export const handlePushComment = async ({
     });
     const data = await res.json();
 
-    return data;
-  } catch (e) {
-    console.log(e);
+    if (data?.error) throw new Error(data.error[0].message);
 
-    throw new Error('Failed to add comment');
+    return data as number;
+  } catch (e) {
+    return { error: e as string };
   }
 };
 
@@ -182,7 +182,7 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
 
     return data || [];
   } catch (e) {
-    console.log('Failed to get total earnings', e);
+    // console.log('Failed to get total earnings', e);
     return [];
   }
 };
@@ -241,66 +241,10 @@ export const handleIPFSPush = async function ({
     const data: { hash?: string; error?: { message: string }[] } =
       await res.json();
 
-    console.log('ipfs return data', data);
-
     if (!data?.hash && data?.error) throw new Error(data.error[0]?.message);
 
     return data;
   } catch (e) {
-    console.log(e);
-    return null;
-  }
-};
-
-export const handleIPFSUpdate = async function ({
-  title,
-  bannerUrl,
-  youtubeLink,
-  mediaLinks,
-  description,
-  tag,
-  id,
-}: {
-  bannerUrl: string;
-  description: string;
-  title: string;
-  youtubeLink: string | undefined;
-  mediaLinks: string[];
-  tag: number;
-  id: string;
-}) {
-  console.log({ id });
-  try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-      }/api/campaign/${id}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          accept: '*/*',
-        },
-        method: 'PUT',
-        body: JSON.stringify({
-          title,
-          description,
-          youtubeLink,
-          bannerUrl,
-          mediaLinks,
-          tag,
-        }),
-      }
-    );
-
-    if (!res.ok) throw new Error();
-
-    const data = await res.json();
-
-    console.log(data, res.ok, id);
-
-    return null;
-  } catch (e) {
-    console.log(e);
     return null;
   }
 };
@@ -321,7 +265,7 @@ export async function fetchActiveStats() {
     return data;
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message);
+      // console.log(e.message);
     }
     return null;
   }
@@ -358,7 +302,7 @@ export async function handleVerificationRequest({
     return { success: true, message: 'Successfully applied for verification' };
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e);
+      // console.log(e);
       return { success: false, message: e.message };
     }
     return { success: false, message: e };

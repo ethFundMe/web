@@ -162,7 +162,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       toast.error((error as BaseError).shortMessage || error.message);
     } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
-      router.push(`/campaigns/${campaign.campaign_id}`);
+      // router.push(`/campaigns/${campaign.campaign_id}`);
     }
   }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 

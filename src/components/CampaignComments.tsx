@@ -18,9 +18,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
 
   const { refresh } = useRouter();
-  const { socket, comments, handleAddComment } = useSocket(
-    campaign.campaign_id
-  );
+  const { socket, comments, handleAddComment } = useSocket(campaign.id);
 
   // useEffect(() => {
   //   socket.connect();
