@@ -1,6 +1,8 @@
 'use client';
 
-import { handleIPFSUpdate } from '@/actions';
+import { handleIPFSPush } from '@/actions';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { TagsWithIds } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import {
@@ -13,9 +15,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ImagePlus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
+import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
@@ -25,7 +28,7 @@ export default function UpdateCampaignMediaForm({
 }: {
   campaign: Campaign;
 }) {
-  const { refresh } = useRouter();
+  const { push } = useRouter();
 
   const [updating, setUpdating] = useState(false);
 
@@ -45,11 +48,28 @@ export default function UpdateCampaignMediaForm({
     return /\b(blob)\b/.test(url);
   };
 
+  const {
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled updateCampaign', { data, error });
+      },
+    },
+  });
+
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
+
   function handleUpdateMedia() {
     setUpdating(true);
     handleCloudinaryUpload()
       .then(() => {
-        handleIPFSUpdate({
+        handleIPFSPush({
           bannerUrl: uploadedBannerUrl || campaign.banner_url,
           title: campaign.title,
           tag: TagsWithIds.filter(
@@ -57,17 +77,28 @@ export default function UpdateCampaignMediaForm({
           )[0].id,
           youtubeLink: campaign.youtube_link || undefined,
           description: campaign.description,
-          id: campaign.id,
           mediaLinks:
             uploadedOtherImages.length > 0
               ? [...campaign.media_links, ...uploadedOtherImages]
               : campaign.media_links,
         })
-          .then(() => {
-            toast.success('Updated campaign media');
-            setUpdating(false);
+          .then((res) => {
+            if (!res?.hash) throw new Error();
+
+            writeContract({
+              abi: EthFundMe,
+              address: ethFundMeContractAddress,
+              functionName: 'updateCampaign',
+              chainId: ethChainId,
+              args: [
+                res.hash,
+                BigInt(campaign.campaign_id),
+                campaign.goal,
+                campaign.beneficiary,
+              ],
+            });
+
             // push(`/campaigns/${campaign.campaign_id}`);
-            refresh();
           })
           .catch(() => {
             toast.error('Failed to upload campaign media');
@@ -102,8 +133,21 @@ export default function UpdateCampaignMediaForm({
     setUploadedBannerUrl(bannerURL[0]);
     setUploadedOtherImages(otherImagesURL);
 
-    return { otherImagesURL, uploadedOtherImages };
+    // console.log({ uploadedBannerUrl, uploadedOtherImages });
+
+    return { bannerURL, otherImagesURL };
   }
+
+  useEffect(() => {
+    if (isError && error) {
+      toast.error('Failed to update campaign media');
+      setUpdating(false);
+    } else if (isConfirmedTxn) {
+      toast.success('Campaign updated');
+      setUpdating(false);
+      push(`/campaigns/${campaign.campaign_id}`);
+    }
+  }, [campaign.campaign_id, push, error, isConfirmedTxn, isError]);
 
   return (
     <div className='w-full sm:max-w-2xl'>
@@ -177,7 +221,6 @@ export default function UpdateCampaignMediaForm({
                       <div
                         title='Remove image'
                         onClick={() => {
-                          console.log(isPreview(item));
                           if (isPreview(item)) {
                             setOtherPreview((prev) =>
                               prev.filter((_) => _ !== item)
@@ -270,7 +313,9 @@ export default function UpdateCampaignMediaForm({
         disabled={
           (bannerPreview === campaign.banner_url &&
             otherPreview.length === campaign.media_links.length) ||
-          updating
+          updating ||
+          isPending ||
+          isConfirmingTxn
         }
         className='w-full border border-slate-300 p-3'
         onClick={handleUpdateMedia}

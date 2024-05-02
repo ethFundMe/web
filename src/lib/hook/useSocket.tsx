@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { socket } from '../socketConfig';
 import { Comment } from '../types';
 
-export const useSocket = (campaignID: number) => {
+export const useSocket = (campaignID: string) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = userStore();
@@ -19,31 +19,47 @@ export const useSocket = (campaignID: number) => {
       },
     };
 
-    const onJoin = (response: { data: Comment[]; totalComments: number }) => {
+    const onJoin = (response: {
+      comments: Comment[];
+      totalComments: number;
+    }) => {
       console.log('Joined room', response);
+      if (response.comments) {
+        setComments(response.comments);
+      }
     };
 
     function onConnect() {
       setIsConnected(true);
-      console.log('Connected');
-      console.log(joinData);
+      console.log('Connected 🔥');
       socket.emit('comment:join', joinData, onJoin);
     }
 
-    function onComment(response: { data: Comment; totalComments: number }) {
+    function onComment(response: {
+      events: string;
+      data: Comment;
+      status: string;
+      totalComments: number;
+    }) {
       if (!response.data) return;
       console.log({ response });
       setComments((prev) => [...prev, response.data]);
     }
 
     function onDisonnect() {
+      console.log('Disconnected ❌');
       setIsConnected(false);
+    }
+
+    function onError(res: unknown) {
+      console.log(res);
     }
 
     socket.on('connect', onConnect);
     socket.on('comment:join', onJoin);
     socket.on('campaign:comment', onComment);
     socket.on('disconnect', onDisonnect);
+    socket.on('error', onError);
 
     return () => {
       socket.off('connect', onConnect);

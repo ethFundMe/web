@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchCampaignTags, handleIPFSUpdate } from '@/actions';
+import { fetchCampaignTags, handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
@@ -118,8 +118,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     )[0].id;
 
     setIsUploadingMetadata(true);
-    handleIPFSUpdate({
-      id: campaign.id,
+    handleIPFSPush({
       title,
       description,
       bannerUrl: campaign.banner_url,
@@ -127,13 +126,16 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       mediaLinks: campaign.media_links,
       tag: preparedTag,
     })
-      .then(() => {
+      .then((res) => {
+        if (!res?.hash) throw new Error();
+
         writeContract({
           abi: EthFundMe,
           address: ethFundMeContractAddress,
           functionName: 'updateCampaign',
           chainId: ethChainId,
           args: [
+            res.hash,
             BigInt(campaign_id),
             parseEther(goal.toString()),
             form.watch('type') === 'personal'
@@ -144,6 +146,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         setIsUploadingMetadata(false);
       })
       .catch(() => {
+        toast.error('Failed to update campaign');
         setIsUploadingMetadata(false);
       });
   };
@@ -159,7 +162,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       toast.error((error as BaseError).shortMessage || error.message);
     } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
-      router.push(`/campaigns/${campaign.campaign_id}`);
+      // router.push(`/campaigns/${campaign.campaign_id}`);
     }
   }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 
@@ -353,7 +356,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           type='submit'
           size='default'
           className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
-          disabled={!editMade || isConfirmingTxn || isPending}
+          disabled={
+            !editMade || isConfirmingTxn || isPending || isUploadingMetadata
+          }
         >
           {isPending || isConfirmingTxn || isUploadingMetadata
             ? 'Loading...'
