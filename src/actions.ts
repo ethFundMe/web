@@ -134,7 +134,7 @@ export const handlePushComment = async ({
   comment: string;
 }) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/comment`, {
+    const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/comment`, {
       method: 'POST',
       body: JSON.stringify({
         comment,
@@ -149,8 +149,11 @@ export const handlePushComment = async ({
 
     if (data?.error) throw new Error(data.error[0].message);
 
+    console.log({ data, ress: res.ok });
+
     return data as number;
   } catch (e) {
+    console.log({ e });
     return { error: e as string };
   }
 };

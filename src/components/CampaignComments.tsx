@@ -20,57 +20,6 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const { refresh } = useRouter();
   const { socket, comments, handleAddComment } = useSocket(campaign.id);
 
-  // useEffect(() => {
-  //   socket.connect();
-
-  //   function onConnect() {
-  //     setIsConnected(true);
-  //     console.log('Connected');
-
-  //     socket.emit('join:comment', joinData, onJoin);
-  //   }
-
-  //   // function onComment(response: { data: Comment; totalComments: number }) {
-  //   //   if (!response.data) return;
-  //   //   console.log('Listening', response);
-  //   //   setComments((prev) => [...prev, response.data]);
-  //   // }
-
-  //   // function onDisonnect() {
-  //   //   setIsConnected(false);
-  //   //   // console.log('Socket disconnected ❌');
-  //   // }
-
-  //   const joinData = {
-  //     data: {
-  //       campaignID: campaign.id,
-  //       userID: user?.id,
-  //       limit: 24,
-  //     },
-  //   };
-
-  //   const onJoin = (response: { data: Comment[]; totalComments: number }) => {
-  //     console.log('Joined room', response);
-
-  //     if (response.data) {
-  //       setComments(response.data);
-  //     }
-  //   };
-
-  //   socket.on('connect', onConnect);
-  //   // socket.on('disconnect', onDisonnect);
-  //   // socket.on('comment:join', onJoin);
-  //   // socket.on('campaign:comment', onComment);
-
-  //   return () => {
-  //     socket.off('connect', onConnect);
-  //     // socket.off('disconnect', onDisonnect);
-  //     // socket.off('comment:join', onJoin);
-  //     // socket.on('campaign:comment', onComment);
-  //     socket.disconnect();
-  //   };
-  // }, [user?.id, campaign.id]);
-
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     const scrollItem = scrollItemRef.current;
@@ -95,8 +44,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
 
         <div
           className={cn(
-            'h-[500px] overflow-y-auto scroll-smooth pr-4',
-            comments.length < 4 && 'h-32'
+            'overflow-y-auto scroll-smooth pr-4 md:h-[500px]',
+            comments.length < 4 && 'md:h-fit'
           )}
           ref={scrollContainerRef}
         >
@@ -132,15 +81,6 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
             </AnimatePresence>
           </div>
         </div>
-
-        {/* <Button
-          type='button'
-          className=''
-          disabled={!isConnected}
-          onClick={() => {}}
-        >
-          Send comment
-        </Button> */}
 
         <CommentForm handleAddComment={handleAddComment} />
       </div>

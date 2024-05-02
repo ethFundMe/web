@@ -116,7 +116,7 @@ export default function DonateForm({
             chainId: ethChainId,
           });
         } else {
-          throw new Error(response.error);
+          // throw new Error(response.error);
         }
       });
     } else {
@@ -131,29 +131,13 @@ export default function DonateForm({
     }
   };
 
-  // const writeContractRef = useRef(writeContract);
-
-  // const handleWriteComment = useCallback(
-  //   (commentId: number) => {
-  //     writeContractRef.current({
-  //       abi: EthFundMe,
-  //       address: ethFundMeContractAddress,
-  //       functionName: 'fundCampaign',
-  //       args: [campaign.campaign_id, commentId],
-  //       value: amt,
-  //       chainId: ethChainId,
-  //     });
-  //   },
-  //   [amt, campaign.campaign_id]
-  // );
-
   useEffect(() => {
     if (isSuccess || isConfirmedTxn) {
       toast.success('Successfully funded campaign');
 
       closeBtnRef.current?.click();
       // router.push(`/campaigns/${campaign.campaign_id}`);
-      return router.refresh();
+      router.refresh();
     }
   }, [campaign.campaign_id, isSuccess, isConfirmedTxn, router]);
 
@@ -205,7 +189,7 @@ export default function DonateForm({
           <div className='relative'>
             <Input
               type='number'
-              step={0.0001}
+              step={0.001}
               min={0}
               max={parseFloat(formatEther(BigInt(campaign.goal)))}
               {...register('amount', {
