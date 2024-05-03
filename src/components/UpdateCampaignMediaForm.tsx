@@ -40,10 +40,10 @@ export default function UpdateCampaignMediaForm({
   const [preparedOtherImages, setPreparedOtherImages] =
     useState<FileList | null>(null);
 
-  const [uploadedBannerUrl, setUploadedBannerUrl] = useState<string | null>(
-    null
-  );
-  const [uploadedOtherImages, setUploadedOtherImages] = useState<string[]>([]);
+  // const [uploadedBannerUrl, setUploadedBannerUrl] = useState<string | null>(
+  //   null
+  // );
+  // const [uploadedOtherImages, setUploadedOtherImages] = useState<string[]>([]);
 
   const isPreview = (url: string) => {
     return /\b(blob)\b/.test(url);
@@ -69,19 +69,26 @@ export default function UpdateCampaignMediaForm({
   function handleUpdateMedia() {
     setUpdating(true);
     handleCloudinaryUpload()
-      .then(() => {
+      .then((res) => {
+        const campaignLinksMinusDeleted = campaign.media_links.filter((img) => {
+          if (otherPreview.indexOf(img) === -1) return false;
+          return true;
+        });
+
+        const mediaLinks =
+          res.otherImagesURL.length > 0
+            ? [...campaignLinksMinusDeleted, ...res.otherImagesURL]
+            : campaignLinksMinusDeleted;
+
         handleIPFSPush({
-          bannerUrl: uploadedBannerUrl || campaign.banner_url,
+          bannerUrl: res.bannerURL || campaign.banner_url,
           title: campaign.title,
           tag: TagsWithIds.filter(
             (i) => i.name === (campaign.tag as CampaignTags)
           )[0].id,
           youtubeLink: campaign.youtube_link || undefined,
           description: campaign.description,
-          mediaLinks:
-            uploadedOtherImages.length > 0
-              ? [...campaign.media_links, ...uploadedOtherImages]
-              : campaign.media_links,
+          mediaLinks,
         })
           .then((res) => {
             if (!res?.hash) throw new Error();
@@ -131,12 +138,7 @@ export default function UpdateCampaignMediaForm({
     const bannerURL = await uploadBanner();
     const otherImagesURL = await uploadOtherImages();
 
-    setUploadedBannerUrl(bannerURL[0]);
-    setUploadedOtherImages(otherImagesURL);
-
-    // console.log({ uploadedBannerUrl, uploadedOtherImages });
-
-    return { bannerURL, otherImagesURL };
+    return { bannerURL: bannerURL[0], otherImagesURL };
   }
 
   useEffect(() => {
