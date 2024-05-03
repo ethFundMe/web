@@ -3,6 +3,7 @@
 
 import { userStore } from '@/store';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
@@ -57,11 +58,11 @@ export const HomepageHeader = () => {
   const images = useMemo(
     () => [
       '/videos/header-video.mp4',
-      'https://res.cloudinary.com/efm/image/upload/v1712748751/homepage/h1.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748749/homepage/h2.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h3.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h4.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h5.jpg',
+      '/images/header/h1.webp',
+      '/images/header/h2.webp',
+      '/images/header/h3.webp',
+      '/images/header/h4.webp',
+      '/images/header/h5.webp',
     ],
     []
   );
@@ -101,9 +102,11 @@ export const HomepageHeader = () => {
               className='absolute h-full w-full bg-slate-900 object-cover'
             />
           ) : (
-            <img
+            <Image
               src={currentImage}
               alt='bg-image'
+              fill
+              priority
               className='absolute h-full w-full bg-slate-900 object-cover'
             />
           )}
