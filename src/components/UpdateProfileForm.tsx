@@ -158,7 +158,9 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           setUser(data);
           form.reset();
           toast.success('Profile updated successfully');
-          router.push(`/dashboard/${data.ethAddress}`);
+          if (!creatorFeeEditMade) {
+            router.push(`/dashboard/${data.ethAddress}`);
+          }
         })
         .catch((error) => {
           console.log(`Failed to update profile, ${error}`);
@@ -169,6 +171,8 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   }
   useEffect(() => {
     if (isConfirmedTxn) {
+      router.push(`/dashboard/${user.ethAddress}`);
+
       toast.success('Creator fee updated succesfully');
     } else if (isError && writingError) {
       let errorMsg =
@@ -181,7 +185,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       }
       toast.error(errorMsg);
     }
-  }, [isConfirmedTxn, isError, writingError]);
+  }, [isConfirmedTxn, user, router, isError, writingError]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateUserProfile(values);
