@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { parseEther } from 'viem';
+import { BaseError, parseEther } from 'viem';
 import {
   // BaseError,
   useWaitForTransactionReceipt,
@@ -61,7 +61,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   });
   const {
     data: hash,
-    error,
+    error: writingError,
     isError,
     isPending,
     writeContract,
@@ -168,10 +168,20 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     }
   }
   useEffect(() => {
-    if (isConfirmingTxn) {
+    if (isConfirmedTxn) {
       toast.success('Creator fee updated succesfully');
+    } else if (isError && writingError) {
+      let errorMsg =
+        (writingError as BaseError).shortMessage || writingError.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update creator fee';
+      }
+      toast.error(errorMsg);
     }
-  }, [isConfirmingTxn]);
+  }, [isConfirmedTxn, isError, writingError]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateUserProfile(values);

@@ -159,7 +159,15 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
 
   useEffect(() => {
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error.message);
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign';
+      }
+
+      toast.error(errorMsg);
     } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
       // router.push(`/campaigns/${campaign.campaign_id}`);
