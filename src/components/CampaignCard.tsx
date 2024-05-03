@@ -30,7 +30,7 @@ export const CampaignCard = ({
       onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
         'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
-        !full && 'w-full max-w-[400px] flex-shrink-0',
+        !full && 'w-full max-w-[400px] flex-shrink-0 md:pr-[40px]',
         variantStyles
       )}
     >
@@ -51,7 +51,9 @@ export const CampaignCard = ({
 
       <div className='flex-1'>
         <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
-        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+        <p className='line-clamp-2 bg-red-100 text-neutral-700 md:min-h-12'>
+          {campaign.description}
+        </p>
       </div>
 
       <div

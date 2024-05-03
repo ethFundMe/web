@@ -34,6 +34,10 @@
   scroll-padding-top: 1rem;
 }
 
+.carouselItem {
+  padding-right: 40px;
+}
+
 .ocean {
   background: #0062a6;
 }
