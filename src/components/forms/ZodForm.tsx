@@ -247,7 +247,15 @@ export default function CreateCampaignForm() {
       return;
     }
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error.message);
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to create campaign';
+      }
+
+      toast.error(errorMsg);
       setSubmitStatus(null);
       return;
     }

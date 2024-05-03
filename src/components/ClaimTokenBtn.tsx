@@ -45,9 +45,15 @@ export const ClaimTokenBtn = ({
       return;
     }
     if (isError && writingError) {
-      toast.error(
-        (writingError as BaseError).shortMessage || writingError.message
-      );
+      let errorMsg =
+        (writingError as BaseError).shortMessage || writingError.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to claim tokens';
+      }
+      toast.error(errorMsg);
 
       return;
     }

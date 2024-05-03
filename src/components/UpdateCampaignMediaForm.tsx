@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
+import { BaseError } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -140,7 +141,15 @@ export default function UpdateCampaignMediaForm({
 
   useEffect(() => {
     if (isError && error) {
-      toast.error('Failed to update campaign media');
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign media';
+      }
+
+      toast.error(errorMsg);
       setUpdating(false);
     } else if (isConfirmedTxn) {
       toast.success('Campaign updated');

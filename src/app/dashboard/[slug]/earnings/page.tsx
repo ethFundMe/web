@@ -131,7 +131,7 @@ export default async function EarningsPage({
                                     <span>Create campaign</span>
                                   </span>
                                 )}
-                                {earning.rewardType === 'campaign_funding' && (
+                                {earning.rewardType === 'funding' && (
                                   <span className='flex items-center gap-1'>
                                     <Coins size={16} />
 

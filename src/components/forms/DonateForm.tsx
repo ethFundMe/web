@@ -70,6 +70,7 @@ export default function DonateForm({
     },
   });
   const [fiatMode, setFiatMode] = useState(false);
+  const [newCommentId, setNewCommentId] = useState<null | number>(null);
   const [usdInput, setUsdInput] = useState(0);
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
@@ -105,20 +106,29 @@ export default function DonateForm({
         campaignID: campaign.id,
         userID: user.id,
         comment: prettyComment,
-      }).then((response) => {
-        if (typeof response === 'number') {
-          writeContract({
-            abi: EthFundMe,
-            address: ethFundMeContractAddress,
-            functionName: 'fundCampaign',
-            args: [BigInt(campaignID), response],
-            value: donationAmt,
-            chainId: ethChainId,
-          });
-        } else {
-          // throw new Error(response.error);
-        }
-      });
+      })
+        .then((response) => {
+          if (typeof response === 'number') {
+            setNewCommentId(response);
+
+            writeContract({
+              abi: EthFundMe,
+              address: ethFundMeContractAddress,
+              functionName: 'fundCampaign',
+              args: [BigInt(campaignID), response],
+              value: donationAmt,
+              chainId: ethChainId,
+            });
+          } else {
+            throw new Error(response.error);
+          }
+        })
+        .catch(() => {
+          if (newCommentId) {
+            // Delete comment
+          }
+          alert('Failed');
+        });
     } else {
       writeContract({
         abi: EthFundMe,
@@ -143,9 +153,19 @@ export default function DonateForm({
 
   useEffect(() => {
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error?.message);
+      if (newCommentId) {
+        // delete comment
+      }
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to donate';
+      }
+      toast.error(errorMsg);
     }
-  }, [error, isError]);
+  }, [error, isError, newCommentId]);
 
   const watchedAmount: number = watch('amount');
 

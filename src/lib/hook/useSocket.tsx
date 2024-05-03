@@ -32,6 +32,7 @@ export const useSocket = (campaignID: string) => {
     function onConnect() {
       setIsConnected(true);
       console.log('Connected 🔥');
+      console.log(joinData);
       socket.emit('comment:join', joinData, onJoin);
     }
 
@@ -46,13 +47,13 @@ export const useSocket = (campaignID: string) => {
       setComments((prev) => [...prev, response.data]);
     }
 
+    function onError(res: unknown) {
+      console.log(res);
+    }
+
     function onDisonnect() {
       console.log('Disconnected ❌');
       setIsConnected(false);
-    }
-
-    function onError(res: unknown) {
-      console.log(res);
     }
 
     socket.on('connect', onConnect);
@@ -66,9 +67,10 @@ export const useSocket = (campaignID: string) => {
       socket.off('comment:join', onJoin);
       socket.on('campaign:comment', onComment);
       socket.off('disconnect', onDisonnect);
+      socket.on('error', onError);
       socket.disconnect();
     };
-  }, [user?.id, campaignID, isConnected]);
+  }, [user, campaignID]);
 
   const handleAddComment = (comment: string) => {
     socket.emit('add:comment', {
