@@ -64,13 +64,30 @@ export enum CampaignTags {
 }
 
 export type Comment = {
-  commentID: number;
+  amount: number;
+  campaign_id: string;
   comment: string;
-  amount: string;
-  createdAt: Date;
+  created_at: Date;
+  transaction_hash: `0x${string}`;
+  id: number;
   user: {
-    fullname: string;
-    bannerUrl: string | null;
-    profileUrl: string | null;
+    ethAddress: `0x${string}`;
+    fullName: string;
+    id: string;
+    profileUrl?: string;
   };
+};
+
+export type Donation = {
+  amount: number;
+  created_at: Date;
+  transaction_hash: string;
+};
+
+export type DonationResponse = SocketResponse<Donation[]>;
+
+export type SocketResponse<T> = {
+  status: 'OK' | 'ERROR';
+  data?: T;
+  error?: Error;
 };

@@ -44,8 +44,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
 
         <div
           className={cn(
-            'overflow-y-auto scroll-smooth pr-4 md:h-[500px]',
-            comments.length < 4 && 'md:h-fit'
+            'h-[500px] overflow-y-auto scroll-smooth pr-4',
+            comments.length < 4 && 'h-fit max-h-[500px]'
           )}
           ref={scrollContainerRef}
         >
@@ -55,20 +55,18 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
                 comments.map((comment, idx) => (
                   <CommentCard
                     handleDelete={
-                      user?.fullName === comment.user.fullname
+                      user?.fullName === comment.user.fullName
                         ? (userID) => {
                             socket.emit('delete:comment', {
-                              data: {
-                                userID,
-                                campaignID: campaign.id,
-                                commentID: comment.commentID,
-                              },
+                              userID,
+                              campaignUUID: campaign.id,
+                              commentID: comment.id,
                             });
                             refresh();
                           }
                         : null
                     }
-                    key={comment.commentID}
+                    key={`${idx}-${comment.transaction_hash}`}
                     comment={comment}
                     ref={idx === comments.length - 1 ? scrollItemRef : null}
                   />
