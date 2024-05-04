@@ -1,9 +1,9 @@
 import { userStore } from '@/store';
 import { useEffect, useState } from 'react';
 import { socket } from '../socketConfig';
-import { Comment } from '../types';
+import { Comment, SocketResponse } from '../types';
 
-export const useSocket = (campaignID: string) => {
+export const useSocket = (campaignUUID?: string) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = userStore();
@@ -12,20 +12,22 @@ export const useSocket = (campaignID: string) => {
     socket.connect();
 
     const joinData = {
-      data: {
-        campaignID,
-        userID: user?.id,
-        limit: 24,
-      },
+      campaignUUID,
+      userID: user?.id,
+      limit: 24,
     };
 
-    const onJoin = (response: {
-      comments: Comment[];
-      totalComments: number;
-    }) => {
-      console.log('Joined room', response);
-      if (response.comments) {
-        setComments(response.comments);
+    const onJoin = (
+      response: SocketResponse<{
+        comments: Comment[];
+        totalComments: number;
+      }>
+    ) => {
+      if (response.status === 'OK' && response.data) {
+        console.log(response.data);
+        setComments(response.data.comments);
+      } else {
+        console.error('Error fetching donations:', response.error);
       }
     };
 
@@ -36,15 +38,16 @@ export const useSocket = (campaignID: string) => {
       socket.emit('comment:join', joinData, onJoin);
     }
 
-    function onComment(response: {
-      events: string;
-      data: Comment;
-      status: string;
-      totalComments: number;
-    }) {
-      if (!response.data) return;
+    // function onComment(response: {
+    //   events: string;
+    //   data: Comment;
+    //   status: string;
+    //   totalComments: number;
+    // }) {
+    function onComment(response: unknown) {
       console.log({ response });
-      setComments((prev) => [...prev, response.data]);
+      // if (!response.data) return;
+      // setComments((prev) => [...prev, response.data]);
     }
 
     function onError(res: unknown) {
@@ -65,20 +68,20 @@ export const useSocket = (campaignID: string) => {
     return () => {
       socket.off('connect', onConnect);
       socket.off('comment:join', onJoin);
-      socket.on('campaign:comment', onComment);
+      socket.off('campaign:comment', onComment);
       socket.off('disconnect', onDisonnect);
       socket.on('error', onError);
       socket.disconnect();
     };
-  }, [user, campaignID]);
+  }, [user, campaignUUID]);
 
   const handleAddComment = (comment: string) => {
+    console.log('Called add comment');
+
     socket.emit('add:comment', {
-      data: {
-        userID: user?.id,
-        campaignID,
-        comment,
-      },
+      userID: user?.id,
+      campaignUUID,
+      comment,
     });
   };
 

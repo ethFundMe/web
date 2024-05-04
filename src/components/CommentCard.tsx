@@ -4,12 +4,19 @@ import { Comment } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
+import { Eye } from 'lucide-react';
 import Link from 'next/link';
 import { forwardRef } from 'react';
 import { FaEthereum } from 'react-icons/fa';
-import { IoTrash } from 'react-icons/io5';
+import { IoEllipsisVertical, IoTrash } from 'react-icons/io5';
 import { formatEther } from 'viem';
 import ImageWithFallback from './ImageWithFallback';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 
 type Props = React.ComponentProps<'div'> & {
   comment: Comment;
@@ -23,20 +30,18 @@ export const CommentCard = forwardRef<Ref, Props>(
     {
       handleDelete,
       comment: {
+        id,
         comment,
         amount,
-        commentID,
-        user: { profileUrl, fullname },
-        createdAt,
+        user: { profileUrl, fullName },
+        created_at,
+        transaction_hash,
       },
     },
     ref
   ) => {
     const formatDonateAmt = () => {
       if (!amount) return;
-      const parsed = parseInt(amount);
-      if (!parsed || typeof parsed !== 'number') return;
-
       return formatEther(BigInt(amount));
     };
     const donatedAmt = formatDonateAmt();
@@ -65,9 +70,9 @@ export const CommentCard = forwardRef<Ref, Props>(
               </div>
 
               <div>
-                <p>{fullname}</p>
+                <p>{fullName}</p>
                 <small>
-                  {dayjs(createdAt)
+                  {dayjs(created_at)
                     .subtract(2, 'minute')
                     .format('DD MMM, YYYY . HH : mm a')}
                 </small>
@@ -90,17 +95,44 @@ export const CommentCard = forwardRef<Ref, Props>(
           <p>{comment}</p>
         </div>
 
-        {handleDelete && (
-          <button
-            className='p-1 px-2'
-            onClick={() => {
-              if (window.confirm('Sure to delete?')) {
-                handleDelete(String(commentID));
-              }
-            }}
-          >
-            <IoTrash className='text-red-500' />
-          </button>
+        {(transaction_hash || handleDelete) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className='cursor-pointer'
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <IoEllipsisVertical />
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              {transaction_hash && (
+                <DropdownMenuItem className='flex items-center gap-2' asChild>
+                  <Link
+                    target='_blank'
+                    href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
+                  >
+                    <Eye size={14} />
+                    View transaction
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {handleDelete && (
+                <DropdownMenuItem
+                  className='flex items-center gap-2'
+                  onClick={() => {
+                    if (window.confirm('Sure to delete?')) {
+                      handleDelete(String(id));
+                    }
+                  }}
+                >
+                  <IoTrash className='text-red-500' />
+                  Delete comment
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </motion.div>
     );

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import crypto, { BinaryLike } from 'crypto';
+import dayjs from 'dayjs';
 import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -264,3 +265,31 @@ export const createUrl = (file: File) => {
 //   if (process.env.NODE_ENV !== 'development') return;
 //   console.log(message);
 // };
+
+export function getRelativeTime(date: Date): string {
+  const commentDate = dayjs(date);
+
+  const currentDate = dayjs();
+
+  const diffInDays = currentDate.diff(commentDate, 'day');
+
+  if (diffInDays === 0) {
+    return `Today, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays === 1) {
+    return `Yesterday, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays <= 7) {
+    return `Last week, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays <= 30) {
+    return `Last month, ${commentDate.format('h:mm a')}`;
+  }
+
+  return `${commentDate.format('h:mm a')} - ${commentDate.format(
+    'DD/MM/YYYY'
+  )}`;
+}
