@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 'use client';
 
-import { socket } from '@/lib/socketConfig';
+import { socket as webSocket } from '@/lib/socketConfig';
 import { Donation, DonationResponse } from '@/lib/types';
 import { formatWalletAddress, getRelativeTime } from '@/lib/utils';
 import dayjs from 'dayjs';
@@ -9,26 +9,32 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
+import { Socket } from 'socket.io-client';
 import { formatEther } from 'viem';
 
 dayjs.extend(advancedFormat);
 dayjs.extend(relativeTime);
 
 export default function LiveDonations() {
-  const [loading, setLoading] = useState(true);
   const [donations, setDonations] = useState<Donation[]>([]);
-  const [isConnected, setIsConnected] = useState(false);
+  const socketRef = useRef<Socket>(null);
 
   useEffect(() => {
-    socket.connect();
+    let socket = socketRef.current;
+
+    if (!socket) {
+      socket = webSocket;
+      socket.connect();
+      socket.on('connect', onConnect);
+      socket.on('donation:receieved', onDonationReceived);
+      socket.on('disconnect', onDisconnect);
+      socket.emit('campaign:donations', {}, onGetDonations);
+    }
 
     function onConnect() {
-      if (isConnected) return;
-      setIsConnected(true);
       console.log('Connected for live donations 🔥');
-      socket.emit('campaign:donations', {}, onGetDonations);
     }
 
     function onGetDonations(response: DonationResponse) {
@@ -36,34 +42,29 @@ export default function LiveDonations() {
         if (response.data) {
           setDonations(response.data);
         }
-        setLoading(false);
         console.log('Received donations:', response.data);
       } else {
         console.error('Error fetching donations:', response.error);
-        setLoading(false);
       }
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
     }
 
     function onDonationReceived(response: Donation) {
       setDonations((prev) => [response, ...prev]);
     }
 
-    socket.on('connect', onConnect);
-    socket.on('donation:receieved', onDonationReceived);
-    socket.on('disconnect', onDisconnect);
+    function onDisconnect() {
+      socket = null;
+    }
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('campaign:donations', onGetDonations);
-      socket.off('disconnect', onDisconnect);
-      setLoading(false);
-      socket.disconnect();
+      if (socket) {
+        socket.off('connect', onConnect);
+        socket.off('campaign:donations', onGetDonations);
+        socket.off('disconnect', onDisconnect);
+        socket.disconnect();
+      }
     };
-  }, [isConnected]);
+  }, []);
 
   // const { ref, inView } = useInView();
 
@@ -79,9 +80,9 @@ export default function LiveDonations() {
 
       <ul
         // ref={ref}
-        className='h-[210px relative mx-auto max-w-md space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[250px] max-w-md space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
       >
-        {loading && donations.length < 1 && <LoadingIndicator />}
+        {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
           {donations.map((i) => (
             <motion.li
@@ -124,7 +125,10 @@ export default function LiveDonations() {
           ))}
         </AnimatePresence>
 
-        {/* <div className='absolute bottom-0 h-20 w-full bg-gradient-to-b from-transparent to-white'></div> */}
+        <div
+          className='absolute bottom-0 h-[55px] w-full bg-gradient-to-b from-transparent to-white'
+          onClick={(e) => e.stopPropagation()}
+        ></div>
       </ul>
     </div>
   );
@@ -133,7 +137,7 @@ export default function LiveDonations() {
 function LoadingIndicator() {
   return (
     <div className='space-y-2'>
-      {Array.from({ length: 3 }).map((_, idx) => (
+      {Array.from({ length: 5 }).map((_, idx) => (
         <>
           <div key={idx} className='mb-1 h-5 animate-pulse bg-slate-100'></div>
           <div
