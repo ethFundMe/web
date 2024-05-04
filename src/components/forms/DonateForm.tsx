@@ -142,7 +142,7 @@ export default function DonateForm({
   };
 
   useEffect(() => {
-    if (isSuccess || isConfirmedTxn) {
+    if (isConfirmedTxn || isSuccess) {
       toast.success('Successfully funded campaign');
 
       closeBtnRef.current?.click();
@@ -209,8 +209,8 @@ export default function DonateForm({
           <div className='relative'>
             <Input
               type='number'
-              step={0.001}
-              min={0}
+              step='any'
+              min={0.0001}
               max={parseFloat(formatEther(BigInt(campaign.goal)))}
               {...register('amount', {
                 required: 'Amount is required',
@@ -242,8 +242,8 @@ export default function DonateForm({
           <div>
             <input
               type='number'
-              step={0.0001}
-              min={0}
+              step='any'
+              min={0.0001}
               max={
                 parseFloat(formatEther(BigInt(campaign.goal))) *
                 (ethPriceInUSD ?? 0)
