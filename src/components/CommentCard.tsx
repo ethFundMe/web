@@ -20,7 +20,7 @@ import {
 
 type Props = React.ComponentProps<'div'> & {
   comment: Comment;
-  handleDelete: ((userID: string) => void) | null;
+  handleDelete: (() => void) | null;
 };
 
 type Ref = HTMLDivElement;
@@ -30,7 +30,7 @@ export const CommentCard = forwardRef<Ref, Props>(
     {
       handleDelete,
       comment: {
-        id,
+        // id,
         comment,
         amount,
         user: { profileUrl, fullName },
@@ -46,16 +46,34 @@ export const CommentCard = forwardRef<Ref, Props>(
     };
     const donatedAmt = formatDonateAmt();
 
+    // const { socket } = useSocket(campaign.id);
+
+    // const handleDeleteComment = useCallback(() => {
+    //   socket.emit(
+    //     'delete:comment',
+    //     {
+    //       userId: user?.id,
+    //       campaignUUID: campaign.id,
+    //       commentId: newCommentId,
+    //     },
+    //     (response: unknown) => {
+    //       if (process.env.NODE_ENV === 'development') {
+    //         console.log('delete response', response);
+    //       }
+    //     }
+    //   );
+    // }, [user?.id, campaign.id, newCommentId, socket]);
+
     return (
       <motion.div
         ref={ref}
         animate={{ x: [-12, 0] }}
         className={cn(
-          'flex items-start justify-between gap-2 rounded-lg border-2 border-transparent p-2 text-sm',
+          'relative flex items-start justify-between gap-2 rounded-lg border-2 border-transparent p-2 text-sm',
           donatedAmt ? 'animated-border  bg-slate-50' : ' border-slate-50'
         )}
       >
-        <div>
+        <div className='w-full pr-3'>
           <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <div className='relative h-8 w-8 flex-shrink-0'>
@@ -98,7 +116,7 @@ export const CommentCard = forwardRef<Ref, Props>(
         {(transaction_hash || handleDelete) && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className='cursor-pointer'
+              className='absolute right-0 top-0 cursor-pointer p-2'
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -123,7 +141,7 @@ export const CommentCard = forwardRef<Ref, Props>(
                   className='flex items-center gap-2'
                   onClick={() => {
                     if (window.confirm('Sure to delete?')) {
-                      handleDelete(String(id));
+                      handleDelete();
                     }
                   }}
                 >
