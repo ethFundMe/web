@@ -5,10 +5,11 @@ import { handlePushComment } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
+import { useSocket } from '@/lib/hook/useSocket';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { formatEther, parseEther } from 'viem';
@@ -71,12 +72,30 @@ export default function DonateForm({
   });
   const [fiatMode, setFiatMode] = useState(false);
   const [newCommentId, setNewCommentId] = useState<null | number>(null);
+  const [isPushingComment, setIsPushingComment] = useState(false);
   const [usdInput, setUsdInput] = useState(0);
+  const { socket } = useSocket(campaign.id);
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
 
   const isLoadingTxn = isPending || isConfirmingTxn;
+
+  const handleDeleteComment = useCallback(() => {
+    socket.emit(
+      'delete:comment',
+      {
+        userId: user?.id,
+        campaignUUID: campaign.id,
+        commentId: newCommentId,
+      },
+      (response: unknown) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('delete response', response);
+        }
+      }
+    );
+  }, [user?.id, campaign.id, newCommentId, socket]);
 
   const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
     const { amount, campaignID, comment } = data;
@@ -102,15 +121,16 @@ export default function DonateForm({
     const prettyComment = comment?.trim();
 
     if (prettyComment && user) {
+      setIsPushingComment(true);
       handlePushComment({
         campaignID: campaign.id,
         userID: user.id,
         comment: prettyComment,
       })
         .then((response) => {
+          setIsPushingComment(false);
           if (typeof response === 'number') {
             setNewCommentId(response);
-
             writeContract({
               abi: EthFundMe,
               address: ethFundMeContractAddress,
@@ -120,14 +140,17 @@ export default function DonateForm({
               chainId: ethChainId,
             });
           } else {
-            throw new Error(response.error);
+            throw new Error(response?.error);
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          setIsPushingComment(false);
           if (newCommentId) {
             // Delete comment
+            handleDeleteComment();
           }
-          alert('Failed');
+          toast.error('Donation failed');
+          console.log(error);
         });
     } else {
       writeContract({
@@ -154,7 +177,7 @@ export default function DonateForm({
   useEffect(() => {
     if (isError && error) {
       if (newCommentId) {
-        // delete comment
+        handleDeleteComment();
       }
       let errorMsg = (error as BaseError).shortMessage || error.message;
 
@@ -165,7 +188,7 @@ export default function DonateForm({
       }
       toast.error(errorMsg);
     }
-  }, [error, isError, newCommentId]);
+  }, [error, isError, newCommentId, handleDeleteComment]);
 
   const watchedAmount: number = watch('amount');
 
@@ -293,7 +316,9 @@ export default function DonateForm({
       {customClose ?? (
         <Button
           size='lg'
-          disabled={isLoadingTxn || isConfirmingTxn || isPending}
+          disabled={
+            isLoadingTxn || isConfirmingTxn || isPending || isPushingComment
+          }
           className='w-full disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-opacity-90'
         >
           {isLoadingTxn ? 'Donating...' : 'Donate'}

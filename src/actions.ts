@@ -133,14 +133,11 @@ export const handlePushComment = async ({
   campaignID: string;
   comment: string;
 }) => {
+  const commentData = { campaignUUID: campaignID, comment, userId: userID };
   try {
     const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/comment`, {
       method: 'POST',
-      body: JSON.stringify({
-        comment,
-        userID,
-        campaignID,
-      }),
+      body: JSON.stringify(commentData),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -149,12 +146,13 @@ export const handlePushComment = async ({
 
     if (data?.error) throw new Error(data.error[0].message);
 
-    console.log({ data, ress: res.ok });
+    console.log(data, { ress: res.ok });
 
     return data as number;
   } catch (e) {
-    console.log({ e });
-    return { error: e as string };
+    if (e instanceof Error) {
+      return { error: e.message };
+    }
   }
 };
 
