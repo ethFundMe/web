@@ -81,7 +81,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
 
-  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA();
+  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA(user?.isVerified);
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -174,6 +174,13 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     }
   }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 
+  function goalReached() {
+    if (campaign.total_accrued >= campaign.goal) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Form {...form}>
       <form
@@ -227,8 +234,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               <FormLabel>Goal (ETH)</FormLabel>
               <FormControl>
                 <Input
+                  disabled={goalReached()}
                   type='number'
-                  step={0.01}
+                  step='any'
                   defaultValue={field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
