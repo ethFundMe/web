@@ -88,7 +88,9 @@ export const CommentCard = forwardRef<Ref, Props>(
               </div>
 
               <div>
-                <p>{fullName}</p>
+                <p className='line-clamp-1 max-w-xs [word-break:break-all] sm:max-w-sm'>
+                  {fullName}
+                </p>
                 <small>
                   {dayjs(created_at)
                     .subtract(2, 'minute')

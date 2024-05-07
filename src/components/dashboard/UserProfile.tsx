@@ -4,6 +4,7 @@ import { updateUser } from '@/actions';
 import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
+import { getCookie } from 'cookies-next';
 import { Eye, RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export const UserProfile = ({
   user: User;
   campaigns: Campaign[];
 }) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const router = useRouter();
   const [closeBannerRef, closePfpRef] = useRefs<HTMLButtonElement>(null);
   const [showPfpUpload, setShowPfpUpload] = useState(false);
@@ -80,6 +81,8 @@ export const UserProfile = ({
       });
   };
 
+  const loggedIn = isConnected && getCookie('efmToken');
+
   return (
     <div className={cn('mb-20 w-full')}>
       {user.isBanned ? (
@@ -97,7 +100,7 @@ export const UserProfile = ({
                   : '#8c929a',
               }}
             >
-              {user.ethAddress === address && (
+              {loggedIn && user.ethAddress === address && (
                 <div className='-mt-10 flex w-fit gap-2 bg-white p-2 duration-200 ease-in-out group-hover:-mt-0'>
                   <Dialog>
                     <DialogTrigger>
@@ -132,128 +135,143 @@ export const UserProfile = ({
 
             <Container className='flex flex-col gap-4 py-4 lg:py-8'>
               <div className='flex justify-between'>
-                <Dialog>
-                  <DialogTrigger className='group relative -mt-24 h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-white bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
-                    <Image
-                      className='h-full w-full object-cover'
-                      src={user.profileUrl || '/images/user-pfp.png'}
-                      height={500}
-                      width={500}
-                      alt='user-pfp'
-                    />
-                    <div className='absolute left-0 top-0 grid h-full w-full place-content-center bg-black/50 text-center text-sm text-white opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100'>
-                      <span className='mx-auto block'>
-                        <Eye />
-                      </span>
-                      View
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className='p-0.5'>
-                    <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
-                      <ImageWithFallback
-                        className={cn(
-                          'my-auto w-full object-cover',
-                          updatingImage[0] && 'opacity-60'
-                        )}
-                        src={user.profileUrl ?? ''}
-                        fallback='/images/user-pfp.png'
-                        height={500}
-                        width={500}
-                        alt={user.fullName ?? 'profile-picture'}
-                      />
-
-                      {updatingImage[0] && (
-                        <span className='absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2'>
-                          <div className='h-8 w-8 animate-spin rounded-full border-2 border-t-0 border-slate-700'></div>
-                        </span>
-                      )}
-
-                      {!updatingImage[0] && user.ethAddress === address && (
-                        <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
-                          <span
-                            title='Change image'
-                            className='cursor-pointer'
-                            onClick={() => setShowPfpUpload(true)}
-                          >
-                            <RefreshCcw />
+                <div className='relative -mt-24 h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-white bg-slate-300 shadow shadow-slate-200 md:h-36 md:w-36'>
+                  <Image
+                    className='h-full w-full object-cover'
+                    src={user.profileUrl || '/images/user-pfp.png'}
+                    height={500}
+                    width={500}
+                    alt='user-pfp'
+                  />
+                  {loggedIn && user.ethAddress === address && (
+                    <Dialog>
+                      <DialogTrigger className='group absolute left-0 top-0 h-full w-full'>
+                        <div className='absolute left-0 top-0 grid h-full w-full place-content-center bg-black/50 text-center text-sm text-white opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100'>
+                          <span className='mx-auto block'>
+                            <Eye />
                           </span>
+                          View
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent className='p-0.5'>
+                        <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
+                          <ImageWithFallback
+                            className={cn(
+                              'my-auto w-full object-cover',
+                              updatingImage[0] && 'opacity-60'
+                            )}
+                            src={user.profileUrl ?? ''}
+                            fallback='/images/user-pfp.png'
+                            height={500}
+                            width={500}
+                            alt={user.fullName ?? 'profile-picture'}
+                          />
 
-                          {user.profileUrl && (
-                            <span
-                              title='Remove image'
-                              className='cursor-pointer text-red-500'
-                              onClick={async () => {
-                                try {
-                                  setUpdatingImage((prev) => [true, prev[1]]);
-                                  const res = await deleteFromCloudinary(
-                                    user.profileUrl as string
-                                  );
-
-                                  if (res.ok) {
-                                    updateUser({
-                                      ethAddress: user.ethAddress,
-                                      email: user.email,
-                                      fullName: user.fullName,
-                                      profileUrl: undefined,
-                                    })
-                                      .then((res) => {
-                                        setUser(res);
-                                        toast.success('Profile updated', {
-                                          position: 'top-right',
-                                        });
-                                        setUpdatingImage((prev) => [
-                                          false,
-                                          prev[1],
-                                        ]);
-
-                                        if (closePfpRef.current) {
-                                          closePfpRef.current.click();
-                                        }
-                                        router.refresh();
-                                      })
-                                      .catch(() => {
-                                        toast.error(
-                                          'Failed to update profile',
-                                          {
-                                            position: 'top-right',
-                                          }
-                                        );
-                                        setUpdatingImage((prev) => [
-                                          false,
-                                          prev[1],
-                                        ]);
-                                      });
-                                  } else {
-                                    throw new Error('Failed to update image');
-                                  }
-                                } catch (err) {
-                                  console.log(err);
-                                  toast.error('Failed to update image', {
-                                    position: 'top-right',
-                                  });
-                                  setUpdatingImage((prev) => [false, prev[1]]);
-                                }
-                              }}
-                            >
-                              <Trash />
+                          {updatingImage[0] && (
+                            <span className='absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2'>
+                              <div className='h-8 w-8 animate-spin rounded-full border-2 border-t-0 border-slate-700'></div>
                             </span>
                           )}
+
+                          {!updatingImage[0] && user.ethAddress === address && (
+                            <div className='absolute left-0 top-0 flex gap-2 bg-white p-2 transition-all duration-150 ease-in group-hover:top-0 md:-top-20'>
+                              <span
+                                title='Change image'
+                                className='cursor-pointer'
+                                onClick={() => setShowPfpUpload(true)}
+                              >
+                                <RefreshCcw />
+                              </span>
+
+                              {user.profileUrl && (
+                                <span
+                                  title='Remove image'
+                                  className='cursor-pointer text-red-500'
+                                  onClick={async () => {
+                                    try {
+                                      setUpdatingImage((prev) => [
+                                        true,
+                                        prev[1],
+                                      ]);
+                                      const res = await deleteFromCloudinary(
+                                        user.profileUrl as string
+                                      );
+
+                                      if (res.ok) {
+                                        updateUser({
+                                          ethAddress: user.ethAddress,
+                                          email: user.email,
+                                          fullName: user.fullName,
+                                          profileUrl: undefined,
+                                        })
+                                          .then((res) => {
+                                            setUser(res);
+                                            toast.success('Profile updated', {
+                                              position: 'top-right',
+                                            });
+                                            setUpdatingImage((prev) => [
+                                              false,
+                                              prev[1],
+                                            ]);
+
+                                            if (closePfpRef.current) {
+                                              closePfpRef.current.click();
+                                            }
+                                            router.refresh();
+                                          })
+                                          .catch(() => {
+                                            toast.error(
+                                              'Failed to update profile',
+                                              {
+                                                position: 'top-right',
+                                              }
+                                            );
+                                            setUpdatingImage((prev) => [
+                                              false,
+                                              prev[1],
+                                            ]);
+                                          });
+                                      } else {
+                                        throw new Error(
+                                          'Failed to update image'
+                                        );
+                                      }
+                                    } catch (err) {
+                                      console.log(err);
+                                      toast.error('Failed to update image', {
+                                        position: 'top-right',
+                                      });
+                                      setUpdatingImage((prev) => [
+                                        false,
+                                        prev[1],
+                                      ]);
+                                    }
+                                  }}
+                                >
+                                  <Trash />
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    {showPfpUpload && (
-                      <DnDUpload handleUpload={handlePfpUpdate} maxFiles={1} />
-                    )}
+                        {showPfpUpload && (
+                          <DnDUpload
+                            handleUpload={handlePfpUpdate}
+                            maxFiles={1}
+                          />
+                        )}
 
-                    <DialogClose
-                      ref={closePfpRef}
-                      className='pointer-events-none absolute opacity-0'
-                    >
-                      Close
-                    </DialogClose>
-                  </DialogContent>
-                </Dialog>
+                        <DialogClose
+                          ref={closePfpRef}
+                          className='pointer-events-none absolute opacity-0'
+                        >
+                          Close
+                        </DialogClose>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
 
                 {!user.isVerified && address === user.ethAddress && (
                   <Button>

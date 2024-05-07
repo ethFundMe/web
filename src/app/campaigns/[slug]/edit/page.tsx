@@ -3,6 +3,8 @@ import { Container } from '@/components/Container';
 import EditCampaignForm from '@/components/EditCampaignForm';
 import UpdateCampaignMediaForm from '@/components/UpdateCampaignMediaForm';
 import { TextSizeStyles } from '@/lib/styles';
+import { Flag } from 'lucide-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default async function EditCampaign({
@@ -16,6 +18,13 @@ export default async function EditCampaign({
 
   return (
     <div className='min-h-[calc(100dvh-269px)]'>
+      {campaign.flagged && (
+        <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
+          <Flag className='fill-red-600' size={15} />
+          <span>This campaign has been flagged. </span>
+          <Link href='/legal/terms-and-conditions'>Learn more</Link>
+        </div>
+      )}
       <Container>
         <div className='pb-3 text-center sm:py-5'>
           <h1 className={TextSizeStyles.h1}>Edit Campaign</h1>

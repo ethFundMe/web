@@ -10,6 +10,7 @@ import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
+import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -112,8 +113,21 @@ export default async function CampaignPage({
     : [campaign.banner_url, ...campaign.media_links];
   return (
     <>
+      {campaign.flagged && (
+        <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
+          <Flag className='fill-red-600' size={15} />
+          <span>This campaign has been flagged. </span>
+          <Link href='/legal/terms-and-conditions'>Learn more</Link>
+        </div>
+      )}
+
       <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
-        <Container className='relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start'>
+        <Container
+          className={cn(
+            'relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start',
+            campaign.flagged && '!pointer-events-none !grayscale'
+          )}
+        >
           <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
             <div>
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
