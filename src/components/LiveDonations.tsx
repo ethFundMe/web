@@ -3,7 +3,7 @@
 
 import { socket as webSocket } from '@/lib/socketConfig';
 import { Donation, DonationResponse } from '@/lib/types';
-import { formatWalletAddress, getRelativeTime } from '@/lib/utils';
+import { formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -69,7 +69,7 @@ export default function LiveDonations() {
   // const { ref, inView } = useInView();
 
   const format = (num: number) => {
-    return parseFloat(formatEther(BigInt(num))).toFixed(3);
+    return parseFloat(formatEther(BigInt(num))).toFixed(5);
   };
 
   return (
@@ -97,7 +97,7 @@ export default function LiveDonations() {
               key={i.transaction_hash}
             >
               <Link
-                href={`https://etherscan.io/tx/${i.transaction_hash}`}
+                href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${i.transaction_hash}`}
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
@@ -117,9 +117,9 @@ export default function LiveDonations() {
                   </span>
                 </span>
 
-                <span className='ml-auto block text-right text-xs text-slate-600'>
+                {/* <span className='ml-auto block text-right text-xs text-slate-600'>
                   {getRelativeTime(i.created_at)}
-                </span>
+                </span> */}
               </Link>
             </motion.li>
           ))}
