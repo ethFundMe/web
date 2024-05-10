@@ -3,6 +3,8 @@
 
 import { userStore } from '@/store';
 import { motion } from 'framer-motion';
+import Typewriter from 'typewriter-effect';
+// import './App.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -29,15 +31,11 @@ export const HomepageHeader = () => {
     return splittedName[0];
   };
 
-  const getGreeterHeader = (fullName: string) => {
-    const _ = splitName(fullName).slice(0, 20);
-    const name =
-      splitName(fullName).length > 20 ? _ + '...' : splitName(fullName);
-    const greetArr = [
-      `Welcome, ${name}`,
-      `Hello 👋 ${name}`,
-      `${greeting} ${name}!`,
-    ];
+  const getGreeterHeader = () => {
+    // const _ = splitName(fullName).slice(0, 20);
+    // const name =
+    //   splitName(fullName).length > 20 ? _ + '...' : splitName(fullName);
+    const greetArr = ['Welcome, ', 'Hello 👋 ', `${greeting} `];
     const randomNum = Math.round(Math.random() * 10);
 
     if (randomNum >= 0 && randomNum < 4) {
@@ -49,6 +47,14 @@ export const HomepageHeader = () => {
     if (randomNum >= 7 && randomNum < 10) {
       return greetArr[2];
     }
+  };
+
+  const truncName = (fullname: string) => {
+    const _ = splitName(fullname).slice(0, 20);
+    const name =
+      splitName(fullname).length > 20 ? _ + '...' : splitName(fullname);
+
+    return name;
   };
 
   useEffect(() => {
@@ -126,9 +132,14 @@ export const HomepageHeader = () => {
                     transition: { duration: 0.25, ease: 'easeInOut' },
                   }}
                   key={greeting}
-                  className='text-5xl font-medium leading-tight md:text-7xl'
+                  className='flex text-5xl font-medium leading-tight md:gap-x-8 md:text-7xl'
                 >
-                  {getGreeterHeader(user.fullName)}
+                  {getGreeterHeader()}
+                  <Typewriter
+                    onInit={(typewriter) => {
+                      typewriter.typeString(truncName(user.fullName)).start();
+                    }}
+                  />
                 </motion.h1>
               )}
 

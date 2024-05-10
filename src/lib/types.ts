@@ -82,6 +82,7 @@ export type Donation = {
   amount: number;
   created_at: Date;
   transaction_hash: string;
+  donor: `0x${string}`;
 };
 
 export type DonationResponse = SocketResponse<Donation[]>;

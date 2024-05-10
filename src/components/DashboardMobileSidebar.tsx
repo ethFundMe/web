@@ -8,7 +8,7 @@ export default function DashboardMobileSidebar({
   routes: { link: string; title: string; icon: React.ReactNode }[];
 }) {
   return (
-    <div className='fixed bottom-4 left-1/2 z-50 mx-auto  w-fit -translate-x-1/2 rounded-3xl border border-slate-200 bg-white opacity-100 hover:border-slate-200 hover:opacity-100 sm:border-transparent sm:opacity-80'>
+    <div className='fixed bottom-6 left-1/2 z-50 mx-auto block w-fit  -translate-x-1/2 rounded-3xl border border-slate-200 bg-white opacity-100 hover:border-slate-200 hover:opacity-100 sm:border-transparent sm:opacity-80 md:hidden'>
       <ul className='flex items-center justify-center gap-5 px-4 py-2'>
         {routes.map((route, idx) => (
           <li key={idx} title={route.title}>
