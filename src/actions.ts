@@ -146,8 +146,6 @@ export const handlePushComment = async ({
 
     if (data?.error) throw new Error(data.error[0].message);
 
-    console.log(data, { ress: res.ok });
-
     return data as number;
   } catch (e) {
     if (e instanceof Error) {

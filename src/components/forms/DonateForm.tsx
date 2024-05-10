@@ -8,6 +8,7 @@ import useEthPrice from '@/lib/hook/useEthPrice';
 import { useSocket } from '@/lib/hook/useSocket';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -75,6 +76,7 @@ export default function DonateForm({
   const [isPushingComment, setIsPushingComment] = useState(false);
   const [usdInput, setUsdInput] = useState(0);
   const { socket } = useSocket(campaign.id);
+  const loggedIn = address || getCookie('efmToken');
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
@@ -112,7 +114,7 @@ export default function DonateForm({
       ? fiatToETH
       : parseEther(amount.toString() || '0');
 
-    if (!user || !address) {
+    if (!loggedIn) {
       if (closeBtnRef.current && openConnectModal) {
         closeBtnRef.current.click();
         openConnectModal();
@@ -149,7 +151,7 @@ export default function DonateForm({
             // Delete comment
             handleDeleteComment();
           }
-          toast.error('Donation failed');
+          toast.error('Failed to add comment');
           console.log(error);
         });
     } else {
@@ -183,12 +185,14 @@ export default function DonateForm({
 
       if (errorMsg === 'User rejected the request.') {
         errorMsg = 'Request rejected';
+      } else if (!loggedIn) {
+        errorMsg = 'Connect wallet to donate';
       } else {
         errorMsg = 'Failed to donate';
       }
       toast.error(errorMsg);
     }
-  }, [error, isError, newCommentId, handleDeleteComment]);
+  }, [error, isError, newCommentId, loggedIn, handleDeleteComment]);
 
   const watchedAmount: number = watch('amount');
 

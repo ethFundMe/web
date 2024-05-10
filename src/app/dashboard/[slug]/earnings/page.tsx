@@ -108,7 +108,7 @@ export default async function EarningsPage({
                   {earnings.map((earning, idx) => (
                     <li key={idx}>
                       <Link
-                        href={'/'}
+                        href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
                         className='block rounded-md bg-white/20 p-2.5 text-white'
                       >
                         <div className=''>
