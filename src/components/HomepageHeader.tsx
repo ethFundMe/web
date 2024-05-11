@@ -132,7 +132,7 @@ export const HomepageHeader = () => {
                     transition: { duration: 0.25, ease: 'easeInOut' },
                   }}
                   key={greeting}
-                  className='flex text-5xl font-medium leading-tight md:gap-x-8 md:text-7xl'
+                  className='flex gap-x-2 text-3xl font-medium leading-tight md:gap-x-8 md:text-7xl'
                 >
                   {getGreeterHeader()}
                   <Typewriter
