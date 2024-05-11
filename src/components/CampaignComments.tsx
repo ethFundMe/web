@@ -18,7 +18,11 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   // const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
 
   const { refresh } = useRouter();
-  const { socket, comments: socketComments } = useSocket(campaign.id);
+  const {
+    socket,
+    comments: socketComments,
+    updateList,
+  } = useSocket(campaign.id);
   const [comments, setComments] = useState(socketComments);
 
   useEffect(() => {
@@ -26,6 +30,62 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
       setComments(socketComments);
     }
   }, [socket, socketComments]);
+
+  function deleteComment(comment: Comment) {
+    const isOwner = user?.fullName === comment.user.fullName;
+
+    if (!isOwner) return;
+    const data = {
+      userId: user?.id,
+      campaignUUID: campaign.id,
+      commentId: comment.id,
+    };
+
+    if (socket) {
+      socket.emit(
+        'delete:comment',
+        data,
+        (response: SocketResponse<object>) => {
+          if (response.status === 'OK') {
+            socket.connect();
+            toast.success('Comment deleted');
+            refresh();
+          }
+
+          if (response.error) {
+            if (response.error instanceof Error) {
+              toast.error(response.error.message);
+            } else {
+              toast.error(response.error);
+            }
+          }
+          if (process.env.NODE_ENV === 'development') {
+            console.log('delete response', response);
+          }
+          socket.emit(
+            'comment:join',
+            {
+              campaignUUID: campaign.id,
+              userID: user?.id,
+              limit: 24,
+            },
+            function (
+              response: SocketResponse<{
+                comments: Comment[];
+                totalComments: number;
+              }>
+            ) {
+              if (response.status === 'OK' && response.data) {
+                updateList(response.data.comments);
+              } else {
+                console.error('Error fetching donations:', response.error);
+              }
+            }
+          );
+        }
+      );
+    }
+  }
 
   // useEffect(() => {
   //   const scrollContainer = scrollContainerRef.current;
@@ -61,69 +121,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
               <>
                 {comments.map((comment) => (
                   <CommentCard
-                    handleDelete={
-                      user?.fullName === comment.user.fullName
-                        ? () => {
-                            const data = {
-                              userId: user.id,
-                              campaignUUID: campaign.id,
-                              commentId: comment.id,
-                            };
-
-                            if (socket) {
-                              socket.emit(
-                                'delete:comment',
-                                data,
-                                (response: SocketResponse<object>) => {
-                                  if (response.status === 'OK') {
-                                    socket.connect();
-                                    toast.success('Comment deleted');
-                                    refresh();
-                                    socket.emit(
-                                      'comment:join',
-                                      {
-                                        campaignUUID: campaign.id,
-                                        userID: user?.id,
-                                        limit: 24,
-                                      },
-                                      function (
-                                        response: SocketResponse<{
-                                          comments: Comment[];
-                                          totalComments: number;
-                                        }>
-                                      ) {
-                                        if (
-                                          response.status === 'OK' &&
-                                          response.data
-                                        ) {
-                                          setComments(response.data.comments);
-                                        } else {
-                                          console.error(
-                                            'Error fetching donations:',
-                                            response.error
-                                          );
-                                        }
-                                      }
-                                    );
-                                    return;
-                                  }
-
-                                  if (response.error) {
-                                    if (response.error instanceof Error) {
-                                      toast.error(response.error.message);
-                                    } else {
-                                      toast.error(response.error);
-                                    }
-                                  }
-                                  if (process.env.NODE_ENV === 'development') {
-                                    console.log('delete response', response);
-                                  }
-                                }
-                              );
-                            }
-                          }
-                        : null
-                    }
+                    isOwner={user?.fullName === comment.user.fullName}
+                    handleDelete={() => deleteComment(comment)}
                     key={`${comment.id}`}
                     comment={comment}
                   />

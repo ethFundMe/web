@@ -34,7 +34,9 @@ export default function LiveDonations() {
     }
 
     function onConnect() {
-      console.log('Connected for live donations 🔥');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Connected for live donations 🔥');
+      }
     }
 
     function onGetDonations(response: DonationResponse) {
@@ -42,7 +44,6 @@ export default function LiveDonations() {
         if (response.data) {
           setDonations(response.data);
         }
-        console.log('Received donations:', response.data);
       } else {
         console.error('Error fetching donations:', response.error);
       }
@@ -101,7 +102,7 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='block border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className=' flex flex-wrap justify-between border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
                 <span className='flex items-center gap-2'>
                   <span>
@@ -114,6 +115,8 @@ export default function LiveDonations() {
                     {format(i.amount)}ETH
                   </span>
                 </span>
+
+                <small>{dayjs(i.created_at).format('HH:mm a')}</small>
 
                 {/* <span className='ml-auto block text-right text-xs text-slate-600'>
                   {getRelativeTime(i.created_at)}
@@ -138,10 +141,10 @@ function LoadingIndicator() {
       {Array.from({ length: 5 }).map((_, idx) => (
         <>
           <div key={idx} className='mb-1 h-5 animate-pulse bg-slate-100'></div>
-          <div
+          {/* <div
             key={idx}
             className='ml-auto h-2 w-20 animate-pulse bg-slate-100'
-          ></div>
+          ></div> */}
         </>
       ))}
     </div>

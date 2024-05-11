@@ -6,11 +6,21 @@ import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { IoEllipsisVertical, IoTrash } from 'react-icons/io5';
 import { formatEther } from 'viem';
 import ImageWithFallback from './ImageWithFallback';
+import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +30,8 @@ import {
 
 type Props = React.ComponentProps<'div'> & {
   comment: Comment;
-  handleDelete: (() => void) | null;
+  handleDelete: () => void;
+  isOwner: boolean;
 };
 
 type Ref = HTMLDivElement;
@@ -28,6 +39,7 @@ type Ref = HTMLDivElement;
 export const CommentCard = forwardRef<Ref, Props>(
   (
     {
+      isOwner,
       handleDelete,
       comment: {
         // id,
@@ -45,24 +57,7 @@ export const CommentCard = forwardRef<Ref, Props>(
       return formatEther(BigInt(amount));
     };
     const donatedAmt = formatDonateAmt();
-
-    // const { socket } = useSocket(campaign.id);
-
-    // const handleDeleteComment = useCallback(() => {
-    //   socket.emit(
-    //     'delete:comment',
-    //     {
-    //       userId: user?.id,
-    //       campaignUUID: campaign.id,
-    //       commentId: newCommentId,
-    //     },
-    //     (response: unknown) => {
-    //       if (process.env.NODE_ENV === 'development') {
-    //         console.log('delete response', response);
-    //       }
-    //     }
-    //   );
-    // }, [user?.id, campaign.id, newCommentId, socket]);
+    const closeRef = useRef<HTMLButtonElement>(null);
 
     return (
       <motion.div
@@ -115,7 +110,7 @@ export const CommentCard = forwardRef<Ref, Props>(
           <p>{comment}</p>
         </div>
 
-        {(transaction_hash || handleDelete) && (
+        {(transaction_hash || isOwner) && (
           <DropdownMenu>
             <DropdownMenuTrigger
               className='absolute right-0 top-0 cursor-pointer p-2'
@@ -138,17 +133,35 @@ export const CommentCard = forwardRef<Ref, Props>(
                   </Link>
                 </DropdownMenuItem>
               )}
-              {handleDelete && (
-                <DropdownMenuItem
-                  className='flex items-center gap-2'
-                  onClick={() => {
-                    if (window.confirm('Sure to delete?')) {
-                      handleDelete();
-                    }
-                  }}
-                >
-                  <IoTrash className='text-red-500' />
-                  Delete comment
+              {isOwner && (
+                <DropdownMenuItem asChild>
+                  <Dialog>
+                    <DialogTrigger className='flex items-center gap-2'>
+                      <IoTrash className='text-red-500' />
+                      Delete comment
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader className='mb-2 space-y-1'>
+                        <DialogTitle>Sure to delete comment?</DialogTitle>
+                        <DialogDescription>
+                          This action is irreversible
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <div className='grid grid-cols-2 gap-4'>
+                        <Button
+                          variant='destructive'
+                          onClick={() => {
+                            handleDelete();
+                            closeRef.current?.click();
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <DialogClose ref={closeRef}>Close</DialogClose>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
