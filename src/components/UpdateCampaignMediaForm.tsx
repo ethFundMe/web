@@ -18,9 +18,18 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
+import useRefs from 'react-use-refs';
 import { BaseError } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -39,11 +48,7 @@ export default function UpdateCampaignMediaForm({
   const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
   const [preparedOtherImages, setPreparedOtherImages] =
     useState<FileList | null>(null);
-
-  // const [uploadedBannerUrl, setUploadedBannerUrl] = useState<string | null>(
-  //   null
-  // );
-  // const [uploadedOtherImages, setUploadedOtherImages] = useState<string[]>([]);
+  const [closeRef, triggerRef] = useRefs<HTMLButtonElement>(null);
 
   const isPreview = (url: string) => {
     return /\b(blob)\b/.test(url);
@@ -141,6 +146,19 @@ export default function UpdateCampaignMediaForm({
     return { bannerURL: bannerURL[0], otherImagesURL };
   }
 
+  function handlePreviewDelete(item: string) {
+    if (isPreview(item)) {
+      setOtherPreview((prev) => prev.filter((_) => _ !== item));
+    } else {
+      deleteFromCloudinary(item)
+        .then(() => {
+          toast.success('Deleted successfully');
+          setOtherPreview((prev) => prev.filter((_) => _ !== item));
+        })
+        .catch(() => toast.error('Failed to delete image'));
+    }
+  }
+
   useEffect(() => {
     if (isError && error) {
       let errorMsg = (error as BaseError).shortMessage || error.message;
@@ -229,32 +247,30 @@ export default function UpdateCampaignMediaForm({
                         alt='image-preview'
                       />
 
-                      <div
-                        title='Remove image'
-                        onClick={() => {
-                          if (isPreview(item)) {
-                            setOtherPreview((prev) =>
-                              prev.filter((_) => _ !== item)
-                            );
-                          } else {
-                            if (window.confirm('Sure to delete?')) {
-                              deleteFromCloudinary(item)
-                                .then(() => {
-                                  toast.success('Deleted successfully');
-                                  setOtherPreview((prev) =>
-                                    prev.filter((_) => _ !== item)
-                                  );
-                                })
-                                .catch(() =>
-                                  toast.error('Failed to delete image')
-                                );
-                            }
-                          }
-                        }}
-                        className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
-                      >
-                        <FaMinusCircle color='tomato' />
-                      </div>
+                      <Dialog>
+                        <DialogTrigger
+                          ref={triggerRef}
+                          title='Remove image'
+                          className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                        >
+                          <FaMinusCircle color='tomato' />
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Sure to remove image?</DialogTitle>
+                          </DialogHeader>
+
+                          <div className='grid grid-cols-2 gap-4'>
+                            <Button
+                              variant='destructive'
+                              onClick={() => handlePreviewDelete(item)}
+                            >
+                              Delete
+                            </Button>
+                            <DialogClose ref={closeRef}>Close</DialogClose>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </motion.div>
                   ))}
                 </AnimatePresence>

@@ -1,5 +1,5 @@
 import { userStore } from '@/store';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { socket as webSocket } from '../socketConfig';
 import { Comment, SocketResponse } from '../types';
@@ -8,6 +8,10 @@ export const useSocket = (campaignUUID: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = userStore();
   const socketRef = useRef<Socket>(null);
+
+  const updateList = useCallback((newList: Comment[]) => {
+    setComments(newList);
+  }, []);
 
   useEffect(() => {
     let socket = socketRef.current;
@@ -36,6 +40,7 @@ export const useSocket = (campaignUUID: string) => {
       }>
     ) {
       if (response.status === 'OK' && response.data) {
+        console.log('joined wai');
         setComments(response.data.comments);
       } else {
         console.error('Error fetching donations:', response.error);
@@ -71,5 +76,5 @@ export const useSocket = (campaignUUID: string) => {
     };
   }, [user, campaignUUID]);
 
-  return { socket: webSocket, comments };
+  return { socket: webSocket, comments, updateList };
 };
