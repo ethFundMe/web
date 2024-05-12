@@ -159,7 +159,7 @@ export default async function CampaignPage({
                 <div className='flex items-center gap-2'>
                   <Link
                     href={`/profile/${campaign.creator}`}
-                    className='flex flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200'
+                    className='flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200'
                   >
                     <div className='relative h-[50px] w-[50px] flex-shrink-0'>
                       <ImageWithFallback

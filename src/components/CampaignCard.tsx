@@ -67,7 +67,6 @@ export const CampaignCard = ({
           e.stopPropagation();
           // router.push(`/profile/${campaign.creator}`);
         }}
-        target='_blank'
         className={cn(
           'flex flex-col-reverse justify-between gap-2',
           campaign.flagged && 'grayscale'
