@@ -85,13 +85,13 @@ export default async function EarningsPage({
               📖 Learn more
             </Link>
 
-            <div className='flex flex-wrap items-center justify-between gap-4'>
-              <ValidatorCountdown />
+            {/* <div className='flex flex-wrap items-center justify-between gap-4'> */}
+            <ValidatorCountdown />
 
-              <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
+            {/* <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
                 UPDATE
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 

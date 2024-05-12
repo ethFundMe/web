@@ -102,8 +102,12 @@ export default function DonateForm({
   const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
     const { amount, campaignID, comment } = data;
     // eslint-disable-next-line no-extra-boolean-cast
-    if (amount <= 0) {
+    if (!fiatMode && amount <= 0) {
       toast.error('Fund more than 0 ETH');
+      return;
+    }
+    if (fiatMode && usdInput <= 0) {
+      toast.error('Fund more than 0 USD');
       return;
     }
     const fiatToETH = parseEther(
