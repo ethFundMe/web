@@ -8,6 +8,7 @@ import Typewriter from 'typewriter-effect';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { FaEthereum } from 'react-icons/fa';
 import { Container } from './Container';
 import { Button } from './ui/button';
@@ -21,9 +22,9 @@ export const HomepageHeader = () => {
       return setGreeting('Good Morning,');
     }
     if (time >= 12 && time < 16) {
-      return setGreeting('Good Afternoon,');
+      return setGreeting('Good Afternoon, ');
     }
-    return setGreeting('Good Evening,');
+    return setGreeting('Good Evening, ');
   };
 
   const splitName = (name: string) => {
@@ -132,12 +133,18 @@ export const HomepageHeader = () => {
                     transition: { duration: 0.25, ease: 'easeInOut' },
                   }}
                   key={greeting}
-                  className='flex gap-x-2 text-3xl font-medium leading-tight md:gap-x-8 md:text-7xl'
+                  className='flex gap-x-2 text-ellipsis whitespace-nowrap text-3xl font-medium leading-tight md:gap-x-8 md:text-7xl'
                 >
                   {getGreeterHeader()}
                   <Typewriter
                     onInit={(typewriter) => {
-                      typewriter.typeString(truncName(user.fullName)).start();
+                      typewriter
+                        .typeString(
+                          isMobileOnly && truncName(user.fullName).length > 8
+                            ? truncName(user.fullName).slice(0, 8).concat('...')
+                            : truncName(user.fullName)
+                        )
+                        .start();
                     }}
                   />
                 </motion.h1>
