@@ -1,7 +1,7 @@
 import { getCampaigns, getUser } from '@/actions';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { isAddress } from 'viem';
 
 export default async function UserProfilePage({
@@ -15,7 +15,7 @@ export default async function UserProfilePage({
 
   const user = await getUser(slug as `0x${string}`);
 
-  if (!user) notFound();
+  if (!user) redirect('/account');
 
   const { campaigns } = await getCampaigns({
     page: 1,

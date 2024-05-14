@@ -139,13 +139,7 @@ function LoadingIndicator() {
   return (
     <div className='space-y-2'>
       {Array.from({ length: 5 }).map((_, idx) => (
-        <>
-          <div key={idx} className='mb-1 h-5 animate-pulse bg-slate-100'></div>
-          {/* <div
-            key={idx}
-            className='ml-auto h-2 w-20 animate-pulse bg-slate-100'
-          ></div> */}
-        </>
+        <div key={idx} className='mb-1 h-5 animate-pulse bg-slate-100'></div>
       ))}
     </div>
   );

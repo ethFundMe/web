@@ -52,6 +52,7 @@ export interface UserTable {
   bannerUrl: string;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
+  registered: boolean;
 }
 
 export interface UserEarning {
