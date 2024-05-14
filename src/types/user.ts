@@ -38,4 +38,5 @@ export interface User {
   bannerUrl: string | null;
   createdAt: Date;
   updatedAt: Date;
+  registered: boolean;
 }

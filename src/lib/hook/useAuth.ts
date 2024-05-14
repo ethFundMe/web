@@ -84,6 +84,5 @@ export const useAuth = () => {
     });
 
     return unWatch;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, isAuth]);
+  }, [config, isAuth, disconnect]);
 };

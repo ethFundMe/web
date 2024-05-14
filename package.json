@@ -91,6 +91,7 @@
     "autoprefixer": "^10.4.17",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
+    "encoding": "^0.1.13",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.1",
     "eslint-config-prettier": "9.0.0",

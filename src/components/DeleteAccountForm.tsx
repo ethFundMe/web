@@ -1,7 +1,12 @@
 'use client';
 
+import { deleteAccount } from '@/actions';
 import { cn } from '@/lib/utils';
+import { userStore } from '@/store';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useRefs from 'react-use-refs';
 import { Button } from './ui/button';
 import {
@@ -23,16 +28,41 @@ export const DeleteAccountForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormSchema>();
-
+  const { user } = userStore();
   const [triggerRef, closeRef] = useRefs<HTMLButtonElement>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const { refresh } = useRouter();
 
   const onSubmit: SubmitHandler<FormSchema> = () => {
     if (triggerRef.current) triggerRef.current.click();
   };
 
-  function deleteAccount() {
-    if (closeRef.current) {
-      closeRef.current.click();
+  async function handleDeleteAccount() {
+    setDeleting(true);
+    if (!user) return;
+    // if (closeRef.current) {
+    //   closeRef.current.click();
+    // }
+    try {
+      const res = await deleteAccount(user.ethAddress);
+      if (!res || !res.success)
+        throw new Error(
+          (res?.message as string) || 'Failed to make delete request'
+        );
+      if (res.success) {
+        toast.success(res?.message as string);
+        closeRef.current?.click();
+        refresh();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error('Failed to make delete request');
+    } finally {
+      setDeleting(false);
     }
     return;
   }
@@ -78,9 +108,9 @@ export const DeleteAccountForm = () => {
 
           <Button
             variant={errors.confirmText ? 'ghost' : 'destructive'}
-            disabled={!!errors.confirmText}
+            disabled={!!errors.confirmText || deleting}
           >
-            Delete
+            {deleting ? 'Deleting' : 'Delete'}
           </Button>
         </div>
       </form>
@@ -94,10 +124,12 @@ export const DeleteAccountForm = () => {
           </DialogHeader>
 
           <div className='grid grid-cols-2 gap-4'>
-            <Button variant='destructive' onClick={deleteAccount}>
+            <Button variant='destructive' onClick={handleDeleteAccount}>
               Delete
             </Button>
-            <DialogClose ref={closeRef}>Close</DialogClose>
+            <Button asChild variant='outline'>
+              <DialogClose ref={closeRef}>Close</DialogClose>
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
