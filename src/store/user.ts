@@ -22,3 +22,22 @@ export const userStore = create<UserState>()(
     { name: 'efm_user' }
   )
 );
+
+export const efmUserAddressStore = create<{
+  address: string | null;
+  setAddress: (address: string) => void;
+  resetAddress: () => void;
+}>()(
+  persist(
+    (set) => ({
+      address: null,
+      setAddress(address) {
+        set(() => ({ address }));
+      },
+      resetAddress() {
+        set(() => ({ address: null }));
+      },
+    }),
+    { name: 'efm_user_address' }
+  )
+);

@@ -35,6 +35,9 @@ const config = getDefaultConfig({
 const authenticationAdapter = createAuthenticationAdapter({
   async getNonce() {
     const res = await fetch(`${efm_endpoint}/api/nonce`);
+    if (!res.ok) {
+      throw Error();
+    }
     return await res.text();
   },
 
@@ -56,6 +59,11 @@ const authenticationAdapter = createAuthenticationAdapter({
   },
 
   async verify({ message, signature }) {
+    const user_res = await fetch(`${efm_endpoint}/api/user/${message.address}`);
+    if (!user_res.ok) {
+      throw Error();
+    }
+
     const res = await fetch(`${efm_endpoint}/api/verify`, {
       method: 'POST',
       headers: {
