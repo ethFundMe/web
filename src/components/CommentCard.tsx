@@ -87,9 +87,8 @@ export const CommentCard = forwardRef<Ref, Props>(
                   {fullName}
                 </p>
                 <small>
-                  {dayjs(created_at.toLocaleDateString()).format(
-                    'DD MMM, YYYY . HH : mm a'
-                  )}
+                  {new Date(created_at).toLocaleDateString()}
+                  {dayjs(new Date(created_at)).format(' . HH : mm a')}
                 </small>
               </div>
             </div>
