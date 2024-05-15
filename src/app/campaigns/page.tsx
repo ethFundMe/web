@@ -17,7 +17,7 @@ export default async function CampaignsPage({
 }) {
   // console.log({ searchParams });
 
-  const { campaigns, totalCampaigns } = await getCampaigns(
+  const { campaigns } = await getCampaigns(
     searchParams as unknown as CampaignUrlParams
   );
   return (
