@@ -1,9 +1,9 @@
 'use client';
 
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
+import { cn } from '@/lib/utils';
 import { Campaign } from '@/types';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { FaPen } from 'react-icons/fa';
 import { DonateBtn } from './DonateBtn';
 import ImageWithFallback from './ImageWithFallback';
@@ -17,12 +17,13 @@ export default function UserCampaignCard({
   campaign: Campaign;
   variant?: 'user' | 'viewer';
 }) {
-  const { push } = useRouter();
-
   return (
-    <div
-      className='group group flex flex-col overflow-hidden rounded-md border border-slate-300'
-      onClick={() => push(`/campaigns/${campaign.campaign_id}`)}
+    <Link
+      href={`/campaigns/${campaign.campaign_id}`}
+      className={cn(
+        'group group flex flex-col overflow-hidden rounded-md border border-slate-300',
+        campaign.flagged && 'grayscale'
+      )}
     >
       <Link
         href={`/campaigns/${campaign.campaign_id}`}
@@ -53,7 +54,7 @@ export default function UserCampaignCard({
         <div
           className='grid grid-cols-2 gap-x-4'
           onClick={(e) => {
-            e.preventDefault();
+            e.stopPropagation();
           }}
         >
           {variant === 'user' && (
@@ -73,6 +74,6 @@ export default function UserCampaignCard({
           <ShareLinkBtn campaign={campaign} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

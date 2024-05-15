@@ -8,26 +8,26 @@ export default function DashboardMobileSidebar({
   routes: { link: string; title: string; icon: React.ReactNode }[];
 }) {
   return (
-    <aside className='-ml-4 bg-white md:hidden'>
-      <div className='fixed bottom-0 z-50 h-14 w-full bg-white'>
-        <ul className='flex items-center justify-between p-2'>
-          {routes.map((route, idx) => (
-            <li key={idx} title={route.title}>
-              <NavLink
-                href={route.link}
-                activeStyles={({ isActive }) =>
-                  isActive
-                    ? 'bg-primary-default hover:bg-opacity-80 text-white font-semibold'
-                    : 'hover:bg-slate-200'
-                }
-                className='flex items-center justify-center rounded-md p-3 text-center'
-              >
-                <span className='text-3xl font-bold'>{route.icon}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </aside>
+    <div className='fixed bottom-6 left-1/2 z-50 mx-auto block w-fit  -translate-x-1/2 rounded-3xl border border-slate-200 bg-white opacity-100 hover:border-slate-200 hover:opacity-100 sm:border-transparent sm:opacity-80 md:hidden'>
+      <ul className='flex items-center justify-center gap-5 px-4 py-2'>
+        {routes.map((route, idx) => (
+          <li key={idx} title={route.title}>
+            <NavLink
+              href={route.link}
+              activeStyles={({ isActive }) =>
+                isActive
+                  ? 'bg-primary-default hover:bg-opacity-80 text-white font-semibold'
+                  : 'hover:bg-slate-200'
+              }
+              className='flex items-center justify-center rounded-xl p-2 text-center sm:rounded-2xl sm:p-3'
+            >
+              <span className='text-2xl font-bold sm:text-3xl'>
+                {route.icon}
+              </span>
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

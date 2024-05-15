@@ -1,68 +1,80 @@
 import { userStore } from '@/store';
-import { useEffect, useState } from 'react';
-import { socket } from '../socketConfig';
-import { Comment } from '../types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Socket } from 'socket.io-client';
+import { socket as webSocket } from '../socketConfig';
+import { Comment, SocketResponse } from '../types';
 
-export const useSocket = (campaignID: number) => {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+export const useSocket = (campaignUUID: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = userStore();
+  const socketRef = useRef<Socket>(null);
+
+  const updateList = useCallback((newList: Comment[]) => {
+    setComments(newList);
+  }, []);
 
   useEffect(() => {
-    socket.connect();
+    let socket = socketRef.current;
 
     const joinData = {
-      data: {
-        campaignID,
-        userID: user?.id,
-        limit: 24,
-      },
+      campaignUUID,
+      userID: user?.id,
+      limit: 24,
     };
 
-    const onJoin = (response: { data: Comment[]; totalComments: number }) => {
-      console.log('Joined room', response);
-    };
-
-    function onConnect() {
-      setIsConnected(true);
-      console.log('Connected');
-      console.log(joinData);
+    if (!socket) {
+      socket = webSocket;
+      socket.connect();
+      socket.on('connect', onConnect);
+      socket.on('campaign:comment', onComment);
+      socket.on('comment:join', onJoin);
+      socket.on('disconnect', onDisonnect);
+      socket.on('error', onError);
       socket.emit('comment:join', joinData, onJoin);
     }
 
-    function onComment(response: { data: Comment; totalComments: number }) {
-      if (!response.data) return;
-      console.log({ response });
-      setComments((prev) => [...prev, response.data]);
+    function onJoin(
+      response: SocketResponse<{
+        comments: Comment[];
+        totalComments: number;
+      }>
+    ) {
+      if (response.status === 'OK' && response.data) {
+        console.log('joined wai');
+        setComments(response.data.comments);
+      } else {
+        console.error('Error fetching donations:', response.error);
+      }
+    }
+
+    function onConnect() {
+      console.log('Connected 🔥');
+    }
+
+    function onComment(response: SocketResponse<Comment>) {
+      const data = response.data;
+      if (!data) return;
+
+      setComments((prev) => [data, ...prev]);
+    }
+
+    function onError(res: unknown) {
+      console.log(res);
     }
 
     function onDisonnect() {
-      setIsConnected(false);
+      console.log('Disconnected ❌');
     }
-
-    socket.on('connect', onConnect);
-    socket.on('comment:join', onJoin);
-    socket.on('campaign:comment', onComment);
-    socket.on('disconnect', onDisonnect);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('comment:join', onJoin);
-      socket.on('campaign:comment', onComment);
+      socket.off('campaign:comment', onComment);
       socket.off('disconnect', onDisonnect);
+      socket.off('error', onError);
       socket.disconnect();
     };
-  }, [user?.id, campaignID, isConnected]);
+  }, [user, campaignUUID]);
 
-  const handleAddComment = (comment: string) => {
-    socket.emit('add:comment', {
-      data: {
-        userID: user?.id,
-        campaignID,
-        comment,
-      },
-    });
-  };
-
-  return { socket, isConnected, comments, handleAddComment };
+  return { socket: webSocket, comments, updateList };
 };

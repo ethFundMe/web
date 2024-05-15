@@ -3,8 +3,12 @@
 
 import { userStore } from '@/store';
 import { motion } from 'framer-motion';
+import Typewriter from 'typewriter-effect';
+// import './App.css';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { FaEthereum } from 'react-icons/fa';
 import { Container } from './Container';
 import { Button } from './ui/button';
@@ -18,9 +22,9 @@ export const HomepageHeader = () => {
       return setGreeting('Good Morning,');
     }
     if (time >= 12 && time < 16) {
-      return setGreeting('Good Afternoon,');
+      return setGreeting('Good Afternoon, ');
     }
-    return setGreeting('Good Evening,');
+    return setGreeting('Good Evening, ');
   };
 
   const splitName = (name: string) => {
@@ -28,15 +32,11 @@ export const HomepageHeader = () => {
     return splittedName[0];
   };
 
-  const getGreeterHeader = (fullName: string) => {
-    const _ = splitName(fullName).slice(0, 20);
-    const name =
-      splitName(fullName).length > 20 ? _ + '...' : splitName(fullName);
-    const greetArr = [
-      `Welcome, ${name}`,
-      `Hello 👋 ${name}`,
-      `${greeting} ${name}!`,
-    ];
+  const getGreeterHeader = () => {
+    // const _ = splitName(fullName).slice(0, 20);
+    // const name =
+    //   splitName(fullName).length > 20 ? _ + '...' : splitName(fullName);
+    const greetArr = ['Welcome, ', 'Hello 👋 ', `${greeting} `];
     const randomNum = Math.round(Math.random() * 10);
 
     if (randomNum >= 0 && randomNum < 4) {
@@ -50,6 +50,14 @@ export const HomepageHeader = () => {
     }
   };
 
+  const truncName = (fullname: string) => {
+    const _ = splitName(fullname).slice(0, 20);
+    const name =
+      splitName(fullname).length > 20 ? _ + '...' : splitName(fullname);
+
+    return name;
+  };
+
   useEffect(() => {
     getGreeting(time);
   }, [time]);
@@ -57,11 +65,11 @@ export const HomepageHeader = () => {
   const images = useMemo(
     () => [
       '/videos/header-video.mp4',
-      'https://res.cloudinary.com/efm/image/upload/v1712748751/homepage/h1.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748749/homepage/h2.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h3.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h4.jpg',
-      'https://res.cloudinary.com/efm/image/upload/v1712748748/homepage/h5.jpg',
+      '/images/header/h1.webp',
+      '/images/header/h2.webp',
+      '/images/header/h3.webp',
+      '/images/header/h4.webp',
+      '/images/header/h5.webp',
     ],
     []
   );
@@ -101,9 +109,11 @@ export const HomepageHeader = () => {
               className='absolute h-full w-full bg-slate-900 object-cover'
             />
           ) : (
-            <img
+            <Image
               src={currentImage}
               alt='bg-image'
+              fill
+              priority
               className='absolute h-full w-full bg-slate-900 object-cover'
             />
           )}
@@ -123,9 +133,20 @@ export const HomepageHeader = () => {
                     transition: { duration: 0.25, ease: 'easeInOut' },
                   }}
                   key={greeting}
-                  className='text-5xl font-medium leading-tight md:text-7xl'
+                  className='flex gap-x-2 text-ellipsis whitespace-nowrap text-3xl font-medium leading-tight md:gap-x-8 md:text-7xl'
                 >
-                  {getGreeterHeader(user.fullName)}
+                  {getGreeterHeader()}
+                  <Typewriter
+                    onInit={(typewriter) => {
+                      typewriter
+                        .typeString(
+                          isMobileOnly && truncName(user.fullName).length > 8
+                            ? truncName(user.fullName).slice(0, 8).concat('...')
+                            : truncName(user.fullName)
+                        )
+                        .start();
+                    }}
+                  />
                 </motion.h1>
               )}
 

@@ -1,133 +1,91 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 'use client';
 
+import { socket as webSocket } from '@/lib/socketConfig';
+import { Donation, DonationResponse } from '@/lib/types';
 import { formatWalletAddress } from '@/lib/utils';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
-import { useInView } from 'react-intersection-observer';
+import { Socket } from 'socket.io-client';
 import { formatEther } from 'viem';
 
+dayjs.extend(advancedFormat);
+dayjs.extend(relativeTime);
+
 export default function LiveDonations() {
-  const donations = useMemo(
-    () => [
-      {
-        id: 0,
-        address: '0x3434jkb34bkj34',
-        amount: 32439882432434324,
-        time: '9:10pm',
-      },
-      {
-        id: 1,
-        address: '0x3434jkb34bkj34',
-        amount: 32439882432434324,
-        time: '9:09pm',
-      },
-      {
-        id: 2,
-        address: '0x3434jkb34bkj34',
-        amount: 432439882432434324,
-        time: '9:08pm',
-      },
-      {
-        id: 3,
-        address: '0x3434jkb34bkj34',
-        amount: 13432439882432434324,
-        time: '9:07pm',
-      },
-      {
-        id: 4,
-        address: '0x3434jkb34bkj34',
-        amount: 3432439882432434324,
-        time: '9:06pm',
-      },
-      {
-        id: 5,
-        address: '0x3434jkb34bkj34',
-        amount: 1232439882432434324,
-        time: '9:05pm',
-      },
-      {
-        id: 6,
-        address: '0x3434jkb34bkj34',
-        amount: 23432439882432434324,
-        time: '9:04pm',
-      },
-      {
-        id: 7,
-        address: '0x3434jkb34bkj34',
-        amount: 3432439882432434324,
-        time: '9:03pm',
-      },
-      {
-        id: 8,
-        address: '0x3434jkb34bkj34',
-        amount: 4332439882432434324,
-        time: '9:02pm',
-      },
-      {
-        id: 9,
-        address: '0x3434jkb34bkj34',
-        amount: 33432439882432434324,
-        time: '9:01pm',
-      },
-      {
-        id: 10,
-        address: '0x3434jkb34bkj34',
-        amount: 123432439882432434324,
-        time: '9:00pm',
-      },
-    ],
-    []
-  );
-
-  const [index, setIndex] = useState(4);
-  const [dts, setDts] = useState<
-    {
-      id: number;
-      address: string;
-      amount: number;
-      time: string;
-    }[]
-  >(donations.slice(-4));
-
-  const { ref, inView } = useInView();
-
-  const format = (num: number) => {
-    return parseFloat(formatEther(BigInt(num))).toFixed(3);
-  };
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const socketRef = useRef<Socket>(null);
 
   useEffect(() => {
-    const interval = setInterval(
-      () => {
-        if (!inView) return;
-        if (index >= 0) {
-          setDts((prev) => [
-            donations[index],
-            ...prev.slice(0, prev.length - 1),
-          ]);
-          setIndex((prev) => prev - 1);
-        }
-      },
-      Math.round(Math.random() * 10000)
-    );
+    let socket = socketRef.current;
 
-    return () => clearInterval(interval);
-  }, [donations, index, inView]);
+    if (!socket) {
+      socket = webSocket;
+      socket.connect();
+      socket.on('connect', onConnect);
+      socket.on('donation:receieved', onDonationReceived);
+      socket.on('disconnect', onDisconnect);
+      socket.emit('campaign:donations', {}, onGetDonations);
+    }
+
+    function onConnect() {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Connected for live donations 🔥');
+      }
+    }
+
+    function onGetDonations(response: DonationResponse) {
+      if (response.status === 'OK') {
+        if (response.data) {
+          setDonations(response.data);
+        }
+      } else {
+        console.error('Error fetching donations:', response.error);
+      }
+    }
+
+    function onDonationReceived(response: Donation) {
+      setDonations((prev) => [response, ...prev]);
+    }
+
+    function onDisconnect() {
+      socket = null;
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('connect', onConnect);
+        socket.off('campaign:donations', onGetDonations);
+        socket.off('disconnect', onDisconnect);
+        socket.disconnect();
+      }
+    };
+  }, []);
+
+  // const { ref, inView } = useInView();
+
+  const format = (num: number) => {
+    return parseFloat(formatEther(BigInt(num))).toFixed(5);
+  };
 
   return (
-    <div>
+    <div className='space-y-4'>
       <h2 className='text-center text-2xl font-light text-primary-dark'>
         Live Donations
       </h2>
 
       <ul
-        ref={ref}
-        className='relative mx-auto h-[210px] max-w-md overflow-hidden overflow-y-hidden text-primary-default'
+        // ref={ref}
+        className='relative mx-auto h-[250px] max-w-md space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
       >
+        {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
-          {dts.map((i) => (
+          {donations.map((i) => (
             <motion.li
               layout
               animate={{ x: [50, 0], opacity: [0, 1] }}
@@ -137,33 +95,52 @@ export default function LiveDonations() {
                 transition: { duration: 0.15 },
               }}
               transition={{ type: 'spring', damping: 14 }}
-              key={i.id}
+              key={i.transaction_hash}
             >
-              {/* Update with real tx when available */}
               <Link
-                href='https://etherscan.io/tx/0xa04bea27c6a906dcad8861c951e7c870907b880f47ffb2e76db36d2f8b3c3910'
+                href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${i.transaction_hash}`}
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='flex items-center gap-2 border-b border-slate-600 py-3 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className=' flex flex-wrap justify-between border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
-                <span>
-                  <FaEthereum size={20} />
+                <span className='flex items-center gap-2'>
+                  <span>
+                    <FaEthereum size={20} />
+                  </span>
+                  <span>
+                    {formatWalletAddress(i.donor)}{' '}
+                    <span className='hidden md:inline'>donated</span>{' '}
+                    <span className='inline md:hidden'> — </span>{' '}
+                    {format(i.amount)}ETH
+                  </span>
                 </span>
-                <span>
-                  {formatWalletAddress(i.address as `0x${string}`)}{' '}
-                  <span className='hidden md:inline'>donated</span>{' '}
-                  <span className='inline md:hidden'> — </span>{' '}
-                  {format(i.amount)}ETH
-                </span>
-                <span className='ml-auto text-xs md:text-sm'>{i.time}</span>
+
+                <small>{dayjs(i.created_at).format('HH:mm a')}</small>
+
+                {/* <span className='ml-auto block text-right text-xs text-slate-600'>
+                  {getRelativeTime(i.created_at)}
+                </span> */}
               </Link>
             </motion.li>
           ))}
         </AnimatePresence>
 
-        {/* <div className='absolute bottom-0 h-20 w-full bg-gradient-to-b from-transparent to-white'></div> */}
+        <div
+          className='absolute bottom-0 h-[55px] w-full bg-gradient-to-b from-transparent to-white'
+          onClick={(e) => e.stopPropagation()}
+        ></div>
       </ul>
+    </div>
+  );
+}
+
+function LoadingIndicator() {
+  return (
+    <div className='space-y-2'>
+      {Array.from({ length: 5 }).map((_, idx) => (
+        <div key={idx} className='mb-1 h-5 animate-pulse bg-slate-100'></div>
+      ))}
     </div>
   );
 }

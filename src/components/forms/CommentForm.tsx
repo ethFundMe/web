@@ -1,5 +1,7 @@
 'use client';
 
+import { useSocket } from '@/lib/hook/useSocket';
+import { SocketResponse } from '@/lib/types';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -8,14 +10,11 @@ import { useAccount } from 'wagmi';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
-export const CommentForm = ({
-  handleAddComment,
-}: {
-  handleAddComment: (comment: string) => void;
-}) => {
+export const CommentForm = ({ campaignId }: { campaignId: string }) => {
   const { user } = userStore();
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { socket } = useSocket(campaignId);
 
   const {
     formState: { errors },
@@ -30,8 +29,22 @@ export const CommentForm = ({
       return;
     }
 
-    handleAddComment(comment);
-    reset();
+    const data = {
+      userId: user?.id,
+      campaignUUID: campaignId,
+      comment,
+    };
+    if (user && socket) {
+      socket?.emit(
+        'add:comment',
+        data,
+        (response: SocketResponse<{ id: number }>) => {
+          if (response.data?.id) {
+            reset();
+          }
+        }
+      );
+    }
   };
 
   return (

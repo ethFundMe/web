@@ -17,5 +17,6 @@ namespace NodeJS {
     NEXT_PUBLIC_WC_PROJECT_ID: string;
     NEXT_PUBLIC_EFM_EMAIL: string;
     NEXT_PUBLIC_MAINNET_ALCHEMY_API_KEY: string;
+    NEXT_PUBLIC_TNX_LINK: string;
   }
 }

@@ -133,25 +133,24 @@ export const handlePushComment = async ({
   campaignID: string;
   comment: string;
 }) => {
+  const commentData = { campaignUUID: campaignID, comment, userId: userID };
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/comment`, {
+    const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/comment`, {
       method: 'POST',
-      body: JSON.stringify({
-        comment,
-        userID,
-        campaignID,
-      }),
+      body: JSON.stringify(commentData),
       headers: {
         'Content-Type': 'application/json',
       },
     });
     const data = await res.json();
 
-    return data;
-  } catch (e) {
-    console.log(e);
+    if (data?.error) throw new Error(data.error[0].message);
 
-    throw new Error('Failed to add comment');
+    return data as number;
+  } catch (e) {
+    if (e instanceof Error) {
+      return { error: e.message };
+    }
   }
 };
 
@@ -160,7 +159,7 @@ export const fetchCampaignTags = async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/tags`
     );
-    const data = await res.json();
+    const data: { tags?: { id: number; name: string }[] } = await res.json();
 
     return data?.tags ? data.tags : [];
   } catch (e) {
@@ -182,7 +181,7 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
 
     return data || [];
   } catch (e) {
-    console.log('Failed to get total earnings', e);
+    // console.log('Failed to get total earnings', e);
     return [];
   }
 };
@@ -238,62 +237,14 @@ export const handleIPFSPush = async function ({
         }),
       }
     );
-    const data: { id?: string; error?: { message: string }[] } =
+    const data: { hash?: string; error?: { message: string }[] } =
       await res.json();
 
-    if (!data?.id && data?.error) throw new Error(data.error[0]?.message);
+    if (!data?.hash && data?.error) throw new Error(data.error[0]?.message);
 
     return data;
   } catch (e) {
-    console.log(e);
     return null;
-  }
-};
-
-export const handleIPFSUpdate = async function ({
-  title,
-  bannerUrl,
-  youtubeLink,
-  mediaLinks,
-  description,
-  tag,
-  metaId,
-}: {
-  bannerUrl: string;
-  description: string;
-  title: string;
-  youtubeLink: string | undefined;
-  mediaLinks: string[];
-  tag: number;
-  metaId: string;
-}) {
-  try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
-      }/api/campaign/metadata/${metaId}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'PUT',
-        body: JSON.stringify({
-          title,
-          description,
-          youtubeLink,
-          bannerUrl,
-          mediaLinks,
-          tag,
-        }),
-      }
-    );
-
-    if (!res.ok) throw new Error();
-
-    const data = await res.json();
-    return data;
-  } catch (e) {
-    throw new Error();
   }
 };
 
@@ -313,7 +264,7 @@ export async function fetchActiveStats() {
     return data;
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message);
+      // console.log(e.message);
     }
     return null;
   }
@@ -350,7 +301,32 @@ export async function handleVerificationRequest({
     return { success: true, message: 'Successfully applied for verification' };
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e);
+      // console.log(e);
+      return { success: false, message: e.message };
+    }
+    return { success: false, message: e };
+  }
+}
+
+export async function deleteAccount(address: `0x${string}`) {
+  try {
+    // `${process.env.ETH_FUND_ENDPOINT}/api/user/0xee9718Df51B678653750B0Ae7AB57E9576E56D8b`
+    const res = await fetch(
+      `${process.env.ETH_FUND_ENDPOINT}/api/user/${address}`,
+      { method: 'DELETE' }
+    );
+
+    if (res.status === 204)
+      return { success: true, message: 'Account deleted' };
+
+    const data: { error?: { name: string; message: string } } =
+      await res.json();
+
+    if (data?.error) throw new Error(data.error.message);
+
+    // return {success: true, data}
+  } catch (e) {
+    if (e instanceof Error) {
       return { success: false, message: e.message };
     }
     return { success: false, message: e };

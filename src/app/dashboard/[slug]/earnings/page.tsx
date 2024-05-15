@@ -85,13 +85,13 @@ export default async function EarningsPage({
               📖 Learn more
             </Link>
 
-            <div className='flex flex-wrap items-center justify-between gap-4'>
-              <ValidatorCountdown />
+            {/* <div className='flex flex-wrap items-center justify-between gap-4'> */}
+            <ValidatorCountdown />
 
-              <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
+            {/* <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
                 UPDATE
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -108,7 +108,7 @@ export default async function EarningsPage({
                   {earnings.map((earning, idx) => (
                     <li key={idx}>
                       <Link
-                        href={'/'}
+                        href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
                         className='block rounded-md bg-white/20 p-2.5 text-white'
                       >
                         <div className=''>
@@ -131,7 +131,7 @@ export default async function EarningsPage({
                                     <span>Create campaign</span>
                                   </span>
                                 )}
-                                {earning.rewardType === 'campaign_funding' && (
+                                {earning.rewardType === 'funding' && (
                                   <span className='flex items-center gap-1'>
                                     <Coins size={16} />
 

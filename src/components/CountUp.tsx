@@ -23,8 +23,8 @@ export default function CountUp({
         if (inView) {
           setResult(end);
           if (isDecimal) {
-            setResult(10);
-            setTimeout(() => setDecimal(end), duration * 400);
+            setResult(0);
+            setTimeout(() => setDecimal(end), duration * 200);
           } else {
             setResult(end);
           }

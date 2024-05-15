@@ -1,6 +1,8 @@
 'use client';
 
-import { handleIPFSUpdate } from '@/actions';
+import { handleIPFSPush } from '@/actions';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { TagsWithIds } from '@/lib/constants';
 import { CampaignTags } from '@/lib/types';
 import {
@@ -13,10 +15,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ImagePlus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
+import useRefs from 'react-use-refs';
+import { BaseError } from 'viem';
+import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -25,7 +38,7 @@ export default function UpdateCampaignMediaForm({
 }: {
   campaign: Campaign;
 }) {
-  const { refresh } = useRouter();
+  const { push } = useRouter();
 
   const [updating, setUpdating] = useState(false);
 
@@ -35,39 +48,70 @@ export default function UpdateCampaignMediaForm({
   const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
   const [preparedOtherImages, setPreparedOtherImages] =
     useState<FileList | null>(null);
-
-  const [uploadedBannerUrl, setUploadedBannerUrl] = useState<string | null>(
-    null
-  );
-  const [uploadedOtherImages, setUploadedOtherImages] = useState<string[]>([]);
+  const [closeRef, triggerRef] = useRefs<HTMLButtonElement>(null);
 
   const isPreview = (url: string) => {
     return /\b(blob)\b/.test(url);
   };
 
+  const {
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled updateCampaign', { data, error });
+      },
+    },
+  });
+
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
+
   function handleUpdateMedia() {
     setUpdating(true);
     handleCloudinaryUpload()
-      .then(() => {
-        handleIPFSUpdate({
-          bannerUrl: uploadedBannerUrl || campaign.banner_url,
+      .then((res) => {
+        const campaignLinksMinusDeleted = campaign.media_links.filter((img) => {
+          if (otherPreview.indexOf(img) === -1) return false;
+          return true;
+        });
+
+        const mediaLinks =
+          res.otherImagesURL.length > 0
+            ? [...campaignLinksMinusDeleted, ...res.otherImagesURL]
+            : campaignLinksMinusDeleted;
+
+        handleIPFSPush({
+          bannerUrl: res.bannerURL || campaign.banner_url,
           title: campaign.title,
           tag: TagsWithIds.filter(
             (i) => i.name === (campaign.tag as CampaignTags)
           )[0].id,
           youtubeLink: campaign.youtube_link || undefined,
           description: campaign.description,
-          metaId: campaign.id,
-          mediaLinks:
-            uploadedOtherImages.length > 0
-              ? [...campaign.media_links, ...uploadedOtherImages]
-              : campaign.media_links,
+          mediaLinks,
         })
-          .then(() => {
-            toast.success('Updated campaign media');
-            setUpdating(false);
+          .then((res) => {
+            if (!res?.hash) throw new Error();
+
+            writeContract({
+              abi: EthFundMe,
+              address: ethFundMeContractAddress,
+              functionName: 'updateCampaign',
+              chainId: ethChainId,
+              args: [
+                res.hash,
+                BigInt(campaign.campaign_id),
+                campaign.goal,
+                campaign.beneficiary,
+              ],
+            });
+
             // push(`/campaigns/${campaign.campaign_id}`);
-            refresh();
           })
           .catch(() => {
             toast.error('Failed to upload campaign media');
@@ -99,11 +143,40 @@ export default function UpdateCampaignMediaForm({
     const bannerURL = await uploadBanner();
     const otherImagesURL = await uploadOtherImages();
 
-    setUploadedBannerUrl(bannerURL[0]);
-    setUploadedOtherImages(otherImagesURL);
-
-    return { otherImagesURL, uploadedOtherImages };
+    return { bannerURL: bannerURL[0], otherImagesURL };
   }
+
+  function handlePreviewDelete(item: string) {
+    if (isPreview(item)) {
+      setOtherPreview((prev) => prev.filter((_) => _ !== item));
+    } else {
+      deleteFromCloudinary(item)
+        .then(() => {
+          toast.success('Deleted successfully');
+          setOtherPreview((prev) => prev.filter((_) => _ !== item));
+        })
+        .catch(() => toast.error('Failed to delete image'));
+    }
+  }
+
+  useEffect(() => {
+    if (isError && error) {
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign media';
+      }
+
+      toast.error(errorMsg);
+      setUpdating(false);
+    } else if (isConfirmedTxn) {
+      toast.success('Campaign updated');
+      setUpdating(false);
+      push(`/campaigns/${campaign.campaign_id}`);
+    }
+  }, [campaign.campaign_id, push, error, isConfirmedTxn, isError]);
 
   return (
     <div className='w-full sm:max-w-2xl'>
@@ -174,33 +247,30 @@ export default function UpdateCampaignMediaForm({
                         alt='image-preview'
                       />
 
-                      <div
-                        title='Remove image'
-                        onClick={() => {
-                          console.log(isPreview(item));
-                          if (isPreview(item)) {
-                            setOtherPreview((prev) =>
-                              prev.filter((_) => _ !== item)
-                            );
-                          } else {
-                            if (window.confirm('Sure to delete?')) {
-                              deleteFromCloudinary(item)
-                                .then(() => {
-                                  toast.success('Deleted successfully');
-                                  setOtherPreview((prev) =>
-                                    prev.filter((_) => _ !== item)
-                                  );
-                                })
-                                .catch(() =>
-                                  toast.error('Failed to delete image')
-                                );
-                            }
-                          }
-                        }}
-                        className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
-                      >
-                        <FaMinusCircle color='tomato' />
-                      </div>
+                      <Dialog>
+                        <DialogTrigger
+                          ref={triggerRef}
+                          title='Remove image'
+                          className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                        >
+                          <FaMinusCircle color='tomato' />
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Sure to remove image?</DialogTitle>
+                          </DialogHeader>
+
+                          <div className='grid grid-cols-2 gap-4'>
+                            <Button
+                              variant='destructive'
+                              onClick={() => handlePreviewDelete(item)}
+                            >
+                              Delete
+                            </Button>
+                            <DialogClose ref={closeRef}>Close</DialogClose>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -270,7 +340,9 @@ export default function UpdateCampaignMediaForm({
         disabled={
           (bannerPreview === campaign.banner_url &&
             otherPreview.length === campaign.media_links.length) ||
-          updating
+          updating ||
+          isPending ||
+          isConfirmingTxn
         }
         className='w-full border border-slate-300 p-3'
         onClick={handleUpdateMedia}

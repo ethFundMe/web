@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { parseEther } from 'viem';
+import { BaseError, parseEther } from 'viem';
 import {
   // BaseError,
   useWaitForTransactionReceipt,
@@ -61,7 +61,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   });
   const {
     data: hash,
-    error,
+    error: writingError,
     isError,
     isPending,
     writeContract,
@@ -133,11 +133,8 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           handleWriteContract(values.creatorFee as number);
           // Reset form and navigate to the dashboard
           setFormStatus(null);
-          form.reset();
           setUser(data);
-          toast.success('Profile updated successfully');
-          router.refresh();
-          router.push(`/dashboard/${data.ethAddress}`);
+          form.reset();
         })
         .catch((error) => {
           console.log(`Failed to update profile, ${error}`);
@@ -158,7 +155,9 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           setUser(data);
           form.reset();
           toast.success('Profile updated successfully');
-          router.push(`/dashboard/${data.ethAddress}`);
+          if (!creatorFeeEditMade) {
+            router.push(`/dashboard/${data.ethAddress}`);
+          }
         })
         .catch((error) => {
           console.log(`Failed to update profile, ${error}`);
@@ -168,10 +167,22 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     }
   }
   useEffect(() => {
-    if (isConfirmingTxn) {
-      toast.success('Creator fee updated succesfully');
+    if (isConfirmedTxn) {
+      toast.success('Profile updated successfully');
+      router.refresh();
+      router.push(`/dashboard/${user.ethAddress}`);
+    } else if (isError && writingError) {
+      let errorMsg =
+        (writingError as BaseError).shortMessage || writingError.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update creator fee';
+      }
+      toast.error(errorMsg);
     }
-  }, [isConfirmingTxn]);
+  }, [isConfirmedTxn, user, router, isError, writingError]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateUserProfile(values);
@@ -269,7 +280,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         />
 
         <Button
-          disabled={!!formStatus || !editMade}
+          disabled={!!formStatus || !editMade || isConfirmingTxn}
           className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50 md:w-52'
         >
           {formStatus ?? 'Save'}

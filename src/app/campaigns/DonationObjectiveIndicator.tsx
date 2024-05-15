@@ -1,21 +1,24 @@
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+import { ClassValue } from 'clsx';
 import { FaTrophy } from 'react-icons/fa';
 import { formatEther } from 'viem';
 
 export const DonationObjectiveIndicator = ({
   currentAmount,
   seekingAmount,
+  className,
 }: {
   currentAmount: number;
   seekingAmount: number;
+  className?: ClassValue;
 }) => {
   const percentage = (currentAmount / seekingAmount) * 100;
   const percentageRaised = percentage > 100 ? 100 : percentage;
   const goalReached = percentageRaised >= 100;
 
   return (
-    <div className='w-full space-y-2'>
+    <div className={cn('w-full space-y-2', className)}>
       <div className='flex justify-between'>
         <p>
           <span className={TextSizeStyles.h6}>

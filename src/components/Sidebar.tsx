@@ -5,6 +5,7 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useAccount } from 'wagmi';
@@ -38,7 +39,7 @@ export const Sidebar = () => {
           ))}
         </ul>
 
-        {isConnected && address ? (
+        {isConnected && address && getCookie('efmToken') ? (
           <Button
             className='rounded-lg bg-red-900 text-lg font-bold text-white hover:bg-red-900/90'
             onClick={openAccountModal}

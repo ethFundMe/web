@@ -21,7 +21,7 @@ export interface CampaignsTable {
   discontinued: boolean;
   total_accrued: number;
   transaction_hash: `0x${string}`;
-  metadata: string;
+  md_hash: string;
   title: string;
   description: string;
   banner_url: string;
@@ -52,6 +52,7 @@ export interface UserTable {
   bannerUrl: string;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
+  registered: boolean;
 }
 
 export interface UserEarning {
@@ -63,7 +64,7 @@ export interface UserEarning {
     profileUrl: string;
   };
   amount: string;
-  rewardType: 'campaign_creation' | 'campaign_funding';
+  rewardType: 'campaign_creation' | 'funding';
   auto: boolean;
   transaction_hash: `0x${string}`;
   created_at: string;

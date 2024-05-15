@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchCampaignTags, handleIPFSUpdate } from '@/actions';
+import { fetchCampaignTags, handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
@@ -50,7 +50,7 @@ import {
 } from './ui/tooltip';
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
   const [isUploadingMetadata, setIsUploadingMetadata] = useState(false);
   const { address } = useAccount();
   const router = useRouter();
@@ -81,7 +81,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
 
-  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA();
+  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA(user?.isVerified);
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -103,9 +103,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('description') !== campaign.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.banner_url;
-  // ||
-  // form.watch('tag') !== campaign.tags[0].id;
+    form.watch('banner') !== campaign.banner_url ||
+    form.watch('tag') !== campaign.tag;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { goal, beneficiaryAddress, tag, title, description } = data;
@@ -113,14 +112,13 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
 
     // Handle push data to backend
 
-    const filterTag = tags.filter((_) => _ === tag)[0];
+    const filterTag = tags.filter((_) => _.name === tag)[0];
     const preparedTag = TagsWithIds.filter(
-      (i) => i.name === (filterTag || CampaignTags.Others)
+      (i) => i.name === (filterTag.name || CampaignTags.Others)
     )[0].id;
 
     setIsUploadingMetadata(true);
-    handleIPFSUpdate({
-      metaId: campaign.id,
+    handleIPFSPush({
       title,
       description,
       bannerUrl: campaign.banner_url,
@@ -128,13 +126,16 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
       mediaLinks: campaign.media_links,
       tag: preparedTag,
     })
-      .then(() => {
+      .then((res) => {
+        if (!res?.hash) throw new Error();
+
         writeContract({
           abi: EthFundMe,
           address: ethFundMeContractAddress,
           functionName: 'updateCampaign',
           chainId: ethChainId,
           args: [
+            res.hash,
             BigInt(campaign_id),
             parseEther(goal.toString()),
             form.watch('type') === 'personal'
@@ -145,6 +146,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
         setIsUploadingMetadata(false);
       })
       .catch(() => {
+        toast.error('Failed to update campaign');
         setIsUploadingMetadata(false);
       });
   };
@@ -157,15 +159,28 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
 
   useEffect(() => {
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error.message);
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign';
+      }
+
+      toast.error(errorMsg);
     } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
-      router.push(`/campaigns/${campaign.campaign_id}`);
+      // router.push(`/campaigns/${campaign.campaign_id}`);
     }
   }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
 
-  // goal: {formatEther(BigInt(campaign.goal))}
-  // goal: {campaign.goal}
+  function goalReached() {
+    if (campaign.total_accrued >= campaign.goal) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Form {...form}>
       <form
@@ -219,8 +234,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               <FormLabel>Goal (ETH)</FormLabel>
               <FormControl>
                 <Input
+                  disabled={goalReached()}
                   type='number'
-                  step={0.01}
+                  step='any'
                   defaultValue={field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
@@ -245,8 +261,8 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                   </SelectTrigger>
                   <SelectContent>
                     {tags.map((_, idx) => (
-                      <SelectItem key={idx} value={_}>
-                        {_}
+                      <SelectItem key={idx} value={_.name}>
+                        {_.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -356,7 +372,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           type='submit'
           size='default'
           className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
-          disabled={!editMade || isConfirmingTxn || isPending}
+          disabled={
+            !editMade || isConfirmingTxn || isPending || isUploadingMetadata
+          }
         >
           {isPending || isConfirmingTxn || isUploadingMetadata
             ? 'Loading...'

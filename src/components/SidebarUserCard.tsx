@@ -2,6 +2,7 @@
 
 import { formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
+import { getCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
 import ImageWithFallback from './ImageWithFallback';
@@ -11,7 +12,7 @@ export const SidebarUserCard = () => {
 
   const view = (
     <div className='border-b border-gray-300 py-4 sm:py-6'>
-      {isConnected && address ? (
+      {isConnected && address && getCookie('efmToken') ? (
         <View />
       ) : (
         <>

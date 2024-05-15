@@ -165,7 +165,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'Twitter',
     href: 'https://twitter.com/ethfundme',
-    icon: BsTwitterX({ size: 20 }),
+    icon: BsTwitterX({ size: 18 }),
   },
   {
     name: 'Instagram',

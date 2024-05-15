@@ -1,13 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { handlePushComment } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import useEthPrice from '@/lib/hook/useEthPrice';
-import { socket } from '@/lib/socketConfig';
-import { Comment } from '@/lib/types';
+import { useSocket } from '@/lib/hook/useSocket';
 import { userStore } from '@/store';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -55,9 +56,6 @@ export default function DonateForm({
   const { user } = userStore();
   const router = useRouter();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  // const [commentRes, setCommentRes] = useState<Comment | null>(null);
-  const [amt, setAmt] = useState(parseEther('0'));
 
   const {
     data: hash,
@@ -74,18 +72,42 @@ export default function DonateForm({
     },
   });
   const [fiatMode, setFiatMode] = useState(false);
+  const [newCommentId, setNewCommentId] = useState<null | number>(null);
+  const [isPushingComment, setIsPushingComment] = useState(false);
   const [usdInput, setUsdInput] = useState(0);
+  const { socket } = useSocket(campaign.id);
+  const loggedIn = address || getCookie('efmToken');
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
 
   const isLoadingTxn = isPending || isConfirmingTxn;
 
+  const handleDeleteComment = useCallback(() => {
+    socket.emit(
+      'delete:comment',
+      {
+        userId: user?.id,
+        campaignUUID: campaign.id,
+        commentId: newCommentId,
+      },
+      (response: unknown) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('delete response', response);
+        }
+      }
+    );
+  }, [user?.id, campaign.id, newCommentId, socket]);
+
   const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
     const { amount, campaignID, comment } = data;
     // eslint-disable-next-line no-extra-boolean-cast
-    if (amount <= 0) {
+    if (!fiatMode && amount <= 0) {
       toast.error('Fund more than 0 ETH');
+      return;
+    }
+    if (fiatMode && usdInput <= 0) {
+      toast.error('Fund more than 0 USD');
       return;
     }
     const fiatToETH = parseEther(
@@ -95,9 +117,8 @@ export default function DonateForm({
     const donationAmt = fiatMode
       ? fiatToETH
       : parseEther(amount.toString() || '0');
-    setAmt(donationAmt);
 
-    if (!user || !address) {
+    if (!loggedIn) {
       if (closeBtnRef.current && openConnectModal) {
         closeBtnRef.current.click();
         openConnectModal();
@@ -105,14 +126,38 @@ export default function DonateForm({
     }
     const prettyComment = comment?.trim();
 
-    if (isConnected && prettyComment && user) {
-      socket.emit('add:comment', {
-        data: {
-          userID: user?.id,
-          campaignID: campaign.id,
-          comment: prettyComment,
-        },
-      });
+    if (prettyComment && user) {
+      setIsPushingComment(true);
+      handlePushComment({
+        campaignID: campaign.id,
+        userID: user.id,
+        comment: prettyComment,
+      })
+        .then((response) => {
+          setIsPushingComment(false);
+          if (typeof response === 'number') {
+            setNewCommentId(response);
+            writeContract({
+              abi: EthFundMe,
+              address: ethFundMeContractAddress,
+              functionName: 'fundCampaign',
+              args: [BigInt(campaignID), response],
+              value: donationAmt,
+              chainId: ethChainId,
+            });
+          } else {
+            throw new Error(response?.error);
+          }
+        })
+        .catch((error) => {
+          setIsPushingComment(false);
+          if (newCommentId) {
+            // Delete comment
+            handleDeleteComment();
+          }
+          toast.error('Failed to add comment');
+          console.log(error);
+        });
     } else {
       writeContract({
         abi: EthFundMe,
@@ -125,80 +170,33 @@ export default function DonateForm({
     }
   };
 
-  const writeContractRef = useRef(writeContract);
-
-  const handleWriteComment = useCallback(
-    (commentId: number) => {
-      writeContractRef.current({
-        abi: EthFundMe,
-        address: ethFundMeContractAddress,
-        functionName: 'fundCampaign',
-        args: [campaign.campaign_id, commentId],
-        value: amt,
-        chainId: ethChainId,
-      });
-    },
-    [amt, campaign.campaign_id]
-  );
-
   useEffect(() => {
-    socket.connect();
-
-    function onConnect() {
-      setIsConnected(true);
-      socket.emit('comment:join', joinData, onJoin);
-    }
-
-    function onComment(response: { data: Comment; totalComments: number }) {
-      if (!response.data) return;
-      handleWriteComment(response.data.commentID);
-    }
-
-    function onDisonnect() {
-      setIsConnected(false);
-    }
-
-    const joinData = {
-      data: {
-        campaignID: campaign.id,
-        userID: user?.id,
-        limit: 24,
-      },
-    };
-
-    const onJoin = (response: { data: Comment[]; totalComments: number }) => {
-      console.log('Joined room', response);
-    };
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisonnect);
-    socket.on('comment:join', onJoin);
-    socket.on('campaign:comment', onComment);
-
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisonnect);
-      socket.off('comment:join', onJoin);
-      socket.on('campaign:comment', onComment);
-      socket.disconnect();
-    };
-  }, [user?.id, campaign.campaign_id, handleWriteComment, campaign.id, amt]);
-
-  useEffect(() => {
-    if (isSuccess || isConfirmedTxn) {
+    if (isConfirmedTxn || isSuccess) {
       toast.success('Successfully funded campaign');
 
       closeBtnRef.current?.click();
       // router.push(`/campaigns/${campaign.campaign_id}`);
-      return router.refresh();
+      router.refresh();
     }
   }, [campaign.campaign_id, isSuccess, isConfirmedTxn, router]);
 
   useEffect(() => {
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error?.message);
+      if (newCommentId) {
+        handleDeleteComment();
+      }
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else if (!loggedIn) {
+        errorMsg = 'Connect wallet to donate';
+      } else {
+        errorMsg = 'Failed to donate';
+      }
+      toast.error(errorMsg);
     }
-  }, [error, isError]);
+  }, [error, isError, newCommentId, loggedIn, handleDeleteComment]);
 
   const watchedAmount: number = watch('amount');
 
@@ -242,8 +240,8 @@ export default function DonateForm({
           <div className='relative'>
             <Input
               type='number'
-              step={0.0001}
-              min={0}
+              step='any'
+              min={0.0001}
               max={parseFloat(formatEther(BigInt(campaign.goal)))}
               {...register('amount', {
                 required: 'Amount is required',
@@ -275,8 +273,8 @@ export default function DonateForm({
           <div>
             <input
               type='number'
-              step={0.0001}
-              min={0}
+              step='any'
+              min={0.0001}
               max={
                 parseFloat(formatEther(BigInt(campaign.goal))) *
                 (ethPriceInUSD ?? 0)
@@ -327,7 +325,7 @@ export default function DonateForm({
         <Button
           size='lg'
           disabled={
-            isLoadingTxn || isConfirmingTxn || isPending || !isConnected
+            isLoadingTxn || isConfirmingTxn || isPending || isPushingComment
           }
           className='w-full disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-opacity-90'
         >
