@@ -1,12 +1,11 @@
 'use client';
 
-import { userStore } from '@/store';
+import { efmUserAddressStore, userStore } from '@/store';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useAccount } from 'wagmi';
 import { Button, Input } from '../inputs';
 
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
@@ -20,7 +19,7 @@ export const AccountForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { setUser } = userStore();
-  const { address, connector, chainId } = useAccount();
+  const { address } = efmUserAddressStore();
   const router = useRouter();
 
   const { handleSubmit, register } = useForm<TAccount>({
@@ -31,7 +30,7 @@ export const AccountForm = () => {
   });
 
   const onSubmit: SubmitHandler<TAccount> = async (data) => {
-    if (!address || !connector || !chainId) {
+    if (!address) {
       toast.error('Wallet not connected.');
       router.refresh();
       return;
@@ -62,6 +61,7 @@ export const AccountForm = () => {
       const user = create_user.user;
       if (user.ethAddress) {
         setUser(user);
+        toast.success('Account created. Connect Wallet');
         router.push('/');
       }
     } catch (error) {

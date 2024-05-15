@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -24,14 +23,6 @@ const Navbar = () => {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
-
-  useEffect(() => {
-    (async function () {
-      if (address && isConnected) {
-        // const a = await getUser(address);
-      }
-    })();
-  }, [address, isConnected]);
 
   return (
     <motion.nav
