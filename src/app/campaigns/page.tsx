@@ -9,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
 
 export default async function CampaignsPage({
   searchParams,
@@ -24,7 +22,7 @@ export default async function CampaignsPage({
   );
   return (
     <Container className='space-y-5 py-10'>
-      <h1 className={cn(TextSizeStyles.h1, 'text-center')}>Our Campaigns</h1>
+      {/* <h1 className={cn(TextSizeStyles.h1, 'text-center')}>Our Campaigns</h1> */}
 
       <div>
         <Select>
@@ -46,7 +44,9 @@ export default async function CampaignsPage({
         initialCampaigns={campaigns}
         totalCampaigns={totalCampaigns}
       /> */}
-      <CampaignsCarousel campaigns={campaigns} />
+      <div className='w-ful px-8'>
+        <CampaignsCarousel campaigns={campaigns} />
+      </div>
     </Container>
   );
 }

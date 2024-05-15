@@ -1,5 +1,6 @@
 'use client';
 import { Campaign } from '@/types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MobileView, deviceType } from 'react-device-detect';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -40,13 +41,27 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               //   showDots={true}
               responsive={responsive}
               //   ssr={true} // means to render carousel on server-side.
-              // infinite={MobileView ? true : false}
+              infinite={true}
               autoPlay={MobileView ? true : false}
               autoPlaySpeed={5000}
               keyBoardControl={true}
               customTransition='all 1.5'
               transitionDuration={1500}
               containerClass='carousel-container'
+              customLeftArrow={
+                <ChevronLeft
+                  size={75}
+                  strokeWidth={1}
+                  className='absolute -left-4 z-50 text-7xl text-primary-default'
+                />
+              }
+              customRightArrow={
+                <ChevronRight
+                  size={75}
+                  strokeWidth={1}
+                  className='absolute -right-6 z-50 text-7xl text-primary-default'
+                />
+              }
               //   removeArrowOnDeviceType={['tablet', 'mobile']}
               deviceType={deviceType}
               //   dotListClass="custom-dot-list-style"
