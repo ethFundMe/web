@@ -54,6 +54,7 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
           {...register('comment', {
             required: 'Enter a comment',
             minLength: 1,
+            maxLength: 250,
             validate: (value) => !!value.trim() || 'Enter a comment',
           })}
           placeholder='Enter your comments'
