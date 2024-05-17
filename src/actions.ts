@@ -98,6 +98,7 @@ export const updateUser = async (userDetails: {
   bio?: string;
   bannerUrl?: string;
   profileUrl?: string;
+  token: string;
 }) => {
   const userData = {
     email: userDetails.email,
@@ -108,11 +109,17 @@ export const updateUser = async (userDetails: {
     profileUrl: userDetails.profileUrl,
   };
 
-  const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/user`, {
-    body: JSON.stringify(userData),
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const res = await fetch(
+    `${process.env.ETH_FUND_ENDPOINT}/api/user/${userDetails.ethAddress}`,
+    {
+      body: JSON.stringify(userData),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userDetails.token}`,
+      },
+    }
+  );
   const data = await res.json();
 
   const resData: User = data;
@@ -121,7 +128,31 @@ export const updateUser = async (userDetails: {
     throw new Error('Failed to update profile');
   }
 
+  // throw new Error('Failed to update profile');
   return resData;
+};
+
+export const resetUser = async (address: `0x${string}`, token: string) => {
+  const res = await fetch(
+    `${process.env.ETH_FUND_ENDPOINT}/api/reset_user/${address}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  console.log(token);
+
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error('Failed to update profile');
+  }
+
+  return data;
 };
 
 export const handlePushComment = async ({

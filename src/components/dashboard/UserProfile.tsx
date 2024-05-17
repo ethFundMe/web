@@ -41,6 +41,7 @@ export const UserProfile = ({
   const [updatingImage, setUpdatingImage] = useState([false, false]);
 
   const { setUser } = userStore();
+  const token = getCookie('efmToken') || '';
 
   const handlePfpUpdate = (profileUrl: string[]) => {
     updateUser({
@@ -48,6 +49,7 @@ export const UserProfile = ({
       fullName: user.fullName,
       email: user.email,
       profileUrl: profileUrl[0],
+      token,
     })
       .then(() => {
         toast.success('Updated profile picture');
@@ -68,6 +70,7 @@ export const UserProfile = ({
       fullName: user.fullName,
       email: user.email,
       bannerUrl: bannerUrl[0],
+      token,
     })
       .then(() => {
         toast.success('Banner updated');
@@ -203,6 +206,7 @@ export const UserProfile = ({
                                           email: user.email,
                                           fullName: user.fullName,
                                           profileUrl: undefined,
+                                          token,
                                         })
                                           .then((res) => {
                                             setUser(res);

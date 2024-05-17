@@ -5,6 +5,7 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import DashboardMobileSidebar from './DashboardMobileSidebar';
 import { NavLink } from './NavLink';
 
@@ -16,12 +17,24 @@ export const DashboardSidebar = ({
   const { user } = userStore();
   const { push } = useRouter();
 
-  if (userAddress !== user?.ethAddress) {
-    push(`/profile/${userAddress}`);
-    return;
-  }
+  const [routes, setRoutes] = useState<
+    {
+      link: string;
+      title: string;
+      icon: JSX.Element;
+    }[]
+  >([]);
 
-  const routes = getDashboardRoutes(userAddress);
+  useEffect(() => {
+    if (userAddress !== user?.ethAddress) {
+      push(`/profile/${userAddress}`);
+      return;
+    }
+  }, [userAddress, user?.ethAddress, push]);
+
+  useEffect(() => {
+    setRoutes(getDashboardRoutes(userAddress));
+  }, [userAddress]);
 
   return (
     <>

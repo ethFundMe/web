@@ -1,8 +1,9 @@
 'use client';
 
-import { deleteAccount } from '@/actions';
+import { resetUser } from '@/actions';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -32,7 +33,8 @@ export const DeleteAccountForm = () => {
   const [triggerRef, closeRef] = useRefs<HTMLButtonElement>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const { refresh } = useRouter();
+  const { push } = useRouter();
+  const token = getCookie('efmToken') || '';
 
   const onSubmit: SubmitHandler<FormSchema> = () => {
     if (triggerRef.current) triggerRef.current.click();
@@ -41,20 +43,12 @@ export const DeleteAccountForm = () => {
   async function handleDeleteAccount() {
     setDeleting(true);
     if (!user) return;
-    // if (closeRef.current) {
-    //   closeRef.current.click();
-    // }
+
     try {
-      const res = await deleteAccount(user.ethAddress);
-      if (!res || !res.success)
-        throw new Error(
-          (res?.message as string) || 'Failed to make delete request'
-        );
-      if (res.success) {
-        toast.success(res?.message as string);
-        closeRef.current?.click();
-        refresh();
-      }
+      const res = await resetUser(user.ethAddress, token);
+      closeRef.current?.click();
+      toast.success(res);
+      push('/');
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -124,8 +118,12 @@ export const DeleteAccountForm = () => {
           </DialogHeader>
 
           <div className='grid grid-cols-2 gap-4'>
-            <Button variant='destructive' onClick={handleDeleteAccount}>
-              Delete
+            <Button
+              variant='destructive'
+              disabled={!!errors.confirmText || deleting}
+              onClick={handleDeleteAccount}
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
             </Button>
             <Button asChild variant='outline'>
               <DialogClose ref={closeRef}>Close</DialogClose>
