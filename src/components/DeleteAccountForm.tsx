@@ -47,7 +47,8 @@ export const DeleteAccountForm = () => {
     try {
       const res = await resetUser(user.ethAddress, token);
       closeRef.current?.click();
-      toast.success(res);
+      console.log(res.user);
+      toast.success(res.message);
       push('/');
     } catch (error) {
       if (error instanceof Error) {
