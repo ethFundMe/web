@@ -26,7 +26,11 @@ export const DashboardSidebar = ({
   >([]);
 
   useEffect(() => {
-    if (userAddress !== user?.ethAddress) {
+    if (!userAddress && !user?.ethAddress) {
+      push(`/profile/${userAddress}`);
+      return;
+    }
+    if (userAddress && user?.ethAddress && userAddress !== user?.ethAddress) {
       push(`/profile/${userAddress}`);
       return;
     }

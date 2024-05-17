@@ -115,6 +115,7 @@ export const updateUser = async (userDetails: {
       body: JSON.stringify(userData),
       method: 'PUT',
       headers: {
+        accept: '*/*',
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userDetails.token}`,
       },
@@ -128,6 +129,8 @@ export const updateUser = async (userDetails: {
     throw new Error('Failed to update profile');
   }
 
+  // console.log(resData, userDetails.token);
+
   // throw new Error('Failed to update profile');
   return resData;
 };
@@ -138,13 +141,11 @@ export const resetUser = async (address: `0x${string}`, token: string) => {
     {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+        accept: '*/*',
         Authorization: `Bearer ${token}`,
       },
     }
   );
-
-  console.log(token);
 
   const data = await res.json();
 
@@ -152,7 +153,7 @@ export const resetUser = async (address: `0x${string}`, token: string) => {
     throw new Error('Failed to update profile');
   }
 
-  return data;
+  return data as { message: string; user: User };
 };
 
 export const handlePushComment = async ({
