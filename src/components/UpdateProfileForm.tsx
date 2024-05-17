@@ -17,6 +17,7 @@ import { REGEX_CODES } from '@/lib/constants';
 import { userStore } from '@/store';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -74,6 +75,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   });
 
   const { setUser } = userStore();
+  const token = getCookie('efmToken');
 
   const {
     isLoading: isConfirmingTxn,
@@ -115,7 +117,6 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     !!form.watch('bio')?.trim() !== !!user.bio ||
     form.watch('bio')?.trim() !== user.bio;
 
-  console.log(`${{ creatorFeeEditMade, editMade }}`);
   const router = useRouter();
 
   function updateUserProfile(values: z.infer<typeof formSchema>) {
@@ -128,6 +129,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         email: values.email,
         ethAddress: user.ethAddress,
         fullName: values.fullName,
+        token: token || '',
       })
         .then((data) => {
           handleWriteContract(values.creatorFee as number);
@@ -148,6 +150,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         email: values.email,
         ethAddress: user.ethAddress,
         fullName: values.fullName,
+        token: token || '',
       })
         .then((data) => {
           // Reset form and navigate to the dashboard

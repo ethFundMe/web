@@ -99,5 +99,5 @@ export const useAuth = () => {
     });
 
     return unWatch;
-  }, [config, isAuth, disconnect]);
+  }, [config, isAuth, disconnect, resetAddress]);
 };

@@ -20,6 +20,7 @@ export default async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/account', req.url));
       return NextResponse.next();
     }
+
     return NextResponse.redirect(new URL('/account', req.url));
   } catch (error) {
     return NextResponse.redirect(new URL('/', req.url));
