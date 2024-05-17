@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId } from '@/lib/constant';
 import { useEffect, useState } from 'react';
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, createWalletClient, custom, http } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
 
 const publicClient = createPublicClient({
@@ -14,10 +14,33 @@ const publicClient = createPublicClient({
   transport: http(),
 });
 
+const walletClient = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum!),
+});
+
 export const ValidatorCountdown = () => {
   const [jsonDate, setJsonDate] = useState('');
   const [expired, setExpired] = useState(false);
   const [days, hours, minutes, seconds] = useCountdown(new Date(jsonDate));
+
+  const diminsh = async () => {
+    const [account] = await walletClient.getAddresses();
+    // const data = await walletClient.writeContract({
+    //   address: process.env.NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS || '',
+    //   abi: EthFundMe,
+    //   functionName: 'diminish',
+    //   account: account
+    // });
+
+    const { request } = await publicClient.simulateContract({
+      account,
+      address: process.env.NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS || '',
+      abi: EthFundMe,
+      functionName: 'diminish',
+    });
+    await walletClient.writeContract(request);
+  };
 
   const getDfNextUpdate = async () => {
     const data = await publicClient.readContract({
@@ -37,7 +60,8 @@ export const ValidatorCountdown = () => {
     async function getDateString() {
       const dateString = await getDfNextUpdate();
       setJsonDate(dateString);
-      if (days + hours + minutes + seconds <= 0) {
+      const now = new Date().toJSON();
+      if (dateString <= now) {
         setExpired(true);
       }
     }
@@ -79,10 +103,12 @@ export const ValidatorCountdown = () => {
       </div>
       <button
         className={`grid h-24 w-24 flex-shrink-0 place-content-center rounded-full ${
-          expired
+          !expired
             ? 'bg-neutral-400 hover:bg-neutral-400/80'
-            : 'bg-green-600 hover:bg-green-400/80'
-        } text-sm text-white sm:h-32 sm:w-32 sm:text-base`}
+            : 'bg-green-600 hover:bg-green-600/90'
+        } text-sm text-white disabled:cursor-not-allowed sm:h-32 sm:w-32 sm:text-base`}
+        onClick={diminsh}
+        disabled={!expired}
       >
         UPDATE
       </button>

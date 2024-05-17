@@ -58,7 +58,9 @@ export const CampaignCard = ({
 
       <div className='flex-1'>
         <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
-        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+        <p className='line-clamp-2 bg-red-100 text-neutral-700 md:min-h-12'>
+          {campaign.description}
+        </p>
       </div>
 
       <Link

@@ -1,6 +1,7 @@
 import { CampaignUrlParams, getCampaigns } from '@/actions';
+import CampaignsCarousel from '@/components/CampaignsCarousel';
 import { Container } from '@/components/Container';
-import InfiniteScroll from '@/components/InfiniteScroll';
+// import InfiniteScroll from '@/components/InfiniteScroll';
 import {
   Select,
   SelectContent,
@@ -8,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { TextSizeStyles } from '@/lib/styles';
-import { cn } from '@/lib/utils';
 
 export default async function CampaignsPage({
   searchParams,
@@ -18,13 +17,12 @@ export default async function CampaignsPage({
 }) {
   // console.log({ searchParams });
 
-  const { campaigns, totalCampaigns } = await getCampaigns(
+  const { campaigns } = await getCampaigns(
     searchParams as unknown as CampaignUrlParams
   );
-
   return (
     <Container className='space-y-5 py-10'>
-      <h1 className={cn(TextSizeStyles.h1, 'text-center')}>Our Campaigns</h1>
+      {/* <h1 className={cn(TextSizeStyles.h1, 'text-center')}>Our Campaigns</h1> */}
 
       <div>
         <Select>
@@ -42,10 +40,13 @@ export default async function CampaignsPage({
         </Select>
       </div>
 
-      <InfiniteScroll
+      {/* <InfiniteScroll
         initialCampaigns={campaigns}
         totalCampaigns={totalCampaigns}
-      />
+      /> */}
+      <div className='w-ful px-8'>
+        <CampaignsCarousel campaigns={campaigns} />
+      </div>
     </Container>
   );
 }
