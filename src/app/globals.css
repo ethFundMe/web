@@ -429,3 +429,8 @@ body {
     border-color: white;
   }
 }
+@media only screen and (max-width: 600px) {
+  .carouselItem {
+    padding-right: 20px;
+  }
+}
