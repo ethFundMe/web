@@ -40,7 +40,10 @@ export default async function EarningsPage({
             <h2 className='text-lg font-bold text-primary-default'>
               Current Earnings
             </h2>
-            <p>Tokens earned from all activities</p>
+            <p>
+              Your FUNDME tokens are sent to you immediately. The amount shown
+              below is the total sent based on your activities.
+            </p>
 
             <div className='flex flex-wrap items-center justify-between'>
               <p className='my-4 text-3xl font-bold text-primary-dark'>
@@ -73,7 +76,7 @@ export default async function EarningsPage({
               Earn More!
             </h2>
             <p className='max-w-screen-[500px]'>
-              Keep an eye here for the opportunity to influene reward
+              Keep an eye here for the opportunity to influence reward
               distribution by participating in updating our reward system.
             </p>
 
@@ -96,31 +99,28 @@ export default async function EarningsPage({
         </div>
 
         <aside className='top-24 w-full lg:sticky lg:max-w-72'>
-          <div className='mt-4 h-fit rounded-lg border border-slate-300 bg-primary-default p-4 lg:min-h-[90%]'>
-            <div className='flex items-center gap-2 text-white'>
-              <History size={40} className='stroke-1' />
-              <h2 className='pb-4 text-xl font-bold'>History</h2>
+          <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
+            <div className='mb-2 flex items-center gap-2 pr-3'>
+              <History size={30} className='stroke-1' />
+              <h2 className=' text-xl font-bold'>History</h2>
             </div>
 
-            <ScrollArea className={cn(earnings.length > 2 ? 'h-96' : 'h-fit')}>
+            <ScrollArea
+              className={cn('pr-3', earnings.length > 2 ? 'h-96' : 'h-fit')}
+            >
               {earnings.length > 0 ? (
                 <ul className='mt-4 space-y-4'>
                   {earnings.map((earning, idx) => (
                     <li key={idx}>
                       <Link
                         href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
-                        className='block rounded-md bg-white/20 p-2.5 text-white'
+                        className='block rounded-md bg-slate-300/20 p-3'
                       >
-                        <div className=''>
-                          {/* {earningBadge[earning.type]} */}
-
+                        <div>
                           <div className='space-y-1.5 lg:space-y-2.5'>
                             <div>
-                              <p className='text-xl font-semibold'>
-                                {/* {earning.rewardType === 'campaign_creation'
-                                ? '-'
-                              : '+'}{' '} */}
-                                {earning.amount} Fundme
+                              <p className='text-lg font-medium'>
+                                {earning.amount} FUNDME
                               </p>
 
                               <p className='text-sm'>

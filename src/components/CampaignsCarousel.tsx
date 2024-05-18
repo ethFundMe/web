@@ -31,10 +31,12 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
 
   return (
     <div>
-      <div className='space-y-5'>
+      <div className='space-y-14'>
         {uniqueTags.map((tag) => (
-          <>
-            <h2 className=' text-4xl font-semibold text-[#0062A6]'>{tag}</h2>
+          <div key={tag} className='space-y-5'>
+            <h2 className='text-2xl font-extralight text-primary-dark md:text-3xl'>
+              {tag}
+            </h2>
             <Carousel
               swipeable={false}
               draggable={false}
@@ -73,7 +75,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
                   return <CampaignCard key={item.id} campaign={item} />;
                 })}
             </Carousel>
-          </>
+          </div>
         ))}
       </div>
     </div>

@@ -1,13 +1,13 @@
 'use client';
 
 import { useCountdown } from '@/lib/hook/useCountdown';
-import { AnimatePresence, motion } from 'framer-motion';
 // import { publicClient } from './client'
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId } from '@/lib/constant';
 import { useEffect, useState } from 'react';
 import { createPublicClient, createWalletClient, custom, http } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
+import { Button } from './ui/button';
 
 const publicClient = createPublicClient({
   chain: ethChainId === 1 ? mainnet : sepolia,
@@ -77,32 +77,23 @@ export const ValidatorCountdown = () => {
   return (
     <div className='flex flex-wrap items-center justify-between gap-4'>
       <div className='flex gap-4'>
-        <AnimatePresence mode='popLayout' initial={false}>
-          {Object.entries(Obj).map(([key, value]) => (
-            <div key={key}>
-              <div className='flex flex-col items-center font-bold uppercase'>
-                <motion.p
-                  key={value}
-                  animate={{
-                    scale: [0.9, 1],
-                    transition: {
-                      type: 'spring',
-                      damping: 30,
-                    },
-                  }}
-                  className='text-4xl text-primary-default sm:text-5xl'
-                >
-                  {String(value).padStart(2, '0')}
-                </motion.p>
+        {Object.entries(Obj).map(([key, value]) => (
+          <div key={key}>
+            <div className='flex flex-col items-center font-bold uppercase'>
+              <p
+                key={value}
+                className='text-4xl text-primary-default sm:text-5xl'
+              >
+                {String(value).padStart(2, '0')}
+              </p>
 
-                <p className='text-sm sm:text-base'>{key}</p>
-              </div>
+              <p className='text-sm sm:text-base'>{key}</p>
             </div>
-          ))}
-        </AnimatePresence>
+          </div>
+        ))}
       </div>
-      <button
-        className={`grid h-24 w-24 flex-shrink-0 place-content-center rounded-full ${
+      <Button
+        className={`grid flex-shrink-0 place-content-center rounded-full ${
           !expired
             ? 'bg-neutral-400 hover:bg-neutral-400/80'
             : 'bg-green-600 hover:bg-green-600/90'
@@ -111,7 +102,7 @@ export const ValidatorCountdown = () => {
         disabled={!expired}
       >
         UPDATE
-      </button>
+      </Button>
     </div>
   );
 };
