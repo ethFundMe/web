@@ -31,7 +31,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
 
   return (
     <div>
-      <div className='space-y-14'>
+      <div className='w-full space-y-14'>
         {uniqueTags.map((tag) => (
           <div key={tag} className='space-y-5'>
             <h2 className='text-2xl font-extralight text-primary-dark md:text-3xl'>
@@ -47,8 +47,8 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               autoPlay={MobileView ? true : false}
               autoPlaySpeed={5000}
               keyBoardControl={true}
-              customTransition='all 1.5'
-              transitionDuration={1500}
+              // customTransition='all 3.5'
+              transitionDuration={3500}
               containerClass='carousel-container'
               customLeftArrow={
                 <ChevronLeft
@@ -64,7 +64,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
                   className='absolute -right-6 z-50 text-7xl text-primary-default'
                 />
               }
-              //   removeArrowOnDeviceType={['tablet', 'mobile']}
+              removeArrowOnDeviceType={['tablet', 'mobile']}
               deviceType={deviceType}
               //   dotListClass="custom-dot-list-style"
               itemClass='carouselItem'

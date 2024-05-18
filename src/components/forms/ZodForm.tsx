@@ -98,7 +98,7 @@ export default function CreateCampaignForm() {
     error,
     isError,
     isPending,
-    isSuccess,
+    // isSuccess,
     writeContract,
   } = useWriteContract({
     mutation: {
@@ -239,13 +239,16 @@ export default function CreateCampaignForm() {
   };
 
   useEffect(() => {
-    if (isConfirmedTxn || isSuccess) {
+    if (isConfirmedTxn) {
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
       router.push('/campaigns');
       return;
     }
+  }, [isConfirmedTxn, router]);
+
+  useEffect(() => {
     if (isError && error) {
       let errorMsg = (error as BaseError).shortMessage || error.message;
 
@@ -259,7 +262,7 @@ export default function CreateCampaignForm() {
       setSubmitStatus(null);
       return;
     }
-  }, [error, form, isConfirmedTxn, isError, isSuccess, router]);
+  }, [error, isError]);
 
   useEffect(() => {
     fetchCampaignTags().then((res) => {
