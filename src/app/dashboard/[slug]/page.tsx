@@ -1,6 +1,6 @@
-import { getCampaigns, getUser } from '@/actions';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
+import { getCampaigns, getUser } from '@/lib/queries';
 import { notFound, redirect } from 'next/navigation';
 import { isAddress } from 'viem';
 
