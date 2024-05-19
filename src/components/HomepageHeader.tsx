@@ -137,6 +137,9 @@ export const HomepageHeader = () => {
                 >
                   {getGreeterHeader()}
                   <Typewriter
+                    options={{
+                      cursorClassName: 'hidden',
+                    }}
                     onInit={(typewriter) => {
                       typewriter
                         .typeString(

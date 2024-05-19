@@ -30,7 +30,7 @@ export const CampaignCard = ({
       // onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
         'group flex cursor-pointer flex-col gap-1 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
-        !full && 'w-full max-w-[400px] flex-shrink-0',
+        !full && 'w-full flex-shrink-0 md:max-w-[400px]',
         variantStyles,
         campaign.flagged && 'border-red-500 hover:border-red-500'
       )}

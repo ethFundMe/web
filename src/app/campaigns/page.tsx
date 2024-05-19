@@ -44,7 +44,7 @@ export default async function CampaignsPage({
         initialCampaigns={campaigns}
         totalCampaigns={totalCampaigns}
       /> */}
-      <div className='w-ful px-8'>
+      <div className='w-full'>
         <CampaignsCarousel campaigns={campaigns} />
       </div>
     </Container>
