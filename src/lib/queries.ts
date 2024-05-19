@@ -4,6 +4,19 @@ export type CampaignUrlParams = {
   [key: string]: string | number | undefined;
 };
 
+export const fetchCampaignTags = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/tags`
+    );
+    const data: { tags?: { id: number; name: string }[] } = await res.json();
+
+    return data?.tags ? data.tags : [];
+  } catch (e) {
+    return [];
+  }
+};
+
 export async function getCampaigns(urlParams: CampaignUrlParams) {
   const page = urlParams?.page;
   const ethAddress = urlParams?.ethAddress;
