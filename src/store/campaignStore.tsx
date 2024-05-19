@@ -1,4 +1,4 @@
-import { getCampaigns } from '@/actions';
+import { getCampaigns } from '@/lib/queries';
 import { Campaign } from '@/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';

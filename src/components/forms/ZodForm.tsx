@@ -1,9 +1,10 @@
 'use client';
 
-import { fetchCampaignTags, handleIPFSPush } from '@/actions';
+import { handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
+import { fetchCampaignTags } from '@/lib/queries';
 import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
@@ -246,7 +247,7 @@ export default function CreateCampaignForm() {
       router.push('/campaigns');
       return;
     }
-  }, [isConfirmedTxn, router]);
+  }, [isConfirmedTxn, router, form]);
 
   useEffect(() => {
     if (isError && error) {

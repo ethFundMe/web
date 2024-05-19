@@ -1,7 +1,7 @@
-import { getCampaigns, getUser } from '@/actions';
 import Navbar from '@/components/Navbar';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
+import { getCampaigns, getUser } from '@/lib/queries';
 import { seoProfile } from '@/lib/seoBannerUrl';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';

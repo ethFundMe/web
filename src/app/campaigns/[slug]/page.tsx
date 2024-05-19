@@ -1,4 +1,3 @@
-import { getCampaign, getCampaigns, getUser } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
 import { CampaignComments } from '@/components/CampaignComments';
 import { Container } from '@/components/Container';
@@ -6,6 +5,7 @@ import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
+import { getCampaign, getCampaigns, getUser } from '@/lib/queries';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';

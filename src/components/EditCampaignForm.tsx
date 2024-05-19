@@ -1,9 +1,10 @@
 'use client';
 
-import { fetchCampaignTags, handleIPFSPush } from '@/actions';
+import { handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
+import { fetchCampaignTags } from '@/lib/queries';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
