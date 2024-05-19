@@ -37,10 +37,6 @@ export async function urlPreview(url: string) {
   }
 }
 
-export type CampaignUrlParams = {
-  [key: string]: string | number | undefined;
-};
-
 export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
   email: string;

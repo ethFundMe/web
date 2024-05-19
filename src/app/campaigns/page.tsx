@@ -1,4 +1,3 @@
-import { CampaignUrlParams, getCampaigns } from '@/actions';
 import CampaignsCarousel from '@/components/CampaignsCarousel';
 import { Container } from '@/components/Container';
 // import InfiniteScroll from '@/components/InfiniteScroll';
@@ -9,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CampaignUrlParams, getCampaigns } from '@/lib/queries';
 
 export default async function CampaignsPage({
   searchParams,
