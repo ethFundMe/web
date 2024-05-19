@@ -1,7 +1,11 @@
-import { fetchTotalUserEarnings, fetchUserEarnings, getUser } from '@/actions';
 import { EarningsChart } from '@/components/EarningsChart';
 import { ValidatorCountdown } from '@/components/ValidatorCountdown';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  fetchTotalUserEarnings,
+  fetchUserEarnings,
+  getUser,
+} from '@/lib/queries';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -73,7 +77,7 @@ export default async function EarningsPage({
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
             <h2 className='text-lg font-bold text-primary-default'>
-              Current Earnings
+              All Earnings
             </h2>
             <p>
               Your FUNDME tokens are sent to you immediately. The amount shown

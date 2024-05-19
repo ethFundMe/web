@@ -1,4 +1,4 @@
-import { getCampaigns, getUser } from '@/actions';
+import { getCampaigns, getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Container } from './Container';

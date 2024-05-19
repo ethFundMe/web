@@ -1,6 +1,6 @@
 'use client';
 
-import { getCampaigns } from '@/actions';
+import { getCampaigns } from '@/lib/queries';
 import { CampaignTags } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { campaignStore } from '@/store/campaignStore';

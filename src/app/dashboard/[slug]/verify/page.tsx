@@ -1,6 +1,6 @@
-import { getUser } from '@/actions';
 import { Container } from '@/components/Container';
 import VerificationForm from '@/components/forms/VerificationForm';
+import { getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

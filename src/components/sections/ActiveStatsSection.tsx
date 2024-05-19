@@ -1,4 +1,4 @@
-import { fetchActiveStats } from '@/actions';
+import { fetchActiveStats } from '@/lib/queries';
 import Image from 'next/image';
 import { formatEther } from 'viem';
 import { Container } from '../Container';

@@ -1,5 +1,5 @@
-import { getUser } from '@/actions';
 import UpdateProfileForm from '@/components/UpdateProfileForm';
+import { getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Metadata } from 'next';

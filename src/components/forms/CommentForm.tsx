@@ -40,6 +40,8 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
         data,
         (response: SocketResponse<{ id: number }>) => {
           if (response.data?.id) {
+            console.log(response);
+
             reset();
           }
         }

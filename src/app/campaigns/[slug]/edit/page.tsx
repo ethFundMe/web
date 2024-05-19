@@ -1,7 +1,7 @@
-import { getCampaign } from '@/actions';
 import { Container } from '@/components/Container';
 import EditCampaignForm from '@/components/EditCampaignForm';
 import UpdateCampaignMediaForm from '@/components/UpdateCampaignMediaForm';
+import { getCampaign } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { Flag } from 'lucide-react';
 import Link from 'next/link';
