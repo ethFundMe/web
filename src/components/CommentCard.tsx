@@ -135,9 +135,9 @@ export const CommentCard = forwardRef<Ref, Props>(
               {isOwner && (
                 <DropdownMenuItem asChild>
                   <Dialog>
-                    <DialogTrigger className='flex items-center gap-2'>
+                    <DialogTrigger className='flex items-center gap-2 px-2 text-sm'>
                       <IoTrash className='text-red-500' />
-                      Delete comment
+                      Delete
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader className='mb-2 space-y-1'>
