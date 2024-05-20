@@ -2,7 +2,6 @@
 
 namespace NodeJS {
   interface ProcessEnv {
-    NEXT_PUBLIC_SEPOLIA_ALCHEMY_API_KEY: string;
     NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS: `0x${string}`;
     NEXT_PUBLIC_CHAIN_ID: number;
     DATABASE_URL: string;
@@ -16,7 +15,6 @@ namespace NodeJS {
     ETH_FUND_ENDPOINT: string;
     NEXT_PUBLIC_WC_PROJECT_ID: string;
     NEXT_PUBLIC_EFM_EMAIL: string;
-    NEXT_PUBLIC_MAINNET_ALCHEMY_API_KEY: string;
     NEXT_PUBLIC_TNX_LINK: string;
   }
 }
