@@ -1,15 +1,18 @@
 'use client';
 
+import { handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
-import { REGEX_CODES } from '@/lib/constants';
+import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
+import { fetchCampaignTags } from '@/lib/queries';
 import { CampaignTags } from '@/lib/types';
 import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
+import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
@@ -48,12 +51,19 @@ import {
 } from './ui/tooltip';
 
 export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+  const [isUploadingMetadata, setIsUploadingMetadata] = useState(false);
   const { address } = useAccount();
   const router = useRouter();
+  const { user } = userStore();
 
-  useEffect(() => {
-    if (!address) redirect('/');
-  }, [address]);
+  // useEffect(() => {
+  //   const isWalletConnected = address;
+
+  //   const isActualCreator = user?.ethAddress === address;
+
+  //   if (!user) redirect('/');
+  // }, [user]);
 
   const {
     data: hash,
@@ -72,21 +82,18 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
 
-  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA();
+  const formSchema = GET_EDIT_CAMPAIGN_FORM_SCHEMA(user?.isVerified);
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       type: campaign.beneficiary === campaign.creator ? 'personal' : 'others',
       beneficiaryAddress: campaign.beneficiary,
-      banner: campaign.media_links[0],
+      banner: campaign.banner_url,
       description: campaign.description,
       title: campaign.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
-      tag: CampaignTags['Arts and Culture'],
-      ytLink:
-        campaign.media_links.filter((link) =>
-          REGEX_CODES.ytLink.test(link)
-        )[0] ?? undefined,
+      tag: campaign.tag as CampaignTags,
+      ytLink: campaign.youtube_link ?? undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(formSchema),
@@ -97,44 +104,83 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     form.watch('description') !== campaign.description ||
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.media_links[0];
-
-  console.log(form.watch());
+    form.watch('banner') !== campaign.banner_url ||
+    form.watch('tag') !== campaign.tag;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    console.log(data);
-    const { description, goal, title, beneficiaryAddress } = data;
+    const { goal, beneficiaryAddress, tag, title, description } = data;
     const { campaign_id } = campaign;
 
-    return writeContract({
-      abi: EthFundMe,
-      address: ethFundMeContractAddress,
-      functionName: 'updateCampaign',
-      chainId: ethChainId,
-      args: [
-        BigInt(campaign_id),
-        title,
-        description,
-        parseEther(goal.toString()),
-        [
-          'https://images.unsplash.com/photo-1527788263495-3518a5c1c42d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnVuZHJhaXNpbmd8ZW58MHx8MHx8fDA%3D',
-        ],
-        beneficiaryAddress as `0x${string}`,
-      ],
-    });
+    // Handle push data to backend
+
+    const filterTag = tags.filter((_) => _.name === tag)[0];
+    const preparedTag = TagsWithIds.filter(
+      (i) => i.name === (filterTag.name || CampaignTags.Others)
+    )[0].id;
+
+    setIsUploadingMetadata(true);
+    handleIPFSPush({
+      title,
+      description,
+      bannerUrl: campaign.banner_url,
+      youtubeLink: campaign.youtube_link || undefined,
+      mediaLinks: campaign.media_links,
+      tag: preparedTag,
+    })
+      .then((res) => {
+        if (!res?.hash) throw new Error();
+
+        writeContract({
+          abi: EthFundMe,
+          address: ethFundMeContractAddress,
+          functionName: 'updateCampaign',
+          chainId: ethChainId,
+          args: [
+            res.hash,
+            BigInt(campaign_id),
+            parseEther(goal.toString()),
+            form.watch('type') === 'personal'
+              ? campaign.creator
+              : (beneficiaryAddress as `0x${string}`),
+          ],
+        });
+        setIsUploadingMetadata(false);
+      })
+      .catch(() => {
+        toast.error('Failed to update campaign');
+        setIsUploadingMetadata(false);
+      });
   };
 
   useEffect(() => {
-    if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error.message);
-      return;
-    }
+    fetchCampaignTags().then((res) => {
+      setTags(res);
+    });
+  }, []);
 
-    if (isConfirmedTxn) {
+  useEffect(() => {
+    if (isError && error) {
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign';
+      }
+
+      toast.error(errorMsg);
+    } else if (isConfirmedTxn) {
       toast.success('Campaign updated');
-      return router.push(`/campaigns/${campaign.id}`);
+      // router.push(`/campaigns/${campaign.campaign_id}`);
     }
-  }, [campaign.id, error, isConfirmedTxn, isError, router]);
+  }, [campaign.campaign_id, error, isConfirmedTxn, isError, router]);
+
+  function goalReached() {
+    if (campaign.total_accrued >= campaign.goal) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <Form {...form}>
@@ -155,7 +201,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='title'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -183,7 +228,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='type'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -191,8 +235,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               <FormLabel>Goal (ETH)</FormLabel>
               <FormControl>
                 <Input
+                  disabled={goalReached()}
                   type='number'
-                  step={0.00001}
+                  step='any'
                   defaultValue={field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
@@ -202,7 +247,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='goal'
         />
-
         <FormField
           control={form.control}
           render={({ field }) => (
@@ -217,10 +261,10 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                     <SelectValue placeholder='Choose a campaign tag' />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(CampaignTags).map(([key, value]) => (
-                      <>
-                        <SelectItem value={key}>{value}</SelectItem>
-                      </>
+                    {tags.map((_, idx) => (
+                      <SelectItem key={idx} value={_.name}>
+                        {_.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -230,70 +274,69 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           )}
           name='tag'
         />
+        {form.watch('type') === 'others' &&
+          campaign.beneficiary !== campaign.creator && (
+            <>
+              <FormField
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Beneficiary address</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                name='beneficiaryAddress'
+              />
 
-        {form.watch('type') === 'others' && (
-          <>
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Beneficiary address</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='beneficiaryAddress'
-            />
+              <FormField
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger className='flex items-center gap-2 pb-2'>
+                              <span>Creator fees (%)</span>
+                              <AiOutlineExclamationCircle />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Visit your{' '}
+                                <Link
+                                  className='italic text-primary-default'
+                                  href={`/dashboard/${address}/update-profile`}
+                                >
+                                  dashboard
+                                </Link>{' '}
+                                if you wish to change your creator fee
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </>
+                    </FormLabel>
 
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    <>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (ETH)</span>
-                            <AiOutlineExclamationCircle />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>
-                              Visit your{' '}
-                              <Link
-                                className='italic text-primary-default'
-                                href={`/dashboard/${address}/update-profile`}
-                              >
-                                dashboard
-                              </Link>{' '}
-                              if you wish to change your creator fee
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </>
-                  </FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type='number'
-                      step={0.00001}
-                      disabled
-                      // value={User.creatorFee}
-                      value={0.02}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='creatorFee'
-            />
-          </>
-        )}
-
+                    <FormControl>
+                      <Input
+                        type='number'
+                        step={0.00001}
+                        disabled
+                        value={user?.creatorFee}
+                        // value={0.02}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                name='creatorFee'
+              />
+            </>
+          )}
         <FormField
           name='description'
           control={form.control}
@@ -307,7 +350,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             </FormItem>
           )}
         />
-
         <div className='col-span-2 space-y-4'>
           {!!REGEX_CODES.ytLink.test(form.watch('ytLink') as string) && (
             <LinkPreview url={form.watch('ytLink') as string} />
@@ -327,14 +369,17 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             name='ytLink'
           />
         </div>
-
         <Button
           type='submit'
           size='default'
-          className='col-span-2 disabled:cursor-not-allowed'
-          disabled={!editMade}
+          className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
+          disabled={
+            !editMade || isConfirmingTxn || isPending || isUploadingMetadata
+          }
         >
-          {isPending || isConfirmingTxn ? 'Loading...' : 'Update campaign'}
+          {isPending || isConfirmingTxn || isUploadingMetadata
+            ? 'Loading...'
+            : 'Update campaign'}
         </Button>
       </form>
     </Form>

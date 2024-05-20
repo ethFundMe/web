@@ -1,8 +1,8 @@
 'use client';
 
-import useStore, { userStore } from '@/store';
+import useStore, { efmUserAddressStore, userStore } from '@/store';
 import { ErrorResponse, User } from '@/types';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -17,14 +17,21 @@ export const useAuth = () => {
   const { push } = useRouter();
   const userEthAddress = useStore(userStore, (state) => state.user?.ethAddress);
   const { setUser, resetUser } = userStore();
+  const { resetAddress, setAddress } = efmUserAddressStore();
   const efmToken = getCookie('efmToken');
   const { disconnect } = useDisconnect();
 
   const [isAuth, setIsAuth] = useState(false);
 
   useAccountEffect({
-    async onConnect({ address, chainId, connector }) {
-      if (!address || !chainId || !connector) return;
+    async onConnect({ address, chainId, isReconnected }) {
+      if (!address || !chainId) return;
+
+      setAddress(address);
+
+      if (isReconnected && !efmToken) {
+        return disconnect();
+      }
 
       if (efmToken && userEthAddress === address) {
         setIsAuth(true);
@@ -33,7 +40,7 @@ export const useAuth = () => {
 
       if (chainId !== ethChainId) {
         toast.error('Wrong network');
-        return connector.disconnect();
+        return disconnect();
       }
 
       try {
@@ -52,15 +59,18 @@ export const useAuth = () => {
         const err = error as unknown as { error: ErrorResponse };
 
         if (err.error.name === 'USER_ETH_ADDRESS_NOT_FOUND') {
+          disconnect();
           push('/account');
           return;
         }
 
         if (err.error.name === 'INVALID_ETHEREUM_ADDRESS') {
+          disconnect();
           toast.error('Not a valid wallet address.');
           return;
         }
 
+        disconnect();
         toast.error('Wallet connection failed. Retry.');
         return;
       }
@@ -68,10 +78,14 @@ export const useAuth = () => {
 
     async onDisconnect() {
       setIsAuth(false);
+
+      if (efmToken) {
+        deleteCookie('efmToken');
+      }
+
       if (userEthAddress) {
         resetUser();
       }
-      push('/');
     },
   });
 
@@ -79,11 +93,11 @@ export const useAuth = () => {
     if (!config || !isAuth) return;
     const unWatch = watchAccount(config, {
       async onChange() {
+        resetAddress();
         disconnect();
       },
     });
 
     return unWatch;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, isAuth]);
+  }, [config, isAuth, disconnect, resetAddress]);
 };

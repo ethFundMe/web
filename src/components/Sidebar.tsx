@@ -5,6 +5,7 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useAccount } from 'wagmi';
@@ -27,7 +28,7 @@ export const Sidebar = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-10 overflow-auto px-6 sm:px-6'
+        className='inner scrollbar-hidden relative flex h-full flex-col justify-between gap-4 overflow-auto px-6 sm:px-6'
       >
         <SidebarUserCard />
 
@@ -38,7 +39,7 @@ export const Sidebar = () => {
           ))}
         </ul>
 
-        {isConnected && address ? (
+        {isConnected && address && getCookie('efmToken') ? (
           <Button
             className='rounded-lg bg-red-900 text-lg font-bold text-white hover:bg-red-900/90'
             onClick={openAccountModal}
@@ -103,7 +104,7 @@ export const SidebarNavLink = ({
           className
         )}
       >
-        {icon}
+        <div className='w-5'>{icon}</div>
 
         {title}
       </NavLink>

@@ -1,8 +1,7 @@
 'use client';
 
-import YouTubePlayer from 'react-player/youtube';
-
 import { REGEX_CODES } from '@/lib/constants';
+import YouTubePlayer from 'react-player/youtube';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -21,11 +20,11 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
         spaceBetween={50}
         loop
         slidesPerView={1}
-        navigation
+        navigation={images.length <= 1 ? false : true}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log('slide change')}
+        // onSwiper={(swiper) => console.log(swiper)}
+        // onSlideChange={() => console.log('slide change')}
       >
         {images.map((mediaLink) => (
           <SwiperSlide key={mediaLink}>
@@ -36,10 +35,10 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
             ) : (
               <ImageWithFallback
                 className='h-full flex-shrink-0 object-contain'
-                src={mediaLink}
+                src={mediaLink || ''}
                 width={800}
                 height={800}
-                alt='...'
+                alt={mediaLink}
               />
             )}
           </SwiperSlide>

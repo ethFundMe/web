@@ -1,119 +1,206 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { EarningsChart } from '@/components/EarningsChart';
+import { ValidatorCountdown } from '@/components/ValidatorCountdown';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  fetchTotalUserEarnings,
+  fetchUserEarnings,
+  getUser,
+} from '@/lib/queries';
+import { cn } from '@/lib/utils';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { BellPlus, Coins, History } from 'lucide-react';
+import { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { isAddress } from 'viem';
 
-type EarningVariant = 'claim' | 'earn';
+dayjs.extend(advancedFormat);
+
+type Props = {
+  params: { slug: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const id = params.slug;
+
+  const user = await getUser(id as `0x${string}`);
+  if (!user) notFound();
+
+  return {
+    title: 'Earnings | EthFundMe',
+    description: `${user.bio}`,
+    keywords:
+      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+    openGraph: {
+      type: 'website',
+      title: 'Earnings | EthFundMe',
+      description: `${user.bio}`,
+      images: '/images/seo-common.jpg',
+      url: 'https://ethfund.me',
+    },
+    twitter: {
+      title: 'Earnings | EthFundMe',
+      card: 'summary_large_image',
+      description: `${user.bio}`,
+      images: '/images/seo-common.jpg',
+      site: '@ethfundme',
+      creator: '@ethfundme',
+    },
+  };
+}
 
 export default async function EarningsPage({
   params: { slug },
 }: {
   params: { slug: string };
 }) {
-  // Fetch user earnings
+  if (!isAddress(slug)) notFound();
+  const totalEarnings = await fetchTotalUserEarnings(slug);
+  const earnings = await fetchUserEarnings(slug);
 
-  const earnings: {
-    type: EarningVariant;
-    amt: number;
-    source?: string;
-    hash: string;
-  }[] = [
-    {
-      hash: '/',
-      type: 'claim',
-      amt: 500,
-    },
-    {
-      hash: '/',
-      type: 'earn',
-      amt: 500,
-      source: 'Create campaign',
-    },
-    {
-      hash: '/',
-      type: 'earn',
-      amt: 250,
-      source: 'Donation',
-    },
-  ];
-
-  const earningBadge: Record<EarningVariant, React.ReactNode> = {
-    claim: <Badge className='bg-red-500'>Claim</Badge>,
-    earn: <Badge className='bg-green-600'>Earn</Badge>,
-  };
+  // console.log(
+  //   earnings.map((i) => ({
+  //     amount: parseFloat(i.amount),
+  //     source:
+  //       i.rewardType === 'campaign_creation'
+  //         ? 'Created campaign'
+  //         : 'Funded campaign',
+  //     dateEarned: new Date(i.created_at),
+  //   }))
+  // );
 
   return (
     <div className='mt-4 flex w-full p-4'>
-      <div className='hidden'>{slug}</div>
-
-      <div className='grid w-full grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20'>
-        <div className='space-y-16 lg:space-y-20'>
+      <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
+        <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
-            <h2 className='text-xl font-bold text-primary-default'>
-              Current Earnings
+            <h2 className='text-lg font-bold text-primary-default'>
+              All Earnings
             </h2>
-            <p>Tokens earned from all activities</p>
+            <p>
+              Your FUNDME tokens are sent to you immediately. The amount shown
+              below is the total sent based on your activities.
+            </p>
 
-            <p className='my-4 text-2xl font-bold lg:text-4xl'>1350 FUNDER</p>
+            <div className='flex flex-wrap items-center justify-between'>
+              <p className='my-4 text-3xl font-bold text-primary-dark'>
+                {totalEarnings && totalEarnings.total} FUNDME
+              </p>
 
-            <Button className='w-full max-w-72 text-lg font-bold'>
-              Claim Tokens
-            </Button>
-          </div>
-
-          <div>
-            <h2 className='text-xl font-bold text-primary-default'>
-              Validator Incentives
-            </h2>
-
-            <div className='mt-4 space-y-6 rounded-lg bg-primary-default p-6 text-center text-white'>
-              <p className='text-3xl'>12:00:03</p>
-
-              <div className='space-y-4'>
-                <p className='text-sm'>
-                  Earn more tokens by validating our smart contracts to keep
-                  them running smoothly.
-                </p>
-                <Link href='/'>Learn more</Link>
-              </div>
-
-              <Button
-                variant='secondary'
-                className='w-full max-w-72 text-lg font-bold'
-              >
-                Validate
-              </Button>
+              {/* <ClaimTokenBtn
+                userAddress={slug}
+                disabled={
+                  totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
+                }
+              /> */}
             </div>
           </div>
-        </div>
 
-        <div>
-          <h2 className='text-xl font-bold text-primary-default'>History</h2>
+          {/* Chart */}
+          <EarningsChart
+            earnings={earnings.map((i) => ({
+              amount: parseFloat(i.amount),
+              source:
+                i.rewardType === 'campaign_creation'
+                  ? 'Created campaign'
+                  : 'Funded campaign',
+              dateEarned: new Date(i.created_at),
+            }))}
+          />
 
-          <div className='mt-4 rounded-lg border border-slate-300 bg-slate-100 p-4 lg:min-h-[90%] lg:p-6'>
-            <ul className='space-y-4'>
-              {earnings.map((earning, idx) => (
-                <li key={idx}>
-                  <Link href={earning.hash}>
-                    <div className='space-y-1.5 text-primary-default lg:space-y-2.5'>
-                      {earningBadge[earning.type]}
+          <div>
+            <h2 className='text-lg font-bold text-primary-default'>
+              Earn More!
+            </h2>
+            <p className='max-w-screen-[500px]'>
+              Keep an eye here for the opportunity to influence reward
+              distribution by participating in updating our reward system.
+            </p>
 
-                      <div className='flex flex-wrap justify-between gap-4'>
-                        <p className='text-xl font-semibold leading-4'>
-                          {earning.amt} Funder
-                        </p>
+            <Link
+              target='_blank'
+              href='/about/validator-program'
+              className='my-4 block text-primary-default'
+            >
+              📖 Learn more
+            </Link>
 
-                        <p>{earning.source}</p>
-                      </div>
+            {/* <div className='flex flex-wrap items-center justify-between gap-4'> */}
+            <ValidatorCountdown />
 
-                      <small>25th July, 2025</small>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {/* <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
+                UPDATE
+              </button>
+            </div> */}
           </div>
         </div>
+
+        <aside className='top-24 w-full lg:sticky lg:max-w-72'>
+          <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
+            <div className='mb-2 flex items-center gap-2 pr-3'>
+              <History size={30} className='stroke-1' />
+              <h2 className=' text-xl font-bold'>History</h2>
+            </div>
+
+            <ScrollArea
+              className={cn('pr-3', earnings.length > 2 ? 'h-96' : 'h-fit')}
+            >
+              {earnings.length > 0 ? (
+                <ul className='mt-4 space-y-4'>
+                  {earnings.map((earning, idx) => (
+                    <li key={idx}>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
+                        className='block rounded-md bg-slate-300/20 p-3'
+                      >
+                        <div>
+                          <div className='space-y-1.5 lg:space-y-2.5'>
+                            <div>
+                              <p className='text-lg font-medium'>
+                                {earning.amount} FUNDME
+                              </p>
+
+                              <p className='text-sm'>
+                                {earning.rewardType === 'campaign_creation' && (
+                                  <span className='flex items-center gap-1'>
+                                    <BellPlus size={16} />
+
+                                    <span>Create campaign</span>
+                                  </span>
+                                )}
+                                {earning.rewardType === 'funding' && (
+                                  <span className='flex items-center gap-1'>
+                                    <Coins size={16} />
+
+                                    <span>Fund campaign</span>
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+                          </div>
+
+                          <small>
+                            {dayjs(earning.created_at)
+                              .subtract(2, 'minute')
+                              .format('Do MMM, YYYY . HH : mm a')}
+                          </small>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className='mt-4 rounded-md bg-white/20 p-2 text-white'>
+                  Keep creating and funding more campaigns to earn tokens
+                </p>
+              )}
+            </ScrollArea>
+          </div>
+        </aside>
       </div>
+
       {/* <EarningsCard /> */}
     </div>
   );

@@ -1,21 +1,21 @@
-import { getCampaign, getCampaigns, getUser } from '@/actions';
 import { CampaignCard } from '@/components/CampaignCard';
+import { CampaignComments } from '@/components/CampaignComments';
 import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { SwiperCarousel } from '@/components/SwiperCarousel';
+import { getCampaign, getCampaigns, getUser } from '@/lib/queries';
+import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
+import { Flag } from 'lucide-react';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
-
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { SwiperCarousel } from '@/components/SwiperCarousel';
-import { seoCampaign } from '@/lib/seoBannerUrl';
-import type { Metadata, ResolvingMetadata } from 'next';
 import { formatEther } from 'viem';
+import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 type Props = {
   params: { slug: string };
@@ -29,6 +29,7 @@ export async function generateMetadata(
   const id = params.slug;
 
   const campaign = await getCampaign(parseInt(id));
+
   if (!campaign) notFound();
 
   const user = await getUser(campaign.creator as `0x${string}`);
@@ -49,11 +50,13 @@ export async function generateMetadata(
           images: [
             {
               url: seoCampaign(
-                user.fullName,
+                campaign.user.fullName,
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
-                campaign?.media_links[0] || ''
+                campaign.banner_url,
+                campaign.user.profileUrl,
+                campaign.user.isVerified
               ),
             },
           ],
@@ -70,7 +73,9 @@ export async function generateMetadata(
                 parseFloat(formatEther(BigInt(campaign.goal))).toString(),
                 campaign.title,
                 campaign.description,
-                campaign?.media_links[0] || ''
+                campaign.banner_url,
+                campaign.user.profileUrl,
+                user.isVerified
               ),
             },
           ],
@@ -90,7 +95,9 @@ export default async function CampaignPage({
   params: { slug: string };
 }) {
   const campaign = await getCampaign(parseInt(slug));
-  const campaignsData = await getCampaigns();
+  // console.log(campaign.metadata);
+
+  const campaignsData = await getCampaigns({});
   const { campaigns } = campaignsData;
   if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
@@ -101,95 +108,136 @@ export default async function CampaignPage({
     .filter((_) => _.campaign_id !== campaign.campaign_id)
     .slice(0, 3);
 
+  const media_links = campaign.youtube_link
+    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
+    : [campaign.banner_url, ...campaign.media_links];
   return (
     <>
-      <Container className='relative grid grid-cols-1 gap-4 py-10 sm:gap-8 lg:grid-cols-3 lg:items-start lg:py-12'>
-        <div className='space-y-5 md:col-span-2 lg:space-y-8'>
-          <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
-            {campaign.title}
-          </h2>
+      {campaign.flagged && (
+        <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
+          <Flag className='fill-red-600' size={15} />
+          <span>This campaign has been flagged. </span>
+          <Link href='/legal/terms-and-conditions'>Learn more</Link>
+        </div>
+      )}
 
-          <SwiperCarousel images={campaign.media_links} />
-
-          <div className='space-y-7 pb-5'>
-            <div className='flex flex-col gap-4 sm:flex-row'>
-              <DonationObjectiveIndicator
-                seekingAmount={campaign.goal}
-                currentAmount={campaign.total_accrued}
-              />
-              <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
-                {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
-                <DonateBtn
-                  text='Donate Now'
-                  className='w-full whitespace-nowrap sm:mt-1'
-                  campaign={campaign}
-                />
-              </div>
+      <div className='space-y-10 py-10 lg:space-y-12 lg:py-12'>
+        <Container
+          className={cn(
+            'relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start',
+            campaign.flagged && '!pointer-events-none !grayscale'
+          )}
+        >
+          <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
+            <div>
+              <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
+                {campaign.title}
+              </h2>
+              <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                {campaign.tag}
+              </small>
             </div>
-            <div className='flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center md:gap-4'>
-              <Link
-                href={`/profile/${campaign.creator}`}
-                className='mt-2 flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:w-fit'
-              >
-                <div className='relative h-[50px] w-[50px] flex-shrink-0'>
-                  <ImageWithFallback
-                    src={user.profileUrl ?? ''}
-                    fallback='/images/pfp.svg'
-                    className='block rounded-full bg-slate-50'
-                    fill
-                    alt='...'
+
+            <SwiperCarousel images={media_links} />
+
+            <div className='space-y-7 pb-5'>
+              <div className='flex flex-col gap-4 sm:flex-row'>
+                <DonationObjectiveIndicator
+                  seekingAmount={campaign.goal}
+                  currentAmount={campaign.total_accrued}
+                />
+                <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
+                  {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
+                  <DonateBtn
+                    text='Donate Now'
+                    className='w-full whitespace-nowrap sm:mt-1'
+                    campaign={campaign}
                   />
                 </div>
+              </div>
+              <div className='flex flex-col-reverse justify-between gap-2 text-sm sm:flex-row sm:items-center sm:text-base md:gap-4'>
+                <div className='flex items-center gap-2'>
+                  <Link
+                    href={`/profile/${campaign.creator}`}
+                    className='flex w-full flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200'
+                  >
+                    <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                      <ImageWithFallback
+                        src={user.profileUrl ?? ''}
+                        fallback='/images/user-pfp.png'
+                        className='block rounded-full bg-slate-50 object-cover'
+                        fill
+                        alt='...'
+                      />
+                    </div>
 
-                <div className='pr-2'>
-                  <p className={TextSizeStyles.caption}>Organizer</p>
+                    <div className='pr-2'>
+                      <>
+                        <p className={TextSizeStyles.caption}>Organizer</p>
+                        <p
+                          className={cn(
+                            'font-semibold',
+                            'line-clamp-2 w-full max-w-[250px] font-semibold [word-break:break-all] sm:max-w-xs'
+                          )}
+                        >
+                          {user?.fullName ??
+                            formatWalletAddress(
+                              campaign.creator as `0x${string}`
+                            )}
+                        </p>
+                      </>
+                    </div>
+                  </Link>
+
+                  {campaign.creator !== campaign.beneficiary && (
+                    <div>
+                      <div className='pr-2'>
+                        <p className={TextSizeStyles.caption}>Organized for</p>
+                        <p className='font-semibold'>
+                          {formatWalletAddress(
+                            campaign.beneficiary as `0x${string}`
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <p className={TextSizeStyles.caption}>Organized On</p>
                   <p className='font-semibold'>
-                    {user?.fullName ??
-                      formatWalletAddress(campaign.creator as `0x${string}`)}
+                    {dayjs(campaign.created_at).format('Do MMM, YYYY')}
                   </p>
                 </div>
-              </Link>
-              <div>
-                <p className={TextSizeStyles.caption}>Organized On</p>
-                <p className='font-semibold'>
-                  {dayjs(campaign.created_at).format('DD MMM, YYYY')}
-                </p>
               </div>
+              <div className='space-y-4'>{campaign.description}</div>
+              <DonateXShareButtons campaign={campaign} />
             </div>
-            <div className='space-y-4'>{campaign.description}</div>
-            <DonateXShareButtons campaign={campaign} />
           </div>
-        </div>
-        <aside className='mt-16 space-y-4 pb-4'>
-          <h2
-            className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
-          >
-            {campaignsToShow.length > 0
-              ? 'Related campaigns'
-              : 'No related campaigns'}
-          </h2>
 
-          {campaignsToShow.length > 0 && (
-            <ScrollArea
+          <CampaignComments campaign={campaign} />
+        </Container>
+        <Container>
+          <div className='space-y-4'>
+            <h2
               className={cn(
-                'rounded-md border-primary-default lg:max-h-[800px] lg:border',
-                campaignsToShow.length > 1 ? 'h-[780px]' : 'h-[610px]'
+                TextSizeStyles.h5,
+                'font-light text-primary-default'
               )}
             >
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1'>
-                {campaignsToShow.map((_, idx) => (
-                  <>
-                    <CampaignCard inSidebar campaign={_} key={idx} />
-                    {idx !== 2 && (
-                      <div className='mx-auto hidden w-[95%] border-t border-primary-default lg:block' />
-                    )}
-                  </>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-        </aside>
-      </Container>
+              {campaignsToShow.length > 0
+                ? 'Related campaigns'
+                : 'No related campaigns'}
+            </h2>
+
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+              {campaignsToShow.map((_, idx) => (
+                <CampaignCard campaign={_} key={idx} />
+              ))}
+            </div>
+          </div>
+        </Container>
+      </div>
     </>
   );
 }

@@ -7,14 +7,12 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <Container className='flex min-h-screen flex-col items-center justify-center gap-8'>
-      <Image src='/images/efm-logo.svg' width={300} height={300} alt='logo' />
+      <Image src='/images/404.webp' width={200} height={200} alt='logo' />
 
       <div className='space-y-4 text-center'>
-        <h1 className='text-xl font-bold sm:text-3xl'>
-          404 Error: Page Not Found
-        </h1>
+        <h1 className='text-xl font-bold sm:text-3xl'>Page Not Found</h1>
         <p className='text-lg'>
-          We can&rsquo;t seem to find the page you&rsquo;re looking for.
+          404 Error — The requested page could not be found
         </p>
 
         <Link
@@ -22,10 +20,10 @@ export default function NotFound() {
           className={cn(
             ButtonStyle.base,
             ButtonStyle.variant.primary,
-            ' mx-auto block w-fit p-3'
+            ' mx-auto block w-fit p-3 px-6'
           )}
         >
-          Go home
+          GO TO HOMEPAGE
         </Link>
       </div>
     </Container>

@@ -1,24 +1,35 @@
 'use client';
 
-import { REGEX_CODES } from '@/lib/constants';
-import { createUrl } from '@/lib/utils';
+import { handleIPFSPush } from '@/actions';
+import { EthFundMe } from '@/lib/abi';
+import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
+import { TagsWithIds } from '@/lib/constants';
+import { CampaignTags } from '@/lib/types';
+import {
+  createUrl,
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from '@/lib/utils';
 import { Campaign } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ImagePlus, Trash } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { FaMinusCircle } from 'react-icons/fa';
-import { z } from 'zod';
+import useRefs from 'react-use-refs';
+import { BaseError } from 'viem';
+import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Button } from './ui/button';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from './ui/form';
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -27,199 +38,317 @@ export default function UpdateCampaignMediaForm({
 }: {
   campaign: Campaign;
 }) {
-  const [bannerPreview, setBannerPreview] = useState<null | string>(null);
+  const { push } = useRouter();
 
-  const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
-    null
-  );
+  const [updating, setUpdating] = useState(false);
 
-  const formSchema = z.object({
-    camapaignBanner: z.any(),
-    otherImages: z.any(),
-    ytLink: z
-      .string()
-      .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
-      .optional(),
-  });
+  const [bannerPreview, setBannerPreview] = useState(campaign.banner_url);
+  const [otherPreview, setOtherPreview] = useState(campaign.media_links);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    defaultValues: {
-      ytLink:
-        campaign.media_links.filter((link) =>
-          REGEX_CODES.ytLink.test(link)
-        )[0] ?? '',
+  const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
+  const [preparedOtherImages, setPreparedOtherImages] =
+    useState<FileList | null>(null);
+  const [closeRef, triggerRef] = useRefs<HTMLButtonElement>(null);
+
+  const isPreview = (url: string) => {
+    return /\b(blob)\b/.test(url);
+  };
+
+  const {
+    data: hash,
+    error,
+    isError,
+    isPending,
+    writeContract,
+  } = useWriteContract({
+    mutation: {
+      onSettled(data, error) {
+        console.log('Settled updateCampaign', { data, error });
+      },
     },
   });
 
-  function showImagePreview(
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: 'banner' | 'others'
-  ) {
-    const data = e.target.files;
+  const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
+    useWaitForTransactionReceipt({ hash });
 
-    const handleBannerUpload = () => {
-      if (data && data[0]) {
-        setBannerPreview(createUrl(data[0]));
-      } else {
-        setBannerPreview(null);
-      }
-    };
+  function handleUpdateMedia() {
+    setUpdating(true);
+    handleCloudinaryUpload()
+      .then((res) => {
+        const campaignLinksMinusDeleted = campaign.media_links.filter((img) => {
+          if (otherPreview.indexOf(img) === -1) return false;
+          return true;
+        });
 
-    if (type === 'banner') {
-      handleBannerUpload();
+        const mediaLinks =
+          res.otherImagesURL.length > 0
+            ? [...campaignLinksMinusDeleted, ...res.otherImagesURL]
+            : campaignLinksMinusDeleted;
+
+        handleIPFSPush({
+          bannerUrl: res.bannerURL || campaign.banner_url,
+          title: campaign.title,
+          tag: TagsWithIds.filter(
+            (i) => i.name === (campaign.tag as CampaignTags)
+          )[0].id,
+          youtubeLink: campaign.youtube_link || undefined,
+          description: campaign.description,
+          mediaLinks,
+        })
+          .then((res) => {
+            if (!res?.hash) throw new Error();
+
+            writeContract({
+              abi: EthFundMe,
+              address: ethFundMeContractAddress,
+              functionName: 'updateCampaign',
+              chainId: ethChainId,
+              args: [
+                res.hash,
+                BigInt(campaign.campaign_id),
+                campaign.goal,
+                campaign.beneficiary,
+              ],
+            });
+
+            // push(`/campaigns/${campaign.campaign_id}`);
+          })
+          .catch(() => {
+            toast.error('Failed to upload campaign media');
+            setUpdating(false);
+          });
+      })
+      .catch(() => {
+        toast.error('Failed to update campaign media');
+        setUpdating(false);
+      });
+  }
+
+  async function uploadBanner() {
+    if (!preparedBanner) return [];
+    await deleteFromCloudinary(campaign.banner_url);
+    const bannerUploadUrl = await uploadToCloudinary(preparedBanner);
+
+    return bannerUploadUrl;
+  }
+
+  async function uploadOtherImages() {
+    if (!preparedOtherImages) return [];
+    const otherImagesUrl = await uploadToCloudinary(preparedOtherImages);
+
+    return otherImagesUrl;
+  }
+
+  async function handleCloudinaryUpload() {
+    const bannerURL = await uploadBanner();
+    const otherImagesURL = await uploadOtherImages();
+
+    return { bannerURL: bannerURL[0], otherImagesURL };
+  }
+
+  function handlePreviewDelete(item: string) {
+    if (isPreview(item)) {
+      setOtherPreview((prev) => prev.filter((_) => _ !== item));
+    } else {
+      deleteFromCloudinary(item)
+        .then(() => {
+          toast.success('Deleted successfully');
+          setOtherPreview((prev) => prev.filter((_) => _ !== item));
+        })
+        .catch(() => toast.error('Failed to delete image'));
     }
   }
 
   useEffect(() => {
-    if (campaign.media_links.length) {
-      setBannerPreview(campaign.media_links[0]);
+    if (isError && error) {
+      let errorMsg = (error as BaseError).shortMessage || error.message;
+
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to update campaign media';
+      }
+
+      toast.error(errorMsg);
+      setUpdating(false);
+    } else if (isConfirmedTxn) {
+      toast.success('Campaign updated');
+      setUpdating(false);
+      push(`/campaigns/${campaign.campaign_id}`);
     }
-    const otherMedia = campaign.media_links.slice(1);
-    const mediaWithoutYTLink = otherMedia.filter(
-      (media) => !REGEX_CODES.ytLink.test(media)
-    );
-    if (otherMedia.length) {
-      setOtherImgsPrepared(mediaWithoutYTLink);
-    }
-  }, [campaign]);
+  }, [campaign.campaign_id, push, error, isConfirmedTxn, isError]);
 
   return (
-    <Form {...form}>
-      <form className='mx-auto w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'>
-        <FormField
-          name='camapaignBanner'
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Campaign banner</FormLabel>
-
-              {bannerPreview && (
-                <Image
-                  className='h-auto max-h-96 w-full object-cover'
-                  src={bannerPreview}
-                  width={300}
-                  height={300}
-                  alt='banner-preview'
-                />
-              )}
-
-              <FormControl>
-                <Input
-                  type='file'
-                  onChange={(e) => {
-                    showImagePreview(e, 'banner');
-                    field.onChange(e.target.files);
-                  }}
-                  accept='image/*'
-                  // {...bannerRef}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+    <div className='w-full sm:max-w-2xl'>
+      <div className='w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
+        <Image
+          className='mx-auto h-[300px] w-auto object-contain'
+          width={400}
+          height={400}
+          src={bannerPreview}
+          alt='campaign-banner'
         />
+        <div className='relative'>
+          <Input
+            type='file'
+            onChange={(e) => {
+              if (!e.target.files) {
+                setPreparedBanner(null);
+                return;
+              }
+              setBannerPreview(createUrl(e.target.files[0]));
+              setPreparedBanner(e.target.files);
+            }}
+            accept='image/*'
+          />
 
-        <FormField
-          name='otherImages'
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className=''>
-              <FormLabel>Other images</FormLabel>
+          {isPreview(bannerPreview) && (
+            <div className='pointer-events-none absolute bottom-0 top-0 w-full rounded-md border border-slate-300 bg-white p-1'>
+              <button
+                className='pointer-events-auto flex h-full w-full items-center justify-center gap-2 bg-neutral-100'
+                onClick={() => {
+                  setBannerPreview(campaign.banner_url);
+                  setPreparedBanner(null);
+                }}
+              >
+                <Trash size={16} />
+                Clear
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
-              {otherImgsPrepared && otherImgsPrepared.length > 0 && (
-                <>
-                  <ScrollArea className='max-h-40'>
-                    <div className='grid grid-cols-3 gap-2'>
-                      <AnimatePresence>
-                        <div className='hidden'>{field.name}</div>
-                        {otherImgsPrepared.map((item, idx) => (
-                          <motion.div
-                            animate={{
-                              scale: ['0%', '100%'],
-                            }}
-                            transition={{ type: 'spring', damping: 20 }}
-                            exit={{ scale: 0 }}
-                            key={idx}
-                            className='relative'
-                          >
-                            <Image
-                              className='h-16 w-full object-cover lg:h-20'
-                              src={
-                                typeof item === 'string'
-                                  ? item
-                                  : createUrl(item as File)
-                              }
-                              width={300}
-                              height={300}
-                              alt='image-preview'
-                            />
+      <div className='mx-auto my-4 w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
+        <p className='text-sm text-slate-400'>
+          {6 - otherPreview.length} remaining
+        </p>
+        {otherPreview.length > 0 && (
+          <>
+            <ScrollArea className='max-h-40'>
+              <div className='grid grid-cols-3 gap-2'>
+                <AnimatePresence>
+                  {otherPreview.map((item, idx) => (
+                    <motion.div
+                      animate={{
+                        scale: ['0%', '100%'],
+                      }}
+                      transition={{ type: 'spring', damping: 20 }}
+                      exit={{ scale: 0 }}
+                      key={idx}
+                      className='relative'
+                    >
+                      <Image
+                        className='h-20 w-full object-cover'
+                        // src={createUrl(item as File)}
+                        src={item}
+                        width={300}
+                        height={300}
+                        alt='image-preview'
+                      />
 
-                            <div
-                              title='Remove image'
-                              onClick={() => {
-                                setOtherImgsPrepared((prev) => {
-                                  return prev
-                                    ? prev.filter(
-                                        (item) =>
-                                          item !== otherImgsPrepared[idx]
-                                      )
-                                    : null;
-                                });
-                              }}
-                              className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                      <Dialog>
+                        <DialogTrigger
+                          ref={triggerRef}
+                          title='Remove image'
+                          className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                        >
+                          <FaMinusCircle color='tomato' />
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Sure to remove image?</DialogTitle>
+                          </DialogHeader>
+
+                          <div className='grid grid-cols-2 gap-4'>
+                            <Button
+                              variant='destructive'
+                              onClick={() => handlePreviewDelete(item)}
                             >
-                              <FaMinusCircle color='tomato' />
-                            </div>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                  </ScrollArea>
-                </>
-              )}
+                              Delete
+                            </Button>
+                            <DialogClose ref={closeRef}>Close</DialogClose>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </ScrollArea>
+          </>
+        )}
 
-              <FormControl>
-                <Input
-                  type='file'
-                  onChange={(e) => {
-                    const itemss: FileList | null = e.target.files;
+        <div className='relative'>
+          <Input
+            type='file'
+            multiple
+            max={6 - otherPreview.length}
+            onChange={(e) => {
+              const images: FileList | null = e.target.files;
 
-                    const getFiles = () => {
-                      if (itemss) {
-                        return [...Array.from(itemss).map((_) => _)].slice(
-                          0,
-                          otherImgsPrepared ? 6 - otherImgsPrepared.length : 6
-                        );
-                      }
-                    };
+              const getFiles = () => {
+                if (images) {
+                  return [...Array.from(images).map((_) => createUrl(_))].slice(
+                    0,
+                    6 - otherPreview.length
+                  );
+                } else {
+                  return [];
+                }
+              };
 
-                    const files = getFiles();
+              const files = getFiles();
 
-                    setOtherImgsPrepared((prev) => {
-                      if (prev && prev.length > 6 && files && files.length) {
-                        toast('Cannot upload more than 6 images');
-                        return prev;
-                      }
-                      if (files && prev) return [...prev, ...files];
-                      if (files && !prev) return files;
-                      return prev;
-                    });
-                  }}
-                  multiple
-                  accept='image/*'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              setOtherPreview((prev) => {
+                if (prev && prev.length > 6 && files && files.length) {
+                  toast('Cannot upload more than 6 images');
+                  return prev;
+                }
+                if (files && prev) return [...prev, ...files];
+                if (files && !prev) return files;
+                return prev;
+              });
+
+              setPreparedOtherImages(images);
+            }}
+            accept='image/*'
+          />
+
+          {otherPreview.some((_) => isPreview(_)) && (
+            <div className='pointer-events-none absolute bottom-0 top-0 grid w-full grid-cols-2 gap-1 rounded-md border border-slate-300 bg-white p-1'>
+              <button
+                className='pointer-events-none flex items-center justify-center gap-2 bg-neutral-100'
+                // onClick={uploadOtherImages}
+              >
+                <ImagePlus size={16} /> Add image
+              </button>
+
+              <button
+                className='pointer-events-auto flex w-full items-center justify-center gap-2 bg-neutral-100'
+                onClick={() => setOtherPreview(campaign.media_links)}
+              >
+                <Trash size={16} />
+                Clear
+              </button>
+            </div>
           )}
-        />
+        </div>
+      </div>
 
-        <Button className='w-full'>Upload files</Button>
-
-        {/* <div className='relative min-h-80'>
-          <DnDUpload handleUpload={() => console.log('hi')} />
-        </div> */}
-      </form>
-    </Form>
+      <Button
+        disabled={
+          (bannerPreview === campaign.banner_url &&
+            otherPreview.length === campaign.media_links.length) ||
+          updating ||
+          isPending ||
+          isConfirmingTxn
+        }
+        className='w-full border border-slate-300 p-3'
+        onClick={handleUpdateMedia}
+      >
+        {updating ? 'Updating...' : 'Save media'}
+      </Button>
+    </div>
   );
 }

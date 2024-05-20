@@ -1,4 +1,7 @@
+'use client';
+
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
+import { cn } from '@/lib/utils';
 import { Campaign } from '@/types';
 import Link from 'next/link';
 import { FaPen } from 'react-icons/fa';
@@ -15,11 +18,20 @@ export default function UserCampaignCard({
   variant?: 'user' | 'viewer';
 }) {
   return (
-    <div className='group flex flex-col overflow-hidden rounded-md border border-slate-300'>
-      <Link href={`/campaigns/${campaign.campaign_id}`}>
+    <Link
+      href={`/campaigns/${campaign.campaign_id}`}
+      className={cn(
+        'group group flex flex-col overflow-hidden rounded-md border border-slate-300',
+        campaign.flagged && 'grayscale'
+      )}
+    >
+      <Link
+        href={`/campaigns/${campaign.campaign_id}`}
+        className='block h-[80vw] overflow-hidden sm:h-[250px]'
+      >
         <ImageWithFallback
-          className='h-[80vw] w-full bg-slate-50 object-cover sm:h-[250px]'
-          src={campaign.media_links[0]}
+          className='duration-250 h-[80vw] w-full bg-slate-50 object-cover transition-all group-hover:scale-105 sm:h-[250px] '
+          src={campaign.banner_url}
           width={400}
           height={400}
           alt={campaign.title}
@@ -39,7 +51,12 @@ export default function UserCampaignCard({
           )}
         </div>
 
-        <div className='grid grid-cols-2 gap-x-4'>
+        <div
+          className='grid grid-cols-2 gap-x-4'
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           {variant === 'user' && (
             <Button asChild variant='outline'>
               <Link
@@ -57,6 +74,6 @@ export default function UserCampaignCard({
           <ShareLinkBtn campaign={campaign} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

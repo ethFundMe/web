@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
+import crypto, { BinaryLike } from 'crypto';
+import dayjs from 'dayjs';
 import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -9,8 +11,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatWalletAddress(address: `0x${string}`) {
-  const shortAddress = address.slice(0, 7) + '...' + address.slice(-5);
+export function formatWalletAddress(
+  address: `0x${string}`,
+  type: 'short' | 'long' = 'long'
+) {
+  const shortAddress =
+    type === 'long'
+      ? address.slice(0, 7) + '...' + address.slice(-5)
+      : address.slice(0, 9);
   return shortAddress;
 }
 
@@ -39,7 +47,10 @@ export async function uploadToCloudinary(files: FileList | string[]) {
       'upload_preset',
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
     );
-    formData.append('folder', 'campaign_media');
+    formData.append(
+      'folder',
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER as string
+    );
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -55,7 +66,7 @@ export async function uploadToCloudinary(files: FileList | string[]) {
       throw new Error('Failed to upload file');
     }
 
-    return data?.url;
+    return data?.secure_url;
   };
 
   const itu = Array.from(files as FileList).map(async (file) => {
@@ -66,6 +77,71 @@ export async function uploadToCloudinary(files: FileList | string[]) {
   const tromise = await Promise.all(itu);
 
   return tromise;
+}
+
+export async function deleteFromCloudinary(image: string) {
+  const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/destroy`;
+
+  const getPublicIdFromUrl = (src: string) => {
+    const parts = src.split('/');
+    const filename = parts[parts.length - 1];
+
+    const final = filename?.split('.')[0];
+    return final
+      ? `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER as string}/${final}`
+      : null;
+  };
+
+  const publicId = getPublicIdFromUrl(image);
+
+  if (!publicId) throw new Error('Public ID not found');
+
+  const generateSHA1 = (data: BinaryLike) => {
+    const hash = crypto.createHash('sha1');
+    hash.update(data);
+    return hash.digest('hex');
+  };
+
+  const generateSignature = (publicId: string, apiSecret: string) => {
+    const timestamp = new Date().getTime();
+    return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  };
+
+  const config = {
+    public_id: publicId as string,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string,
+    timestamp: new Date().getTime(),
+    resource_type: 'image',
+    signature: generateSHA1(
+      generateSignature(
+        publicId,
+        process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET as string
+      )
+    ),
+  };
+
+  const formData = new FormData();
+
+  Object.entries(config).forEach((item) =>
+    formData.append(item[0], String(item[1]))
+  );
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: formData,
+  });
+
+  const data = await res.json();
+
+  const erroredOut = data.errors;
+
+  console.log({ publicId, data });
+
+  if (erroredOut) {
+    throw new Error('Failed to delete image');
+  }
+
+  return { ok: !erroredOut };
 }
 
 export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
@@ -116,22 +192,7 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       CampaignTags['Technology and Innovation'],
     ]),
     banner: z.any().refine((file) => file?.length == 1, 'Banner is required.'),
-    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
-    // .refine(
-    //   (files) =>
-    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-    //       files?.[0]?.type
-    //     ),
-    //   '.jpg, .jpeg, .png and .webp files are accepted.')
     otherImages: z.any(),
-    // .refine((files) => files?.[0]?.size >= 500000, 'Max file size is 5MB.')
-    // .refine(
-    //   (files) =>
-    //     ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-    //       files?.[0]?.type
-    //     ),
-    //   '.jpg, .jpeg, .png and .webp files are accepted.'
-    // )
     ytLink: z
       .string()
       .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
@@ -199,3 +260,36 @@ export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
 };
+
+// export const devlog = (message: unknown) => {
+//   if (process.env.NODE_ENV !== 'development') return;
+//   console.log(message);
+// };
+
+export function getRelativeTime(date: Date): string {
+  const commentDate = dayjs(date);
+
+  const currentDate = dayjs();
+
+  const diffInDays = currentDate.diff(commentDate, 'day');
+
+  if (diffInDays === 0) {
+    return `Today, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays === 1) {
+    return `Yesterday, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays <= 7) {
+    return `Last week, ${commentDate.format('h:mm a')}`;
+  }
+
+  if (diffInDays <= 30) {
+    return `Last month, ${commentDate.format('h:mm a')}`;
+  }
+
+  return `${commentDate.format('h:mm a')} - ${commentDate.format(
+    'DD/MM/YYYY'
+  )}`;
+}

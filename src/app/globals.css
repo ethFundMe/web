@@ -2,6 +2,198 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 90deg;
+  inherits: true;
+}
+
+@property --gradX {
+  syntax: '<percentage>';
+  initial-value: 50%;
+  inherits: true;
+}
+
+@property --gradY {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: true;
+}
+
+:root {
+  --d: 2500ms;
+  --angle: 90deg;
+  --gradX: 100%;
+  --gradY: 50%;
+  --c1: #0062a6;
+  --c2: #042d4205;
+}
+
+* {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1rem;
+}
+
+.carouselItem {
+  padding-right: 40px;
+}
+
+.ocean {
+  background: #0062a6;
+}
+
+.wave {
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg)
+    repeat-x;
+  position: absolute;
+  top: -108px;
+  width: 6400px;
+  height: 108px;
+  animation: wave 22s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+/* .wave:nth-of-type(2) {
+  top: -175px;
+  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+  opacity: 1;
+} */
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -1600px;
+  }
+}
+
+@keyframes swell {
+  0%,
+  100% {
+    transform: translate3d(0, -25px, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
+#space,
+.stars {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.stars {
+  background-image: radial-gradient(
+    2px 2px at 40px 70px,
+    #fff,
+    rgba(0, 0, 0, 0)
+  );
+  /* Only one star pattern */
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: zoom 22s infinite;
+  /* Adjusted for slower animation */
+  opacity: 0;
+}
+
+.stars:nth-child(1) {
+  background-position: 50% 50%;
+  animation-delay: 0s;
+}
+
+.stars:nth-child(2) {
+  background-position: 20% 60%;
+  animation-delay: 1s;
+}
+
+.stars:nth-child(3) {
+  background-position: -20% -30%;
+  animation-delay: 2s;
+}
+
+.stars:nth-child(4) {
+  background-position: 40% -80%;
+  animation-delay: 3s;
+}
+
+.stars:nth-child(5) {
+  background-position: -20% 30%;
+  animation-delay: 4s;
+}
+
+@keyframes zoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    animation-timing-function: ease-in;
+  }
+
+  85% {
+    opacity: 0.35;
+    transform: scale(1.8);
+    animation-timing-function: linear;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+.animated-border {
+  border-image: conic-gradient(
+      from var(--angle),
+      var(--c2),
+      var(--c1) 0.1turn,
+      var(--c1) 0.15turn,
+      var(--c2) 0.25turn
+    )
+    30;
+  /* border-image: radial-gradient(
+      ellipse at var(--gradX) var(--gradY),
+      var(--c1),
+      var(--c1) 10%,
+      var(--c2) 40%
+    )
+    30; */
+  animation: borderRotate var(--d) linear infinite forwards;
+  /* animation: borderRadial var(--d) linear infinite forwards; */
+}
+
+@keyframes borderRotate {
+  100% {
+    --angle: 420deg;
+  }
+}
+@keyframes borderRadial {
+  20% {
+    --gradX: 100%;
+    --gradY: 50%;
+  }
+  40% {
+    --gradX: 100%;
+    --gradY: 100%;
+  }
+  60% {
+    --gradX: 50%;
+    --gradY: 100%;
+  }
+  80% {
+    --gradX: 0%;
+    --gradY: 50%;
+  }
+  100% {
+    --gradX: 50%;
+    --gradY: 0%;
+  }
+}
+
 /* Typography */
 @font-face {
   font-family: 'Mona Sans';
@@ -99,10 +291,10 @@ body {
 
 /* Accordion styles */
 :root {
-  --primary: #dedede;
-  --secondary: #eeeeee;
-  --background: #eee;
-  --highlight: #ffda79;
+  --primary: #ededed;
+  --secondary: #f5f6f6;
+  --background: #eeeeee;
+  --highlight: #ffe092;
   /* Theme color */
   --theme: var(--primary);
 }
@@ -151,6 +343,8 @@ body {
 }
 .tab__content {
   background-color: white;
+  overflow: auto;
+  max-height: 0.05rem;
 }
 .tab__label::after {
   content: '\276F';
@@ -166,10 +360,6 @@ body {
 .tab__content p {
   margin: 0;
   padding: 1rem;
-}
-.tab__close {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
 }
 
 /* Arrow animation */
@@ -192,10 +382,55 @@ body {
 
 .swiper:hover .swiper-button-prev,
 .swiper:hover .swiper-button-next {
-  @apply block;
+  @apply lg:block;
 }
 
 .swiper .swiper-button-prev,
 .swiper .swiper-button-next {
   @apply hidden;
+}
+
+.typewriter {
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  /* Ensures the content is not revealed until the animation */
+  border-right: 0.15em solid white;
+  /* The typwriter cursor */
+  white-space: nowrap;
+  /* Keeps the content on a single line */
+  margin: 0 auto;
+  /* Gives that scrolling effect as the typing happens */
+  /* letter-spacing: .15em; */
+  /* Adjust as needed */
+  animation:
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: white;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .carouselItem {
+    padding-right: 20px;
+  }
 }

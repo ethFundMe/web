@@ -4,22 +4,22 @@ import {
   BiLogoDiscordAlt,
   BiLogoGithub,
   BiLogoInstagram,
-  BiLogoTwitter,
 } from 'react-icons/bi';
-import { FaRegQuestionCircle } from 'react-icons/fa';
+import { BsTwitterX } from 'react-icons/bs';
 import { MdOutlineCampaign } from 'react-icons/md';
-import { CampaignType, DonationStep, NavbarRoute, SocialLink } from './types';
+import {
+  CampaignTags,
+  CampaignType,
+  DonationStep,
+  NavbarRoute,
+  SocialLink,
+} from './types';
 
 export const NAVBARROUTES: NavbarRoute[] = [
   {
     title: 'Campaigns',
     link: '/campaigns',
     icon: MdOutlineCampaign({ size: 25 }),
-  },
-  {
-    title: 'How to Donate',
-    link: '/how-to-donate',
-    icon: FaRegQuestionCircle({ size: 20, strokeWidth: 0.5 }),
   },
   {
     title: 'Create Campaign',
@@ -116,6 +116,7 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Share your dreams, challenges, aspirations and hurdles with personal campaigns and rally community support for your journey.',
     link: '/campaigns/create?campaign-type=personal',
+    ctaBtnText: 'Launch My Campaign',
   },
   {
     image: '/images/Creative team-pana.svg',
@@ -123,29 +124,35 @@ export const CAMPAIGNTYPES: CampaignType[] = [
     description:
       'Support others on their journey with campaigns for friends, family, or strangers facing challenges,  directly impacting the lives of others.',
     link: '/campaigns/create?campaign-type=others',
+    ctaBtnText: 'Start Support Campaign',
   },
 ];
 
 export const FAQS = [
   {
-    question: 'How to do some action?',
+    question: '❓ What is EthFundMe',
     answer:
-      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+      'EthFundMe is a blockchain-based crowdfunding platform that leverages the power of Ethereum technology to enable users to support and fund projects or causes they believe in. Our platform provides a transparent, secure, and efficient way for project creators and supporters to connect and contribute to the realization of innovative ideas and impactful initiatives, families, and communities in need. It is a simple click to change lives',
   },
   {
-    question: 'Is this allowed on EFM?',
+    question: '🏋️ How does EthFundMe work?',
     answer:
-      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+      'Users can create campaigns for their projects by detailing their goals, the amount needed, and how the funds will be used. Supporters can browse these projects and contribute Ethereum (ETH) directly through our platform. EthFundMe utilizes smart contracts to manage transactions securely, ensuring transparency and trust throughout the funding process.',
   },
   {
-    question: 'More queries?',
+    question: '💲 Is there a fee to use EthFundMe?',
     answer:
-      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+      'EthFundMe charges a minimal platform fee on successfully funded projects to cover operational costs.',
   },
   {
-    question: 'Do you have customer support?',
+    question: '🔒 How secure is EthFundMe?',
     answer:
-      'With your wallet connected, it is time to give. Authorize your payment securely and effortlessly. Your support will empower individuals, families, and communities in need. It is a simple click to change lives',
+      'Security is our top priority. EthFundMe utilizes Ethereum blockchain technology, known for its security and immutability. All transactions are conducted through smart contracts, ensuring that funds are only released according to the terms set by the campaign. We also implement best practices in data security to protect the  information of our users.',
+  },
+  {
+    question: '🎁 Do I get any rewards from using the platform?',
+    answer:
+      'Both campaign creators and contributors are rewarded with the $FUNDME tokens relative to their engagement levels. Moreover, users who contribute to maintaining our systems reliability to enhance operational efficiency also earn $FUNDME tokens.',
   },
 ];
 
@@ -158,7 +165,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'Twitter',
     href: 'https://twitter.com/ethfundme',
-    icon: BiLogoTwitter({ size: 20 }),
+    icon: BsTwitterX({ size: 18 }),
   },
   {
     name: 'Instagram',
@@ -167,13 +174,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Discord',
-    href: 'https://twitter.com/ethfundme',
+    href: 'https://discord.gg/9kac2FFMWe',
     icon: BiLogoDiscordAlt({ size: 20 }),
   },
 ];
 
 export const REGEX_CODES = {
-  email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+  email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/,
   intlPhoneNumber:
     /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/,
   link: /(?:https?|ftp):\/\/\S+/gi,
@@ -187,4 +194,96 @@ export const CAROUSEL_IMAGES = [
   'https://picsum.photos/id/132/700',
   'https://picsum.photos/id/13/700',
   'https://picsum.photos/id/113/700',
+];
+
+export const COMMENTS = [
+  {
+    user: {
+      fullname: 'John Smith',
+    },
+    date: '2024-02-26T18:52:42.185Z',
+    // text: 'Thank you all for your incredible support! Every contribution means the world to us and brings us closer to our goal.',
+    text: '',
+    amt: 100000000000000000,
+  },
+  {
+    user: {
+      fullname: 'Emily Johnson',
+    },
+    date: '2024-02-26T19:30:00.000Z',
+    text: 'I just donated what I could. Let us keep spreading the word and helping those in need!',
+    amt: 5000000000000000,
+  },
+  {
+    user: {
+      fullname: 'David Rodriguez',
+    },
+    date: '2024-02-26T20:15:00.000Z',
+    text: 'This campaign is truly inspiring. I am proud to be a part of this community that comes together to support each other.',
+    // amt: 2500000000000000000,
+    amt: 0,
+  },
+  {
+    user: {
+      fullname: 'Sarah Thompson',
+    },
+    date: '2024-02-26T21:00:00.000Z',
+    text: 'It is heartwarming to see the impact we can make when we join forces. Let us keep the momentum going!',
+    amt: 100000000000000000,
+  },
+  {
+    user: {
+      fullname: 'Michael Nguyen',
+    },
+    date: '2024-02-26T22:00:00.000Z',
+    text: 'Small acts of kindness can create big changes. Proud to support this cause.',
+    amt: 200000000000000000,
+  },
+];
+
+export const TagsWithIds: { id: number; name: CampaignTags }[] = [
+  {
+    id: 1,
+    name: CampaignTags['Arts and Culture'],
+  },
+  {
+    id: 2,
+    name: CampaignTags['Business and Entrepreneurship'],
+  },
+  {
+    id: 3,
+    name: CampaignTags['Community and Social Impact'],
+  },
+  {
+    id: 4,
+    name: CampaignTags['Education and Learning'],
+  },
+  {
+    id: 5,
+    name: CampaignTags['Entertainment and Media'],
+  },
+  {
+    id: 6,
+    name: CampaignTags['Environment and Sustainability'],
+  },
+  {
+    id: 7,
+    name: CampaignTags['Health and Wellness'],
+  },
+  {
+    id: 8,
+    name: CampaignTags['Lifestyle and Hobbies'],
+  },
+  {
+    id: 9,
+    name: CampaignTags['Others'],
+  },
+  {
+    id: 10,
+    name: CampaignTags['Science and Research'],
+  },
+  {
+    id: 11,
+    name: CampaignTags['Technology and Innovation'],
+  },
 ];

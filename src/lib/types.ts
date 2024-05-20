@@ -1,3 +1,4 @@
+import { User } from '@/types';
 import { ReactElement } from 'react';
 
 export type NavbarRoute = {
@@ -17,20 +18,29 @@ export type CampaignType = {
   title: 'Yourself' | 'Others';
   description: string;
   link: string;
+  ctaBtnText: string;
 };
 
 export type Campaign = {
+  id: string;
   campaign_id: number;
-  beneficiary: string;
-  creator: string;
+  beneficiary: `0x${string}`;
+  creator: `0x${string}`;
   date_created: number;
   description: string;
   flagged: boolean;
   goal: number;
-  is_closed: boolean;
-  links: string[];
+  discontinued: boolean;
+  banner_url: string;
+  media_links: Array<string>;
   title: string;
   total_accrued: number;
+  youtube_link: string | null;
+  uri: string;
+  created_at: Date;
+  updated_at: Date;
+  // fundings: Array<FundingsTable>
+  user: User;
 };
 
 export type SocialLink = {
@@ -52,3 +62,33 @@ export enum CampaignTags {
   'Science and Research' = 'Science and Research',
   'Others' = 'Others',
 }
+
+export type Comment = {
+  amount: number;
+  campaign_id: string;
+  comment: string;
+  created_at: Date;
+  transaction_hash: `0x${string}`;
+  id: number;
+  user: {
+    ethAddress: `0x${string}`;
+    fullName: string;
+    id: string;
+    profileUrl?: string;
+  };
+};
+
+export type Donation = {
+  amount: number;
+  created_at: Date;
+  transaction_hash: string;
+  donor: `0x${string}`;
+};
+
+export type DonationResponse = SocketResponse<Donation[]>;
+
+export type SocketResponse<T> = {
+  status: 'OK' | 'ERROR';
+  data?: T;
+  error?: Error;
+};

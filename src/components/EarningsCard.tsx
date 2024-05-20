@@ -39,13 +39,13 @@ export default function EarningsCard() {
     <div className='w-full max-w-md rounded-lg bg-primary-default p-4 text-white'>
       <h2 className='font-bold'>Earnings</h2>
       <div className='flex items-center justify-between gap-2 border-b border-blue-600 py-6'>
-        <p className='text-2xl font-bold'>100 FUNDER</p>
+        <p className='text-2xl font-bold'>45,500.02 FUNDME</p>
         <Button
           variant='secondary'
           size='sm'
           className='px-6 font-semibold uppercase text-primary-default'
         >
-          Claim
+          Claim Tokens
         </Button>
       </div>
 
@@ -57,7 +57,7 @@ export default function EarningsCard() {
 
               <div className='text-sm'>
                 <span className='font-bold'>
-                  {item.type === 'claim' ? '-' : '+'} {item.amt} FUNDER
+                  {item.type === 'claim' ? '-' : '+'} {item.amt} FUNDME
                 </span>
 
                 <div className='text-xs text-slate-300 lg:text-sm'>

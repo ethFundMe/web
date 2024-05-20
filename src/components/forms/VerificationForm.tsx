@@ -1,14 +1,17 @@
 'use client';
 
+import { handleVerificationRequest } from '@/actions';
 import { REGEX_CODES } from '@/lib/constants';
+import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { toast } from 'sonner';
 import * as z from 'zod';
 import { Button } from '../ui/button';
 import {
@@ -30,7 +33,16 @@ import {
 } from '../ui/tooltip';
 
 export default function VerificationForm() {
+  const [submitting, setSubmitting] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>('GH');
+  const { push } = useRouter();
+  const { user } = userStore();
+
+  useEffect(() => {
+    if (user?.isVerified) {
+      push(`/dashboard/${user.ethAddress}`);
+    }
+  }, [user, push]);
 
   useEffect(() => {
     fetch('https://ipapi.co/json/')
@@ -40,7 +52,7 @@ export default function VerificationForm() {
         setSelectedCountry(response.country ?? 'GH');
       })
       .catch((data) => {
-        console.log('Request failed:', data);
+        console.log(`Request failed:, ${{ data }}`);
       });
   }, [selectedCountry]);
 
@@ -63,20 +75,42 @@ export default function VerificationForm() {
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
+      fullname: user?.fullName || '',
       agree: false,
       phoneNumber: '',
-      email: '',
+      email: user?.email || '',
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    toast(
-      <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>,
-      { position: 'top-right' }
-    );
-    console.log({ data });
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async ({
+    fullname,
+    agree,
+    email,
+    phoneNumber,
+  }) => {
+    setSubmitting(true);
+    try {
+      const res = await handleVerificationRequest({
+        fullName: fullname,
+        email,
+        phoneNumber,
+        agree,
+        userId: user?.id as string,
+      });
+      if (res.success) {
+        toast.success(res.message as string);
+        if (user) {
+          push(`/dashboard/${user.ethAddress}`);
+        }
+        setSubmitting(false);
+      } else {
+        toast.error(res.message as string);
+        setSubmitting(false);
+      }
+    } catch (e) {
+      setSubmitting(false);
+      console.log('Error', e);
+    }
   };
 
   return (
@@ -93,7 +127,11 @@ export default function VerificationForm() {
               <FormItem className='col-span-2'>
                 <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your full name' {...field} />
+                  <Input
+                    disabled
+                    placeholder='Enter your full name'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,10 +141,14 @@ export default function VerificationForm() {
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='col-span-2 sm:col-span-1'>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your email address' {...field} />
+                  <Input
+                    disabled
+                    placeholder='Enter your email address'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,7 +158,7 @@ export default function VerificationForm() {
             control={form.control}
             name='phoneNumber'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='col-span-2 sm:col-span-1'>
                 <>
                   <TooltipProvider>
                     <Tooltip>
@@ -139,10 +181,12 @@ export default function VerificationForm() {
                         border: 'none',
                         margin: 0,
                         marginTop: 5,
+                        width: '100%',
                       }}
                       inputStyle={{
                         border: '1px solid rgb(226,232,240)',
                         height: '2.5rem',
+                        width: '100%',
                       }}
                       buttonStyle={{
                         background: 'rgb(245,245,245)',
@@ -158,7 +202,11 @@ export default function VerificationForm() {
                     />
                   </>
                 </FormControl>
-                <FormMessage />
+                {/* <FormMessage /> */}
+                <span className='text-sm font-medium text-red-500 dark:text-red-900'>
+                  {form.formState.errors.phoneNumber &&
+                    form.formState.errors.phoneNumber.message}
+                </span>
               </FormItem>
             )}
           />
@@ -181,19 +229,28 @@ export default function VerificationForm() {
 
                 <FormDescription className='text-xs'>
                   I have read and agreed to the{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/terms-and-conditions'
+                    className='text-primary-default'
+                  >
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href='#' className='text-primary-default'>
+                  <Link
+                    href='/legal/privacy-policy'
+                    className='text-primary-default'
+                  >
                     Privacy Policy
                   </Link>
                 </FormDescription>
               </FormItem>
             )}
           />
-          <Button disabled={!form.watch('agree')} className='col-span-2 w-full'>
-            Submit
+          <Button
+            disabled={!form.watch('agree') || submitting}
+            className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
+          >
+            {submitting ? 'Loading...' : 'Submit'}
           </Button>
         </form>
       </Form>

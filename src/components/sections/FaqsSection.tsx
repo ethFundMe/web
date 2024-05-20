@@ -1,31 +1,34 @@
 import { FAQS } from '@/lib/constants';
 import { TextSizeStyles } from '@/lib/styles';
-import { FaCaretUp } from 'react-icons/fa';
+import { cn } from '@/lib/utils';
 import { Container } from '../Container';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../ui/accordion';
 
 export const FaqsSection = () => {
   return (
-    <section>
+    <section id='faqs'>
       <Container className='space-y-5 py-10 lg:py-20'>
         <div className='py-5 text-center'>
           <h2 className={TextSizeStyles.h2}>Frequently Asked Questions</h2>
           <p className='text-lg'>
-            You may share the following concerns on using EthFundMe
+            You may share the following concerns about using EthFundMe
           </p>
         </div>
 
-        <section className='accordion accordion--radio mx-auto w-full max-w-4xl'>
+        <Accordion
+          type='single'
+          collapsible
+          className='mx-auto w-full max-w-4xl overflow-hidden rounded-md'
+        >
           {FAQS.map((item, idx) => (
-            <FaqTab key={idx} {...item} checked={!!(idx === 0)} />
+            <FaqTab key={idx} {...item} checked={!!(idx % 2)} />
           ))}
-
-          <div className='tab'>
-            <input type='radio' name='accordion-2' id='close' />
-            <label htmlFor='close' className='tab__close'>
-              <FaCaretUp size={18} />
-            </label>
-          </div>
-        </section>
+        </Accordion>
       </Container>
     </section>
   );
@@ -40,18 +43,12 @@ const FaqTab = ({
   answer: string;
   checked?: boolean;
 }) => (
-  <div className='tab'>
-    <input
-      type='radio'
-      name='accordion-2'
-      defaultChecked={checked}
-      id={question}
-    />
-    <label htmlFor={question} className='tab__label'>
+  <AccordionItem value={question}>
+    <AccordionTrigger
+      className={cn(checked ? 'bg-[var(--secondary)]' : 'bg-[var(--theme)]')}
+    >
       {question}
-    </label>
-    <div className='tab__content'>
-      <p>{answer}</p>
-    </div>
-  </div>
+    </AccordionTrigger>
+    <AccordionContent className='text-base'>{answer}</AccordionContent>
+  </AccordionItem>
 );

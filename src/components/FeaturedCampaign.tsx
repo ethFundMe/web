@@ -1,11 +1,10 @@
 'use client';
 
-import { REGEX_CODES } from '@/lib/constants';
 import { Campaign, User } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonateBtn } from './DonateBtn';
@@ -22,8 +21,9 @@ export default function FeaturedCampaign({
 }) {
   const [index, setIndex] = useState(0);
 
-  const images = campaign.media_links.filter(
-    (media) => !REGEX_CODES.ytLink.test(media)
+  const images = useMemo(
+    () => [campaign.banner_url, ...campaign.media_links],
+    [campaign]
   );
 
   const AnimImage = motion(Image);
@@ -52,9 +52,12 @@ export default function FeaturedCampaign({
         style={{ background: 'linear-gradient(#004f6c96 60%,#004f6c)' }}
       >
         <div className='relative z-20 mx-auto flex max-w-2xl flex-col items-center text-center text-white'>
-          <p className='mb-3 text-xs font-semibold text-slate-300 md:text-base'>
-            {user.fullName} presents
-          </p>
+          <div className='mb-3 text-slate-300'>
+            <p className='line-clamp-1 w-full max-w-xs text-center font-semibold leading-[1] [word-break:break-all] sm:max-w-sm md:text-lg'>
+              {user.fullName}
+            </p>
+            <span className='text-xs leading-[0] md:text-sm'>presents</span>
+          </div>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
             {campaign.title}
           </p>
@@ -93,10 +96,23 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <div className='mt-4 flex items-center gap-2'>
-          <DonateBtn campaign={campaign} />
-          <Button asChild variant='secondary' className='w-full max-w-[10rem]'>
-            <Link href={`/campaigns/${campaign.campaign_id}`}>Read more</Link>
+        <div className='mt-4 flex flex-wrap items-center gap-2'>
+          <DonateBtn
+            text='Help now'
+            size='lg'
+            campaign={campaign}
+            className='text-md'
+          />
+
+          <Button
+            asChild
+            variant='secondary'
+            className='text-md w-full max-w-[10rem] flex-shrink-0 px-8'
+            size='lg'
+          >
+            <Link href={`/campaigns/${campaign.campaign_id}`}>
+              <span>View campaign</span>
+            </Link>
           </Button>
         </div>
       </div>

@@ -1,14 +1,17 @@
 'use client';
 
+import { handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
-import { REGEX_CODES } from '@/lib/constants';
+import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
+import { fetchCampaignTags } from '@/lib/queries';
 import { CampaignTags } from '@/lib/types';
 import {
   GET_CREATE_CAMPAIGN_FORM_SCHEMA,
   createUrl,
   uploadToCloudinary,
 } from '@/lib/utils';
+import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
@@ -58,6 +61,9 @@ export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const { address } = useAccount();
   const router = useRouter();
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+
+  const { user } = userStore();
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
   const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
@@ -74,7 +80,9 @@ export default function CreateCampaignForm() {
   };
 
   const campaignType = getCampaignType();
-  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(false);
+  const formSchema = GET_CREATE_CAMPAIGN_FORM_SCHEMA(
+    user ? user.isVerified : false
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -91,6 +99,7 @@ export default function CreateCampaignForm() {
     error,
     isError,
     isPending,
+    // isSuccess,
     writeContract,
   } = useWriteContract({
     mutation: {
@@ -114,8 +123,15 @@ export default function CreateCampaignForm() {
   >(null);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const { description, goal, title, banner, beneficiaryAddress, ytLink } =
-      data;
+    const {
+      description,
+      goal,
+      title,
+      banner,
+      beneficiaryAddress,
+      tag,
+      ytLink,
+    } = data;
     if (isPending || isConfirmingTxn) return;
 
     if (!isAddress(String(beneficiaryAddress))) {
@@ -182,23 +198,45 @@ export default function CreateCampaignForm() {
         setSubmitStatus(null);
         if (uploaded.length > 0) {
           setSubmitStatus('Creating campaign');
-          const mediaLinks = ytLink ? [...uploaded, ytLink] : uploaded;
-          writeContract({
-            abi: EthFundMe,
-            address: ethFundMeContractAddress,
-            functionName: 'addCampaign',
-            args: [
-              title,
-              description,
-              parseEther(goal.toString()),
-              mediaLinks,
-              beneficiaryAddress as `0x${string}`,
-            ],
-            chainId: ethChainId,
-          });
+
+          const filterTag = tags.filter((_) => _.name === tag)[0];
+          const preparedTag = TagsWithIds.filter(
+            (i) => i.name === (filterTag.name || CampaignTags.Others)
+          )[0].id;
+
+          handleIPFSPush({
+            title,
+            description,
+            youtubeLink: ytLink,
+            bannerUrl: uploaded[0],
+            mediaLinks: uploaded.filter((_, id) => id !== 0),
+            tag: preparedTag,
+          })
+            .then((res) => {
+              if (!res?.hash) throw new Error();
+              writeContract({
+                abi: EthFundMe,
+                address: ethFundMeContractAddress,
+                functionName: 'addCampaign',
+                args: [
+                  res.hash,
+                  parseEther(String(goal)),
+                  beneficiaryAddress as `0x${string}`,
+                ],
+                chainId: ethChainId,
+              });
+            })
+            .catch(() => {
+              toast.error('Failed to create campaign');
+              setSubmitStatus(null);
+            });
         }
       })
-      .catch((e) => toast.error(e));
+      .catch((e) => {
+        setSubmitStatus(null);
+        toast.error(e);
+        toast.error('Failed to create campaign');
+      });
   };
 
   useEffect(() => {
@@ -207,24 +245,31 @@ export default function CreateCampaignForm() {
       setSubmitStatus(null);
       form.reset();
       router.push('/campaigns');
-
       return;
     }
+  }, [isConfirmedTxn, router, form]);
+
+  useEffect(() => {
     if (isError && error) {
-      toast.error((error as BaseError).shortMessage || error.message);
-      setSubmitStatus(null);
+      let errorMsg = (error as BaseError).shortMessage || error.message;
 
+      if (errorMsg === 'User rejected the request.') {
+        errorMsg = 'Request rejected';
+      } else {
+        errorMsg = 'Failed to create campaign';
+      }
+
+      toast.error(errorMsg);
+      setSubmitStatus(null);
       return;
     }
-  }, [error, form, isConfirmedTxn, isError, router]);
+  }, [error, isError]);
 
-  // const onError: SubmitErrorHandler<z.infer<typeof formSchema>> = () => {
-  //   console.error(errors);
-  // };
-
-  // function onError(errors: z.infer<typeof formSchema>) {
-  //   console.error(errors);
-  // }
+  useEffect(() => {
+    fetchCampaignTags().then((res) => {
+      setTags(res);
+    });
+  }, []);
 
   function showImagePreview(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -367,7 +412,7 @@ export default function CreateCampaignForm() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger className='flex items-center gap-2 pb-2'>
-                            <span>Creator fees (ETH)</span>
+                            <span>Creator fees (%)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
                           <TooltipContent>
@@ -392,8 +437,8 @@ export default function CreateCampaignForm() {
                       type='number'
                       step={0.1}
                       disabled
-                      // value={User.creatorFee}
-                      value={0.02}
+                      value={user?.creatorFee}
+                      // value={0.02}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>

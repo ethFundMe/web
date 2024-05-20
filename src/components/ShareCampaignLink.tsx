@@ -15,7 +15,7 @@ export const ShareCampaignLink = ({
       <LinkPreviewCmp
         params={{
           title: campaign.title,
-          image: campaign.media_links[0],
+          image: campaign.banner_url,
           description: campaign.description,
         }}
       />

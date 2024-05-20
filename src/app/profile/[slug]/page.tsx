@@ -1,7 +1,7 @@
-import { getCampaigns, getUser } from '@/actions';
 import Navbar from '@/components/Navbar';
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
+import { getCampaigns, getUser } from '@/lib/queries';
 import { seoProfile } from '@/lib/seoBannerUrl';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -20,27 +20,32 @@ export async function generateMetadata(
   const user = await getUser(id as `0x${string}`);
 
   if (!user) notFound();
-  const campaigns = await getCampaigns(1, user.ethAddress);
+  const campaigns = await getCampaigns({
+    page: 1,
+    ethAddress: user.ethAddress,
+  });
 
   const previousMetaData = await parent;
 
   return user
     ? {
         title: `${user.fullName}`,
-        description: `${user.bio}`,
+        description: `${user.bio ? user.bio : '~'}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
         openGraph: {
           type: 'website',
           title: `${user.fullName}`,
-          description: `${user.bio}`,
+          description: `${user.bio ? user.bio : '~'}`,
           url: process.env.NEXT_PUBLIC_WEB_URL,
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'redd',
-                String(campaigns.totalCampaigns)
+                user.bio || '',
+                String(campaigns.totalCampaigns),
+                user.isVerified
                 // user.campaigns.length.toString()
               ),
             },
@@ -49,15 +54,17 @@ export async function generateMetadata(
         twitter: {
           title: `${user.fullName}`,
           card: 'summary_large_image',
-          description: `${user.bio}`,
+          description: `${user.bio ? user.bio : '~'}`,
           site: '@ethfundme',
           creator: '@ethfundme',
           images: [
             {
               url: seoProfile(
+                user.profileUrl || '',
                 user.fullName,
-                'Test Bio',
-                String(campaigns.totalCampaigns)
+                user.bio || '',
+                String(campaigns.totalCampaigns),
+                user.isVerified
               ),
             },
           ],
@@ -79,7 +86,10 @@ export default async function UserProfilePage({
 
   if (!user) return;
 
-  const { campaigns } = await getCampaigns(1, user.ethAddress);
+  const { campaigns } = await getCampaigns({
+    page: 1,
+    ethAddress: user.ethAddress,
+  });
 
   return (
     <div className='flex min-h-[calc(100dvh-269px)] flex-col'>

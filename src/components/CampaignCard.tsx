@@ -1,15 +1,15 @@
 'use client';
 
-import { getUser } from '@/actions';
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
-import { usePRouter } from '@/lib/hook/useRouter';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
-import { User } from '@/types';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import Link from 'next/link';
 import ImageWithFallback from './ImageWithFallback';
+
+dayjs.extend(advancedFormat);
 
 export const CampaignCard = ({
   campaign,
@@ -21,27 +21,29 @@ export const CampaignCard = ({
   full?: boolean;
   inSidebar?: boolean;
 }) => {
-  const router = usePRouter();
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUser(campaign.creator as `0x${string}`).then((res) => setUser(res));
-  }, [campaign.creator]);
+  const user = campaign.user;
 
   return (
-    <div
-      onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
+    <Link
+      href={`/campaigns/${campaign.campaign_id}`}
+      // onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
       className={cn(
-        'group flex cursor-pointer flex-col gap-4 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
-        !full && 'w-full max-w-[400px] flex-shrink-0',
-        variantStyles
+        'group flex cursor-pointer flex-col gap-1 rounded-md border border-primary-gray bg-white p-4 hover:border-primary-default',
+        !full && 'w-full flex-shrink-0 md:max-w-[400px]',
+        variantStyles,
+        campaign.flagged && 'border-red-500 hover:border-red-500'
       )}
     >
-      <div className='h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60'>
+      <div
+        className={cn(
+          'h-80 overflow-hidden bg-slate-200 md:h-48 lg:h-60',
+          campaign.flagged && 'grayscale'
+        )}
+      >
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-105'
-          src={campaign?.media_links[0] ?? '/images/broken.jpg'}
+          src={campaign.banner_url ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -49,27 +51,34 @@ export const CampaignCard = ({
       </div>
 
       <DonationObjectiveIndicator
+        className={cn(campaign.flagged && 'grayscale')}
         currentAmount={campaign.total_accrued}
         seekingAmount={campaign.goal}
       />
 
       <div className='flex-1'>
         <p className='line-clamp-1 text-xl font-semibold'>{campaign.title}</p>
-        <p className='line-clamp-2 text-neutral-700'>{campaign.description}</p>
+        <p className='line-clamp-2 text-neutral-700 md:min-h-12'>
+          {campaign.description}
+        </p>
       </div>
 
-      <div
+      <Link
+        href={`/profile/${campaign.creator}`}
         onClick={(e) => {
           e.stopPropagation();
-          router.push(`/profile/${campaign.creator}`);
+          // router.push(`/profile/${campaign.creator}`);
         }}
-        className='flex flex-col-reverse justify-between gap-2'
+        className={cn(
+          'flex flex-col-reverse justify-between gap-2',
+          campaign.flagged && 'grayscale'
+        )}
       >
         <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
           <div className='relative h-[48px] w-[48px] flex-shrink-0'>
             <ImageWithFallback
               src={(user && user.profileUrl) ?? ''}
-              fallback='/images/pfp.svg'
+              fallback='/images/user-pfp.png'
               className='rounded-full bg-slate-200 object-cover'
               fill
               sizes='48px'
@@ -79,24 +88,37 @@ export const CampaignCard = ({
 
           <div>
             <p className={TextSizeStyles.small}>Organizer</p>
-            <p className={cn(TextSizeStyles.caption, 'font-semibold')}>
+            <p
+              className={cn(
+                TextSizeStyles.caption,
+                'line-clamp-1 w-full font-semibold [word-break:break-all]'
+              )}
+            >
               {(user && user.fullName) ??
                 formatWalletAddress(campaign.creator as `0x${string}`)}
             </p>
           </div>
         </div>
 
-        <div>
-          <p className={TextSizeStyles.small}>
+        <div className='flex flex-wrap justify-between md:gap-2'>
+          <p className={cn(TextSizeStyles.small, 'hidden')}>
             Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {dayjs(campaign.created_at).format('DD MMM, YYYY')}
+              {dayjs(campaign.created_at).format('Do MMM, YYYY')}
             </span>
           </p>
+          {campaign.creator !== campaign.beneficiary && (
+            <p className={cn(TextSizeStyles.small, 'text-primary-default')}>
+              Organized for{' '}
+              <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
+                {formatWalletAddress(campaign.beneficiary, 'short')}
+              </span>
+            </p>
+          )}
         </div>
-      </div>
+      </Link>
 
       {/* <DonateXShareButtons campaign={campaign} /> */}
-    </div>
+    </Link>
   );
 };

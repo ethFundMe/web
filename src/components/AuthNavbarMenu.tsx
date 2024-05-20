@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline } from 'react-icons/io5';
 import { LiaUserCogSolid } from 'react-icons/lia';
 import { LuUnlink } from 'react-icons/lu';
@@ -25,7 +26,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           {children}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent>
+        <DropdownMenuContent className='space-y-1.5'>
           <DropdownMenuItem
             className='flex items-center gap-2'
             onClick={() => router.push(`/dashboard/${address}`)}
@@ -40,6 +41,14 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           >
             <IoPencilOutline />
             Update profile
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className='flex items-center gap-2'
+            onClick={() => router.push(`/dashboard/${address}/earnings`)}
+          >
+            <FaEthereum />
+            Earnings
           </DropdownMenuItem>
 
           {/* <DropdownMenuSeparator /> */}

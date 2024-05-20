@@ -1,9 +1,9 @@
 'use client';
 
-import { getUser } from '@/actions';
 import { formatWalletAddress } from '@/lib/utils';
-import { User } from '@/types';
-import { useEffect, useState } from 'react';
+import { userStore } from '@/store';
+import { getCookie } from 'cookies-next';
+import Link from 'next/link';
 import { useAccount } from 'wagmi';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -12,8 +12,8 @@ export const SidebarUserCard = () => {
 
   const view = (
     <div className='border-b border-gray-300 py-4 sm:py-6'>
-      {isConnected && address ? (
-        <View address={address} />
+      {isConnected && address && getCookie('efmToken') ? (
+        <View />
       ) : (
         <>
           <p className='mt-6 text-2xl font-bold text-primary-default'>
@@ -28,48 +28,40 @@ export const SidebarUserCard = () => {
   return view;
 };
 
-const View = ({ address }: { address?: `0x${string}` }) => {
-  const [loading, setLoading] = useState(true);
-  const [userDetails, setUserDetails] = useState<User | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    if (!address) return;
-    getUser(address)
-      .then((res) => {
-        setLoading(false);
-        setUserDetails(res);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [address]);
+const View = () => {
+  const { user } = userStore();
 
   return (
-    <div className='flex items-center gap-4'>
-      {!loading && (
+    <Link
+      href={`/dashboard/${user?.ethAddress}`}
+      className='flex items-center gap-4'
+    >
+      {
         <>
           <ImageWithFallback
             className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-slate-100 object-cover'
-            src={userDetails?.profileUrl ?? ''}
-            fallback='/images/pfp.svg'
+            src={
+              user?.profileUrl || ''
+              // 'https://img.icons8.com/plumpy/256/user-male-circle.png'
+            }
+            fallback='/images/user-pfp.png'
             width={300}
             height={300}
-            alt={userDetails?.fullName ?? ''}
+            alt={user?.fullName ?? ''}
           />
 
           <div>
             <p className='text-xl font-bold text-primary-default'>
-              {userDetails?.fullName}
+              {user?.fullName}
             </p>
-            {userDetails?.ethAddress && (
+            {user?.ethAddress && (
               <p className='text-primary-dark'>
-                {formatWalletAddress(userDetails?.ethAddress)}
+                {user?.ethAddress && formatWalletAddress(user.ethAddress)}
               </p>
             )}
           </div>
         </>
-      )}
-    </div>
+      }
+    </Link>
   );
 };

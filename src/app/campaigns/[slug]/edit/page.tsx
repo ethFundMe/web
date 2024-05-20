@@ -1,8 +1,10 @@
 import { Container } from '@/components/Container';
 import EditCampaignForm from '@/components/EditCampaignForm';
 import UpdateCampaignMediaForm from '@/components/UpdateCampaignMediaForm';
-import { getCampaign } from '@/lib/api';
+import { getCampaign } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
+import { Flag } from 'lucide-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default async function EditCampaign({
@@ -16,18 +18,24 @@ export default async function EditCampaign({
 
   return (
     <div className='min-h-[calc(100dvh-269px)]'>
+      {campaign.flagged && (
+        <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
+          <Flag className='fill-red-600' size={15} />
+          <span>This campaign has been flagged. </span>
+          <Link href='/legal/terms-and-conditions'>Learn more</Link>
+        </div>
+      )}
       <Container>
         <div className='pb-3 text-center sm:py-5'>
           <h1 className={TextSizeStyles.h1}>Edit Campaign</h1>
         </div>
 
-        <div className='my-5 grid grid-cols-1 items-start gap-y-5 lg:grid-cols-3'>
-          <div className='col-span-2 w-full'>
-            <EditCampaignForm campaign={campaign} />
-          </div>
-
-          <div>
+        <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
+          <div className='mx-auto lg:mx-0'>
             <UpdateCampaignMediaForm campaign={campaign} />
+          </div>
+          <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
+            <EditCampaignForm campaign={campaign} />
           </div>
         </div>
       </Container>

@@ -9,7 +9,7 @@ import { FaChevronRight } from 'react-icons/fa';
 import { Button } from './inputs/Button';
 
 export const CampaignTypeCard = ({
-  campaignType: { image, title, description, link },
+  campaignType: { image, title, description, link, ctaBtnText },
 }: {
   campaignType: CampaignType;
 }) => {
@@ -35,7 +35,7 @@ export const CampaignTypeCard = ({
         size='sm'
         onClick={() => router.push(link)}
       >
-        Create Campaign
+        {ctaBtnText}
         <FaChevronRight size={13} />
       </Button>
     </div>

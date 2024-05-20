@@ -5,30 +5,45 @@ import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useEffect, useState } from 'react';
 import DashboardMobileSidebar from './DashboardMobileSidebar';
 import { NavLink } from './NavLink';
 
-export const DashboardSidebar = () => {
-  const { address } = useAccount();
+export const DashboardSidebar = ({
+  userAddress,
+}: {
+  userAddress: `0x${string}`;
+}) => {
   const { user } = userStore();
   const { push } = useRouter();
 
-  if (!user) {
-    return;
-  }
+  const [routes, setRoutes] = useState<
+    {
+      link: string;
+      title: string;
+      icon: JSX.Element;
+    }[]
+  >([]);
 
-  if (user.ethAddress !== address) {
-    push('/');
-    return;
-  }
+  useEffect(() => {
+    if (!userAddress && !user?.ethAddress) {
+      push(`/profile/${userAddress}`);
+      return;
+    }
+    if (userAddress && user?.ethAddress && userAddress !== user?.ethAddress) {
+      push(`/profile/${userAddress}`);
+      return;
+    }
+  }, [userAddress, user?.ethAddress, push]);
 
-  const routes = getDashboardRoutes(address);
+  useEffect(() => {
+    setRoutes(getDashboardRoutes(userAddress));
+  }, [userAddress]);
 
   return (
     <>
       <aside className='hidden w-60 flex-shrink-0 p-4 pl-0 md:block'>
-        <div className='fixed top-16 w-[14rem]'>
+        <div className='fixed top-16 z-20 w-[14rem]'>
           <ul className='space-y-4'>
             {routes.map((route, idx) => (
               <li key={idx}>
