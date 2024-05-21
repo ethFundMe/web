@@ -45,7 +45,10 @@ const FaqTab = ({
 }) => (
   <AccordionItem value={question}>
     <AccordionTrigger
-      className={cn(checked ? 'bg-[var(--secondary)]' : 'bg-[var(--theme)]')}
+      className={cn(
+        '!text-left',
+        checked ? 'bg-[var(--secondary)]' : 'bg-[var(--theme)]'
+      )}
     >
       {question}
     </AccordionTrigger>

@@ -21,23 +21,6 @@ type Props = {
 };
 
 export const EarningsChart = ({ earnings }: Props) => {
-  // const data = [
-  //   { name: 'A', x: 2, y: 23, z: 122 },
-  //   { name: 'B', x: 1, y: 3, z: 73 },
-  //   { name: 'C', x: 2, y: 15, z: 32 },
-  //   { name: 'D', x: 5, y: 35, z: 23 },
-  //   { name: 'E', x: 1, y: 45, z: 20 },
-  //   { name: 'F', x: 6, y: 25, z: 29 },
-  //   { name: 'G', x: 9, y: 17, z: 61 },
-  //   { name: 'H', x: 0, y: 32, z: 45 },
-  //   { name: 'I', x: 19, y: 43, z: 93 },
-  //   { name: 'J', x: 1, y: 43, z: 93 },
-  //   { name: 'K', x: 7, y: 43, z: 93 },
-  //   { name: 'L', x: 1, y: 43, z: 93 },
-  //   { name: 'M', x: 90, y: 43, z: 93 },
-  //   { name: 'N', x: 8, y: 43, z: 93 },
-  // ];
-
   return (
     <ResponsiveContainer width='100%' height={300}>
       <AreaChart

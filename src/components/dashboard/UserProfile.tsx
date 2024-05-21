@@ -98,11 +98,14 @@ export const UserProfile = ({
         <div className='flex-1 rounded-md'>
           <div className='header'>
             <div
-              className='banner group mx-auto flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden bg-cover bg-center bg-no-repeat md:h-64 md:max-h-max xl:h-[25rem]'
+              className={cn(
+                'banner group mx-auto flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden bg-[#8c929a] bg-cover bg-center bg-no-repeat md:h-64 md:max-h-max xl:h-[25rem]',
+                !user.bannerUrl && 'opacity-70'
+              )}
               style={{
                 backgroundImage: user.bannerUrl
                   ? `url(${user.bannerUrl})`
-                  : '#8c929a',
+                  : 'url(/user-banner.webp)',
               }}
             >
               {loggedIn && user.ethAddress === address && (
@@ -313,7 +316,9 @@ export const UserProfile = ({
                   </p>
 
                   {user.bio && (
-                    <p className='max-w-[700px] text-sm'>{user.bio}</p>
+                    <p className='max-w-[700px] text-sm sm:text-base'>
+                      {user.bio}
+                    </p>
                   )}
                 </div>
               </div>

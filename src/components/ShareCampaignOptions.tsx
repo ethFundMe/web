@@ -34,7 +34,7 @@ export default function ShareCampaignOptions({
     <div className='mt-4 grid grid-cols-3 gap-4'>
       <OptionCard link={shareLinks.whatsapp}>
         <Image
-          src='/images/whatsapp-logo.png'
+          src='/images/whatsapp-icon.webp'
           width={40}
           height={40}
           priority
@@ -44,7 +44,7 @@ export default function ShareCampaignOptions({
       </OptionCard>
       <OptionCard link={shareLinks.email}>
         <Image
-          src='/images/email.png'
+          src='/images/email-icon.webp'
           width={40}
           height={40}
           priority
