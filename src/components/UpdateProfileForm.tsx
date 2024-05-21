@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { updateUser } from '@/actions';
 import {
   Form,
   FormControl,
@@ -14,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
+import { updateUser } from '@/lib/queries';
 import { userStore } from '@/store';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';

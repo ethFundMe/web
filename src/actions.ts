@@ -1,7 +1,6 @@
 'use server';
 
 import parse from 'node-html-parser';
-import { User } from './types';
 
 export async function urlPreview(url: string) {
   try {
@@ -36,71 +35,6 @@ export async function urlPreview(url: string) {
     return { error: true, message: 'Failed to fetch URL data', urlData: null };
   }
 }
-
-export const updateUser = async (userDetails: {
-  ethAddress: `0x${string}`;
-  email: string;
-  fullName: string;
-  bio?: string;
-  bannerUrl?: string;
-  profileUrl?: string;
-  token: string;
-}) => {
-  const userData = {
-    email: userDetails.email,
-    eth_address: userDetails.ethAddress,
-    full_name: userDetails.fullName,
-    bio: userDetails.bio,
-    bannerUrl: userDetails.bannerUrl,
-    profileUrl: userDetails.profileUrl,
-  };
-
-  const res = await fetch(
-    `${process.env.ETH_FUND_ENDPOINT}/api/user/${userDetails.ethAddress}`,
-    {
-      body: JSON.stringify(userData),
-      method: 'PUT',
-      headers: {
-        accept: '*/*',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userDetails.token}`,
-      },
-    }
-  );
-  const data = await res.json();
-
-  const resData: User = data;
-
-  if (data.error) {
-    throw new Error('Failed to update profile');
-  }
-
-  // console.log(resData, userDetails.token);
-
-  // throw new Error('Failed to update profile');
-  return resData;
-};
-
-export const resetUser = async (address: `0x${string}`, token: string) => {
-  const res = await fetch(
-    `${process.env.ETH_FUND_ENDPOINT}/api/reset_user/${address}`,
-    {
-      method: 'PUT',
-      headers: {
-        accept: '*/*',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data = await res.json();
-
-  if (data.error) {
-    throw new Error('Failed to update profile');
-  }
-
-  return data as { message: string; user: User };
-};
 
 export const handlePushComment = async ({
   userID,

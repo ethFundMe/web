@@ -1,7 +1,7 @@
 'use client';
 import { Campaign } from '@/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { MobileView, deviceType } from 'react-device-detect';
+import { deviceType, isMobile } from 'react-device-detect';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { CampaignCard } from './CampaignCard';
@@ -10,6 +10,7 @@ const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
     items: 3,
+    partialVisibilityGutter: 40,
     // slidesToSlide: 3 // optional, default to 1.
   },
   tablet: {
@@ -20,7 +21,8 @@ const responsive = {
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    slidesToSlide: 1, // optional, default to 1.
+    partialVisibilityGutter: 40,
+    // slidesToSlide: 1, // optional, default to 1.
   },
 };
 
@@ -31,24 +33,27 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
 
   return (
     <div>
-      <div className='w-full space-y-14'>
+      <div className='w-full space-y-14 md:pl-6'>
         {uniqueTags.map((tag) => (
           <div key={tag} className='space-y-5'>
-            <h2 className='text-2xl font-extralight text-primary-dark md:text-3xl'>
+            <h2 className='text-center text-2xl font-extralight text-primary-dark md:text-left md:text-3xl'>
               {tag}
             </h2>
             <Carousel
               swipeable={false}
               draggable={false}
-              //   showDots={true}
+              showDots={isMobile ? true : false}
+              // renderDotsOutside={true}
               responsive={responsive}
+              // centerMode={isMobile ? true : false}
+              // renderArrowsWhenDisabled={isMobile ? true : false}
               //   ssr={true} // means to render carousel on server-side.
-              // infinite={true}
-              autoPlay={MobileView ? true : false}
+              infinite={isMobile ? true : false}
+              autoPlay={isMobile ? true : false}
               autoPlaySpeed={5000}
               keyBoardControl={true}
-              // customTransition='all 3.5'
-              transitionDuration={3500}
+              customTransition='all 750ms'
+              // transitionDuration={3500}
               containerClass='carousel-container'
               customLeftArrow={
                 <ChevronLeft
@@ -66,7 +71,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               }
               removeArrowOnDeviceType={['tablet', 'mobile']}
               deviceType={deviceType}
-              //   dotListClass="custom-dot-list-style"
+              dotListClass='!-mb-1'
               itemClass='carouselItem'
             >
               {campaigns

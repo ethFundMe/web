@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUser } from '@/actions';
+import { updateUser } from '@/lib/queries';
 import { efmUserAddressStore, userStore } from '@/store';
 import { User } from '@/types';
 import { getCookie } from 'cookies-next';
