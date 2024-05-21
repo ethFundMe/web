@@ -12,15 +12,15 @@ type Props = React.ComponentProps<'button'> & {
   text?: string;
 } & ButtonProps;
 
-export const ShareLinkBtn = ({ campaign, text, className }: Props) => {
+export const ShareLinkBtn = ({ campaign, text, className, ...rest }: Props) => {
   return (
     <Dialog>
       <DialogTrigger
-        onClick={(e) => e.stopPropagation()}
         className={cn(
           'flex w-full flex-1 items-center justify-center gap-2 rounded-md bg-primary-dark px-4 py-2 text-white hover:bg-opacity-90',
           className
         )}
+        {...rest}
       >
         <>
           {text ?? 'Share'}
