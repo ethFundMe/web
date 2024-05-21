@@ -1,6 +1,6 @@
 'use client';
 
-import { resetUser } from '@/actions';
+import { resetUser } from '@/lib/queries';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { getCookie } from 'cookies-next';

@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUser } from '@/actions';
+import { updateUser } from '@/lib/queries';
 import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
@@ -59,8 +59,10 @@ export const UserProfile = ({
         }
         setShowPfpUpload(false);
       })
-      .catch(() => {
-        toast.success('Failed to update profile picture');
+      .catch((e) => {
+        console.log(e);
+
+        toast.error('Failed to update profile picture');
       });
   };
 
@@ -96,10 +98,10 @@ export const UserProfile = ({
         <div className='flex-1 rounded-md'>
           <div className='header'>
             <div
-              className='banner group flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden md:h-64 md:max-h-max'
+              className='banner group mx-auto flex h-[calc(40vw)] max-h-[16rem] flex-col items-end overflow-hidden bg-cover bg-center bg-no-repeat md:h-64 md:max-h-max xl:h-[25rem]'
               style={{
-                background: user.bannerUrl
-                  ? `url(${user.bannerUrl}) center center/cover no-repeat`
+                backgroundImage: user.bannerUrl
+                  ? `url(${user.bannerUrl})`
                   : '#8c929a',
               }}
             >

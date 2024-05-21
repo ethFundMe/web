@@ -1,5 +1,48 @@
 import { Campaign, User, UserEarning } from '@/types';
 
+export const updateUser = async (userDetails: {
+  ethAddress: `0x${string}`;
+  email: string;
+  fullName: string;
+  bio?: string;
+  bannerUrl?: string;
+  profileUrl?: string;
+  token: string;
+}) => {
+  const userData = {
+    email: userDetails.email,
+    eth_address: userDetails.ethAddress,
+    full_name: userDetails.fullName,
+    bio: userDetails.bio,
+    bannerUrl: userDetails.bannerUrl,
+    profileUrl: userDetails.profileUrl,
+  };
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${userDetails.ethAddress}`,
+    {
+      body: JSON.stringify(userData),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userDetails.token}`,
+      },
+    }
+  );
+  const data = await res.json();
+
+  const resData: User = data;
+
+  if (data.error) {
+    throw new Error('Failed to update profile');
+  }
+
+  // console.log(resData, userDetails.token);
+
+  // throw new Error('Failed to update profile');
+  return resData;
+};
+
 export type CampaignUrlParams = {
   [key: string]: string | number | undefined;
 };
@@ -45,7 +88,7 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
 
 export const getUser = async (userId: `0x${string}`) => {
   const res = await fetch(
-    `${process.env.ETH_FUND_ENDPOINT}/api/user/${userId}`,
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${userId}`,
     { cache: 'no-store' }
   );
   const data = await res.json();
@@ -70,7 +113,7 @@ export const getCampaign = async (id: number) => {
 export async function fetchActiveStats() {
   try {
     const res = await fetch(
-      `${process.env.ETH_FUND_ENDPOINT}/api/home/statistics`
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/home/statistics`
     );
     const data: {
       activeCampaigns: number;
@@ -121,4 +164,24 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
     // console.log('Failed to get total earnings', e);
     return [];
   }
+};
+
+export const resetUser = async (address: `0x${string}`, token: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/reset_user/${address}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error('Failed to update profile');
+  }
+
+  return data as { message: string; user: User };
 };
