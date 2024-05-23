@@ -40,9 +40,6 @@ export const useSocket = (campaignUUID: string) => {
       }>
     ) {
       if (response.status === 'OK' && response.data) {
-        console.log('joined room');
-        console.log('comments', response.data.comments);
-
         setComments(response.data.comments.reverse());
       } else {
         console.error('Error fetching donations:', response.error);
@@ -56,9 +53,8 @@ export const useSocket = (campaignUUID: string) => {
     function onComment(response: SocketResponse<Comment>) {
       const data = response.data;
       if (!data) return;
-      console.log(data);
 
-      setComments((prev) => [data, ...prev].reverse());
+      setComments((prev) => [data, ...prev.reverse()].reverse());
     }
 
     function onError(res: unknown) {

@@ -62,7 +62,7 @@ export const CommentCard = forwardRef<Ref, Props>(
     return (
       <motion.div
         ref={ref}
-        animate={{ x: [-12, 0] }}
+        animate={{ x: [-12, 0], transition: { ease: 'easeOut' } }}
         className={cn(
           'relative flex items-start justify-between gap-2 rounded-lg border-2 border-transparent p-2 text-sm',
           donatedAmt ? 'animated-border  bg-slate-50' : ' border-slate-50'
