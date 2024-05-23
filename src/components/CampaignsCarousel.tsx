@@ -50,7 +50,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               //   ssr={true} // means to render carousel on server-side.
               infinite={isMobile ? true : false}
               autoPlay={isMobile ? true : false}
-              autoPlaySpeed={5000}
+              autoPlaySpeed={10000}
               keyBoardControl={true}
               customTransition='all 750ms'
               // transitionDuration={3500}
@@ -71,7 +71,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               }
               removeArrowOnDeviceType={['tablet', 'mobile']}
               deviceType={deviceType}
-              dotListClass='!-mb-1'
+              dotListClass='!mb-2'
               itemClass='carouselItem'
             >
               {campaigns

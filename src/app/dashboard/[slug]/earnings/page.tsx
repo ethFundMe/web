@@ -29,13 +29,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!user) notFound();
 
   return {
-    title: 'Earnings | EthFundMe',
+    title: 'Earnings',
     description: `${user.bio}`,
     keywords:
       'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
     openGraph: {
       type: 'website',
-      title: 'Earnings | EthFundMe',
+      title: 'Earnings',
       description: `${user.bio}`,
       images: '/images/seo-common.jpg',
       url: 'https://ethfund.me',
