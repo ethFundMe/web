@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
+import { Input } from '../ui/input';
 
 export const CommentForm = ({ campaignId }: { campaignId: string }) => {
   const { user } = userStore();
@@ -52,7 +52,7 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-2 rounded-md'>
       <div className='relative'>
-        <Textarea
+        <Input
           {...register('comment', {
             required: 'Enter a comment',
             minLength: 1,
@@ -60,7 +60,7 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
             validate: (value) => !!value.trim() || 'Enter a comment',
           })}
           placeholder='Enter your comments'
-          className='max-h-32 pr-12 md:pr-[70px]'
+          className='h-14 pr-12 md:pr-[70px]'
         />
 
         <Button className='absolute bottom-2 right-2 p-0 px-2 disabled:pointer-events-auto'>

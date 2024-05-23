@@ -9,13 +9,14 @@ import { Campaign } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import useRefs from 'react-use-refs';
 import { CommentCard } from './CommentCard';
 import { CommentForm } from './forms/CommentForm';
 
 export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const { user } = userStore();
 
-  // const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
+  const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
 
   const { refresh } = useRouter();
   const {
@@ -87,18 +88,18 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     }
   }
 
-  // useEffect(() => {
-  //   const scrollContainer = scrollContainerRef.current;
-  //   const scrollItem = scrollItemRef.current;
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    const scrollItem = scrollItemRef.current;
 
-  //   if (!scrollContainer || !scrollItem) return;
+    if (!scrollContainer || !scrollItem) return;
 
-  //   const containerRect = scrollContainer.getBoundingClientRect();
-  //   const childRect = scrollItem.getBoundingClientRect();
-  //   const scrollOffset = childRect.top - containerRect.top;
+    const containerRect = scrollContainer.getBoundingClientRect();
+    const childRect = scrollItem.getBoundingClientRect();
+    const scrollOffset = childRect.top - containerRect.top;
 
-  //   scrollContainer.scrollTo({ top: scrollOffset, behavior: 'smooth' });
-  // }, [comments, scrollContainerRef, scrollItemRef]);
+    scrollContainer.scrollTo({ top: scrollOffset, behavior: 'smooth' });
+  }, [comments, scrollContainerRef, scrollItemRef]);
 
   return (
     <aside className='mt-16 space-y-8'>
@@ -114,7 +115,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
             'h-[500px] overflow-y-auto scroll-smooth pr-4',
             comments.length < 4 && 'h-fit max-h-[500px]'
           )}
-          // ref={scrollContainerRef}
+          ref={scrollContainerRef}
         >
           <div className='space-y-2'>
             {comments.length > 0 ? (
@@ -128,7 +129,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
                   />
                 ))}
 
-                {/* <div ref={scrollItemRef} className='h-1 w-full'></div> */}
+                <div ref={scrollItemRef} className='h-1 w-full'></div>
               </>
             ) : (
               <p className='text-primary-gray'>

@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { BellPlus, Coins, History } from 'lucide-react';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
@@ -29,13 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!user) notFound();
 
   return {
-    title: 'Earnings | EthFundMe',
+    title: 'Earnings',
     description: `${user.bio}`,
     keywords:
       'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
     openGraph: {
       type: 'website',
-      title: 'Earnings | EthFundMe',
+      title: 'Earnings',
       description: `${user.bio}`,
       images: '/images/seo-common.jpg',
       url: 'https://ethfund.me',
@@ -153,7 +154,7 @@ export default async function EarningsPage({
                     <li key={idx}>
                       <Link
                         href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
-                        className='block rounded-md bg-slate-300/20 p-3'
+                        className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3'
                       >
                         <div>
                           <div className='space-y-1.5 lg:space-y-2.5'>
@@ -187,6 +188,13 @@ export default async function EarningsPage({
                               .format('Do MMM, YYYY . HH : mm a')}
                           </small>
                         </div>
+
+                        <Image
+                          src='/images/etherscan.svg'
+                          width={17}
+                          height={17}
+                          alt='etherscan'
+                        />
                       </Link>
                     </li>
                   ))}

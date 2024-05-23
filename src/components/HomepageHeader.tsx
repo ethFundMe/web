@@ -10,11 +10,13 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { FaEthereum } from 'react-icons/fa';
+import { useAccount } from 'wagmi';
 import { Container } from './Container';
 import { Button } from './ui/button';
 
 export const HomepageHeader = () => {
   const { user } = userStore();
+  const { isConnected } = useAccount();
   const time = new Date().getHours();
   const [greeting, setGreeting] = useState('');
   const getGreeting = (time: number) => {
@@ -22,9 +24,9 @@ export const HomepageHeader = () => {
       return setGreeting('Good Morning,');
     }
     if (time >= 12 && time < 16) {
-      return setGreeting('Good Afternoon, ');
+      return setGreeting('Good Afternoon,');
     }
-    return setGreeting('Good Evening, ');
+    return setGreeting('Good Evening,');
   };
 
   const splitName = (name: string) => {
@@ -121,7 +123,7 @@ export const HomepageHeader = () => {
         <Container className='flex h-[calc(100dvh-4rem)] max-h-[910px]  items-center justify-center'>
           <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
             <div className='space-y-4 md:space-y-5'>
-              {!user ? (
+              {!user || !isConnected ? (
                 <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
                   Welcome to EthFundMe!
                 </h1>
