@@ -77,11 +77,13 @@ const Navbar = () => {
                   </button>
                 </div>
                 <DropdownMenuItem className='relative block w-full p-0'>
-                  <p className='w-full px-2'>Fri, June 4, 2020</p>
                   <div className='flex gap-x-4 bg-primary-default/10'>
                     {/* <div className='rounded-full !w-6 !h-6 bg-gray-500'></div> */}
                     <div className='full border-l-4 border-primary-dark'>
-                      <div className='p-2'>
+                      <p className='w-full px-2 text-right text-[10px]'>
+                        Today, 2:45pm
+                      </p>
+                      <div className='p-2 pl-6 pt-0'>
                         <h3 className='text-sm font-semibold text-gray-400'>
                           Campaign Funded
                         </h3>
@@ -96,11 +98,13 @@ const Navbar = () => {
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem className='relative block w-full p-0'>
-                  <p className='w-full px-2'>Fri, June 4, 2020</p>
                   <div className='flex gap-x-4 bg-primary-default/10'>
                     {/* <div className='rounded-full !w-6 !h-6 bg-gray-500'></div> */}
                     <div className='full border-l-4 border-primary-dark'>
-                      <div className='p-2'>
+                      <p className='w-full px-2 text-right text-[10px]'>
+                        Today, 2:45pm
+                      </p>
+                      <div className='p-2 pl-6 pt-0'>
                         <h3 className='text-sm font-semibold text-gray-400'>
                           Campaign Funded
                         </h3>
