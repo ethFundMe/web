@@ -10,7 +10,7 @@ export const useSocket = (campaignUUID: string) => {
   const socketRef = useRef<Socket>(null);
 
   const updateList = useCallback((newList: Comment[]) => {
-    setComments(newList);
+    setComments(newList.reverse());
   }, []);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const useSocket = (campaignUUID: string) => {
         console.log('joined room');
         console.log('comments', response.data.comments);
 
-        setComments(response.data.comments);
+        setComments(response.data.comments.reverse());
       } else {
         console.error('Error fetching donations:', response.error);
       }
@@ -58,7 +58,7 @@ export const useSocket = (campaignUUID: string) => {
       if (!data) return;
       console.log(data);
 
-      setComments((prev) => [data, ...prev]);
+      setComments((prev) => [data, ...prev].reverse());
     }
 
     function onError(res: unknown) {

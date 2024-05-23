@@ -1,5 +1,6 @@
 'use client';
 
+import { REGEX_CODES } from '@/lib/constants';
 import { updateUser } from '@/lib/queries';
 import { efmUserAddressStore, userStore } from '@/store';
 import { User } from '@/types';
@@ -123,7 +124,13 @@ export const AccountForm = () => {
           id='email'
           type='email'
           label='Email'
-          {...register('email', { required: 'Email is required' })}
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: REGEX_CODES.email,
+              message: 'Invalid email address',
+            },
+          })}
           required
           placeholder='Enter your email'
         />

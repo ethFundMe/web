@@ -86,7 +86,7 @@ export const CommentCard = forwardRef<Ref, Props>(
                 <p className='line-clamp-1 max-w-xs [word-break:break-all] sm:max-w-sm'>
                   {fullName}
                 </p>
-                <small>
+                <small className='text-[10px]'>
                   {new Date(created_at).toLocaleDateString()}
                   {dayjs(new Date(created_at)).format(' . HH : mm a')}
                 </small>
@@ -127,17 +127,17 @@ export const CommentCard = forwardRef<Ref, Props>(
                     target='_blank'
                     href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
                   >
-                    <Eye size={14} />
-                    View transaction
+                    <Eye size={12} />
+                    <small className='text-[10px]'>View transaction</small>
                   </Link>
                 </DropdownMenuItem>
               )}
               {isOwner && (
                 <DropdownMenuItem asChild>
                   <Dialog>
-                    <DialogTrigger className='flex items-center gap-2 px-2 text-sm'>
-                      <IoTrash className='text-red-500' />
-                      Delete
+                    <DialogTrigger className='flex items-center gap-2 px-2'>
+                      <IoTrash size={12} className='text-red-500' />
+                      <small className='text-[10px]'>Delete comment</small>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader className='mb-2 space-y-1'>

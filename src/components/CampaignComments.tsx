@@ -23,7 +23,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     comments: socketComments,
     updateList,
   } = useSocket(campaign.id);
-  const [comments, setComments] = useState(socketComments);
+  const [comments, setComments] = useState(socketComments.reverse());
 
   useEffect(() => {
     if (socket && socketComments) {
