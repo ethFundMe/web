@@ -103,11 +103,11 @@ export default function DonateForm({
     const { amount, campaignID, comment } = data;
     // eslint-disable-next-line no-extra-boolean-cast
     if (!fiatMode && amount <= 0) {
-      toast.error('Fund more than 0 ETH');
+      toast.error('Cannot fund with 0 ETH');
       return;
     }
     if (fiatMode && usdInput <= 0) {
-      toast.error('Fund more than 0 USD');
+      toast.error('Cannot fund with 0 USD');
       return;
     }
     const fiatToETH = parseEther(
@@ -172,7 +172,7 @@ export default function DonateForm({
 
   useEffect(() => {
     if (isConfirmedTxn) {
-      toast.success('Successfully funded campaign');
+      toast.success('Campaign funded');
 
       closeBtnRef.current?.click();
       // router.push(`/campaigns/${campaign.campaign_id}`);

@@ -35,7 +35,7 @@ export const AccountForm = () => {
 
   const onSubmit: SubmitHandler<TAccount> = async (data) => {
     if (!address) {
-      toast.error('Wallet not connected.');
+      toast.error('Wallet not connected');
       router.refresh();
       return;
     }
@@ -66,7 +66,7 @@ export const AccountForm = () => {
           if (!res) throw new Error();
 
           setUser(res);
-          toast.success('Account updated. Connect Wallet');
+          toast.success('Account updated');
           router.push('/');
         }
       } else {
@@ -89,14 +89,14 @@ export const AccountForm = () => {
         const user = create_user.user;
         if (user.ethAddress) {
           setUser(user);
-          toast.success('Account created. Connect Wallet');
+          toast.success('Account created');
           router.push('/');
         }
       }
     } catch (error) {
       setIsLoading(false);
       console.error(error);
-      toast.error('We could not create your account.');
+      toast.error('We could not create your account');
       router.refresh();
     }
   };
