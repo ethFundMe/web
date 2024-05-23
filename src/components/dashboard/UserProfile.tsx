@@ -52,7 +52,7 @@ export const UserProfile = ({
       token,
     })
       .then(() => {
-        toast.success('Updated profile picture');
+        toast.success('Profile picture updated');
         router.refresh();
         if (closePfpRef.current) {
           closePfpRef.current.click();

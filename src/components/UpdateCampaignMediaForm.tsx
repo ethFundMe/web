@@ -152,7 +152,7 @@ export default function UpdateCampaignMediaForm({
     } else {
       deleteFromCloudinary(item)
         .then(() => {
-          toast.success('Deleted successfully');
+          toast.success('Image deleted');
           setOtherPreview((prev) => prev.filter((_) => _ !== item));
         })
         .catch(() => toast.error('Failed to delete image'));

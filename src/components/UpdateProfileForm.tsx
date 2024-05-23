@@ -157,7 +157,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           setFormStatus(null);
           setUser(data);
           form.reset();
-          toast.success('Profile updated successfully');
+          toast.success('Profile updated');
           if (!creatorFeeEditMade) {
             router.push(`/dashboard/${data.ethAddress}`);
           }
@@ -171,7 +171,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   }
   useEffect(() => {
     if (isConfirmedTxn) {
-      toast.success('Profile updated successfully');
+      toast.success('Profile updated');
       router.refresh();
       router.push(`/dashboard/${user.ethAddress}`);
     } else if (isError && writingError) {
