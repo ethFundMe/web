@@ -94,11 +94,11 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
 
     if (!scrollContainer || !scrollItem) return;
 
-    const containerRect = scrollContainer.getBoundingClientRect();
-    const childRect = scrollItem.getBoundingClientRect();
-    const scrollOffset = childRect.top - containerRect.top;
-
-    scrollContainer.scrollTo({ top: scrollOffset, behavior: 'smooth' });
+    // Scroll to the bottom smoothly
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight,
+      behavior: 'smooth',
+    });
   }, [comments, scrollContainerRef, scrollItemRef]);
 
   return (

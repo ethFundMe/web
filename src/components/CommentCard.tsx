@@ -106,7 +106,7 @@ export const CommentCard = forwardRef<Ref, Props>(
               </Link>
             )}
           </div>
-          <p>{comment}</p>
+          <p className='line-clamp-4 whitespace-pre-wrap'>{comment}</p>
         </div>
 
         {(transaction_hash || isOwner) && (
