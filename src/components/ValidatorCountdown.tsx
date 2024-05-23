@@ -4,27 +4,30 @@ import { useCountdown } from '@/lib/hook/useCountdown';
 // import { publicClient } from './client'
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId } from '@/lib/constant';
-import { useEffect, useState } from 'react';
-import { createPublicClient, createWalletClient, custom, http } from 'viem';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  WalletClient,
+  createPublicClient,
+  createWalletClient,
+  custom,
+  http,
+} from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
 import { Button } from './ui/button';
-
-const publicClient = createPublicClient({
-  chain: ethChainId === 1 ? mainnet : sepolia,
-  transport: http(),
-});
-
-const walletClient = createWalletClient({
-  chain: mainnet,
-  transport: custom(window.ethereum!),
-});
 
 export const ValidatorCountdown = () => {
   const [jsonDate, setJsonDate] = useState('');
   const [expired, setExpired] = useState(false);
+  const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
   const [days, hours, minutes, seconds] = useCountdown(new Date(jsonDate));
 
+  const publicClient = createPublicClient({
+    chain: ethChainId === 1 ? mainnet : sepolia,
+    transport: http(),
+  });
+
   const diminsh = async () => {
+    if (!walletClient) return;
     const [account] = await walletClient.getAddresses();
     // const data = await walletClient.writeContract({
     //   address: process.env.NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS || '',
@@ -42,7 +45,7 @@ export const ValidatorCountdown = () => {
     await walletClient.writeContract(request);
   };
 
-  const getDfNextUpdate = async () => {
+  const getDfNextUpdate = useCallback(async () => {
     const data = await publicClient.readContract({
       address: process.env.NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS || '',
       abi: EthFundMe,
@@ -54,7 +57,17 @@ export const ValidatorCountdown = () => {
     console.log(typeof myDate);
     console.log(myDate.toJSON());
     return myDate.toJSON();
-  };
+  }, [publicClient]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const newWalletClient: WalletClient = createWalletClient({
+        chain: mainnet,
+        transport: custom(window.ethereum!),
+      });
+      setWalletClient(newWalletClient);
+    }
+  }, []);
 
   useEffect(() => {
     async function getDateString() {
@@ -66,7 +79,7 @@ export const ValidatorCountdown = () => {
       }
     }
     getDateString();
-  }, []);
+  }, [getDfNextUpdate]);
 
   // useEffectOnce(() => {
   //   if(days + hours + minutes + seconds <= 0) setExpired(true);
