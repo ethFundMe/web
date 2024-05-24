@@ -203,7 +203,7 @@ export default async function CampaignPage({
                   )}
                 </div>
 
-                <div>
+                <div className='text-neutral-500'>
                   <p className={TextSizeStyles.caption}>Organized On</p>
                   <p className='font-semibold'>
                     {dayjs(campaign.created_at).format('Do MMM, YYYY')}
