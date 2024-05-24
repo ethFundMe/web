@@ -168,7 +168,7 @@ export const HomepageHeader = () => {
                   className='group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
                 >
                   <span className='transition-all duration-200 ease-in sm:group-hover:-translate-x-3'>
-                    Donate now
+                    Explore
                   </span>
                   <span className='-right-8 top-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100 sm:absolute sm:-translate-y-1/2'>
                     <FaEthereum />

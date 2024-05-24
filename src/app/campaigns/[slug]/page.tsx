@@ -226,7 +226,7 @@ export default async function CampaignPage({
               )}
             >
               {campaignsToShow.length > 0
-                ? 'Related campaigns'
+                ? 'These might interest you'
                 : 'No related campaigns'}
             </h2>
 

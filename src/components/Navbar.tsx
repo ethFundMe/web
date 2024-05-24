@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { Bell, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { MdOutlineCampaign } from 'react-icons/md';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -63,61 +64,67 @@ const Navbar = () => {
           {isConnected && (
             <DropdownMenu>
               <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
-                {/* <svg data-src="https://s2.svgbox.net/octicons.svg?ic=bell-fill" width="32" height="32" color="#e4e4e4" /> */}
                 <Bell />
                 <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-rose-400 text-[10px] text-white'>
                   4
                 </p>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='max-w-md space-y-2 rounded-md border px-0 py-2 text-sm'>
-                <div className='flex items-center justify-between border-b p-2'>
-                  <p>Notifications</p>
-                  <button className='rounded-md bg-primary-default p-2 text-xs font-semibold text-white'>
-                    Mark all as read
-                  </button>
-                </div>
-                <DropdownMenuItem className='relative block w-full p-0'>
-                  <div className='flex gap-x-4 bg-primary-default/10'>
-                    {/* <div className='rounded-full !w-6 !h-6 bg-gray-500'></div> */}
-                    <div className='full border-l-4 border-primary-dark'>
-                      <p className='w-full px-2 text-right text-[10px]'>
-                        Today, 2:45pm
-                      </p>
-                      <div className='p-2 pl-6 pt-0'>
-                        <h3 className='text-sm font-semibold text-gray-400'>
-                          Campaign Funded
-                        </h3>
-                        <p className='text-xs'>
-                          Lorem ipsum, dolor sit amet consectetur adipisicing
-                          elit. Ipsam, consectetur. Quis, porro ducimus.
-                          Exercitationem harum hic aspernatur officiis nemo
-                          suscipit quia!
+              <DropdownMenuContent className='max-h-md min-h-96 min-w-80 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm'>
+                <>
+                  <div className='flex items-center justify-between border-b p-2'>
+                    <p>Notifications</p>
+                    <button className='rounded-md p-2 text-xs font-semibold text-primary-default'>
+                      Mark all as read
+                    </button>
+                  </div>
+                  <DropdownMenuItem className='relative block w-full border-b p-0'>
+                    <div className='flex items-center gap-x-2'>
+                      <div className='pl-3'>
+                        {MdOutlineCampaign({ size: 22 })}
+                      </div>
+                      <div className='full'>
+                        <p className='w-full pr-2 text-right text-[10px]'>
+                          Today, 2:45pm
                         </p>
+                        <div className='p-2 pt-0'>
+                          <h3 className='text-sm font-semibold text-gray-400'>
+                            Campaign Funded
+                          </h3>
+                          <p className='text-xs'>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing
+                            elit. Ipsam, consectetur.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem className='relative block w-full p-0'>
-                  <div className='flex gap-x-4 bg-primary-default/10'>
-                    {/* <div className='rounded-full !w-6 !h-6 bg-gray-500'></div> */}
-                    <div className='full border-l-4 border-primary-dark'>
-                      <p className='w-full px-2 text-right text-[10px]'>
-                        Today, 2:45pm
-                      </p>
-                      <div className='p-2 pl-6 pt-0'>
-                        <h3 className='text-sm font-semibold text-gray-400'>
-                          Campaign Funded
-                        </h3>
-                        <p className='text-xs'>
-                          Lorem ipsum, dolor sit amet consectetur adipisicing
-                          elit. Ipsam, consectetur. Quis, porro ducimus.
-                          Exercitationem harum hic aspernatur officiis nemo
-                          suscipit quia!
+                  </DropdownMenuItem>
+                  {/* <DropdownMenuItem className='relative block w-full p-0 border-b'>
+                    <div className='flex gap-x-4'>
+                      <div className='full'>
+                        <p className='w-full px-2 text-right text-[10px]'>
+                          Today, 2:45pm
                         </p>
+                        <div className='p-2 pl-6 pt-0'>
+                          <h3 className='text-sm font-semibold text-gray-400'>
+                            Campaign Funded
+                          </h3>
+                          <p className='text-xs'>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing
+                            elit. Ipsam, consectetur. Quis, porro ducimus.
+                            Exercitationem harum hic aspernatur officiis nemo
+                            suscipit quia!
+                          </p>
+                        </div>
                       </div>
                     </div>
+                  </DropdownMenuItem> */}
+                </>
+                {/* <div className='w-full flex justify-center items-center h-full'>
+                  <div className='flex justify-center items-center flex-col h-full w-full'>
+                    <Inbox size={60} color="#000" strokeWidth={0.75} absoluteStrokeWidth className='p-3 rounded-full bg-gray-100'/>
+                      <h4 className='pt-2 '>No new notifications</h4>
                   </div>
-                </DropdownMenuItem>
+                </div> */}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
