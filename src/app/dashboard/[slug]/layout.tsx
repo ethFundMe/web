@@ -19,7 +19,6 @@ export default async function DashboardLayout({
           <DashboardSidebar userAddress={slug as `0x${string}`} />
 
           {children}
-          {/* <MobileDashboardMenu userAddress={slug as `0x${string}`} /> */}
         </div>
       </Container>
     </div>
