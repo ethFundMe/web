@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { forwardRef, useRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { IoEllipsisVertical, IoTrash } from 'react-icons/io5';
 import { formatEther } from 'viem';
@@ -52,12 +52,40 @@ export const CommentCard = forwardRef<Ref, Props>(
     },
     ref
   ) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const closeRef = useRef<HTMLButtonElement>(null);
+
+    const textRef = useRef<HTMLParagraphElement>(null);
+
     const formatDonateAmt = () => {
       if (!amount) return;
       return formatEther(BigInt(amount));
     };
     const donatedAmt = formatDonateAmt();
-    const closeRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+      function handleExpand() {
+        if (!textRef.current) return;
+        const lineHeight = parseInt(
+          window.getComputedStyle(textRef.current).lineHeight,
+          10
+        );
+        const maxHeight = lineHeight * 3;
+
+        if (textRef.current.scrollHeight > maxHeight) {
+          setIsOverflowing(true);
+        } else {
+          setIsOverflowing(false);
+        }
+      }
+
+      handleExpand();
+
+      window.addEventListener('resize', () => handleExpand());
+
+      return () => window.removeEventListener('resize', () => handleExpand());
+    }, [textRef]);
 
     return (
       <motion.div
@@ -100,13 +128,25 @@ export const CommentCard = forwardRef<Ref, Props>(
                 className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
               >
                 <FaEthereum />
-                {/* <span>{formatEther(BigInt(amt))}</span> */}
-
                 <span>{donatedAmt}</span>
               </Link>
             )}
           </div>
-          <p className='line-clamp-4 whitespace-pre-wrap'>{comment}</p>
+          <p
+            ref={textRef}
+            className={cn('whitespace-pre-wrap', !isExpanded && 'line-clamp-4')}
+          >
+            {comment}
+          </p>
+
+          {isOverflowing && (
+            <small
+              onClick={() => setIsExpanded((prev) => !prev)}
+              className='cursor-pointer text-slate-400'
+            >
+              {isExpanded ? 'Read less' : 'Read more...'}
+            </small>
+          )}
         </div>
 
         {(transaction_hash || isOwner) && (
@@ -136,7 +176,7 @@ export const CommentCard = forwardRef<Ref, Props>(
                       height={12}
                       alt='etherscan'
                     />
-                    <small className='text-[10px]'>View transaction</small>
+                    <small className='text-xs'>View transaction</small>
                   </Link>
                 </DropdownMenuItem>
               )}
@@ -145,7 +185,7 @@ export const CommentCard = forwardRef<Ref, Props>(
                   <Dialog>
                     <DialogTrigger className='flex items-center gap-2 px-2 py-1 hover:bg-slate-100'>
                       <IoTrash size={12} className='text-red-500' />
-                      <small className='text-[10px]'>Delete comment</small>
+                      <small className='text-xs'>Delete comment</small>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader className='mb-2 space-y-1'>
