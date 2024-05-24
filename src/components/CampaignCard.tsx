@@ -7,7 +7,6 @@ import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import Link from 'next/link';
-import { useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
 dayjs.extend(advancedFormat);
@@ -24,8 +23,6 @@ export const CampaignCard = ({
 }) => {
   const variantStyles = cn(!inSidebar ? '' : 'lg:border-none');
   const user = campaign.user;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const images = [campaign.banner_url, ...campaign.media_links];
 
   return (
     <Link
@@ -46,7 +43,7 @@ export const CampaignCard = ({
       >
         <ImageWithFallback
           className='h-full w-full object-cover transition-all duration-300 ease-in group-hover:scale-[1.03]'
-          src={images[currentIndex] ?? '/images/broken.jpg'}
+          src={campaign.banner_url ?? '/images/broken.jpg'}
           height={240}
           width={300}
           alt='...'
@@ -103,7 +100,7 @@ export const CampaignCard = ({
           </div>
         </div>
 
-        <div className='flex flex-wrap justify-between md:gap-2'>
+        <div className='flex flex-wrap justify-between'>
           <p className={cn(TextSizeStyles.small, 'hidden')}>
             Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
@@ -120,28 +117,6 @@ export const CampaignCard = ({
           )}
         </div>
       </Link>
-
-      <div
-        onClick={(e) => e.preventDefault()}
-        className='hidden items-center justify-center gap-1 pt-2 opacity-50 transition-all duration-100 ease-in hover:opacity-100 sm:flex'
-      >
-        {images.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={(e) => {
-              e.preventDefault();
-              // e.stopPropagation();
-              setCurrentIndex(idx);
-            }}
-            className={cn(
-              'h-2.5 w-2.5 rounded-full border-transparent',
-              idx === currentIndex ? 'bg-blue-600' : 'bg-slate-300'
-            )}
-          ></button>
-        ))}
-      </div>
-
-      {/* <DonateXShareButtons campaign={campaign} /> */}
     </Link>
   );
 };
