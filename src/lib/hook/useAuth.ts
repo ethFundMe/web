@@ -66,12 +66,12 @@ export const useAuth = () => {
 
         if (err.error.name === 'INVALID_ETHEREUM_ADDRESS') {
           disconnect();
-          toast.error('Not a valid wallet address.');
+          toast.error('Not a valid wallet address');
           return;
         }
 
         disconnect();
-        toast.error('Wallet connection failed. Retry.');
+        toast.error('Wallet connection failed');
         return;
       }
     },

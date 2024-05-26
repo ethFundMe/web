@@ -148,9 +148,9 @@ export function seoProfile(
   isVerified: boolean
 ) {
   const name = fullName.toUpperCase();
-  //isVerified = true;
-  const isVerifX = 98;
-  const isVeriff = 240;
+  // isVerified = true;
+  const isVerifX = 91;
+  const isVeriff = 245;
   const nameY = '250';
   const profileY = '70';
   let nameX = '186';

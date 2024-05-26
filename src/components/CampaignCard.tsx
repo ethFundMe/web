@@ -100,7 +100,7 @@ export const CampaignCard = ({
           </div>
         </div>
 
-        <div className='flex flex-wrap justify-between md:gap-2'>
+        <div className='flex flex-wrap justify-between'>
           <p className={cn(TextSizeStyles.small, 'hidden')}>
             Organized On{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
@@ -117,8 +117,6 @@ export const CampaignCard = ({
           )}
         </div>
       </Link>
-
-      {/* <DonateXShareButtons campaign={campaign} /> */}
     </Link>
   );
 };

@@ -18,8 +18,7 @@ export default function UserCampaignCard({
   variant?: 'user' | 'viewer';
 }) {
   return (
-    <Link
-      href={`/campaigns/${campaign.campaign_id}`}
+    <div
       className={cn(
         'group group flex flex-col overflow-hidden rounded-md border border-slate-300',
         campaign.flagged && 'grayscale'
@@ -71,9 +70,12 @@ export default function UserCampaignCard({
 
           {variant === 'viewer' && <DonateBtn campaign={campaign} />}
 
-          <ShareLinkBtn campaign={campaign} />
+          <ShareLinkBtn
+            campaign={campaign}
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
