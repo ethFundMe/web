@@ -235,7 +235,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           <FormField
             control={form.control}
             name='creatorFee'
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Creator fee (%)</FormLabel>
                 <FormControl>
@@ -246,7 +246,9 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   /> */}
                   <div className='flex items-center gap-x-3'>
-                    <p className='w-14 text-sm'>{watchedAmount}%</p>
+                    <div className='w-14 text-sm'>
+                      <Input {...field} />%
+                    </div>
                     <Slider
                       onValueChange={(e) => {
                         form.setValue('creatorFee', e[0] as number);

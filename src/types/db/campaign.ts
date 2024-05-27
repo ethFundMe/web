@@ -64,7 +64,7 @@ export interface UserEarning {
     profileUrl: string;
   };
   amount: string;
-  rewardType: 'campaign_creation' | 'funding';
+  rewardType: 'campaign_creation' | 'funding' | 'validator';
   auto: boolean;
   transaction_hash: `0x${string}`;
   created_at: string;

@@ -26,7 +26,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           {children}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className='space-y-1.5'>
+        <DropdownMenuContent className='space-y-1.5 md:min-w-[300px]'>
           <DropdownMenuItem
             className='flex items-center gap-2'
             onClick={() => router.push(`/dashboard/${address}`)}
@@ -53,7 +53,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
 
           {/* <DropdownMenuSeparator /> */}
           <DropdownMenuItem
-            className='flex items-center gap-2'
+            className='flex items-center gap-2 text-red-500'
             onClick={() => disconnect()}
           >
             <LuUnlink />
