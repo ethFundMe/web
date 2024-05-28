@@ -272,6 +272,15 @@ export function getRelativeTime(date: Date): string {
   const currentDate = dayjs();
 
   const diffInDays = currentDate.diff(commentDate, 'day');
+  const diffInMinutes = currentDate.diff(commentDate, 'minute');
+
+  if (diffInMinutes < 1) {
+    return 'Just now';
+  }
+
+  if (diffInMinutes <= 5) {
+    return `${diffInMinutes} minutes ago`;
+  }
 
   if (diffInDays === 0) {
     return `Today, ${commentDate.format('h:mm a')}`;
@@ -285,11 +294,11 @@ export function getRelativeTime(date: Date): string {
     return `Last week, ${commentDate.format('h:mm a')}`;
   }
 
-  if (diffInDays <= 30) {
-    return `Last month, ${commentDate.format('h:mm a')}`;
-  }
+  // if (diffInDays <= 30) {
+  //   return `Last month, ${commentDate.format('h:mm a')}`;
+  // }
 
-  return `${commentDate.format('h:mm a')} - ${commentDate.format(
-    'DD/MM/YYYY'
+  return `${commentDate.toDate().toLocaleDateString()} - ${commentDate.format(
+    'h:mm a'
   )}`;
 }

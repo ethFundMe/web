@@ -287,3 +287,9 @@ export const TagsWithIds: { id: number; name: CampaignTags }[] = [
     name: CampaignTags['Technology and Innovation'],
   },
 ];
+
+export const ShortLabels: Record<string, string> = {
+  'Created campaign': 'CC',
+  'Funded campaign': 'FC',
+  Validator: 'Diminish',
+};

@@ -169,7 +169,9 @@ export default async function CampaignPage({
                     href={`/profile/${campaign.creator}`}
                     className={cn(
                       'flex flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200',
-                      campaign.creator !== campaign.beneficiary && 'w-full'
+                      campaign.creator === campaign.beneficiary
+                        ? 'w-full'
+                        : 'flex-1 sm:flex-none'
                     )}
                   >
                     <div className='relative h-[50px] w-[50px] flex-shrink-0'>
@@ -200,11 +202,11 @@ export default async function CampaignPage({
                     </div>
                   </Link>
 
-                  {campaign.creator !== campaign.beneficiary ? (
-                    beneficiary ? (
+                  {campaign.creator !== campaign.beneficiary &&
+                    (beneficiary ? (
                       <Link
                         href={`/profile/${beneficiary.ethAddress}`}
-                        className='flex flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200'
+                        className='flex flex-1 flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:flex-none'
                       >
                         <div className='relative h-[50px] w-[50px] flex-shrink-0'>
                           <ImageWithFallback
@@ -246,10 +248,7 @@ export default async function CampaignPage({
                           </p>
                         </div>
                       </div>
-                    )
-                  ) : (
-                    ''
-                  )}
+                    ))}
                 </div>
 
                 <div className='text-neutral-500'>
