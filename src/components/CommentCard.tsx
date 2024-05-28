@@ -1,8 +1,7 @@
 'use client';
 
 import { Comment } from '@/lib/types';
-import { cn } from '@/lib/utils';
-import dayjs from 'dayjs';
+import { cn, getRelativeTime } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -115,8 +114,9 @@ export const CommentCard = forwardRef<Ref, Props>(
                   {fullName}
                 </p>
                 <small className='text-[10px]'>
-                  {new Date(created_at).toLocaleDateString()}
-                  {dayjs(new Date(created_at)).format(' . HH : mm a')}
+                  {/* {new Date(created_at).toLocaleDateString()} */}
+                  {/* {dayjs(new Date(created_at)).format(' . HH : mm a')} */}
+                  {getRelativeTime(created_at)}
                 </small>
               </div>
             </div>
@@ -152,7 +152,7 @@ export const CommentCard = forwardRef<Ref, Props>(
         {(transaction_hash || isOwner) && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className='absolute right-0 top-0 cursor-pointer p-2'
+              className='absolute right-0 top-0 cursor-pointer p-2 focus:outline-none'
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -183,7 +183,7 @@ export const CommentCard = forwardRef<Ref, Props>(
               {isOwner && (
                 <DropdownMenuItem asChild>
                   <Dialog>
-                    <DialogTrigger className='flex items-center gap-2 px-2 py-1 hover:bg-slate-100'>
+                    <DialogTrigger className='flex items-center gap-2 px-2 py-1 hover:bg-slate-100 focus:outline-none'>
                       <IoTrash size={12} className='text-red-500' />
                       <small className='text-xs'>Delete comment</small>
                     </DialogTrigger>

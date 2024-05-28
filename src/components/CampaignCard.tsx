@@ -63,18 +63,30 @@ export const CampaignCard = ({
         </p>
       </div>
 
-      <Link
-        href={`/profile/${campaign.creator}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          // router.push(`/profile/${campaign.creator}`);
-        }}
-        className={cn(
-          'flex flex-col-reverse justify-between gap-2',
-          campaign.flagged && 'grayscale'
+      <div className='space-y-2'>
+        {campaign.creator !== campaign.beneficiary && (
+          <p
+            className={cn(TextSizeStyles.small, 'text-primary-default')}
+            onClick={(e) => e.preventDefault()}
+          >
+            Organized for{' '}
+            <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
+              {formatWalletAddress(campaign.beneficiary, 'short')}
+            </span>
+          </p>
         )}
-      >
-        <div className='flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200'>
+
+        <Link
+          href={`/profile/${campaign.creator}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            // router.push(`/profile/${campaign.creator}`);
+          }}
+          className={cn(
+            'flex w-full cursor-pointer items-center gap-4 rounded-md bg-slate-100 p-3 hover:bg-slate-200',
+            campaign.flagged && 'grayscale'
+          )}
+        >
           <div className='relative h-[48px] w-[48px] flex-shrink-0'>
             <ImageWithFallback
               src={(user && user.profileUrl) ?? ''}
@@ -98,25 +110,8 @@ export const CampaignCard = ({
                 formatWalletAddress(campaign.creator as `0x${string}`)}
             </p>
           </div>
-        </div>
-
-        <div className='flex flex-wrap justify-between'>
-          <p className={cn(TextSizeStyles.small, 'hidden')}>
-            Organized On{' '}
-            <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {dayjs(campaign.created_at).format('Do MMM, YYYY')}
-            </span>
-          </p>
-          {campaign.creator !== campaign.beneficiary && (
-            <p className={cn(TextSizeStyles.small, 'text-primary-default')}>
-              Organized for{' '}
-              <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-                {formatWalletAddress(campaign.beneficiary, 'short')}
-              </span>
-            </p>
-          )}
-        </div>
-      </Link>
+        </Link>
+      </div>
     </Link>
   );
 };

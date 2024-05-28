@@ -250,8 +250,9 @@ export default function CreateCampaignForm() {
   }, [isConfirmedTxn, router, form]);
 
   useEffect(() => {
-    if (isError && error) {
-      let errorMsg = (error as BaseError).shortMessage || error.message;
+    if (isError || error) {
+      let errorMsg =
+        (error as BaseError).shortMessage || (error as BaseError).message;
 
       if (errorMsg === 'User rejected the request.') {
         errorMsg = 'Request rejected';

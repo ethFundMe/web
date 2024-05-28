@@ -9,11 +9,13 @@ import {
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import { BellPlus, Coins, History } from 'lucide-react';
+import { Coins, History } from 'lucide-react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { CiSquarePlus } from 'react-icons/ci';
+import { GiFairyWand } from 'react-icons/gi';
 import { isAddress } from 'viem';
 
 dayjs.extend(advancedFormat);
@@ -153,6 +155,7 @@ export default async function EarningsPage({
                   {earnings.map((earning, idx) => (
                     <li key={idx}>
                       <Link
+                        target='_blank'
                         href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
                         className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3'
                       >
@@ -166,7 +169,7 @@ export default async function EarningsPage({
                               <p className='text-sm'>
                                 {earning.rewardType === 'campaign_creation' && (
                                   <span className='flex items-center gap-1'>
-                                    <BellPlus size={16} />
+                                    <CiSquarePlus size={16} />
 
                                     <span>Create campaign</span>
                                   </span>
@@ -176,6 +179,14 @@ export default async function EarningsPage({
                                     <Coins size={16} />
 
                                     <span>Fund campaign</span>
+                                  </span>
+                                )}
+
+                                {earning.rewardType === 'validator' && (
+                                  <span className='flex items-center gap-1'>
+                                    <GiFairyWand size={16} />
+
+                                    <span>Diminish</span>
                                   </span>
                                 )}
                               </p>
@@ -190,10 +201,12 @@ export default async function EarningsPage({
                         </div>
 
                         <Image
+                          className='mt-1'
                           src='/images/etherscan.svg'
-                          width={17}
-                          height={17}
+                          width={16}
+                          height={16}
                           alt='etherscan'
+                          priority
                         />
                       </Link>
                     </li>

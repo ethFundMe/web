@@ -235,18 +235,26 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           <FormField
             control={form.control}
             name='creatorFee'
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Creator fee (%)</FormLabel>
                 <FormControl>
-                  {/* <Input
-                    type='number'
-                    placeholder='Enter your creator fee'
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  /> */}
-                  <div className='flex items-center gap-x-3'>
-                    <p className='w-14 text-sm'>{watchedAmount}%</p>
+                  <div className='flex items-center gap-3'>
+                    <div className='mr-2 flex w-14 flex-shrink-0 items-center gap-1 text-sm'>
+                      <Input
+                        className='hidden-arrows flex-shrink-0'
+                        type='number'
+                        disabled={field.disabled}
+                        ref={field.ref}
+                        max={30}
+                        min={0}
+                        name={field.name}
+                        onBlur={field.onBlur}
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                      <span className='block'>%</span>
+                    </div>
                     <Slider
                       onValueChange={(e) => {
                         form.setValue('creatorFee', e[0] as number);
@@ -254,7 +262,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                       value={[watchedAmount as unknown as number]}
                       min={0}
                       max={30}
-                      step={0.01}
+                      step={0.1}
                     />
                   </div>
                 </FormControl>
