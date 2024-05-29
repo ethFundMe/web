@@ -248,6 +248,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                         ref={field.ref}
                         max={30}
                         min={0}
+                        step={0.1}
                         name={field.name}
                         onBlur={field.onBlur}
                         value={field.value}

@@ -297,6 +297,21 @@ export default function CreateCampaignForm() {
     }
   }, [address, form]);
 
+  const validateFormData = () => {
+    const { errors } = form.formState;
+    if (Object.keys(errors).length > 0) {
+      const currentError = Object.values(errors)[0];
+      if (currentError) {
+        toast.error(currentError?.message?.toString() || '', {
+          position: 'top-right',
+        });
+      }
+      // Object.values(errors).forEach((error) => {
+      //   toast.error(error?.message?.toString());
+      // });
+    }
+  };
+
   return (
     <Form {...form}>
       <form
@@ -611,6 +626,9 @@ export default function CreateCampaignForm() {
 
         <Button
           type='submit'
+          onClick={() => {
+            validateFormData();
+          }}
           disabled={
             submitStatus !== null || isPending || isConfirmingTxn || !address
           }

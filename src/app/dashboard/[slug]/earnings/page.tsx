@@ -83,8 +83,9 @@ export default async function EarningsPage({
               All Earnings
             </h2>
             <p>
-              Your FUNDME tokens are sent to you immediately. The amount shown
-              below is the total sent based on your activities.
+              Your FUNDME tokens are automatically sent to you after each
+              activity. The amount shown below represents the total tokens you
+              have received so far based on all your activities.
             </p>
 
             <div className='flex flex-wrap items-center justify-between'>
