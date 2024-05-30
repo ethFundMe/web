@@ -71,7 +71,7 @@ export const CampaignCard = ({
           >
             Organized for{' '}
             <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {formatWalletAddress(campaign.beneficiary, 'short')}
+              {campaign.beneficiary}
             </span>
           </p>
         )}
