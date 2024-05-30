@@ -13,6 +13,18 @@ export type DonationStep = {
   description: string;
 };
 
+export type Notification = {
+  eth_address: string;
+  description: string;
+  notification_type: 'FUNDING' | 'TOKEN REWARDS' | 'CAMPAIGN';
+  url: string;
+  id?: string | undefined;
+  created_at?: Date | null | undefined;
+  updated_at?: Date | undefined;
+  hash?: string | undefined;
+  viewed?: boolean | undefined;
+};
+
 export type CampaignType = {
   image: string;
   title: 'Yourself' | 'Others';

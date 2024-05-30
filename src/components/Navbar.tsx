@@ -11,6 +11,7 @@ import { Bell, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MdOutlineCampaign } from 'react-icons/md';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -25,12 +26,49 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
+  const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
+  const { data, error, isLoading } = useSWR(
+    `${apiBaseUrl}/api/notifications/${user?.ethAddress}`,
+    fetcher
+  );
+  console.log(data);
+  console.log(error);
 
+  function formatDateToHumanReadable(dateString: Date): string {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const timeDifference = now.getTime() - date.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    // const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+
+    const formatTime = (date: Date): string => {
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const period = hours >= 12 ? 'pm' : 'am';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+      return `${formattedHours}:${formattedMinutes}${period}`;
+    };
+
+    if (daysDifference === 0) {
+      return `today, ${formatTime(date)}`;
+    } else if (daysDifference === 1) {
+      return `yesterday, ${formatTime(date)}`;
+    } else {
+      return `${daysDifference} days ago`;
+    }
+  }
+
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
   return (
     <motion.nav
       className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
@@ -77,47 +115,31 @@ const Navbar = () => {
                       Mark all as read
                     </button>
                   </div>
-                  <DropdownMenuItem className='relative block w-full border-b p-0'>
-                    <div className='flex items-center gap-x-2'>
-                      <div className='pl-3'>
-                        {MdOutlineCampaign({ size: 22 })}
-                      </div>
-                      <div className='full'>
-                        <p className='w-full pr-2 text-right text-[10px]'>
-                          Today, 2:45pm
-                        </p>
-                        <div className='p-2 pt-0'>
-                          <h3 className='text-sm font-semibold text-gray-400'>
-                            Campaign Funded
-                          </h3>
-                          <p className='text-xs'>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit. Ipsam, consectetur.
+                  {data.notification?.map((item, index) => (
+                    <DropdownMenuItem
+                      key={index}
+                      className='relative block w-full border-b p-0'
+                    >
+                      <div className='flex items-center gap-x-2'>
+                        <div className='pl-3'>
+                          {MdOutlineCampaign({ size: 22 })}
+                        </div>
+                        <div className='full'>
+                          <p className='w-full pr-2 text-right text-[10px]'>
+                            {formatDateToHumanReadable(
+                              item?.created_at as Date
+                            )}
                           </p>
+                          <div className='p-2 pt-0'>
+                            <h3 className='text-sm font-semibold capitalize text-gray-400'>
+                              {item.notification_type}
+                            </h3>
+                            <p className='text-xs'>{item.description}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </DropdownMenuItem>
-                  {/* <DropdownMenuItem className='relative block w-full p-0 border-b'>
-                    <div className='flex gap-x-4'>
-                      <div className='full'>
-                        <p className='w-full px-2 text-right text-[10px]'>
-                          Today, 2:45pm
-                        </p>
-                        <div className='p-2 pl-6 pt-0'>
-                          <h3 className='text-sm font-semibold text-gray-400'>
-                            Campaign Funded
-                          </h3>
-                          <p className='text-xs'>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit. Ipsam, consectetur. Quis, porro ducimus.
-                            Exercitationem harum hic aspernatur officiis nemo
-                            suscipit quia!
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </DropdownMenuItem> */}
+                    </DropdownMenuItem>
+                  ))}
                 </>
                 {/* <div className='w-full flex justify-center items-center h-full'>
                   <div className='flex justify-center items-center flex-col h-full w-full'>
