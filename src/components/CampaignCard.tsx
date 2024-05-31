@@ -8,6 +8,12 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import Link from 'next/link';
 import ImageWithFallback from './ImageWithFallback';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 dayjs.extend(advancedFormat);
 
@@ -63,17 +69,33 @@ export const CampaignCard = ({
         </p>
       </div>
 
-      <div className='space-y-2'>
+      <div className='w-full space-y-2'>
         {campaign.creator !== campaign.beneficiary && (
-          <p
+          <div
             className={cn(TextSizeStyles.small, 'text-primary-default')}
             onClick={(e) => e.preventDefault()}
           >
             Organized for{' '}
-            <span className={cn(TextSizeStyles.caption, 'font-semibold')}>
-              {formatWalletAddress(campaign.beneficiary, 'short')}
-            </span>
-          </p>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <p
+                    // title={campaign.beneficiary}
+                    className={cn(
+                      TextSizeStyles.caption,
+                      'line-clamp-1 block w-full font-semibold'
+                    )}
+                  >
+                    {formatWalletAddress(campaign.beneficiary)}
+                  </p>
+                </TooltipTrigger>
+
+                <TooltipContent>
+                  <p>{campaign.beneficiary}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         )}
 
         <Link
