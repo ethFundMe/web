@@ -1,15 +1,17 @@
 'use client';
 
 import { NAVBARROUTES } from '@/lib/constants';
+import { Notification } from '@/lib/types';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useModalStore } from '@/store/modal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
-import { Bell, ChevronDown } from 'lucide-react';
+import { Bell, ChevronDown, Inbox } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { MdOutlineCampaign } from 'react-icons/md';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
@@ -32,11 +34,11 @@ const Navbar = () => {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
+  const router = useRouter();
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
-  const { data, error, isLoading } = useSWR(
-    `${apiBaseUrl}/api/notifications/${user?.ethAddress}`,
-    fetcher
-  );
+  const { data, error } = useSWR<{
+    notification: Notification[];
+  }>(`${apiBaseUrl}/api/notifications/${user?.ethAddress}`, fetcher);
   console.log(data);
   console.log(error);
 
@@ -66,9 +68,53 @@ const Navbar = () => {
       return `${daysDifference} days ago`;
     }
   }
-
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  const viewNotification = async ({
+    id,
+    eth_address,
+  }: {
+    id: string;
+    eth_address: `0x${string}`;
+  }) => {
+    try {
+      const res = await fetch(
+        `${apiBaseUrl}/api/notifications/${eth_address}/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const resData = await res.json();
+      console.log(resData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const viewAllNotification = async ({
+    eth_address,
+  }: {
+    eth_address: `0x${string}`;
+  }) => {
+    try {
+      const res = await fetch(
+        `${apiBaseUrl}/api/view/notifications/${user?.ethAddress}/all`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({ eth_address }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const resData = await res.json();
+      console.log(resData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>loading...</div>;
   return (
     <motion.nav
       className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
@@ -103,50 +149,108 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
                 <Bell />
-                <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-rose-400 text-[10px] text-white'>
-                  4
+                <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                  {data?.notification?.length}
                 </p>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='max-h-md min-h-96 min-w-80 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm'>
-                <>
-                  <div className='flex items-center justify-between border-b p-2'>
-                    <p>Notifications</p>
-                    <button className='rounded-md p-2 text-xs font-semibold text-primary-default'>
-                      Mark all as read
-                    </button>
-                  </div>
-                  {data.notification?.map((item, index) => (
-                    <DropdownMenuItem
-                      key={index}
-                      className='relative block w-full border-b p-0'
-                    >
-                      <div className='flex items-center gap-x-2'>
-                        <div className='pl-3'>
-                          {MdOutlineCampaign({ size: 22 })}
-                        </div>
-                        <div className='full'>
-                          <p className='w-full pr-2 text-right text-[10px]'>
-                            {formatDateToHumanReadable(
-                              item?.created_at as Date
-                            )}
-                          </p>
-                          <div className='p-2 pt-0'>
-                            <h3 className='text-sm font-semibold capitalize text-gray-400'>
-                              {item.notification_type}
-                            </h3>
-                            <p className='text-xs'>{item.description}</p>
+              <DropdownMenuContent
+                className={`${
+                  data?.notification.length === 0
+                    ? 'flex flex-col items-center justify-center'
+                    : ''
+                } max-h-96 min-h-96 min-w-72 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm`}
+              >
+                {data?.notification.length !== 0 ? (
+                  <>
+                    <div className='flex items-center justify-between border-b p-2 px-3'>
+                      <p>Notifications</p>
+                      <button
+                        onClick={() =>
+                          viewAllNotification({
+                            eth_address: user?.ethAddress as `0x${string}`,
+                          })
+                        }
+                        className='rounded-md p-2 text-xs font-semibold text-primary-default'
+                      >
+                        Mark all as read
+                      </button>
+                    </div>
+                    {data?.notification?.map((item, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        className='relative block w-full border-b p-0'
+                      >
+                        <Link
+                          href={item.url}
+                          onClick={() => {
+                            viewNotification({
+                              id: item.id as string,
+                              eth_address: item.eth_address as `0x${string}`,
+                            });
+                            router.push(item.url);
+                          }}
+                          className='flex w-full items-center gap-x-2 border-l-4 border-[#042D42]'
+                        >
+                          {item.notification_type === 'CAMPAIGN' && (
+                            <div className='pl-3'>
+                              {MdOutlineCampaign({ size: 22 })}
+                            </div>
+                          )}
+                          {item.notification_type === 'FUNDING' && (
+                            <div className='pl-3'>
+                              {
+                                <img
+                                  src='/images/fund.png'
+                                  alt='fund'
+                                  className='w-6'
+                                />
+                              }
+                            </div>
+                          )}
+                          {item.notification_type === 'TOKEN REWARDS' && (
+                            <div className='pl-3'>
+                              {
+                                <img
+                                  src='/images/eth-logo.png'
+                                  alt='fund'
+                                  className='w-6'
+                                />
+                              }
+                            </div>
+                          )}
+                          <div className='w-full pr-4 pt-1'>
+                            <p className='w-full text-right text-[10px]'>
+                              {formatDateToHumanReadable(
+                                item?.created_at as Date
+                              )}
+                            </p>
+                            <div className='p-2 pt-0'>
+                              <h3 className='text-sm font-semibold capitalize text-gray-400'>
+                                {item.notification_type}
+                              </h3>
+                              <p className='whitespace-nowrap text-xs'>
+                                {item.description}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </>
-                {/* <div className='w-full flex justify-center items-center h-full'>
-                  <div className='flex justify-center items-center flex-col h-full w-full'>
-                    <Inbox size={60} color="#000" strokeWidth={0.75} absoluteStrokeWidth className='p-3 rounded-full bg-gray-100'/>
-                      <h4 className='pt-2 '>No new notifications</h4>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                ) : (
+                  <div className='inset-center grid w-full place-items-center'>
+                    <Inbox
+                      size={60}
+                      color='#000'
+                      strokeWidth={0.75}
+                      absoluteStrokeWidth
+                      className='rounded-full bg-gray-100 p-3'
+                    />
+                    <h4 className='w-full pt-2 text-center'>
+                      No new notifications
+                    </h4>
                   </div>
-                </div> */}
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}

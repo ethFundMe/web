@@ -12,7 +12,6 @@ export type ButtonStyles = {
   wide: string;
   variant: Record<ButtonVariant, string>;
 };
-
 export type ButtonProps = React.ComponentProps<'button'> & {
   size?: ButtonSize;
   wide?: boolean;
