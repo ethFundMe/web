@@ -168,13 +168,13 @@ export default async function CampaignPage({
                   <Link
                     href={`/profile/${campaign.creator}`}
                     className={cn(
-                      'flex flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200',
+                      'flex flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:gap-4',
                       campaign.creator === campaign.beneficiary
                         ? 'w-full'
                         : 'flex-1 sm:flex-none'
                     )}
                   >
-                    <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                    <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
                       <ImageWithFallback
                         src={user.profileUrl ?? ''}
                         fallback='/images/user-pfp.png'
@@ -188,9 +188,15 @@ export default async function CampaignPage({
                       <>
                         <p className={TextSizeStyles.caption}>Organizer</p>
                         <p
+                          title={
+                            user?.fullName ??
+                            formatWalletAddress(
+                              campaign.creator as `0x${string}`
+                            )
+                          }
                           className={cn(
                             'font-semibold',
-                            'line-clamp-2 w-full max-w-[250px] font-semibold [word-break:break-all] sm:max-w-xs'
+                            'line-clamp-1 w-full max-w-[250px] font-semibold [word-break:break-all] sm:line-clamp-2 sm:max-w-xs'
                           )}
                         >
                           {user?.fullName ??
@@ -206,9 +212,9 @@ export default async function CampaignPage({
                     (beneficiary ? (
                       <Link
                         href={`/profile/${beneficiary.ethAddress}`}
-                        className='flex flex-1 flex-shrink-0 cursor-pointer items-center gap-4 rounded-md p-3 hover:bg-slate-200 sm:flex-none'
+                        className='flex flex-1 flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:flex-none sm:gap-4'
                       >
-                        <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+                        <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
                           <ImageWithFallback
                             src={beneficiary.profileUrl ?? ''}
                             fallback='/images/user-pfp.png'
