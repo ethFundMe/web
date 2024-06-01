@@ -41,6 +41,7 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { ScrollArea } from '../ui/scroll-area';
 import {
   Select,
@@ -427,7 +428,7 @@ export default function CreateCampaignForm() {
                     <>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger className='flex items-center gap-2 pb-2'>
+                          <TooltipTrigger className='hidden items-center gap-2 pb-2 md:flex'>
                             <span>Creator fees (%)</span>
                             <AiOutlineExclamationCircle />
                           </TooltipTrigger>
@@ -445,6 +446,28 @@ export default function CreateCampaignForm() {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
+
+                      <Popover>
+                        <PopoverTrigger
+                          className='flex items-center gap-2 pb-2 md:hidden'
+                          type='button'
+                        >
+                          <span>Creator fees (%)</span>
+                          <AiOutlineExclamationCircle />
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <p>
+                            Visit your{' '}
+                            <Link
+                              className='italic text-primary-default'
+                              href={`/dashboard/${address}/update-profile`}
+                            >
+                              dashboard
+                            </Link>{' '}
+                            if you wish to change your creator fee
+                          </p>
+                        </PopoverContent>
+                      </Popover>
                     </>
                   </FormLabel>
 

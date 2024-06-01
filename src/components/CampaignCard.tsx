@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import Link from 'next/link';
 import ImageWithFallback from './ImageWithFallback';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import {
   Tooltip,
   TooltipContent,
@@ -78,7 +79,7 @@ export const CampaignCard = ({
             Organized for{' '}
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger className='hidden md:block'>
                   <p
                     // title={campaign.beneficiary}
                     className={cn(
@@ -95,6 +96,23 @@ export const CampaignCard = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            <Popover>
+              <PopoverTrigger className='block md:hidden'>
+                <p
+                  // title={campaign.beneficiary}
+                  className={cn(
+                    TextSizeStyles.caption,
+                    'line-clamp-1 block w-full font-semibold'
+                  )}
+                >
+                  {formatWalletAddress(campaign.beneficiary)}
+                </p>
+              </PopoverTrigger>
+
+              <PopoverContent>
+                <p>{campaign.beneficiary}</p>
+              </PopoverContent>
+            </Popover>
           </div>
         )}
 

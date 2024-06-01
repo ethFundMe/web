@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Switch } from '../ui/switch';
 import {
   Tooltip,
@@ -162,7 +163,7 @@ export default function VerificationForm() {
                 <>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className='flex items-center gap-2 pb-1'>
+                      <TooltipTrigger className='hidden items-center gap-2 pb-1 md:flex'>
                         <span>Phone number</span>
                         <AiOutlineExclamationCircle />
                       </TooltipTrigger>
@@ -171,6 +172,15 @@ export default function VerificationForm() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
+                  <Popover>
+                    <PopoverTrigger className='flex items-center gap-2 pb-1 md:hidden'>
+                      <span>Phone number</span>
+                      <AiOutlineExclamationCircle />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <p>Example: +233551234567</p>
+                    </PopoverContent>
+                  </Popover>
                 </>
 
                 <FormControl>

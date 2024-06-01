@@ -247,7 +247,7 @@ export default function DonateForm({
                 required: 'Amount is required',
                 min: {
                   value: 0,
-                  message: 'Enter an amount larger than 0.001 ETH',
+                  message: 'Enter an amount larger than 0.0001 ETH',
                 },
               })}
               autoFocus
@@ -281,7 +281,7 @@ export default function DonateForm({
               }
               value={usdInput}
               onChange={(e) => {
-                setUsdInput(Number(e.target.value));
+                setUsdInput(e.target.valueAsNumber);
               }}
               autoFocus
               className='h-full w-full rounded-md border border-primary-default px-4 py-3 outline-0 placeholder:text-neutral-700'
