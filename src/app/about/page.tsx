@@ -33,7 +33,7 @@ export default function AboutPage() {
             </PGroup>
 
             <PGroup>
-              p<Heading>Our Mission</Heading>
+              <Heading>Our Mission</Heading>
               <p>
                 Our mission is to democratize the funding process, making it
                 accessible to innovators and creators worldwide, regardless of
