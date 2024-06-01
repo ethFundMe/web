@@ -67,9 +67,9 @@ export default function CreateCampaignForm() {
   const { user } = userStore();
 
   const [bannerPreview, setBannerPreview] = useState<null | string>(null);
-  const [imagesUploaded, setImagesUploaded] = useState<[boolean, boolean]>([
-    false,
-    false,
+  const [imagesUploaded, setImagesUploaded] = useState<[string, string[]]>([
+    '',
+    [],
   ]);
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
     null
@@ -133,7 +133,7 @@ export default function CreateCampaignForm() {
       tag,
       ytLink,
     } = data;
-    if (isPending || isConfirmingTxn) return;
+    setSubmitStatus('Creating campaign');
 
     if (!isAddress(String(beneficiaryAddress))) {
       return toast.error(`Address not valid ${beneficiaryAddress}`);
@@ -147,12 +147,12 @@ export default function CreateCampaignForm() {
 
         if (bannerUploadUrl && bannerUploadUrl.length > 0) {
           setSubmitStatus(null);
-          setImagesUploaded([true, imagesUploaded[1]]);
+          setImagesUploaded([bannerUploadUrl[0], imagesUploaded[1]]);
           // toast.success('Banner uploaded');
           return bannerUploadUrl;
         } else {
           setSubmitStatus(null);
-          setImagesUploaded([false, imagesUploaded[1]]);
+          setImagesUploaded(['', imagesUploaded[1]]);
           throw new Error('Failed to upload banner');
         }
       }
@@ -160,7 +160,7 @@ export default function CreateCampaignForm() {
     }
 
     async function uploadOtherImages() {
-      if (otherImgsPrepared && !imagesUploaded[1]) {
+      if (otherImgsPrepared && imagesUploaded[1].length === 0) {
         setSubmitStatus('Uploading other images');
 
         const OIUploadUrl = await uploadToCloudinary(
@@ -169,13 +169,13 @@ export default function CreateCampaignForm() {
 
         if (OIUploadUrl && OIUploadUrl.length > 0) {
           setSubmitStatus(null);
-          setImagesUploaded([imagesUploaded[0], true]);
+          setImagesUploaded([imagesUploaded[0], OIUploadUrl]);
           // toast.success('Other images uploaded');
           return OIUploadUrl;
         } else {
           setSubmitStatus(null);
           toast.error('Failed to upload other images');
-          setImagesUploaded([imagesUploaded[0], false]);
+          setImagesUploaded([imagesUploaded[0], []]);
           throw new Error('Could not upload other images');
         }
       }
@@ -183,8 +183,16 @@ export default function CreateCampaignForm() {
     }
 
     async function handleMediaLinksUpload() {
+      if (imagesUploaded[0] && imagesUploaded[1].length > 0) {
+        return [imagesUploaded[0], ...imagesUploaded[1]];
+      }
+      if (imagesUploaded[0]) {
+        return [imagesUploaded[0]];
+      }
+
       const bannerUploaded = await uploadBanner();
       const otherImagesUploaded = await uploadOtherImages();
+
       return bannerUploaded.length > 0 &&
         otherImgsPrepared &&
         otherImgsPrepared.length > 0
@@ -263,7 +271,6 @@ export default function CreateCampaignForm() {
 
       toast.error(errorMsg);
       setSubmitStatus(null);
-      return;
     }
   }, [error, isError]);
 
@@ -307,9 +314,6 @@ export default function CreateCampaignForm() {
           position: 'top-right',
         });
       }
-      // Object.values(errors).forEach((error) => {
-      //   toast.error(error?.message?.toString());
-      // });
     }
   };
 
@@ -651,6 +655,7 @@ export default function CreateCampaignForm() {
           type='submit'
           onClick={() => {
             validateFormData();
+            console.log('Jii');
           }}
           disabled={
             submitStatus !== null || isPending || isConfirmingTxn || !address
