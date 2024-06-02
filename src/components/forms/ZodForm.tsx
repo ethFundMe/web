@@ -253,6 +253,7 @@ export default function CreateCampaignForm() {
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
+      router.refresh();
       router.push('/campaigns');
       return;
     }
