@@ -26,10 +26,10 @@ export const CampaignCard = ({
 
   return (
     <div
-      className={`border pb-4 md:pb-0${
+      className={`rounded-md border pb-4 md:pb-0 ${
         campaign.flagged
           ? 'border-red-500 hover:border-red-500'
-          : 'rounded-md border-primary-gray hover:border-primary-default'
+          : 'border-primary-gray hover:border-primary-default'
       }`}
     >
       <Link
