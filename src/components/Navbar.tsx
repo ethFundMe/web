@@ -152,9 +152,11 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
                 <Bell />
-                <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
-                  {data?.notification?.length}
-                </p>
+                {data?.notification?.length !== 0 && (
+                  <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                    {data?.notification?.length}
+                  </p>
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className={`${
@@ -277,9 +279,11 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
                 <Bell />
-                <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
-                  {data?.notification?.length}
-                </p>
+                {data?.notification?.length !== 0 && (
+                  <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                    {data?.notification?.length}
+                  </p>
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className={`${
