@@ -418,6 +418,17 @@ body {
   }
 }
 
+.hidden-arrows::-webkit-outer-spin-button,
+.hidden-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.hidden-arrows[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* The typewriter cursor effect */
 @keyframes blink-caret {
   from,
@@ -433,4 +444,11 @@ body {
   .carouselItem {
     padding-right: 10px;
   }
+}
+
+.inset-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

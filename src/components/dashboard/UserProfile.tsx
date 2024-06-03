@@ -5,7 +5,7 @@ import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
 import { getCookie } from 'cookies-next';
-import { Eye, RefreshCcw, Trash } from 'lucide-react';
+import { RefreshCcw, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -26,6 +26,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from '../ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export const UserProfile = ({
   user,
@@ -154,12 +155,7 @@ export const UserProfile = ({
                   {loggedIn && user.ethAddress === address && (
                     <Dialog>
                       <DialogTrigger className='group absolute left-0 top-0 h-full w-full'>
-                        <div className='absolute left-0 top-0 grid h-full w-full place-content-center bg-black/50 text-center text-sm text-white opacity-0 transition-all duration-200 ease-in-out group-hover:opacity-100'>
-                          <span className='mx-auto block'>
-                            <Eye />
-                          </span>
-                          View
-                        </div>
+                        <div className='absolute left-0 top-0 grid h-full w-full'></div>
                       </DialogTrigger>
                       <DialogContent className='p-0.5'>
                         <div className='group relative flex min-h-[370px] flex-col overflow-hidden'>
@@ -282,13 +278,26 @@ export const UserProfile = ({
                   )}
                 </div>
 
-                {!user.isVerified && address === user.ethAddress && (
-                  <Button>
-                    <Link href={`/dashboard/${user.ethAddress}/verify`}>
-                      Get verified
-                    </Link>
-                  </Button>
-                )}
+                <div className='space-y-2'>
+                  <Popover>
+                    <PopoverTrigger>
+                      <small className='block h-fit w-fit rounded-md bg-primary-default px-1.5 py-0.5 text-base text-white hover:bg-primary-default/80 md:px-3 md:py-1'>
+                        {parseInt(String(user.creatorFee))}%
+                      </small>
+                    </PopoverTrigger>
+                    <PopoverContent className='max-w-[200px]'>
+                      Creator fee
+                    </PopoverContent>
+                  </Popover>
+
+                  {!user.isVerified && address === user.ethAddress && (
+                    <Button>
+                      <Link href={`/dashboard/${user.ethAddress}/verify`}>
+                        Get verified
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </div>
 
               <div className='flex w-full justify-between'>

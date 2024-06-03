@@ -7,7 +7,7 @@ import { WagmiWrapper } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
 
@@ -48,6 +48,12 @@ export const metadata: Metadata = {
     siteName: 'EthFundMe',
     images: '/images/seo-common.jpg',
   },
+};
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  maximumScale: 1,
+  width: 'device-width',
 };
 
 export default async function RootLayout({

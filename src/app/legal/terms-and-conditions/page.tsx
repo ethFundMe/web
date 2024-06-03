@@ -207,8 +207,11 @@ export default function TermsAndConditionsPage() {
         <p>
           If you have any questions, concerns, or feedback about these Terms,
           please contact us at{' '}
-          <Link href='team@ethfund.me' className='text-primary-default'>
-            team@ethfund.me
+          <Link
+            href={`mailto:${process.env.NEXT_PUBLIC_EFM_EMAIL}`}
+            className='text-primary-default'
+          >
+            ethfundme@gmail.com
           </Link>{' '}
           or via our{' '}
           <Link

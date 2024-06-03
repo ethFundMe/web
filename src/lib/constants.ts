@@ -169,7 +169,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Instagram',
-    href: 'https://instagram.com/ethfundme',
+    href: 'https://instagram.com/ethfund.me',
     icon: BiLogoInstagram({ size: 20 }),
   },
   {
@@ -287,3 +287,9 @@ export const TagsWithIds: { id: number; name: CampaignTags }[] = [
     name: CampaignTags['Technology and Innovation'],
   },
 ];
+
+export const ShortLabels: Record<string, string> = {
+  'Created campaign': 'CC',
+  'Funded campaign': 'FC',
+  Validator: 'Diminish',
+};

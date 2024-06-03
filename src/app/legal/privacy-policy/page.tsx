@@ -172,8 +172,11 @@ export default function PrivacyPolicy() {
         <p>
           If you have any questions, concerns, or complaints about this Privacy
           Policy or our data practices, please contact us at{' '}
-          <Link href='mailto:team@ethfund.me' className='text-primary-default'>
-            team@ethfund.me
+          <Link
+            href={`mailto:${process.env.NEXT_PUBLIC_EFM_EMAIL}`}
+            className='text-primary-default'
+          >
+            ethfundme@gmail.com
           </Link>{' '}
           or via our{' '}
           <Link

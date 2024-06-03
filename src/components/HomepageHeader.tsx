@@ -3,13 +3,11 @@
 
 import { userStore } from '@/store';
 import { motion } from 'framer-motion';
-import Typewriter from 'typewriter-effect';
-// import './App.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import { FaEthereum } from 'react-icons/fa';
+import Typewriter from 'typewriter-effect';
 import { useAccount } from 'wagmi';
 import { Container } from './Container';
 import { Button } from './ui/button';
@@ -168,10 +166,17 @@ export const HomepageHeader = () => {
                   className='group relative flex min-w-[150px] items-center justify-center gap-1 overflow-hidden hover:bg-opacity-100'
                 >
                   <span className='transition-all duration-200 ease-in sm:group-hover:-translate-x-3'>
-                    Donate now
+                    Explore
                   </span>
-                  <span className='-right-8 top-1/2 transition-all duration-200 ease-in group-hover:right-3 group-hover:opacity-100 sm:absolute sm:-translate-y-1/2'>
-                    <FaEthereum />
+                  <span className='-right-8 top-1/2 text-white transition-all duration-200 ease-in group-hover:right-7 group-hover:opacity-100 sm:absolute sm:-translate-y-1/2'>
+                    <Image
+                      src='/images/explore-icon.png'
+                      width={20}
+                      height={20}
+                      alt='...'
+                      className='invert'
+                    />
+                    {/* <Search size={15} className='fill-blue-500' /> */}
                   </span>
                 </Link>
               </Button>

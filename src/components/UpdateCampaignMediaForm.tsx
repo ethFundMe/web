@@ -318,8 +318,13 @@ export default function UpdateCampaignMediaForm({
           {otherPreview.some((_) => isPreview(_)) && (
             <div className='pointer-events-none absolute bottom-0 top-0 grid w-full grid-cols-2 gap-1 rounded-md border border-slate-300 bg-white p-1'>
               <button
-                className='pointer-events-none flex items-center justify-center gap-2 bg-neutral-100'
-                // onClick={uploadOtherImages}
+                disabled={6 - otherPreview.length === 0}
+                className='flex items-center justify-center gap-2 bg-neutral-100 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-50'
+                onClick={(e) => {
+                  if (6 - otherPreview.length === 0) {
+                    e.stopPropagation();
+                  }
+                }}
               >
                 <ImagePlus size={16} /> Add image
               </button>
