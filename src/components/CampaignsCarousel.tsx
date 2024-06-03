@@ -71,7 +71,7 @@ const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
               }
               removeArrowOnDeviceType={['tablet', 'mobile']}
               deviceType={deviceType}
-              dotListClass='!mb-2'
+              dotListClass='!-mb-1'
               itemClass='carouselItem'
             >
               {campaigns
