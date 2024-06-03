@@ -3,7 +3,6 @@
 
 import { userStore } from '@/store';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -170,7 +169,14 @@ export const HomepageHeader = () => {
                     Explore
                   </span>
                   <span className='-right-8 top-1/2 text-white transition-all duration-200 ease-in group-hover:right-7 group-hover:opacity-100 sm:absolute sm:-translate-y-1/2'>
-                    <Search size={15} className='fill-blue-500' />
+                    <Image
+                      src='/images/explore-icon.png'
+                      width={20}
+                      height={20}
+                      alt='...'
+                      className='invert'
+                    />
+                    {/* <Search size={15} className='fill-blue-500' /> */}
                   </span>
                 </Link>
               </Button>

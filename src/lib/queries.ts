@@ -59,6 +59,18 @@ export const fetchCampaignTags = async () => {
     return [];
   }
 };
+export const fetchNotifications = async (user_address: string) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${user_address}`
+    );
+    const data: Notification = await res.json();
+
+    return data;
+  } catch (e) {
+    return [];
+  }
+};
 
 export async function getCampaigns(urlParams: CampaignUrlParams) {
   const page = urlParams?.page;

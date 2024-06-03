@@ -1,16 +1,19 @@
 'use client';
 
 import { NAVBARROUTES } from '@/lib/constants';
+import { Notification } from '@/lib/types';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useModalStore } from '@/store/modal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
-import { Bell, ChevronDown } from 'lucide-react';
+import { Bell, ChevronDown, Inbox } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { MdOutlineCampaign } from 'react-icons/md';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 import { AuthNavbarMenu } from './AuthNavbarMenu';
 import { Container } from './Container';
@@ -25,12 +28,96 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
+  const router = useRouter();
+  const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
+  const { data, error } = useSWR<{
+    notification: Notification[];
+  }>(
+    `${apiBaseUrl}/api/notifications/${user?.ethAddress}?viewed=false`,
+    fetcher
+  );
+  console.log(data);
+  console.log(error);
 
+  function formatDateToHumanReadable(dateString: Date): string {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const timeDifference = now.getTime() - date.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    // const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+
+    const formatTime = (date: Date): string => {
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const period = hours >= 12 ? 'pm' : 'am';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+      return `${formattedHours}:${formattedMinutes}${period}`;
+    };
+
+    if (daysDifference === 0) {
+      return `today, ${formatTime(date)}`;
+    } else if (daysDifference === 1) {
+      return `yesterday, ${formatTime(date)}`;
+    } else {
+      return `${daysDifference} days ago`;
+    }
+  }
+  const viewNotification = async ({
+    id,
+    eth_address,
+  }: {
+    id: string;
+    eth_address: `0x${string}`;
+  }) => {
+    try {
+      const res = await fetch(
+        `${apiBaseUrl}/api/notifications/${eth_address}/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const resData = await res.json();
+      console.log(resData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const viewAllNotification = async ({
+    eth_address,
+  }: {
+    eth_address: `0x${string}`;
+  }) => {
+    try {
+      const res = await fetch(
+        `${apiBaseUrl}/api/view/notifications/${user?.ethAddress}/all`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({ eth_address }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const resData = await res.json();
+      console.log(resData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>loading...</div>;
   return (
     <motion.nav
       className={cn('sticky top-0 z-30 h-16 w-full bg-white py-1.5 text-black')}
@@ -65,66 +152,102 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
                 <Bell />
-                <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-rose-400 text-[10px] text-white'>
-                  4
-                </p>
+                {data?.notification?.length !== 0 && (
+                  <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                    {data?.notification?.length}
+                  </p>
+                )}
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='max-h-md min-h-96 min-w-80 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm'>
-                <>
-                  <div className='flex items-center justify-between border-b p-2'>
-                    <p>Notifications</p>
-                    <button className='rounded-md p-2 text-xs font-semibold text-primary-default'>
-                      Mark all as read
-                    </button>
-                  </div>
-                  <DropdownMenuItem className='relative block w-full border-b p-0'>
-                    <div className='flex items-center gap-x-2'>
-                      <div className='pl-3'>
-                        {MdOutlineCampaign({ size: 22 })}
-                      </div>
-                      <div className='full'>
-                        <p className='w-full pr-2 text-right text-[10px]'>
-                          Today, 2:45pm
-                        </p>
-                        <div className='p-2 pt-0'>
-                          <h3 className='text-sm font-semibold text-gray-400'>
-                            Campaign Funded
-                          </h3>
-                          <p className='text-xs'>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit. Ipsam, consectetur.
-                          </p>
-                        </div>
-                      </div>
+              <DropdownMenuContent
+                className={`${
+                  data?.notification.length === 0
+                    ? 'flex flex-col items-center justify-center'
+                    : ''
+                } max-h-96 min-h-96 min-w-72 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm`}
+              >
+                {data?.notification.length !== 0 ? (
+                  <>
+                    <div className='flex items-center justify-between border-b p-2 px-3'>
+                      <p>Notifications</p>
+                      <button
+                        onClick={() =>
+                          viewAllNotification({
+                            eth_address: user?.ethAddress as `0x${string}`,
+                          })
+                        }
+                        className='rounded-md p-2 text-xs font-semibold text-primary-default'
+                      >
+                        Mark all as read
+                      </button>
                     </div>
-                  </DropdownMenuItem>
-                  {/* <DropdownMenuItem className='relative block w-full p-0 border-b'>
-                    <div className='flex gap-x-4'>
-                      <div className='full'>
-                        <p className='w-full px-2 text-right text-[10px]'>
-                          Today, 2:45pm
-                        </p>
-                        <div className='p-2 pl-6 pt-0'>
-                          <h3 className='text-sm font-semibold text-gray-400'>
-                            Campaign Funded
-                          </h3>
-                          <p className='text-xs'>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit. Ipsam, consectetur. Quis, porro ducimus.
-                            Exercitationem harum hic aspernatur officiis nemo
-                            suscipit quia!
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </DropdownMenuItem> */}
-                </>
-                {/* <div className='w-full flex justify-center items-center h-full'>
-                  <div className='flex justify-center items-center flex-col h-full w-full'>
-                    <Inbox size={60} color="#000" strokeWidth={0.75} absoluteStrokeWidth className='p-3 rounded-full bg-gray-100'/>
-                      <h4 className='pt-2 '>No new notifications</h4>
+                    {data?.notification?.map((item, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        className='block w-full border-b p-0'
+                      >
+                        <Link
+                          href={item.url}
+                          onClick={() => {
+                            viewNotification({
+                              id: item.id as string,
+                              eth_address: item.eth_address as `0x${string}`,
+                            });
+                            router.push(item.url);
+                          }}
+                          className='flex w-full items-center gap-x-2 border-l-4 border-[#042D42]'
+                        >
+                          <>
+                            {item.notification_type === 'CAMPAIGN' && (
+                              <div className=''>
+                                {MdOutlineCampaign({ size: 16 })}
+                              </div>
+                            )}
+                            {item.notification_type === 'FUNDING' && (
+                              <img
+                                src='/images/fund.png'
+                                alt='fund'
+                                className='w-6 pl-2'
+                              />
+                            )}
+                            {item.notification_type === 'TOKEN REWARDS' && (
+                              <img
+                                src='/images/eth-logo.png'
+                                alt='fund'
+                                className='w-6'
+                              />
+                            )}
+                          </>
+                          <div className='pr-4 pt-1'>
+                            <p className='w-full text-right text-[10px]'>
+                              {formatDateToHumanReadable(
+                                item?.created_at as Date
+                              )}
+                            </p>
+                            <div className='p-2 pt-0'>
+                              <h3 className='text-sm font-semibold capitalize text-gray-400'>
+                                {item.notification_type}
+                              </h3>
+                              <p className='text-xs'>{item.description}</p>
+                            </div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                ) : (
+                  <div className='inset-center grid w-full place-items-center'>
+                    <Inbox
+                      size={60}
+                      color='#000'
+                      strokeWidth={0.75}
+                      absoluteStrokeWidth
+                      className='rounded-full bg-gray-100 p-3'
+                    />
+                    <h4 className='w-full pt-2 text-center'>
+                      No new notifications
+                    </h4>
                   </div>
-                </div> */}
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -151,23 +274,127 @@ const Navbar = () => {
             </Button>
           )}
         </ul>
-
-        <button
-          className='block lg:hidden'
-          onClick={() => {
-            openModal(<Sidebar />);
-            setModalOptions({ hideContent: true });
-          }}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='30'
-            height='30'
-            viewBox='0 0 50 50'
+        <div className='flex items-center gap-x-5 lg:hidden'>
+          {isConnected && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
+                <Bell />
+                {data?.notification?.length !== 0 && (
+                  <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                    {data?.notification?.length}
+                  </p>
+                )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className={`${
+                  data?.notification.length === 0
+                    ? 'flex flex-col items-center justify-center'
+                    : ''
+                } max-h-96 min-h-96 w-screen overflow-y-auto rounded-md border px-0 py-2 text-sm shadow-lg`}
+              >
+                {data?.notification.length !== 0 ? (
+                  <>
+                    <div className='flex items-center justify-between border-b p-2 px-3'>
+                      <p>Notifications</p>
+                      <button
+                        onClick={() =>
+                          viewAllNotification({
+                            eth_address: user?.ethAddress as `0x${string}`,
+                          })
+                        }
+                        className='rounded-md p-2 text-xs font-semibold text-primary-default'
+                      >
+                        Mark all as read
+                      </button>
+                    </div>
+                    {data?.notification?.map((item, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        className='block w-full border-b p-0'
+                      >
+                        <Link
+                          href={item.url}
+                          onClick={() => {
+                            viewNotification({
+                              id: item.id as string,
+                              eth_address: item.eth_address as `0x${string}`,
+                            });
+                            router.push(item.url);
+                          }}
+                          className='flex w-full items-center gap-x-2 border-l-4 border-[#042D42]'
+                        >
+                          <>
+                            {item.notification_type === 'CAMPAIGN' && (
+                              <div className=''>
+                                {MdOutlineCampaign({ size: 16 })}
+                              </div>
+                            )}
+                            {item.notification_type === 'FUNDING' && (
+                              <img
+                                src='/images/fund.png'
+                                alt='fund'
+                                className='w-6 pl-2'
+                              />
+                            )}
+                            {item.notification_type === 'TOKEN REWARDS' && (
+                              <img
+                                src='/images/eth-logo.png'
+                                alt='fund'
+                                className='w-6'
+                              />
+                            )}
+                          </>
+                          <div className='pr-4 pt-1'>
+                            <p className='w-full text-right text-[10px]'>
+                              {formatDateToHumanReadable(
+                                item?.created_at as Date
+                              )}
+                            </p>
+                            <div className='p-2 pt-0'>
+                              <h3 className='text-sm font-semibold capitalize text-gray-400'>
+                                {item.notification_type}
+                              </h3>
+                              <p className='text-xs'>{item.description}</p>
+                            </div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                ) : (
+                  <div className='inset-center grid w-full place-items-center'>
+                    <Inbox
+                      size={60}
+                      color='#000'
+                      strokeWidth={0.75}
+                      absoluteStrokeWidth
+                      className='rounded-full bg-gray-100 p-3'
+                    />
+                    <h4 className='w-full pt-2 text-center'>
+                      No new notifications
+                    </h4>
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <button
+            className='block'
+            onClick={() => {
+              openModal(<Sidebar />);
+              setModalOptions({ hideContent: true });
+            }}
           >
-            <path d='M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z'></path>
-          </svg>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='30'
+              height='30'
+              viewBox='0 0 50 50'
+            >
+              <path d='M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z'></path>
+            </svg>
+          </button>
+        </div>
       </Container>
     </motion.nav>
   );
