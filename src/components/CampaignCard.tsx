@@ -32,20 +32,19 @@ export const CampaignCard = ({
   const user = campaign.user;
 
   return (
-    <div
-      className={`rounded-md border pb-4 md:pb-0 ${
-        campaign.flagged
-          ? 'border-red-500 hover:border-red-500'
-          : 'border-primary-gray hover:border-primary-default'
-      }`}
-    >
+    <div className='pb-6'>
       <Link
         href={`/campaigns/${campaign.campaign_id}`}
         // onClick={() => router.push(`/campaigns/${campaign.campaign_id}`)}
         className={cn(
           'group flex cursor-pointer flex-col gap-1  bg-white p-4',
           !full && 'w-full flex-shrink-0 md:max-w-[400px]',
-          variantStyles
+          variantStyles,
+          `rounded-md border ${
+            campaign.flagged
+              ? 'border-red-500 hover:border-red-500'
+              : 'border-primary-gray hover:border-primary-default'
+          }`
         )}
       >
         <div
