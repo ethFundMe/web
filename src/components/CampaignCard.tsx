@@ -8,13 +8,6 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import Link from 'next/link';
 import ImageWithFallback from './ImageWithFallback';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from './ui/tooltip';
 
 dayjs.extend(advancedFormat);
 
@@ -77,51 +70,6 @@ export const CampaignCard = ({
         </div>
 
         <div className='w-full space-y-2'>
-          {campaign.creator !== campaign.beneficiary && (
-            <div
-              className={cn(TextSizeStyles.small, 'text-primary-default')}
-              onClick={(e) => e.preventDefault()}
-            >
-              Organized for{' '}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger className='hidden md:block'>
-                    <p
-                      // title={campaign.beneficiary}
-                      className={cn(
-                        TextSizeStyles.caption,
-                        'line-clamp-1 block w-full font-semibold'
-                      )}
-                    >
-                      {formatWalletAddress(campaign.beneficiary)}
-                    </p>
-                  </TooltipTrigger>
-
-                  <TooltipContent>
-                    <p>{campaign.beneficiary}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <Popover>
-                <PopoverTrigger className='block md:hidden'>
-                  <p
-                    // title={campaign.beneficiary}
-                    className={cn(
-                      TextSizeStyles.caption,
-                      'line-clamp-1 block w-full font-semibold'
-                    )}
-                  >
-                    {formatWalletAddress(campaign.beneficiary)}
-                  </p>
-                </PopoverTrigger>
-
-                <PopoverContent>
-                  <p>{campaign.beneficiary}</p>
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
-
           <Link
             href={`/profile/${campaign.creator}`}
             onClick={(e) => {

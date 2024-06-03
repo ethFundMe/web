@@ -26,6 +26,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from '../ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export const UserProfile = ({
   user,
@@ -277,13 +278,26 @@ export const UserProfile = ({
                   )}
                 </div>
 
-                {!user.isVerified && address === user.ethAddress && (
-                  <Button>
-                    <Link href={`/dashboard/${user.ethAddress}/verify`}>
-                      Get verified
-                    </Link>
-                  </Button>
-                )}
+                <div className='space-y-2'>
+                  <Popover>
+                    <PopoverTrigger>
+                      <small className='block h-fit w-fit rounded-md bg-primary-default px-1.5 py-0.5 text-base text-white hover:bg-primary-default/80 md:px-3 md:py-1'>
+                        {parseInt(String(user.creatorFee))}%
+                      </small>
+                    </PopoverTrigger>
+                    <PopoverContent className='max-w-[200px]'>
+                      Creator fee
+                    </PopoverContent>
+                  </Popover>
+
+                  {!user.isVerified && address === user.ethAddress && (
+                    <Button>
+                      <Link href={`/dashboard/${user.ethAddress}/verify`}>
+                        Get verified
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </div>
 
               <div className='flex w-full justify-between'>
