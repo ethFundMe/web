@@ -40,10 +40,7 @@ const View = () => {
         <>
           <ImageWithFallback
             className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-slate-100 object-cover'
-            src={
-              user?.profileUrl || ''
-              // 'https://img.icons8.com/plumpy/256/user-male-circle.png'
-            }
+            src={user?.profileUrl ? user.profileUrl : '/images/user-pfp.png'}
             fallback='/images/user-pfp.png'
             width={300}
             height={300}

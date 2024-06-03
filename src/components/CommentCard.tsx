@@ -99,14 +99,24 @@ export const CommentCard = forwardRef<Ref, Props>(
           <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <div className='relative h-8 w-8 flex-shrink-0'>
-                <ImageWithFallback
-                  className='block flex-shrink-0 rounded-full object-cover'
-                  src={profileUrl || ''}
-                  fallback='/images/user-pfp.png'
-                  fill
-                  sizes='50px'
-                  alt='user-pfp'
-                />
+                {profileUrl ? (
+                  <ImageWithFallback
+                    className='block flex-shrink-0 rounded-full object-cover'
+                    src={profileUrl}
+                    fallback='/images/user-pfp.png'
+                    fill
+                    sizes='50px'
+                    alt='user-pfp'
+                  />
+                ) : (
+                  <Image
+                    className='block flex-shrink-0 rounded-full object-cover'
+                    src='/images/user-pfp.png'
+                    fill
+                    sizes='50px'
+                    alt='user-pfp'
+                  />
+                )}
               </div>
 
               <div>

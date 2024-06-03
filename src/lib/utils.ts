@@ -158,7 +158,10 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       .string({ required_error: 'Description is required' })
       .min(11, { message: 'Description must be more than 10 characters' }),
     goal: z
-      .number({ required_error: 'Enter amount in ETH' })
+      .number({
+        required_error: 'Enter amount in ETH',
+        invalid_type_error: 'Enter a number',
+      })
       .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
       .max(verifiedAddress ? 100000 : 2, {
         message: verifiedAddress
@@ -178,19 +181,23 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
       .max(2, { message: 'Amount cannot be more than 2 ETH' })
       .optional(),
-    tag: z.enum([
-      CampaignTags['Arts and Culture'],
-      CampaignTags['Business and Entrepreneurship'],
-      CampaignTags['Community and Social Impact'],
-      CampaignTags['Education and Learning'],
-      CampaignTags['Entertainment and Media'],
-      CampaignTags['Environment and Sustainability'],
-      CampaignTags['Health and Wellness'],
-      CampaignTags['Lifestyle and Hobbies'],
-      CampaignTags.Others,
-      CampaignTags['Science and Research'],
-      CampaignTags['Technology and Innovation'],
-    ]),
+    tag: z
+      .enum([
+        CampaignTags['Arts and Culture'],
+        CampaignTags['Business and Entrepreneurship'],
+        CampaignTags['Community and Social Impact'],
+        CampaignTags['Education and Learning'],
+        CampaignTags['Entertainment and Media'],
+        CampaignTags['Environment and Sustainability'],
+        CampaignTags['Health and Wellness'],
+        CampaignTags['Lifestyle and Hobbies'],
+        CampaignTags.Others,
+        CampaignTags['Science and Research'],
+        CampaignTags['Technology and Innovation'],
+      ])
+      .refine((value) => value, {
+        message: 'Select a campaign tag from the list.',
+      }),
     banner: z.any().refine((file) => file?.length == 1, 'Banner is required.'),
     otherImages: z.any(),
     ytLink: z
@@ -214,7 +221,10 @@ export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
       .string({ required_error: 'Description is required' })
       .min(11, { message: 'Description must be more than 10 characters' }),
     goal: z
-      .number({ required_error: 'Enter amount in ETH' })
+      .number({
+        required_error: 'Enter amount in ETH',
+        invalid_type_error: 'Enter a number',
+      })
       .min(0.00001, { message: 'Amount cannot be less than 0.00001 ETH' })
       .max(verifiedAddress ? 100000 : 2, {
         message: verifiedAddress
@@ -234,19 +244,23 @@ export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
       .min(0.00001, { message: 'Amount cannot be less than 0.0001 ETH' })
       .max(2, { message: 'Amount cannot be more than 2 ETH' })
       .optional(),
-    tag: z.enum([
-      CampaignTags['Arts and Culture'],
-      CampaignTags['Business and Entrepreneurship'],
-      CampaignTags['Community and Social Impact'],
-      CampaignTags['Education and Learning'],
-      CampaignTags['Entertainment and Media'],
-      CampaignTags['Environment and Sustainability'],
-      CampaignTags['Health and Wellness'],
-      CampaignTags['Lifestyle and Hobbies'],
-      CampaignTags.Others,
-      CampaignTags['Science and Research'],
-      CampaignTags['Technology and Innovation'],
-    ]),
+    tag: z
+      .enum([
+        CampaignTags['Arts and Culture'],
+        CampaignTags['Business and Entrepreneurship'],
+        CampaignTags['Community and Social Impact'],
+        CampaignTags['Education and Learning'],
+        CampaignTags['Entertainment and Media'],
+        CampaignTags['Environment and Sustainability'],
+        CampaignTags['Health and Wellness'],
+        CampaignTags['Lifestyle and Hobbies'],
+        CampaignTags.Others,
+        CampaignTags['Science and Research'],
+        CampaignTags['Technology and Innovation'],
+      ])
+      .refine((value) => value, {
+        message: 'Select a campaign tag from the list.',
+      }),
     banner: z.any(),
     otherImages: z.any(),
     ytLink: z
@@ -260,11 +274,6 @@ export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
 };
-
-// export const devlog = (message: unknown) => {
-//   if (process.env.NODE_ENV !== 'development') return;
-//   console.log(message);
-// };
 
 export function getRelativeTime(date: Date): string {
   const commentDate = dayjs(date);

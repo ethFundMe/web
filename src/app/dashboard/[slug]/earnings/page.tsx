@@ -83,8 +83,9 @@ export default async function EarningsPage({
               All Earnings
             </h2>
             <p>
-              Your FUNDME tokens are sent to you immediately. The amount shown
-              below is the total sent based on your activities.
+              Your FUNDME tokens are automatically sent to you after each
+              activity. The amount shown below represents the total tokens you
+              have received so far based on all your activities.
             </p>
 
             <div className='flex flex-wrap items-center justify-between'>
@@ -157,7 +158,7 @@ export default async function EarningsPage({
                       <Link
                         target='_blank'
                         href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
-                        className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3'
+                        className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3 hover:bg-slate-300/40'
                       >
                         <div>
                           <div className='space-y-1.5 lg:space-y-2.5'>

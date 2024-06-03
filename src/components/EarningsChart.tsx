@@ -69,20 +69,6 @@ export const EarningsChart = ({ earnings }: Props) => {
         /> */}
         </AreaChart>
       </ResponsiveContainer>
-
-      <div className='mt-5'>
-        <p className='mb-2 font-bold text-primary-default'>Legend</p>
-        <ul className='text-sm'>
-          <li>
-            <span className='inline-block w-10 font-bold'>CC:</span>
-            Created campaign
-          </li>
-          <li>
-            <span className='inline-block w-10 font-bold'>FC:</span>
-            Funded campaign
-          </li>
-        </ul>
-      </div>
     </div>
   );
 };

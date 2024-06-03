@@ -120,6 +120,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   const router = useRouter();
 
   function updateUserProfile(values: z.infer<typeof formSchema>) {
+    setFormStatus('Saving changes');
     if (creatorFeeEditMade && !editMade) {
       handleWriteContract(values.creatorFee as number);
     }
@@ -134,9 +135,11 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         .then((data) => {
           handleWriteContract(values.creatorFee as number);
           // Reset form and navigate to the dashboard
-          setFormStatus(null);
           setUser(data);
-          form.reset();
+          if (!creatorFeeEditMade) {
+            setFormStatus(null);
+            form.reset();
+          }
         })
         .catch((error) => {
           console.log(`Failed to update profile, ${error}`);
@@ -184,6 +187,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         errorMsg = 'Failed to update creator fee';
       }
       toast.error(errorMsg);
+      setFormStatus(null);
     }
   }, [isConfirmedTxn, user, router, isError, writingError]);
 
@@ -248,6 +252,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                         ref={field.ref}
                         max={30}
                         min={0}
+                        step={0.1}
                         name={field.name}
                         onBlur={field.onBlur}
                         value={field.value}

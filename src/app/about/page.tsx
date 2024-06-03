@@ -22,12 +22,13 @@ export default function AboutPage() {
                 >
                   EthFundMe
                 </Link>
-                , a pioneering crowdfunding platform powered by Ethereum
-                blockchain technology. At EthFundMe, we believe in the power of
-                community and innovation to bring groundbreaking ideas to life.
-                Our mission is to provide a transparent, secure, and efficient
-                platform where creators and supporters can connect to make
-                dreams a reality.
+                , where compassion clicks with blockchain! We&rsquo;re the
+                trailblazing crowdfunding platform that blends community spirit
+                with the cutting-edge efficiency of web3 technologies. Whether
+                you&rsquo;re igniting a personal dream, backing a local project,
+                or championing global causes, EthFundMe is your gateway to
+                making a real impact. Jump into a world where every donation is
+                a building block for a brighter future!
               </p>
             </PGroup>
 
