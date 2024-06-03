@@ -169,7 +169,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'Instagram',
-    href: 'https://instagram.com/ethfundme',
+    href: 'https://instagram.com/ethfund.me/',
     icon: BiLogoInstagram({ size: 20 }),
   },
   {
