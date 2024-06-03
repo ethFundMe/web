@@ -1,17 +1,18 @@
 'use client';
 import { Notification } from '@/lib/types';
 import { userStore } from '@/store';
+import { Bell, Inbox } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { MdOutlineCampaign } from 'react-icons/md';
+import useSWR from 'swr';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
-import { Bell, Inbox, Link } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { MdOutlineCampaign } from 'react-icons/md';
-import useSWR from 'swr';
+} from './ui/dropdown-menu';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
