@@ -1,7 +1,7 @@
 'use client';
 import { Notification } from '@/lib/types';
 import { userStore } from '@/store';
-import { Bell, Inbox } from 'lucide-react';
+import { Bell, Coins, Inbox } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -130,7 +130,7 @@ const Notifications = () => {
       >
         {notifications.length !== 0 ? (
           <>
-            <div className='flex items-center justify-between border-b p-2 px-3'>
+            <div className='flex items-center justify-between border-b p-2 px-5'>
               <p>Notifications</p>
               <button
                 onClick={() => {
@@ -158,35 +158,39 @@ const Notifications = () => {
                     });
                     router.push(item.url);
                   }}
-                  className='flex w-full items-center gap-x-2 border-l-4 border-[#042D42]'
+                  className='flex w-full items-center gap-x-8'
                 >
                   <>
-                    {item.notification_type === 'CAMPAIGN' && (
-                      <div className=''>{MdOutlineCampaign({ size: 16 })}</div>
+                    {item.notification_type === 'CAMPAIGN_UPDATED' && (
+                      <div className='ml-5'>
+                        {MdOutlineCampaign({ size: 16 })}
+                      </div>
+                    )}
+                    {item.notification_type === 'CAMPAIGN_CREATED' && (
+                      <img
+                        src='/images/create_campaign.png'
+                        alt='create'
+                        className='ml-5 w-4'
+                      />
                     )}
                     {item.notification_type === 'FUNDING' && (
                       <img
                         src='/images/fund.png'
                         alt='fund'
-                        className='w-6 pl-2'
+                        className='ml-5 w-4'
                       />
                     )}
-                    {item.notification_type === 'TOKEN REWARDS' && (
-                      <img
-                        src='/images/eth-logo.png'
-                        alt='fund'
-                        className='w-6'
-                      />
+                    {item.notification_type === 'TOKEN_REWARDS' && (
+                      <div className='ml-5'>
+                        <Coins size={16} />
+                      </div>
                     )}
                   </>
-                  <div className='w-full pr-5 pt-1'>
-                    <p className='w-full text-right text-[10px]'>
+                  <div className='w-full space-y-1 py-3'>
+                    <p className='w-full text-left text-[10px] text-gray-400'>
                       {formatDateToHumanReadable(item?.created_at as Date)}
                     </p>
-                    <div className='p-2 pt-0'>
-                      <h3 className='text-sm font-semibold capitalize text-gray-400'>
-                        {item.notification_type}
-                      </h3>
+                    <div className=''>
                       <p className='text-xs'>{item.description}</p>
                     </div>
                   </div>
