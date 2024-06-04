@@ -1,9 +1,8 @@
 'use client';
 
-import { useCountdown } from '@/lib/hook/useCountdown';
-// import { publicClient } from './client'
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId } from '@/lib/constant';
+import { useCountdown } from '@/lib/hook/useCountdown';
 import { useCallback, useEffect, useState } from 'react';
 import {
   WalletClient,
@@ -26,15 +25,9 @@ export const ValidatorCountdown = () => {
     transport: http(),
   });
 
-  const diminsh = async () => {
+  const diminish = async () => {
     if (!walletClient) return;
     const [account] = await walletClient.getAddresses();
-    // const data = await walletClient.writeContract({
-    //   address: process.env.NEXT_PUBLIC_ETH_FUND_ME_CONTRACT_ADDRESS || '',
-    //   abi: EthFundMe,
-    //   functionName: 'diminish',
-    //   account: account
-    // });
 
     const { request } = await publicClient.simulateContract({
       account,
@@ -53,11 +46,9 @@ export const ValidatorCountdown = () => {
     });
 
     const myDate = new Date(Number(data) * 1000);
-    console.log(typeof data);
-    console.log(typeof myDate);
-    console.log(myDate.toJSON());
     return myDate.toJSON();
-  }, [publicClient]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -78,12 +69,9 @@ export const ValidatorCountdown = () => {
         setExpired(true);
       }
     }
+
     getDateString();
   }, [getDfNextUpdate]);
-
-  // useEffectOnce(() => {
-  //   if(days + hours + minutes + seconds <= 0) setExpired(true);
-  // });
 
   const Obj = { days, hours, minutes, seconds };
 
@@ -92,10 +80,10 @@ export const ValidatorCountdown = () => {
       <div className='flex gap-4'>
         {Object.entries(Obj).map(([key, value]) => (
           <div key={key}>
-            <div className='flex flex-col items-center font-bold uppercase'>
+            <div className='flex flex-col items-center uppercase'>
               <p
                 key={value}
-                className='text-4xl text-primary-default sm:text-5xl'
+                className='text-xl text-primary-default sm:text-3xl'
               >
                 {String(value).padStart(2, '0')}
               </p>
@@ -111,7 +99,7 @@ export const ValidatorCountdown = () => {
             ? 'bg-neutral-400 hover:bg-neutral-400/80'
             : 'bg-green-600 hover:bg-green-600/90'
         } text-sm text-white disabled:cursor-not-allowed sm:h-32 sm:w-32 sm:text-base`}
-        onClick={diminsh}
+        onClick={diminish}
         disabled={!expired}
       >
         UPDATE
