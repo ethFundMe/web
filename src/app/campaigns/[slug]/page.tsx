@@ -39,7 +39,7 @@ export async function generateMetadata(
 
   return user
     ? {
-        title: `${campaign.title}`,
+        title: `${campaign.title} | EthFundMe`,
         description: `${campaign.description}`,
         keywords:
           'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
