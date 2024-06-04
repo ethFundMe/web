@@ -281,7 +281,7 @@ export const UserProfile = ({
                 <div className='space-y-2'>
                   <Popover>
                     <PopoverTrigger>
-                      <small className='block h-fit w-fit rounded-md bg-primary-default px-1.5 py-0.5 text-base text-white hover:bg-primary-default/80 md:px-3 md:py-1'>
+                      <small className='grid h-12 w-12 place-content-center rounded-full bg-primary-default px-1.5 py-0.5 text-base text-white hover:bg-primary-default/80 md:px-3 md:py-1'>
                         {parseInt(String(user.creatorFee))}%
                       </small>
                     </PopoverTrigger>
@@ -289,14 +289,6 @@ export const UserProfile = ({
                       Creator fee
                     </PopoverContent>
                   </Popover>
-
-                  {!user.isVerified && address === user.ethAddress && (
-                    <Button>
-                      <Link href={`/dashboard/${user.ethAddress}/verify`}>
-                        Get verified
-                      </Link>
-                    </Button>
-                  )}
                 </div>
               </div>
 
@@ -328,6 +320,14 @@ export const UserProfile = ({
                     <p className='max-w-[700px] text-sm sm:text-base'>
                       {user.bio}
                     </p>
+                  )}
+
+                  {!user.isVerified && address === user.ethAddress && (
+                    <Button className='mt-2'>
+                      <Link href={`/dashboard/${user.ethAddress}/verify`}>
+                        Get verified
+                      </Link>
+                    </Button>
                   )}
                 </div>
               </div>

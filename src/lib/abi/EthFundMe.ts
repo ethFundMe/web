@@ -1,5 +1,165 @@
 export const EthFundMe = [
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_slot',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_newMTNR',
+        type: 'address',
+      },
+    ],
+    name: '_0x0',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_fee',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x2_1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x2_3',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_creators',
+        type: 'address[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x3',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_creators',
+        type: 'address[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x4',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: '_campaignIDs',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'bool[]',
+        name: '_statuses',
+        type: 'bool[]',
+      },
+    ],
+    name: '_0x5',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
+      },
+    ],
+    name: '_0x7',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: '_mdHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'uint256',
+        name: '_goal',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_beneficiary',
+        type: 'address',
+      },
+    ],
+    name: 'addCampaign',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'EthFundMe__AmountExceedsLimit',
     type: 'error',
@@ -417,6 +577,13 @@ export const EthFundMe = [
     type: 'event',
   },
   {
+    inputs: [],
+    name: 'diminish',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -440,6 +607,50 @@ export const EthFundMe = [
     ],
     name: 'DiminishFactorUpdated',
     type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_campaignID',
+        type: 'uint256',
+      },
+    ],
+    name: 'discontinueCampaign',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_campaignID',
+        type: 'uint256',
+      },
+      {
+        internalType: 'int256',
+        name: '_commentID',
+        type: 'int256',
+      },
+    ],
+    name: 'fundCampaign',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'setCreatorFeePercentage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     anonymous: false,
@@ -471,6 +682,87 @@ export const EthFundMe = [
     type: 'fallback',
   },
   {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: '_mdHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'uint256',
+        name: '_campaignID',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_goal',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_beneficiary',
+        type: 'address',
+      },
+    ],
+    name: 'updateCampaign',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_seconds',
+        type: 'uint256',
+      },
+    ],
+    name: 'updateDFInterval',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newTokenAddress',
+        type: 'address',
+      },
+    ],
+    name: 'updateTokenContract',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive',
+  },
+  {
+    inputs: [],
+    name: '_0x2_2',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'M0',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'M1',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'M2',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'BASE_REWARD',
     outputs: [
@@ -485,11 +777,100 @@ export const EthFundMe = [
   },
   {
     inputs: [],
+    name: 'campaignsCount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalCampaigns',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'CREATOR_FEE_PERCENTAGE_LIMIT',
     outputs: [
       {
         internalType: 'uint256',
         name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+    ],
+    name: 'creator_isBanned',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'isBanned',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+    ],
+    name: 'creator_isVerified',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'isVerified',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_creator',
+        type: 'address',
+      },
+    ],
+    name: 'creatorCollection',
+    outputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'creatorCampaignIDs',
+        type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
+    ],
+    name: 'creatorFee_Percentage',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'feePercentage',
         type: 'uint256',
       },
     ],
@@ -537,6 +918,19 @@ export const EthFundMe = [
   },
   {
     inputs: [],
+    name: 'EFM_TOKEN_CONTRACT',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'FEE',
     outputs: [
       {
@@ -546,355 +940,6 @@ export const EthFundMe = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'PERCENTAGE',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'PLTF_WT',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'UNVERIFIED_CREATOR_CAMPAIGN_DONATION_LIMIT',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_slot',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '_newMTNR',
-        type: 'address',
-      },
-    ],
-    name: '_0x0',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_fee',
-        type: 'uint256',
-      },
-    ],
-    name: '_0x1',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: '_0x2',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_value',
-        type: 'uint256',
-      },
-    ],
-    name: '_0x2_1',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: '_0x2_2',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'M0',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'M1',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'M2',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: '_0x2_3',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address[]',
-        name: '_creators',
-        type: 'address[]',
-      },
-      {
-        internalType: 'bool[]',
-        name: '_statuses',
-        type: 'bool[]',
-      },
-    ],
-    name: '_0x3',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address[]',
-        name: '_creators',
-        type: 'address[]',
-      },
-      {
-        internalType: 'bool[]',
-        name: '_statuses',
-        type: 'bool[]',
-      },
-    ],
-    name: '_0x4',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256[]',
-        name: '_campaignIDs',
-        type: 'uint256[]',
-      },
-      {
-        internalType: 'bool[]',
-        name: '_statuses',
-        type: 'bool[]',
-      },
-    ],
-    name: '_0x5',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'value',
-        type: 'uint256',
-      },
-    ],
-    name: '_0x7',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: '_mdHash',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'uint256',
-        name: '_goal',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '_beneficiary',
-        type: 'address',
-      },
-    ],
-    name: 'addCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'campaignsCount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'totalCampaigns',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_creator',
-        type: 'address',
-      },
-    ],
-    name: 'creatorCollection',
-    outputs: [
-      {
-        internalType: 'uint256[]',
-        name: 'creatorCampaignIDs',
-        type: 'uint256[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'creator',
-        type: 'address',
-      },
-    ],
-    name: 'creatorFee_Percentage',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'feePercentage',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'creator',
-        type: 'address',
-      },
-    ],
-    name: 'creator_isBanned',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: 'isBanned',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'creator',
-        type: 'address',
-      },
-    ],
-    name: 'creator_isVerified',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: 'isVerified',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'diminish',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
-      },
-    ],
-    name: 'discontinueCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'int256',
-        name: '_commentID',
-        type: 'int256',
-      },
-    ],
-    name: 'fundCampaign',
-    outputs: [],
-    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -969,6 +1014,32 @@ export const EthFundMe = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'PERCENTAGE',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'PLTF_WT',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -1028,61 +1099,16 @@ export const EthFundMe = [
     type: 'function',
   },
   {
-    inputs: [
+    inputs: [],
+    name: 'UNVERIFIED_CREATOR_CAMPAIGN_DONATION_LIMIT',
+    outputs: [
       {
         internalType: 'uint256',
-        name: '_amount',
+        name: '',
         type: 'uint256',
       },
     ],
-    name: 'setCreatorFeePercentage',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: '_mdHash',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'uint256',
-        name: '_campaignID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_goal',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '_beneficiary',
-        type: 'address',
-      },
-    ],
-    name: 'updateCampaign',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_seconds',
-        type: 'uint256',
-      },
-    ],
-    name: 'updateDFInterval',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    stateMutability: 'payable',
-    type: 'receive',
   },
 ];
