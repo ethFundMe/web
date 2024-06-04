@@ -161,12 +161,12 @@ const Notifications = () => {
                   className='flex w-full items-center gap-x-8'
                 >
                   <>
-                    {item.notification_type === 'CAMPAIGN_UPDATED' && (
+                    {item.notification_type === 'CAMPAIGN UPDATED' && (
                       <div className='ml-5'>
                         {MdOutlineCampaign({ size: 16 })}
                       </div>
                     )}
-                    {item.notification_type === 'CAMPAIGN_CREATED' && (
+                    {item.notification_type === 'CAMPAIGN CREATED' && (
                       <img
                         src='/images/create_campaign.png'
                         alt='create'
@@ -180,7 +180,7 @@ const Notifications = () => {
                         className='ml-5 w-4'
                       />
                     )}
-                    {item.notification_type === 'TOKEN_REWARDS' && (
+                    {item.notification_type === 'TOKEN REWARDS' && (
                       <div className='ml-5'>
                         <Coins size={16} />
                       </div>
