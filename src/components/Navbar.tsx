@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { NAVBARROUTES } from '@/lib/constants';
@@ -36,14 +37,14 @@ const Navbar = () => {
   const { user } = userStore();
   const router = useRouter();
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
-  const { data, error } = useSWR<{
+  const { data } = useSWR<{
     notification: Notification[];
   }>(
     `${apiBaseUrl}/api/notifications/${user?.ethAddress}?viewed=false`,
     fetcher
   );
-  console.log(data);
-  console.log(error);
+  // console.log(data);
+  // console.log(error);
 
   function formatDateToHumanReadable(dateString: Date): string {
     const date = new Date(dateString);
@@ -160,12 +161,12 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className={`${
-                  data?.notification.length === 0
+                  data?.notification?.length === 0
                     ? 'flex flex-col items-center justify-center'
                     : ''
                 } max-h-96 min-h-96 min-w-72 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm`}
               >
-                {data?.notification.length !== 0 ? (
+                {data?.notification?.length !== 0 ? (
                   <>
                     <div className='flex items-center justify-between border-b p-2 px-3'>
                       <p>Notifications</p>
@@ -287,12 +288,12 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className={`${
-                  data?.notification.length === 0
+                  data?.notification?.length === 0
                     ? 'flex flex-col items-center justify-center'
                     : ''
                 } max-h-96 min-h-96 w-screen overflow-y-auto rounded-md border px-0 py-2 text-sm shadow-lg`}
               >
-                {data?.notification.length !== 0 ? (
+                {data?.notification?.length !== 0 ? (
                   <>
                     <div className='flex items-center justify-between border-b p-2 px-3'>
                       <p>Notifications</p>
