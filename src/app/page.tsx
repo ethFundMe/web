@@ -11,13 +11,13 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },
-  title: 'Welcome | EthFundMe',
+  title: 'EthFundMe | Empower your giving with blockchain',
   description:
     'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
   keywords:
     'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
   twitter: {
-    title: 'Welcome | EthFundMe',
+    title: 'EthFundMe | Empower your giving with blockchain',
     card: 'summary_large_image',
     images: '/images/seo-common.jpg',
     description:
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: '/images/seo-common.jpg',
     url: 'https://ethfund.me',
-    title: 'Welcome | EthFundMe',
+    title: 'EthFundMe | Empower your giving with blockchain',
     description:
       'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
     siteName: 'EthFundMe',
