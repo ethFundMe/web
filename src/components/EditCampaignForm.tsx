@@ -24,6 +24,7 @@ import {
   type BaseError,
 } from 'wagmi';
 import * as z from 'zod';
+import { DiscontinueCampaignBtn } from './DiscontinueCampaignBtn';
 import { LinkPreview } from './LinkPreview';
 import { Button } from './ui/button';
 import {
@@ -389,18 +390,23 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             name='ytLink'
           />
         </div>
-        <Button
-          type='submit'
-          size='default'
-          className='col-span-2 disabled:pointer-events-auto disabled:cursor-not-allowed'
-          disabled={
-            !editMade || isConfirmingTxn || isPending || isUploadingMetadata
-          }
-        >
-          {isPending || isConfirmingTxn || isUploadingMetadata
-            ? 'Loading...'
-            : 'Update campaign'}
-        </Button>
+
+        <div className='col-span-2 grid grid-cols-2 gap-4'>
+          <Button
+            type='submit'
+            size='default'
+            className='disabled:pointer-events-auto disabled:cursor-not-allowed'
+            disabled={
+              !editMade || isConfirmingTxn || isPending || isUploadingMetadata
+            }
+          >
+            {isPending || isConfirmingTxn || isUploadingMetadata
+              ? 'Loading...'
+              : 'Update campaign'}
+          </Button>
+
+          <DiscontinueCampaignBtn campaign={campaign} />
+        </div>
       </form>
     </Form>
   );
