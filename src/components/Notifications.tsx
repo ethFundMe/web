@@ -5,7 +5,6 @@ import { Bell, Coins, Inbox } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { MdOutlineCampaign } from 'react-icons/md';
 import useSWR from 'swr';
 import {
   DropdownMenu,
@@ -126,7 +125,7 @@ const Notifications = () => {
           notifications.length === 0
             ? 'flex flex-col items-center justify-center'
             : ''
-        } max-h-96 min-h-96 min-w-72 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm`}
+        } max-h-96 min-h-96 w-96 overflow-y-auto rounded-md border px-0 py-2 text-sm`}
       >
         {notifications.length !== 0 ? (
           <>
@@ -163,7 +162,20 @@ const Notifications = () => {
                   <>
                     {item.notification_type === 'CAMPAIGN UPDATED' && (
                       <div className='ml-5'>
-                        {MdOutlineCampaign({ size: 16 })}
+                        <img
+                          src='/images/pen.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
+                      </div>
+                    )}
+                    {item.notification_type === 'CREATOR FEE UPDATED' && (
+                      <div className='ml-5'>
+                        <img
+                          src='/images/gear.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
                       </div>
                     )}
                     {item.notification_type === 'CAMPAIGN CREATED' && (
@@ -173,9 +185,16 @@ const Notifications = () => {
                         className='ml-5 w-4'
                       />
                     )}
-                    {item.notification_type === 'FUNDING' && (
+                    {item.notification_type === 'FUNDED' && (
                       <img
                         src='/images/fund.png'
+                        alt='fund'
+                        className='ml-5 w-4'
+                      />
+                    )}
+                    {item.notification_type === 'FUNDER' && (
+                      <img
+                        src='/images/hand.png'
                         alt='fund'
                         className='ml-5 w-4'
                       />
@@ -186,7 +205,7 @@ const Notifications = () => {
                       </div>
                     )}
                   </>
-                  <div className='w-full space-y-1 py-3'>
+                  <div className='w-full space-y-1 py-3 pr-4'>
                     <p className='w-full text-left text-[10px] text-gray-400'>
                       {formatDateToHumanReadable(item?.created_at as Date)}
                     </p>
