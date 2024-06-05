@@ -3,11 +3,12 @@
 import { NAVBARROUTES } from '@/lib/constants';
 import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/store';
+import { useModalStore, userStore } from '@/store';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { FaRegBell } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { AuthSidebarRoute } from './AuthSidebarRoute';
 import { NavLink } from './NavLink';
@@ -18,6 +19,7 @@ export const Sidebar = () => {
   const { openConnectModal } = useConnectModal();
   const { isConnected, address } = useAccount();
   const { openAccountModal } = useAccountModal();
+  const { user } = userStore();
   // const { closeModal } = useModalStore();
 
   return (
@@ -37,6 +39,13 @@ export const Sidebar = () => {
           {NAVBARROUTES.map((route) => (
             <SidebarNavLink key={route.title} {...route} />
           ))}
+          <SidebarNavLink
+            {...{
+              title: 'Notifications',
+              link: `/notifications/${user?.ethAddress}`,
+              icon: FaRegBell({ size: 20 }),
+            }}
+          />
         </ul>
 
         {isConnected && address && getCookie('efmToken') ? (

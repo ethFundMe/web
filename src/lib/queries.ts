@@ -1,4 +1,5 @@
 import { Campaign, User, UserEarning } from '@/types';
+import { Notification } from './types';
 
 export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
@@ -97,6 +98,15 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
 
   return { campaigns, totalCampaigns };
 }
+export const getNotfications = async (eth_address: `0x${string}`) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${eth_address}`
+  );
+  const data = (await res.json()) as {
+    notification: Notification[];
+  };
+  return data;
+};
 
 export const getUser = async (userId: `0x${string}`) => {
   const res = await fetch(
