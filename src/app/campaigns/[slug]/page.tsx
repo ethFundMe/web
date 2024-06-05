@@ -120,10 +120,19 @@ export default async function CampaignPage({
     : [campaign.banner_url, ...campaign.media_links];
   return (
     <>
-      {campaign.flagged && (
+      {(campaign.flagged || campaign.discontinued) && (
         <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
-          <Flag className='fill-red-600' size={15} />
-          <span>This campaign has been flagged. </span>
+          {campaign.discontinued ? (
+            <span>
+              This campaign has been discontinued. It can no longer receive
+              donations.
+            </span>
+          ) : (
+            <>
+              <Flag className='fill-red-600' size={15} />
+              <span>This campaign has been flagged</span>
+            </>
+          )}
           <Link href='/legal/terms-and-conditions'>Learn more</Link>
         </div>
       )}
@@ -132,7 +141,8 @@ export default async function CampaignPage({
         <Container
           className={cn(
             'relative grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3 lg:items-start',
-            campaign.flagged && '!pointer-events-none !grayscale'
+            (campaign.flagged || campaign.discontinued) &&
+              '!pointer-events-none !grayscale'
           )}
         >
           <div className='space-y-5 lg:col-span-2 lg:space-y-8'>
