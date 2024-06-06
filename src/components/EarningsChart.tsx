@@ -1,16 +1,16 @@
 'use client';
 
-import { ShortLabels } from '@/lib/constants';
+import dayjs from 'dayjs';
 import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   TooltipProps,
   XAxis,
   YAxis,
+  ZAxis,
 } from 'recharts';
 
 type Earning = {
@@ -32,7 +32,7 @@ export const EarningsChart = ({ earnings }: Props) => {
           // width={600}
           height={300}
           data={earnings}
-          // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
         >
           {/* <defs>
           <linearGradient id='colorUv' x1='0' y1='0' x2='0' y2='1'>
@@ -40,9 +40,20 @@ export const EarningsChart = ({ earnings }: Props) => {
             <stop offset='95%' stopColor='#0062a6' stopOpacity={0} />
           </linearGradient>
         </defs> */}
+          <ZAxis dataKey='source' />
           <XAxis
-            dataKey='source'
-            tickFormatter={(label: string) => `${ShortLabels[label]}`}
+            dataKey='dateEarned'
+            reversed
+            // tickFormatter={(label: string) => {
+            //   const date = dayjs(label).toDate().toLocaleDateString();
+            //   return date ?? '';
+            // }}
+            tickFormatter={(label: string) => {
+              const date = dayjs(label).toDate().toLocaleDateString();
+              const thisYear = new Date().getFullYear().toString();
+              const newDate = date.replace(thisYear, thisYear.slice(2));
+              return newDate ?? '';
+            }}
           />
           <YAxis dataKey='amount' />
           <CartesianGrid strokeDasharray='3 3' />
@@ -56,9 +67,9 @@ export const EarningsChart = ({ earnings }: Props) => {
             fill='#93c5fd50'
           />
 
-          <span className='capitalize'>
+          {/* <span className='capitalize'>
             <Legend />
-          </span>
+          </span> */}
 
           {/* <Area
           type='monotone'
@@ -73,12 +84,14 @@ export const EarningsChart = ({ earnings }: Props) => {
   );
 };
 
-function CustomLabel({ label, payload }: TooltipProps<number, string>) {
+function CustomLabel({ payload }: TooltipProps<number, string>) {
+  // const date = new Date(label).toLocaleDateString();
+
   return (
     <div className='bg-white p-1.5'>
-      {/* <p>{ShortLabels[label]}</p> */}
-      <p>{label}</p>
+      <p>{payload?.map((i) => `${i.payload.source}`)}</p>
       <p>{payload?.map((i) => `${i.value} FUNDME`)}</p>
+      {/* <p>{date}</p> */}
     </div>
   );
 }

@@ -16,7 +16,13 @@ export type DonationStep = {
 export type Notification = {
   eth_address: string;
   description: string;
-  notification_type: 'FUNDING' | 'TOKEN REWARDS' | 'CAMPAIGN';
+  notification_type:
+    | 'FUNDED'
+    | 'FUNDER'
+    | 'TOKEN REWARDS'
+    | 'CAMPAIGN CREATED'
+    | 'CREATOR FEE UPDATED'
+    | 'CAMPAIGN UPDATED';
   url: string;
   id?: string | undefined;
   created_at?: Date | null | undefined;
