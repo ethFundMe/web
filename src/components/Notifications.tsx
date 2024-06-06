@@ -1,6 +1,7 @@
 'use client';
 import { Notification } from '@/lib/types';
 import { userStore } from '@/store';
+import DOMPurify from 'dompurify';
 import { Bell, Coins, Inbox } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -183,11 +184,9 @@ const Notifications = () => {
                       />
                     )}
                     {item.notification_type === 'FUNDED' && (
-                      <img
-                        src='/images/fund.png'
-                        alt='fund'
-                        className='ml-5 w-4'
-                      />
+                      <div className='ml-5'>
+                        <Coins size={16} />
+                      </div>
                     )}
                     {item.notification_type === 'FUNDER' && (
                       <div className='ml-5'>
@@ -205,7 +204,12 @@ const Notifications = () => {
                       {formatDateToHumanReadable(item?.created_at as Date)}
                     </p>
                     <div className=''>
-                      <p className='text-xs'>{item.description}</p>
+                      <p
+                        className='text-xs'
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(item.description),
+                        }}
+                      />
                     </div>
                   </div>
                 </Link>
