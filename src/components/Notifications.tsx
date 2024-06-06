@@ -5,6 +5,7 @@ import { Bell, Coins, Inbox } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { BiDonateHeart } from 'react-icons/bi';
 import useSWR from 'swr';
 import {
   DropdownMenu,
@@ -161,22 +162,18 @@ const Notifications = () => {
                 >
                   <>
                     {item.notification_type === 'CAMPAIGN UPDATED' && (
-                      <div className='ml-5'>
-                        <img
-                          src='/images/pen.png'
-                          alt='create'
-                          className='ml-5 w-4'
-                        />
-                      </div>
+                      <img
+                        src='/images/pen.png'
+                        alt='create'
+                        className='ml-5 w-4'
+                      />
                     )}
                     {item.notification_type === 'CREATOR FEE UPDATED' && (
-                      <div className='ml-5'>
-                        <img
-                          src='/images/gear.png'
-                          alt='create'
-                          className='ml-5 w-4'
-                        />
-                      </div>
+                      <img
+                        src='/images/gear.png'
+                        alt='create'
+                        className='ml-5 w-4'
+                      />
                     )}
                     {item.notification_type === 'CAMPAIGN CREATED' && (
                       <img
@@ -193,11 +190,9 @@ const Notifications = () => {
                       />
                     )}
                     {item.notification_type === 'FUNDER' && (
-                      <img
-                        src='/images/hand.png'
-                        alt='fund'
-                        className='ml-5 w-4'
-                      />
+                      <div className='ml-5'>
+                        <BiDonateHeart size={18} />
+                      </div>
                     )}
                     {item.notification_type === 'TOKEN REWARDS' && (
                       <div className='ml-5'>
