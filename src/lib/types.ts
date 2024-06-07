@@ -19,6 +19,7 @@ export type Notification = {
   notification_type:
     | 'FUNDED'
     | 'FUNDER'
+    | 'COMMENT'
     | 'TOKEN REWARDS'
     | 'CAMPAIGN CREATED'
     | 'CREATOR FEE UPDATED'

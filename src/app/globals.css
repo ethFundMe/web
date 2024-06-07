@@ -446,6 +446,10 @@ input.hidden-arrows[type='number'] {
   }
 }
 
+button:focus {
+  outline: none;
+}
+
 .inset-center {
   position: absolute;
   top: 50%;

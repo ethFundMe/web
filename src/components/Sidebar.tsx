@@ -39,13 +39,15 @@ export const Sidebar = () => {
           {NAVBARROUTES.map((route) => (
             <SidebarNavLink key={route.title} {...route} />
           ))}
-          <SidebarNavLink
-            {...{
-              title: 'Notifications',
-              link: `/notifications/${user?.ethAddress}`,
-              icon: FaRegBell({ size: 20 }),
-            }}
-          />
+          {isConnected && address && getCookie('efmToken') && (
+            <SidebarNavLink
+              {...{
+                title: 'Notifications',
+                link: `/notifications/${user?.ethAddress}`,
+                icon: FaRegBell({ size: 20 }),
+              }}
+            />
+          )}
         </ul>
 
         {isConnected && address && getCookie('efmToken') ? (

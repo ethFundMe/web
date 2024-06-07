@@ -5,6 +5,14 @@
 //   description: string;
 
 // }
+
+function removeEmojis(text: string): string {
+  // This regex pattern matches most emojis.
+  const emojiPattern =
+    /([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{FE00}-\u{FE0F}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{200D}]|[\u{20E3}]|[\u{0023}-\u{0039}]\u{FE0F}?|\u{1F3FB}-\u{1F3FF})/gu;
+
+  return text.replace(emojiPattern, '');
+}
 export function seoCampaign(
   namee: string,
   goal: string,
@@ -14,8 +22,9 @@ export function seoCampaign(
   profileImage: string,
   isVerified: boolean
 ) {
-  const title = titlee.toUpperCase(),
-    name = namee.toUpperCase();
+  const _description = removeEmojis(description);
+  const title = removeEmojis(titlee).toUpperCase(),
+    name = removeEmojis(namee).toUpperCase();
 
   let encodedUrl = btoa(profileImage);
 
@@ -118,7 +127,7 @@ export function seoCampaign(
     const slicedWords = words.slice(0, 37);
     return slicedWords.join(' ') + '. . .';
   }
-  const shortDescription = descriptionSlice(description);
+  const shortDescription = descriptionSlice(_description);
 
   const combinedMessage =
     link1 +
@@ -147,7 +156,8 @@ export function seoProfile(
   campaigns: string,
   isVerified: boolean
 ) {
-  const name = fullName.toUpperCase();
+  let _bio = removeEmojis(bio);
+  const name = removeEmojis(fullName).toUpperCase();
   // isVerified = true;
   const isVerifX = 91;
   const isVeriff = 245;
@@ -174,11 +184,11 @@ export function seoProfile(
     campaigns = 'NO';
   }
 
-  if (bio.length > 188) {
-    const words = bio.split(' ');
-    while (bio.length > 188 && words.length > 1) {
+  if (_bio.length > 188) {
+    const words = _bio.split(' ');
+    while (_bio.length > 188 && words.length > 1) {
       words.pop();
-      bio = words.join(' ') + ' .  .  .';
+      _bio = words.join(' ') + ' .  .  .';
     }
   }
 
@@ -199,7 +209,7 @@ export function seoProfile(
     '/co_rgb:FFFFFF,w_' +
     descripWidth +
     ',c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left_line_spacing_5:' +
-    encodeURIComponent(encodeURIComponent(bio));
+    encodeURIComponent(encodeURIComponent(_bio));
   const link3 =
     '/fl_layer_apply,g_north_west,x_108,y_' +
     descripY +
@@ -232,7 +242,7 @@ export function seoProfile(
       '/co_rgb:FFFFFF,w_' +
       descripWidth +
       ',c_fit,l_text:Mona-sans-RegularWide.ttf_25_bold_normal_left_line_spacing_5:' +
-      encodeURIComponent(encodeURIComponent(bio));
+      encodeURIComponent(encodeURIComponent(_bio));
     link4 =
       '/fl_layer_apply,g_west,x_158,y_399/l_fetch:' +
       encodedUrl +
