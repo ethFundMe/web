@@ -37,8 +37,8 @@ export const DashboardSidebar = ({
   }, [userAddress, user?.ethAddress, push]);
 
   useEffect(() => {
-    setRoutes(getDashboardRoutes(userAddress));
-  }, [userAddress]);
+    setRoutes(getDashboardRoutes(userAddress, user?.isVerified || false));
+  }, [userAddress, user?.isVerified]);
 
   return (
     <>
@@ -59,8 +59,6 @@ export const DashboardSidebar = ({
       </aside>
 
       <DashboardMobileSidebar routes={routes} />
-      {/* <DashboardBottomTabs routes={routes} /> */}
-      {/* <DashboardMobileMenu routes={routes} /> */}
     </>
   );
 };

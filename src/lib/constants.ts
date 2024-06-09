@@ -24,7 +24,7 @@ export const NAVBARROUTES: NavbarRoute[] = [
   {
     title: 'Create Campaign',
     link: '/campaigns/create',
-    icon: CiSquarePlus({ size: 20 }),
+    icon: CiSquarePlus({ size: 20, strokeWidth: 1.2 }),
   },
 ];
 

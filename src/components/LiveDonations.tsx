@@ -88,7 +88,7 @@ export default function LiveDonations() {
           {donations.map((i) => (
             <motion.li
               layout
-              animate={{ x: [50, 0], opacity: [0, 1] }}
+              animate={{ opacity: [0, 1] }}
               exit={{
                 y: 20,
                 opacity: 0,
@@ -117,10 +117,6 @@ export default function LiveDonations() {
                 </span>
 
                 <small>{dayjs(i.created_at).format('HH:mm a')}</small>
-
-                {/* <span className='ml-auto block text-right text-xs text-slate-600'>
-                  {getRelativeTime(i.created_at)}
-                </span> */}
               </Link>
             </motion.li>
           ))}

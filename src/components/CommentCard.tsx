@@ -3,7 +3,6 @@
 import { Comment } from '@/lib/types';
 import { cn, getRelativeTime } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Eye } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { forwardRef, useEffect, useRef, useState } from 'react';
@@ -99,7 +98,11 @@ export const CommentCard = forwardRef<Ref, Props>(
         <div className='w-full pr-3'>
           <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
             <div className='flex items-center gap-2'>
-              <div className='relative h-8 w-8 flex-shrink-0'>
+              <Link
+                target='_blank'
+                href={`/profile/${ethAddress}`}
+                className='relative h-8 w-8 flex-shrink-0'
+              >
                 {profileUrl ? (
                   <ImageWithFallback
                     className='block flex-shrink-0 rounded-full object-cover'
@@ -118,12 +121,16 @@ export const CommentCard = forwardRef<Ref, Props>(
                     alt='user-pfp'
                   />
                 )}
-              </div>
+              </Link>
 
               <div>
-                <p className='line-clamp-1 max-w-xs [word-break:break-all] sm:max-w-sm'>
+                <Link
+                  target='_blank'
+                  className='line-clamp-1 max-w-xs [word-break:break-all] hover:underline sm:max-w-sm'
+                  href={`/profile/${ethAddress}`}
+                >
                   {fullName}
-                </p>
+                </Link>
                 <small className='text-[10px]'>
                   {getRelativeTime(created_at)}
                 </small>
@@ -169,12 +176,6 @@ export const CommentCard = forwardRef<Ref, Props>(
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            <DropdownMenuItem className='flex items-center gap-2 py-1' asChild>
-              <Link target='_blank' href={`/profile/${ethAddress}`}>
-                <Eye size={12} />
-                <small className='text-xs'>Visit profile</small>
-              </Link>
-            </DropdownMenuItem>
             {transaction_hash && (
               <DropdownMenuItem
                 className='flex items-center gap-2 py-1'

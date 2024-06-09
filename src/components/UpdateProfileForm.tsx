@@ -51,7 +51,6 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .string()
       .max(450, { message: 'Bio is limited to 450 characters' })
       .optional(),
-    // ethAddress: z.string().regex(REGEX_CODES.walletAddress).optional(),
     creatorFee: z
       .number({ required_error: 'Enter amount in percentage' })
       .min(0, { message: 'Enter a minimum value of 0 or greater' })
@@ -199,7 +198,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='mx-auto w-full space-y-4 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:p-5 md:py-4'
+        className='mx-auto w-full space-y-4 rounded-md border border-neutral-300 p-3 sm:max-w-xl sm:p-5 md:py-4'
       >
         <div className='grid w-full grid-cols-2 gap-4'>
           <FormField
@@ -297,7 +296,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
 
         <Button
           disabled={!!formStatus || !editMade || isConfirmingTxn}
-          className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50 md:w-52'
+          className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50'
         >
           {formStatus ?? 'Save'}
         </Button>
