@@ -181,6 +181,8 @@ export default function UpdateCampaignMediaForm({
   return (
     <div className='w-full sm:max-w-2xl'>
       <div className='w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
+        <h2 className='text-xl'>Banner</h2>
+
         <Image
           className='mx-auto h-[300px] w-auto object-contain'
           width={400}
@@ -220,6 +222,8 @@ export default function UpdateCampaignMediaForm({
       </div>
 
       <div className='mx-auto my-4 w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
+        <h2 className='text-xl'>Other Images</h2>
+
         <p className='text-sm text-slate-400'>
           {6 - otherPreview.length} remaining
         </p>
