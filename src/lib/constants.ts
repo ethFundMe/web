@@ -1,11 +1,11 @@
 import { CampaignCategory } from '@/components/types';
 import {
-  BiDonateHeart,
   BiLogoDiscordAlt,
   BiLogoGithub,
   BiLogoInstagram,
 } from 'react-icons/bi';
 import { BsTwitterX } from 'react-icons/bs';
+import { CiSquarePlus } from 'react-icons/ci';
 import { MdOutlineCampaign } from 'react-icons/md';
 import {
   CampaignTags,
@@ -24,7 +24,7 @@ export const NAVBARROUTES: NavbarRoute[] = [
   {
     title: 'Create Campaign',
     link: '/campaigns/create',
-    icon: BiDonateHeart({ size: 20 }),
+    icon: CiSquarePlus({ size: 20 }),
   },
 ];
 

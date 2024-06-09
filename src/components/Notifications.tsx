@@ -1,11 +1,12 @@
 'use client';
 import { Notification } from '@/lib/types';
 import { userStore } from '@/store';
+import DOMPurify from 'dompurify';
 import { Bell, Coins, Inbox } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { MdOutlineCampaign } from 'react-icons/md';
+import { BiDonateHeart } from 'react-icons/bi';
 import useSWR from 'swr';
 import {
   DropdownMenu,
@@ -126,7 +127,7 @@ const Notifications = () => {
           notifications.length === 0
             ? 'flex flex-col items-center justify-center'
             : ''
-        } max-h-96 min-h-96 min-w-72 max-w-md overflow-y-auto rounded-md border px-0 py-2 text-sm`}
+        } max-h-96 min-h-96 w-96 overflow-y-auto rounded-md border px-0 py-2 text-sm`}
       >
         {notifications.length !== 0 ? (
           <>
@@ -162,9 +163,18 @@ const Notifications = () => {
                 >
                   <>
                     {item.notification_type === 'CAMPAIGN UPDATED' && (
-                      <div className='ml-5'>
-                        {MdOutlineCampaign({ size: 16 })}
-                      </div>
+                      <img
+                        src='/images/pen.png'
+                        alt='create'
+                        className='ml-5 w-4'
+                      />
+                    )}
+                    {item.notification_type === 'CREATOR FEE UPDATED' && (
+                      <img
+                        src='/images/gear.png'
+                        alt='create'
+                        className='ml-5 w-4'
+                      />
                     )}
                     {item.notification_type === 'CAMPAIGN CREATED' && (
                       <img
@@ -173,12 +183,15 @@ const Notifications = () => {
                         className='ml-5 w-4'
                       />
                     )}
-                    {item.notification_type === 'FUNDING' && (
-                      <img
-                        src='/images/fund.png'
-                        alt='fund'
-                        className='ml-5 w-4'
-                      />
+                    {item.notification_type === 'FUNDED' && (
+                      <div className='ml-5'>
+                        <Coins size={16} />
+                      </div>
+                    )}
+                    {item.notification_type === 'FUNDER' && (
+                      <div className='ml-5'>
+                        <BiDonateHeart size={18} />
+                      </div>
                     )}
                     {item.notification_type === 'TOKEN REWARDS' && (
                       <div className='ml-5'>
@@ -186,12 +199,17 @@ const Notifications = () => {
                       </div>
                     )}
                   </>
-                  <div className='w-full space-y-1 py-3'>
+                  <div className='w-full space-y-1 py-3 pr-4'>
                     <p className='w-full text-left text-[10px] text-gray-400'>
                       {formatDateToHumanReadable(item?.created_at as Date)}
                     </p>
                     <div className=''>
-                      <p className='text-xs'>{item.description}</p>
+                      <p
+                        className='text-xs'
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(item.description),
+                        }}
+                      />
                     </div>
                   </div>
                 </Link>

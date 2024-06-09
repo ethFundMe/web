@@ -17,9 +17,11 @@ export type Notification = {
   eth_address: string;
   description: string;
   notification_type:
-    | 'FUNDING'
+    | 'FUNDED'
+    | 'FUNDER'
     | 'TOKEN REWARDS'
     | 'CAMPAIGN CREATED'
+    | 'CREATOR FEE UPDATED'
     | 'CAMPAIGN UPDATED';
   url: string;
   id?: string | undefined;

@@ -81,7 +81,6 @@ const Navbar = () => {
           )}
         </ul>
         <div className='flex items-center gap-x-5 lg:hidden'>
-          {isConnected && <Notifications />}
           <button
             className='block'
             onClick={() => {
