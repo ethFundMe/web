@@ -1,5 +1,5 @@
-import { CheckCircle, PercentCircle } from 'lucide-react';
 import { BiUser } from 'react-icons/bi';
+import { CiCircleCheck, CiPercent } from 'react-icons/ci';
 import { FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline, IoTrashBin } from 'react-icons/io5';
 
@@ -23,7 +23,7 @@ export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
     {
       link: `/dashboard/${address}/creator-fee`,
       title: 'Creator fee',
-      icon: <PercentCircle size={16} />,
+      icon: <CiPercent />,
     },
   ];
 
@@ -36,7 +36,7 @@ export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
   const verifyAccount = {
     link: `/dashboard/${address}/verify`,
     title: 'Get verified',
-    icon: <CheckCircle size={16} />,
+    icon: <CiCircleCheck />,
   };
 
   return verified
