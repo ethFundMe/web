@@ -19,14 +19,12 @@ import DnDUpload from '../DnDUpload';
 import EarningsCard from '../EarningsCard';
 import ImageWithFallback from '../ImageWithFallback';
 import UserCampaignCard from '../UserCampaignCard';
-import { Button } from '../ui/button';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
 } from '../ui/dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export const UserProfile = ({
   user,
@@ -278,18 +276,12 @@ export const UserProfile = ({
                   )}
                 </div>
 
-                <div className='space-y-2'>
-                  <Popover>
-                    <PopoverTrigger>
-                      <small className='grid h-12 w-12 place-content-center rounded-full bg-primary-default px-1.5 py-0.5 text-base text-white hover:bg-primary-default/80 md:px-3 md:py-1'>
-                        {parseInt(String(user.creatorFee))}%
-                      </small>
-                    </PopoverTrigger>
-                    <PopoverContent className='max-w-[200px]'>
-                      Creator fee
-                    </PopoverContent>
-                  </Popover>
-                </div>
+                <Link
+                  href={`/dashboard/${user.ethAddress}/creator-fee`}
+                  className='grid h-20 w-20 place-content-center rounded-full bg-primary-default px-1.5 py-0.5 text-base text-white md:px-3 md:py-1'
+                >
+                  {Number(user.creatorFee)}%
+                </Link>
               </div>
 
               <div className='flex w-full justify-between'>
@@ -320,14 +312,6 @@ export const UserProfile = ({
                     <p className='max-w-[700px] text-sm sm:text-base'>
                       {user.bio}
                     </p>
-                  )}
-
-                  {!user.isVerified && address === user.ethAddress && (
-                    <Button className='mt-2'>
-                      <Link href={`/dashboard/${user.ethAddress}/verify`}>
-                        Get verified
-                      </Link>
-                    </Button>
                   )}
                 </div>
               </div>

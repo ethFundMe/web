@@ -130,7 +130,7 @@ export default async function CampaignPage({
           ) : (
             <>
               <Flag className='fill-red-600' size={15} />
-              <span>This campaign has been flagged</span>
+              <span>This campaign has been flagged.</span>
             </>
           )}
           <Link href='/legal/terms-and-conditions'>Learn more</Link>
