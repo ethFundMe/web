@@ -99,7 +99,6 @@ export const CommentCard = forwardRef<Ref, Props>(
           <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <Link
-                target='_blank'
                 href={`/profile/${ethAddress}`}
                 className='relative h-8 w-8 flex-shrink-0'
               >
@@ -125,7 +124,6 @@ export const CommentCard = forwardRef<Ref, Props>(
 
               <div>
                 <Link
-                  target='_blank'
                   className='line-clamp-1 max-w-xs [word-break:break-all] hover:underline sm:max-w-sm'
                   href={`/profile/${ethAddress}`}
                 >
@@ -165,69 +163,71 @@ export const CommentCard = forwardRef<Ref, Props>(
           )}
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className='absolute right-0 top-0 cursor-pointer p-2 focus:outline-none'
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <IoEllipsisVertical />
-          </DropdownMenuTrigger>
+        {(transaction_hash || isOwner) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className='absolute right-0 top-0 cursor-pointer p-2 focus:outline-none'
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <IoEllipsisVertical />
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent>
-            {transaction_hash && (
-              <DropdownMenuItem
-                className='flex items-center gap-2 py-1'
-                asChild
-              >
-                <Link
-                  target='_blank'
-                  href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
+            <DropdownMenuContent>
+              {transaction_hash && (
+                <DropdownMenuItem
+                  className='flex items-center gap-2 py-1'
+                  asChild
                 >
-                  <Image
-                    src='/images/etherscan.svg'
-                    width={12}
-                    height={12}
-                    alt='etherscan'
-                  />
-                  <small className='text-xs'>View transaction</small>
-                </Link>
-              </DropdownMenuItem>
-            )}
-            {isOwner && (
-              <DropdownMenuItem asChild>
-                <Dialog>
-                  <DialogTrigger className='flex items-center gap-2 px-2 py-1 hover:bg-slate-100 focus:outline-none'>
-                    <IoTrash size={12} className='text-red-500' />
-                    <small className='text-xs'>Delete comment</small>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader className='mb-2 space-y-1'>
-                      <DialogTitle>Sure to delete comment?</DialogTitle>
-                      <DialogDescription>
-                        This action is irreversible
-                      </DialogDescription>
-                    </DialogHeader>
+                  <Link
+                    target='_blank'
+                    href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
+                  >
+                    <Image
+                      src='/images/etherscan.svg'
+                      width={12}
+                      height={12}
+                      alt='etherscan'
+                    />
+                    <small className='text-xs'>View transaction</small>
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {isOwner && (
+                <DropdownMenuItem asChild>
+                  <Dialog>
+                    <DialogTrigger className='flex items-center gap-2 px-2 py-1 hover:bg-slate-100 focus:outline-none'>
+                      <IoTrash size={12} className='text-red-500' />
+                      <small className='text-xs'>Delete comment</small>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader className='mb-2 space-y-1'>
+                        <DialogTitle>Sure to delete comment?</DialogTitle>
+                        <DialogDescription>
+                          This action is irreversible
+                        </DialogDescription>
+                      </DialogHeader>
 
-                    <div className='grid grid-cols-2 gap-4'>
-                      <Button
-                        variant='destructive'
-                        onClick={() => {
-                          handleDelete();
-                          closeRef.current?.click();
-                        }}
-                      >
-                        Delete
-                      </Button>
-                      <DialogClose ref={closeRef}>Close</DialogClose>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                      <div className='grid grid-cols-2 gap-4'>
+                        <Button
+                          variant='destructive'
+                          onClick={() => {
+                            handleDelete();
+                            closeRef.current?.click();
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <DialogClose ref={closeRef}>Close</DialogClose>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </motion.div>
     );
   }
