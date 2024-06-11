@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiDonateHeart } from 'react-icons/bi';
+import { HiEllipsisVertical } from 'react-icons/hi2';
 import useSWR from 'swr';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
@@ -20,13 +22,16 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const Notifications = () => {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [getAllNotifications, setGetAllNotifications] = useState(false);
   const { user } = userStore();
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
   const { data, isLoading, error } = useSWR<{
     notification: Notification[];
   }>(
-    `${apiBaseUrl}/api/notifications/${user?.ethAddress}?viewed=false`,
+    `${apiBaseUrl}/api/notifications/${user?.ethAddress}${
+      getAllNotifications ? '' : '?viewed=false'
+    }`,
     fetcher
   );
 
@@ -114,7 +119,7 @@ const Notifications = () => {
     );
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='relative active:border-none active:outline-none'>
+      <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
         {notifications?.length !== 0 && (
           <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
@@ -123,111 +128,132 @@ const Notifications = () => {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className={`${
-          notifications.length === 0
-            ? 'flex flex-col items-center justify-center'
-            : ''
-        } max-h-96 min-h-96 w-96 overflow-y-auto rounded-md border px-0 py-2 text-sm`}
+        className={
+          'max-h-96 min-h-96 w-96 overflow-y-auto rounded-md border px-0 py-2 text-sm'
+        }
       >
-        {notifications.length !== 0 ? (
-          <>
-            <div className='flex items-center justify-between border-b p-2 px-5'>
-              <p>Notifications</p>
-              <button
-                onClick={() => {
-                  viewAllNotification({
-                    eth_address: user?.ethAddress as `0x${string}`,
-                  });
-                  setNotifications([]);
-                }}
-                className='rounded-md p-2 text-xs font-semibold text-primary-default'
-              >
-                Mark all as read
-              </button>
-            </div>
-            {notifications?.map((item, index) => (
-              <DropdownMenuItem
-                key={index}
-                className='block w-full border-b p-0'
-              >
-                <Link
-                  href={item.url}
-                  onClick={() => {
-                    viewNotification({
-                      id: item.id as string,
-                      eth_address: item.eth_address as `0x${string}`,
-                    });
-                    router.push(item.url);
-                  }}
-                  className='flex w-full items-center gap-x-8'
-                >
-                  <>
-                    {item.notification_type === 'CAMPAIGN UPDATED' && (
-                      <img
-                        src='/images/pen.png'
-                        alt='create'
-                        className='ml-5 w-4'
-                      />
-                    )}
-                    {item.notification_type === 'CREATOR FEE UPDATED' && (
-                      <img
-                        src='/images/gear.png'
-                        alt='create'
-                        className='ml-5 w-4'
-                      />
-                    )}
-                    {item.notification_type === 'CAMPAIGN CREATED' && (
-                      <img
-                        src='/images/create_campaign.png'
-                        alt='create'
-                        className='ml-5 w-4'
-                      />
-                    )}
-                    {item.notification_type === 'FUNDED' && (
-                      <div className='ml-5'>
-                        <Coins size={16} />
-                      </div>
-                    )}
-                    {item.notification_type === 'FUNDER' && (
-                      <div className='ml-5'>
-                        <BiDonateHeart size={18} />
-                      </div>
-                    )}
-                    {item.notification_type === 'TOKEN REWARDS' && (
-                      <div className='ml-5'>
-                        <Coins size={16} />
-                      </div>
-                    )}
-                  </>
-                  <div className='w-full space-y-1 py-3 pr-4'>
-                    <p className='w-full text-left text-[10px] text-gray-400'>
-                      {formatDateToHumanReadable(item?.created_at as Date)}
-                    </p>
-                    <div className=''>
-                      <p
-                        className='text-xs'
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(item.description),
-                        }}
-                      />
-                    </div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-            ))}
-          </>
-        ) : (
-          <div className='inset-center grid w-full place-items-center'>
-            <Inbox
-              size={60}
-              color='#000'
-              strokeWidth={0.75}
-              absoluteStrokeWidth
-              className='rounded-full bg-gray-100 p-3'
-            />
-            <h4 className='w-full pt-2 text-center'>No new notifications</h4>
+        <>
+          <div className='flex items-center justify-between border-b p-2 px-5'>
+            <p>Notifications</p>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <HiEllipsisVertical />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  {' '}
+                  <button
+                    onClick={() => {
+                      viewAllNotification({
+                        eth_address: user?.ethAddress as `0x${string}`,
+                      });
+                      setNotifications([]);
+                    }}
+                    className='rounded-md p-2 text-sm disabled:cursor-not-allowed disabled:text-gray-400'
+                    disabled={notifications.length === 0}
+                  >
+                    Mark all as read
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  {' '}
+                  <button
+                    onClick={() => setGetAllNotifications(true)}
+                    className='rounded-md p-2 text-sm '
+                  >
+                    View all notifications
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        )}
+          {notifications.length !== 0 ? (
+            <>
+              {notifications?.map((item, index) => (
+                <DropdownMenuItem
+                  key={index}
+                  className='block w-full border-b p-0'
+                >
+                  <Link
+                    href={item.url}
+                    onClick={() => {
+                      viewNotification({
+                        id: item.id as string,
+                        eth_address: item.eth_address as `0x${string}`,
+                      });
+                      router.push(item.url);
+                    }}
+                    className='flex w-full items-center gap-x-8'
+                  >
+                    <>
+                      {item.notification_type === 'CAMPAIGN UPDATED' && (
+                        <img
+                          src='/images/pen.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
+                      )}
+                      {item.notification_type === 'CREATOR FEE UPDATED' && (
+                        <img
+                          src='/images/gear.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
+                      )}
+                      {item.notification_type === 'COMMENT' && (
+                        <img
+                          src='/images/comment.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
+                      )}
+                      {item.notification_type === 'FUNDED' && (
+                        <div className='ml-5'>
+                          <Coins size={16} />
+                        </div>
+                      )}
+                      {item.notification_type === 'FUNDER' && (
+                        <div className='ml-5'>
+                          <BiDonateHeart size={18} />
+                        </div>
+                      )}
+                      {item.notification_type === 'TOKEN REWARDS' && (
+                        <div className='ml-5'>
+                          <Coins size={16} />
+                        </div>
+                      )}
+                    </>
+                    <div className='w-full space-y-1 py-3 pr-4'>
+                      <p className='w-full text-left text-[10px] text-gray-400'>
+                        {formatDateToHumanReadable(item?.created_at as Date)}
+                      </p>
+                      <div className=''>
+                        <p
+                          className='text-xs'
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(item.description),
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </>
+          ) : (
+            <div className='inset-center grid w-full place-items-center'>
+              <Inbox
+                size={60}
+                color='#000'
+                strokeWidth={0.75}
+                absoluteStrokeWidth
+                className='rounded-full bg-gray-100 p-3'
+              />
+              <h4 className='w-full pt-2 text-center'>No new notifications</h4>
+            </div>
+          )}
+        </>
       </DropdownMenuContent>
     </DropdownMenu>
   );
