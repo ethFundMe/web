@@ -26,62 +26,58 @@ const responsive = {
   },
 };
 
-const CampaignsCarousel = ({ campaigns }: { campaigns: Campaign[] }) => {
-  const uniqueTags: string[] = Array.from(
-    new Set(campaigns.map((obj) => obj.tag))
-  );
-
+const CampaignsCarousel = ({
+  campaigns,
+  tag,
+}: {
+  campaigns: Campaign[];
+  tag: string;
+}) => {
   return (
-    <div>
-      <div className='w-full space-y-14 md:pl-6'>
-        {uniqueTags.map((tag) => (
-          <div key={tag} className='space-y-5'>
-            <h2 className='text-center text-2xl font-extralight text-primary-dark md:text-left md:text-3xl'>
-              {tag}
-            </h2>
-            <Carousel
-              swipeable={false}
-              draggable={false}
-              showDots={isMobile ? true : false}
-              // renderDotsOutside={true}
-              responsive={responsive}
-              // centerMode={isMobile ? true : false}
-              // renderArrowsWhenDisabled={isMobile ? true : false}
-              //   ssr={true} // means to render carousel on server-side.
-              infinite={isMobile ? true : false}
-              autoPlay={isMobile ? true : false}
-              autoPlaySpeed={10000}
-              keyBoardControl={true}
-              customTransition='all 750ms'
-              // transitionDuration={3500}
-              containerClass='carousel-container'
-              customLeftArrow={
-                <ChevronLeft
-                  size={75}
-                  strokeWidth={1}
-                  className='absolute -left-4 z-50 text-7xl text-primary-default'
-                />
-              }
-              customRightArrow={
-                <ChevronRight
-                  size={75}
-                  strokeWidth={1}
-                  className='absolute -right-6 z-50 text-7xl text-primary-default'
-                />
-              }
-              removeArrowOnDeviceType={['tablet', 'mobile']}
-              deviceType={deviceType}
-              dotListClass='!-mb-1'
-              itemClass='carouselItem'
-            >
-              {campaigns
-                .filter((i) => i.tag === tag)
-                .map((item) => {
-                  return <CampaignCard key={item.id} campaign={item} />;
-                })}
-            </Carousel>
-          </div>
-        ))}
+    <div className='w-full space-y-14 md:pl-6'>
+      <div className='space-y-5'>
+        <h2 className='text-center text-2xl font-extralight text-primary-dark md:text-left md:text-3xl'>
+          {tag}
+        </h2>
+        <Carousel
+          swipeable={false}
+          draggable={false}
+          showDots={isMobile ? true : false}
+          // renderDotsOutside={true}
+          responsive={responsive}
+          // centerMode={isMobile ? true : false}
+          // renderArrowsWhenDisabled={isMobile ? true : false}
+          //   ssr={true} // means to render carousel on server-side.
+          infinite={isMobile ? true : false}
+          autoPlay={isMobile ? true : false}
+          autoPlaySpeed={10000}
+          keyBoardControl={true}
+          customTransition='all 750ms'
+          // transitionDuration={3500}
+          containerClass='carousel-container'
+          customLeftArrow={
+            <ChevronLeft
+              size={75}
+              strokeWidth={1}
+              className='absolute -left-4 z-50 text-7xl text-primary-default'
+            />
+          }
+          customRightArrow={
+            <ChevronRight
+              size={75}
+              strokeWidth={1}
+              className='absolute -right-6 z-50 text-7xl text-primary-default'
+            />
+          }
+          removeArrowOnDeviceType={['tablet', 'mobile']}
+          deviceType={deviceType}
+          dotListClass='!-mb-1'
+          itemClass='carouselItem'
+        >
+          {campaigns.map((item) => {
+            return <CampaignCard key={item.id} campaign={item} />;
+          })}
+        </Carousel>
       </div>
     </div>
   );
