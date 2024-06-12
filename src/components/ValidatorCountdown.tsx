@@ -26,7 +26,7 @@ export const ValidatorCountdown = () => {
   });
 
   const diminish = async () => {
-    if (!walletClient) return;
+    if (!walletClient || !publicClient) return;
     const [account] = await walletClient.getAddresses();
 
     const { request } = await publicClient.simulateContract({
@@ -51,12 +51,18 @@ export const ValidatorCountdown = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const newWalletClient: WalletClient = createWalletClient({
-        chain: mainnet,
-        transport: custom(window.ethereum!),
-      });
-      setWalletClient(newWalletClient);
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        const newWalletClient: WalletClient = createWalletClient({
+          chain: mainnet,
+          transport: custom(window.ethereum),
+        });
+        setWalletClient(newWalletClient);
+      } catch (error) {
+        console.error('Failed to create wallet client:', error);
+      }
+    } else {
+      console.warn('No web3 provider found. Please install MetaMask.');
     }
   }, []);
 
@@ -78,7 +84,7 @@ export const ValidatorCountdown = () => {
   return (
     <div className='flex flex-wrap items-center justify-between gap-4'>
       <div className='flex gap-4'>
-        {Object.entries(Obj).map(([key, value]) => (
+        {Object.entries(Obj)?.map(([key, value]) => (
           <div key={key}>
             <div className='flex flex-col items-center uppercase'>
               <p

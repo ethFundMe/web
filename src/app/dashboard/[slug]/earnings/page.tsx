@@ -63,17 +63,6 @@ export default async function EarningsPage({
   const totalEarnings = await fetchTotalUserEarnings(slug);
   const earnings = await fetchUserEarnings(slug);
 
-  // console.log(
-  //   earnings.map((i) => ({
-  //     amount: parseFloat(i.amount),
-  //     source:
-  //       i.rewardType === 'campaign_creation'
-  //         ? 'Created campaign'
-  //         : 'Funded campaign',
-  //     dateEarned: new Date(i.created_at),
-  //   }))
-  // );
-
   return (
     <div className='mt-4 flex w-full p-4'>
       <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
@@ -92,13 +81,6 @@ export default async function EarningsPage({
               <p className='my-4 text-3xl font-bold text-primary-dark'>
                 {totalEarnings && totalEarnings.total} FUNDME
               </p>
-
-              {/* <ClaimTokenBtn
-                userAddress={slug}
-                disabled={
-                  totalEarnings ? parseFloat(totalEarnings.total) < 0 : true
-                }
-              /> */}
             </div>
           </div>
 
@@ -222,8 +204,6 @@ export default async function EarningsPage({
           </div>
         </aside>
       </div>
-
-      {/* <EarningsCard /> */}
     </div>
   );
 }
