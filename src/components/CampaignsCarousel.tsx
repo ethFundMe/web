@@ -40,8 +40,8 @@ const CampaignsCarousel = ({
           {tag}
         </h2>
         <Carousel
-          swipeable={false}
-          draggable={false}
+          swipeable={true}
+          draggable={true}
           showDots={isMobile ? true : false}
           // renderDotsOutside={true}
           responsive={responsive}

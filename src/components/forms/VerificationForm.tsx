@@ -118,7 +118,7 @@ export default function VerificationForm() {
     <div className='pb-20'>
       <Form {...form}>
         <form
-          className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
+          className='mx-auto mt-5 grid grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-xl sm:gap-8 sm:p-5'
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField

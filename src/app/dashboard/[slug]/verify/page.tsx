@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: 'https://ethfund.me',
     },
     twitter: {
-      title: 'Verify | EthFundMe',
+      title: 'Verify',
       card: 'summary_large_image',
       description: `${user.bio}`,
       images: '/images/seo-common.jpg',
@@ -41,10 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function VerifyPage() {
   return (
-    <div className='min-h-[calc(100dvh-269px)]'>
+    <div className='min-h-[calc(100dvh-269px)] w-full'>
       <Container>
-        <div className='pb-3 text-center sm:py-5'>
-          <h1 className={TextSizeStyles.h1}>Apply For Verification</h1>
+        <div className='mb-6 text-center lg:mb-8'>
+          <h1 className={TextSizeStyles.h4}>Apply For Verification</h1>
         </div>
 
         <VerificationForm />

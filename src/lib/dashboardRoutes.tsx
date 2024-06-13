@@ -1,7 +1,7 @@
 import { BiUser } from 'react-icons/bi';
-import { CiCircleCheck, CiPercent } from 'react-icons/ci';
-import { FaEthereum } from 'react-icons/fa';
+import { FaCheckCircle, FaEthereum } from 'react-icons/fa';
 import { IoPencilOutline, IoTrashBin } from 'react-icons/io5';
+import { RiPercentFill } from 'react-icons/ri';
 
 export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
   const allLinks = [
@@ -23,7 +23,7 @@ export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
     {
       link: `/dashboard/${address}/creator-fee`,
       title: 'Creator fee',
-      icon: <CiPercent />,
+      icon: <RiPercentFill />,
     },
   ];
 
@@ -36,7 +36,7 @@ export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
   const verifyAccount = {
     link: `/dashboard/${address}/verify`,
     title: 'Get verified',
-    icon: <CiCircleCheck />,
+    icon: <FaCheckCircle />,
   };
 
   return verified

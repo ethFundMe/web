@@ -32,7 +32,7 @@ export default async function CampaignsPage() {
         </Select>
       </div>
 
-      <div className='w-full'>
+      <div className='w-full space-y-8'>
         {tags?.map((tag) => <CampaignsByTag key={tag.id} tag={tag.name} />)}
       </div>
     </Container>
