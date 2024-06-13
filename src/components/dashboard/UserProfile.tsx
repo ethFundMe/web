@@ -277,8 +277,9 @@ export const UserProfile = ({
                 </div>
 
                 <Link
+                  title='Creator Fee'
                   href={`/dashboard/${user.ethAddress}/creator-fee`}
-                  className='grid h-20 w-20 place-content-center rounded-full bg-primary-default px-1.5 py-0.5 text-base text-white md:px-3 md:py-1'
+                  className='h-fit rounded-lg bg-primary-default px-5 py-1 text-base font-semibold text-white'
                 >
                   {Number(user.creatorFee)}%
                 </Link>

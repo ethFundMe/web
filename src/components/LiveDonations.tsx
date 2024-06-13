@@ -3,7 +3,7 @@
 
 import { socket as webSocket } from '@/lib/socketConfig';
 import { Donation, DonationResponse } from '@/lib/types';
-import { formatWalletAddress } from '@/lib/utils';
+import { formatWalletAddress, getRelativeTime } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -81,7 +81,7 @@ export default function LiveDonations() {
 
       <ul
         // ref={ref}
-        className='relative mx-auto h-[250px] max-w-md space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[250px] max-w-lg space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
       >
         {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
@@ -116,7 +116,8 @@ export default function LiveDonations() {
                   </span>
                 </span>
 
-                <small>{dayjs(i.created_at).format('HH:mm a')}</small>
+                {/* <small>{dayjs(i.created_at).format('HH:mm a')}</small> */}
+                <small>{getRelativeTime(i.created_at)}</small>
               </Link>
             </motion.li>
           ))}

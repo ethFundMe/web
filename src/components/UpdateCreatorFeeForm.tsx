@@ -111,7 +111,7 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
   return (
     <Form {...form}>
       <form
-        className='mx-auto flex w-full max-w-md flex-col items-center gap-4'
+        className='flex w-full max-w-xs flex-col gap-4'
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField

@@ -6,6 +6,7 @@ import {
   fetchUserEarnings,
   getUser,
 } from '@/lib/queries';
+import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -25,7 +26,6 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
   const id = params.slug;
 
   const user = await getUser(id as `0x${string}`);
@@ -68,9 +68,7 @@ export default async function EarningsPage({
       <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
-            <h2 className='text-lg font-bold text-primary-default'>
-              All Earnings
-            </h2>
+            <h2 className={cn(TextSizeStyles.h4)}>All Earnings</h2>
             <p>
               Your FUNDME tokens are automatically sent to you after each
               activity. The amount shown below represents the total tokens you
