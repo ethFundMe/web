@@ -1,30 +1,19 @@
 'use client';
+import { Campaign } from '@/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import useSWR from 'swr';
 import { CampaignCard } from './CampaignCard';
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
-interface Meta {
-  limit: number;
-  page: number;
-  totalCampaigns: number;
-  totalPages: number;
-}
-
-const CampaignsCarousel = ({ tag }: { tag: string }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
-  const { data, isLoading } = useSWR<{ campaigns: Camapaign[]; meta: Meta }>(
-    `${apiBaseUrl}/api/campaigns?tag=${tag}`,
-    fetcher
-  );
-  if (isLoading) return <div>loading...</div>;
-
-  const { campaigns } = data;
-  console.log(campaigns);
+const CampaignsCarousel = ({
+  campaigns,
+  tag,
+}: {
+  campaigns: Campaign[];
+  tag: string;
+}) => {
   return (
     <div className='w-full space-y-14 md:pl-6'>
       <div className='space-y-5'>
