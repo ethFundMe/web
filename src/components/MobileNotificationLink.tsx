@@ -86,8 +86,14 @@ export default function MobileNotificationLink({
             className='ml-5 w-4'
           />
         )}
+        {item.notification_type === 'COMMENT' && (
+          <img src='/images/comment.png' alt='fund' className='ml-5 w-4' />
+        )}
         {item.notification_type === 'FUNDER' && (
           <img src='/images/fund.png' alt='fund' className='ml-5 w-4' />
+        )}
+        {item.notification_type === 'CREATOR FEE UPDATED' && (
+          <img src='/images/gear.png' alt='gear' className='ml-5 w-4' />
         )}
         {item.notification_type === 'FUNDED' && (
           <img src='/images/fund.png' alt='fund' className='ml-5 w-4' />
@@ -103,7 +109,7 @@ export default function MobileNotificationLink({
           {formatDateToHumanReadable(item?.created_at as Date)}
         </p>
         <div className=''>
-          <p className='text-xs'>{item.description}</p>
+          <p className='text-sm'>{item.description}</p>
         </div>
       </div>
     </Link>
