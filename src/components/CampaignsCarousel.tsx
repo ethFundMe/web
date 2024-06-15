@@ -102,14 +102,14 @@ const CampaignsCarousel = ({
             <ChevronLeft
               size={75}
               strokeWidth={1}
-              className='absolute -left-4 z-50 text-7xl text-primary-default'
+              className='absolute -left-4 z-50 text-7xl text-primary-default md:hidden'
             />
           }
           customRightArrow={
             <ChevronRight
               size={75}
               strokeWidth={1}
-              className='absolute -right-6 z-50 text-7xl text-primary-default'
+              className='absolute -right-6 z-50 text-7xl text-primary-default md:hidden'
             />
           }
           removeArrowOnDeviceType={['tablet', 'mobile']}
@@ -148,7 +148,7 @@ const ButtonGroup = ({ next, previous, carouselState }: ButtonGroupProps) => {
     : 0;
   return (
     lastIndex !== 0 && (
-      <div className='carousel-button-group absolute -top-7 right-6 flex gap-3'>
+      <div className='carousel-button-group absolute -top-7 right-6 hidden gap-3 md:flex'>
         <Button
           variant='outline'
           onClick={() => previous && previous()}
