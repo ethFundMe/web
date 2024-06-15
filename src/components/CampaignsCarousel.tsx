@@ -1,7 +1,11 @@
 'use client';
+
+import { getCampaigns } from '@/lib/queries';
 import { Campaign } from '@/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { deviceType, isMobile } from 'react-device-detect';
+import { useInView } from 'react-intersection-observer';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { CampaignCard } from './CampaignCard';
@@ -28,11 +32,44 @@ const responsive = {
 
 const CampaignsCarousel = ({
   campaigns,
+  totalCampaigns,
   tag,
 }: {
   campaigns: Campaign[];
   tag: string;
+  totalCampaigns: number;
 }) => {
+  const [page, setPage] = useState(1);
+  const [campaignsShowing, setCampaignsShowing] = useState(campaigns);
+  const [ref, inView] = useInView({ rootMargin: '50px' });
+
+  const loadMoreCampaigns = useCallback(
+    async function () {
+      const next = page + 1;
+
+      if (typeof window === 'undefined') return;
+
+      const { campaigns: c } = await getCampaigns({
+        page: next,
+        tag,
+      });
+
+      if (c.length && !(campaigns.length === totalCampaigns)) {
+        setPage(next);
+        setCampaignsShowing((prev) => [...prev, ...c]);
+      }
+
+      console.log({ c });
+    },
+    [page, campaigns, tag, totalCampaigns]
+  );
+
+  useEffect(() => {
+    if (inView) {
+      loadMoreCampaigns();
+    }
+  }, [inView, loadMoreCampaigns]);
+
   return (
     <div className='w-full space-y-14 md:pl-6'>
       <div className='space-y-5'>
@@ -74,9 +111,23 @@ const CampaignsCarousel = ({
           dotListClass='!-mb-1'
           itemClass='carouselItem'
         >
-          {campaigns.map((item) => {
+          {campaignsShowing.map((item) => {
             return <CampaignCard key={item.id} campaign={item} />;
           })}
+
+          {campaignsShowing.length !== totalCampaigns ? (
+            <div ref={ref} className='space-y-4 border border-primary-gray p-4'>
+              <div className='h-80 animate-pulse bg-slate-100 md:h-48 lg:h-60'></div>
+              <div className='h-4 animate-pulse bg-slate-100'></div>
+              <div className='h-2 animate-pulse bg-slate-100'></div>
+              <div className='h-12 animate-pulse bg-slate-100'></div>
+              <div className='h-[60px] animate-pulse bg-slate-100'></div>
+            </div>
+          ) : (
+            <div className='flex h-4/5 items-center justify-center'>
+              <p className='text-center text-slate-500'>- End of campaigns -</p>
+            </div>
+          )}
         </Carousel>
       </div>
     </div>
