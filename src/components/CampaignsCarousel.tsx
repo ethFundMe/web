@@ -2,13 +2,19 @@
 
 import { getCampaigns } from '@/lib/queries';
 import { Campaign } from '@/types';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { deviceType, isMobile } from 'react-device-detect';
 import { useInView } from 'react-intersection-observer';
-import Carousel from 'react-multi-carousel';
+import Carousel, { ButtonGroupProps } from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { CampaignCard } from './CampaignCard';
+import { Button } from './ui/button';
 
 const responsive = {
   desktop: {
@@ -58,8 +64,6 @@ const CampaignsCarousel = ({
         setPage(next);
         setCampaignsShowing((prev) => [...prev, ...c]);
       }
-
-      console.log({ c });
     },
     [page, campaigns, tag, totalCampaigns]
   );
@@ -72,13 +76,15 @@ const CampaignsCarousel = ({
 
   return (
     <div className='w-full space-y-14 md:pl-6'>
-      <div className='space-y-5'>
-        <h2 className='text-center text-2xl font-extralight text-primary-dark md:text-left md:text-3xl'>
+      <div className='relative space-y-5'>
+        <h2 className='text-left text-2xl font-extralight text-primary-dark md:text-3xl'>
           {tag}
         </h2>
         <Carousel
-          swipeable={true}
-          draggable={true}
+          swipeable
+          draggable
+          renderButtonGroupOutside
+          customButtonGroup={<ButtonGroup />}
           showDots={isMobile ? true : false}
           // renderDotsOutside={true}
           responsive={responsive}
@@ -88,7 +94,7 @@ const CampaignsCarousel = ({
           infinite={isMobile ? true : false}
           autoPlay={isMobile ? true : false}
           autoPlaySpeed={10000}
-          keyBoardControl={true}
+          keyBoardControl
           customTransition='all 750ms'
           // transitionDuration={3500}
           containerClass='carousel-container'
@@ -110,6 +116,7 @@ const CampaignsCarousel = ({
           deviceType={deviceType}
           dotListClass='!-mb-1'
           itemClass='carouselItem'
+          className='!relative'
         >
           {campaignsShowing.map((item) => {
             return <CampaignCard key={item.id} campaign={item} />;
@@ -124,13 +131,43 @@ const CampaignsCarousel = ({
               <div className='h-[60px] animate-pulse bg-slate-100'></div>
             </div>
           ) : (
-            <div className='flex h-4/5 items-center justify-center'>
+            <div className='hidden h-4/5 items-center justify-center'>
               <p className='text-center text-slate-500'>- End of campaigns -</p>
             </div>
           )}
         </Carousel>
       </div>
     </div>
+  );
+};
+
+const ButtonGroup = ({ next, previous, carouselState }: ButtonGroupProps) => {
+  const currentSlide = carouselState?.currentSlide || 0;
+  const lastIndex = carouselState?.totalItems
+    ? carouselState.totalItems - 2
+    : 0;
+  return (
+    lastIndex !== 0 && (
+      <div className='carousel-button-group absolute -top-7 right-6 flex gap-3'>
+        <Button
+          variant='outline'
+          onClick={() => previous && previous()}
+          disabled={currentSlide === 0}
+          className='p-2 disabled:pointer-events-auto'
+        >
+          <ArrowLeftIcon strokeWidth={1.2} />
+        </Button>
+
+        <Button
+          className='p-2 disabled:pointer-events-auto'
+          variant='outline'
+          onClick={() => next && next()}
+          disabled={currentSlide === lastIndex}
+        >
+          <ArrowRightIcon strokeWidth={1.2} />
+        </Button>
+      </div>
+    )
   );
 };
 
