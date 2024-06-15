@@ -80,7 +80,7 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
 
   // console.log({ tagId, page, ethAddress });
 
-  let baseUrl = `${process.env.ETH_FUND_ENDPOINT}/api/campaigns/`;
+  let baseUrl = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/`;
 
   baseUrl = ethAddress
     ? `${baseUrl}?creator=${ethAddress}&page=${page ?? 1}`
@@ -88,16 +88,17 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
     ? `${baseUrl}?tag=${tagId}&page=${page ?? 1}`
     : `${baseUrl}?page=${page ?? 1}`;
 
+  // console.log({ baseUrl });
+
   const res = await fetch(baseUrl, { cache: 'no-store' });
   const data = await res.json();
-
-  // console.log({ baseUrl, data });
 
   const campaigns: Campaign[] = data.campaigns || [];
   const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
 }
+
 export const getNotfications = async (eth_address: `0x${string}`) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${eth_address}`
