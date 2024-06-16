@@ -49,6 +49,7 @@ export default async function CreatorFeePage({
     <div className='flex w-full max-w-2xl flex-col gap-6 p-4 lg:gap-8'>
       <div>
         <h2 className={cn(TextSizeStyles.h4)}>Update Creator Fee</h2>
+
         <p>
           Creator fees are an integral part of EthFundMe, designed to
           incentivize individuals like you to create impactful campaigns that
@@ -57,6 +58,13 @@ export default async function CreatorFeePage({
           promoting campaigns on our platform.
         </p>
       </div>
+
+      {user?.creatorFee && (
+        <p>
+          Your current creator fee is{' '}
+          <span className='font-semibold'>{Number(user.creatorFee)}%</span>
+        </p>
+      )}
 
       {user && <UpdateCreatorFeeForm user={user} />}
     </div>
