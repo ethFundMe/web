@@ -5,7 +5,7 @@ import { Campaign } from '@/types';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import 'react-multi-carousel/lib/styles.css';
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SClass } from 'swiper/types';
 import { CampaignCard } from './CampaignCard';
@@ -110,13 +110,12 @@ const CampaignsCarousel = ({
           }}
           lazyPreloadPrevNext={5}
           draggable={true}
-          navigation
           autoplay={{
             delay: 10000,
           }}
           slidesPerView='auto'
           spaceBetween='40px'
-          modules={[Pagination, Navigation, Autoplay]}
+          modules={[Pagination, Autoplay]}
           onActiveIndexChange={(swiper) => {
             const shouldLoadMore =
               swiper.activeIndex > swiper.slides.length - 5 &&
