@@ -10,7 +10,6 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
   const id = params.slug;
 
   const user = await getUser(id as `0x${string}`);

@@ -3,7 +3,7 @@
 
 import { socket as webSocket } from '@/lib/socketConfig';
 import { Donation, DonationResponse } from '@/lib/types';
-import { formatWalletAddress } from '@/lib/utils';
+import { formatWalletAddress, getRelativeTime } from '@/lib/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -81,14 +81,14 @@ export default function LiveDonations() {
 
       <ul
         // ref={ref}
-        className='relative mx-auto h-[250px] max-w-md space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[250px] max-w-[530px] space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
       >
         {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
           {donations.map((i) => (
             <motion.li
               layout
-              animate={{ x: [50, 0], opacity: [0, 1] }}
+              animate={{ opacity: [0, 1] }}
               exit={{
                 y: 20,
                 opacity: 0,
@@ -102,7 +102,7 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className=' flex flex-wrap justify-between border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className='flex flex-wrap justify-between gap-2 border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
                 <span className='flex items-center gap-2'>
                   <span>
@@ -116,11 +116,8 @@ export default function LiveDonations() {
                   </span>
                 </span>
 
-                <small>{dayjs(i.created_at).format('HH:mm a')}</small>
-
-                {/* <span className='ml-auto block text-right text-xs text-slate-600'>
-                  {getRelativeTime(i.created_at)}
-                </span> */}
+                {/* <small>{dayjs(i.created_at).format('HH:mm a')}</small> */}
+                <small>{getRelativeTime(i.created_at)}</small>
               </Link>
             </motion.li>
           ))}

@@ -21,7 +21,7 @@ export default function UserCampaignCard({
     <div
       className={cn(
         'group group flex flex-col overflow-hidden rounded-md border border-slate-300',
-        campaign.flagged && 'grayscale'
+        (campaign.flagged || campaign.discontinued) && 'grayscale'
       )}
     >
       <Link

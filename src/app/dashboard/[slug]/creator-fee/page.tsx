@@ -1,7 +1,7 @@
-import { Container } from '@/components/Container';
-import VerificationForm from '@/components/forms/VerificationForm';
+import { UpdateCreatorFeeForm } from '@/components/UpdateCreatorFeeForm';
 import { getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -10,26 +10,25 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
   const id = params.slug;
 
   const user = await getUser(id as `0x${string}`);
   if (!user) notFound();
 
   return {
-    title: 'Verify',
+    title: 'Creator Fee',
     description: `${user.bio}`,
     keywords:
       'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
     openGraph: {
       type: 'website',
-      title: 'Verify',
+      title: 'Creator Fee',
       description: `${user.bio}`,
       images: '/images/seo-common.jpg',
       url: 'https://ethfund.me',
     },
     twitter: {
-      title: 'Verify',
+      title: 'Creator Fee',
       card: 'summary_large_image',
       description: `${user.bio}`,
       images: '/images/seo-common.jpg',
@@ -39,16 +38,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function VerifyPage() {
-  return (
-    <div className='min-h-[calc(100dvh-269px)] w-full'>
-      <Container>
-        <div className='mb-6 text-center lg:mb-8'>
-          <h1 className={TextSizeStyles.h4}>Apply For Verification</h1>
-        </div>
+export default async function CreatorFeePage({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
+  const user = await getUser(slug as `0x${string}`);
 
-        <VerificationForm />
-      </Container>
+  return (
+    <div className='flex w-full max-w-2xl flex-col gap-6 p-4 lg:gap-8'>
+      <div>
+        <h2 className={cn(TextSizeStyles.h4)}>Update Creator Fee</h2>
+
+        <p>
+          Creator fees are an integral part of EthFundMe, designed to
+          incentivize individuals like you to create impactful campaigns that
+          resonate with your audience. Creator fees provide a sustainable
+          revenue model for individuals who dedicate their time and resources to
+          promoting campaigns on our platform.
+        </p>
+      </div>
+
+      {user?.creatorFee && (
+        <p>
+          Your current creator fee is{' '}
+          <span className='font-semibold'>{Number(user.creatorFee)}%</span>
+        </p>
+      )}
+
+      {user && <UpdateCreatorFeeForm user={user} />}
     </div>
   );
 }

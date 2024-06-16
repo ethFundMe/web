@@ -7,7 +7,7 @@ import { Button, Input, Textarea } from '../inputs';
 
 export const Footer = () => {
   return (
-    <footer className='relative z-20 bg-primary-dark text-white'>
+    <footer className='relative z-10 bg-primary-dark text-white'>
       {/* <Image
         className='absolute bottom-0 left-1/2 z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
         src='/images/logo-outline.png'
