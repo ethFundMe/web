@@ -77,7 +77,7 @@ const CampaignsCarousel = ({
   return (
     <div className='w-full space-y-14 md:pl-6'>
       <div className='relative space-y-5'>
-        <h2 className='text-left text-2xl font-extralight text-primary-dark md:text-3xl'>
+        <h2 className='text-center text-2xl font-extralight text-primary-dark md:text-left md:text-3xl'>
           {tag}
         </h2>
         <Carousel

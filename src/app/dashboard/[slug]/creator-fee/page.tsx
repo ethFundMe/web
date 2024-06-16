@@ -46,21 +46,19 @@ export default async function CreatorFeePage({
   const user = await getUser(slug as `0x${string}`);
 
   return (
-    <div className='w-full'>
-      <div className='flex w-full max-w-2xl flex-col gap-6 p-4 lg:gap-8'>
-        <div>
-          <h2 className={cn(TextSizeStyles.h4)}>Update Creator Fee</h2>
-          <p>
-            Creator fees are an integral part of EthFundMe, designed to
-            incentivize individuals like you to create impactful campaigns that
-            resonate with your audience. Creator fees provide a sustainable
-            revenue model for individuals who dedicate their time and resources
-            to promoting campaigns on our platform.
-          </p>
-        </div>
-
-        {user && <UpdateCreatorFeeForm user={user} />}
+    <div className='flex w-full max-w-2xl flex-col gap-6 p-4 lg:gap-8'>
+      <div>
+        <h2 className={cn(TextSizeStyles.h4)}>Update Creator Fee</h2>
+        <p>
+          Creator fees are an integral part of EthFundMe, designed to
+          incentivize individuals like you to create impactful campaigns that
+          resonate with your audience. Creator fees provide a sustainable
+          revenue model for individuals who dedicate their time and resources to
+          promoting campaigns on our platform.
+        </p>
       </div>
+
+      {user && <UpdateCreatorFeeForm user={user} />}
     </div>
   );
 }
