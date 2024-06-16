@@ -9,6 +9,9 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import type { Metadata, Viewport } from 'next';
 import React from 'react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import './globals.css';
 
 dayjs.extend(advancedFormat);

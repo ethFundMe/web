@@ -81,7 +81,7 @@ export default function LiveDonations() {
 
       <ul
         // ref={ref}
-        className='relative mx-auto h-[250px] max-w-lg space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
+        className='relative mx-auto h-[250px] max-w-[530px] space-y-2 overflow-hidden overflow-y-hidden text-primary-default'
       >
         {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
@@ -102,7 +102,7 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className=' flex flex-wrap justify-between border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className='flex flex-wrap justify-between gap-2 border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
                 <span className='flex items-center gap-2'>
                   <span>
