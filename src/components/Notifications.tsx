@@ -19,21 +19,23 @@ import {
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
+export interface Meta {
+  limit: number;
+  page: number;
+  totalNotifications: number;
+  totalPages: number;
+}
 const Notifications = () => {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [getAllNotifications, setGetAllNotifications] = useState(false);
+  // const [getAllNotifications, setGetAllNotifications] = useState(false);
   const { user } = userStore();
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
   const { data, isLoading, error } = useSWR<{
     notification: Notification[];
-  }>(
-    `${apiBaseUrl}/api/notifications/${user?.ethAddress}${
-      getAllNotifications ? '' : '?viewed=false'
-    }`,
-    fetcher
-  );
+    meta: Meta;
+  }>(`${apiBaseUrl}/api/notifications/${user?.ethAddress}`, fetcher);
 
   useEffect(() => {
     if (data && data.notification) {
@@ -149,7 +151,7 @@ const Notifications = () => {
                       });
                       setNotifications([]);
                     }}
-                    className='rounded-md p-2 text-sm disabled:cursor-not-allowed disabled:text-gray-400'
+                    className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
                     disabled={notifications.length === 0}
                   >
                     Mark all as read
@@ -158,10 +160,7 @@ const Notifications = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   {' '}
-                  <button
-                    onClick={() => setGetAllNotifications(true)}
-                    className='rounded-md p-2 text-sm '
-                  >
+                  <button className='rounded-md p-2 text-xs'>
                     View all notifications
                   </button>
                 </DropdownMenuItem>
@@ -184,7 +183,7 @@ const Notifications = () => {
                       });
                       router.push(item.url);
                     }}
-                    className='flex w-full items-center gap-x-8'
+                    className='flex w-full items-center gap-x-6'
                   >
                     <>
                       {item.notification_type === 'CAMPAIGN UPDATED' && (
@@ -208,6 +207,13 @@ const Notifications = () => {
                           className='ml-5 w-4'
                         />
                       )}
+                      {item.notification_type === 'CAMPAIGN CREATED' && (
+                        <img
+                          src='/images/create_campaign.png'
+                          alt='create'
+                          className='ml-5 w-4'
+                        />
+                      )}
                       {item.notification_type === 'FUNDED' && (
                         <div className='ml-5'>
                           <Coins size={16} />
@@ -225,10 +231,13 @@ const Notifications = () => {
                       )}
                     </>
                     <div className='w-full space-y-1 py-3 pr-4'>
-                      <p className='w-full text-left text-[10px] text-gray-400'>
+                      <p className='w-full pl-3 text-left text-[10px] text-gray-400'>
                         {formatDateToHumanReadable(item?.created_at as Date)}
                       </p>
-                      <div className=''>
+                      <div className='flex items-start gap-x-1.5'>
+                        {!item.viewed && (
+                          <div className='mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
+                        )}
                         <p
                           className='text-xs'
                           dangerouslySetInnerHTML={{
