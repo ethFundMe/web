@@ -104,11 +104,14 @@ export default function MobileNotificationLink({
           </div>
         )}
       </>
-      <div className='w-full space-y-1 py-3 pr-4'>
+      <div className='w-full space-y-1 py-5 pr-4'>
         <p className='w-full text-left text-[10px] text-gray-400'>
           {formatDateToHumanReadable(item?.created_at as Date)}
         </p>
-        <div className=''>
+        <div className='relative'>
+          {!item.viewed && (
+            <div className=' absolute -left-3 mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
+          )}
           <p className='text-xs'>{item.description}</p>
         </div>
       </div>

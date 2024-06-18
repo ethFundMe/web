@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { BiDonateHeart } from 'react-icons/bi';
 import { HiEllipsisVertical } from 'react-icons/hi2';
 import useSWR from 'swr';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +29,6 @@ export interface Meta {
 const Notifications = () => {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  // const [getAllNotifications, setGetAllNotifications] = useState(false);
   const { user } = userStore();
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
@@ -119,13 +119,15 @@ const Notifications = () => {
     return (
       <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200'></div>
     );
+  const red = notifications.filter((item) => item.viewed === false).length;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
-        {notifications?.length !== 0 && (
+        {red !== 0 && (
           <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
-            {notifications?.length}
+            {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
+            {red}
           </p>
         )}
       </DropdownMenuTrigger>
@@ -160,9 +162,12 @@ const Notifications = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   {' '}
-                  <button className='rounded-md p-2 text-xs'>
+                  <Link
+                    href={`/notifications/${user?.ethAddress}`}
+                    className='rounded-md p-2 text-xs'
+                  >
                     View all notifications
-                  </button>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -183,7 +188,7 @@ const Notifications = () => {
                       });
                       router.push(item.url);
                     }}
-                    className='flex w-full items-center gap-x-6'
+                    className='flex w-full items-center gap-x-8'
                   >
                     <>
                       {item.notification_type === 'CAMPAIGN UPDATED' && (
@@ -234,9 +239,9 @@ const Notifications = () => {
                       <p className='w-full pl-3 text-left text-[10px] text-gray-400'>
                         {formatDateToHumanReadable(item?.created_at as Date)}
                       </p>
-                      <div className='flex items-start gap-x-1.5'>
+                      <div className='relative'>
                         {!item.viewed && (
-                          <div className='mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
+                          <div className=' absolute -left-3 mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
                         )}
                         <p
                           className='text-xs'
@@ -249,6 +254,13 @@ const Notifications = () => {
                   </Link>
                 </DropdownMenuItem>
               ))}
+              <div className='my-4 flex w-full justify-center'>
+                <Button asChild={true}>
+                  <Link href={`/notifications/${user?.ethAddress}`}>
+                    Show All
+                  </Link>
+                </Button>
+              </div>
             </>
           ) : (
             <div className='inset-center grid w-full place-items-center'>
