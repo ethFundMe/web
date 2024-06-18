@@ -105,6 +105,12 @@ export const getNotfications = async (eth_address: `0x${string}`) => {
   );
   const data = (await res.json()) as {
     notification: Notification[];
+    meta: {
+      limit: number;
+      page: number;
+      totalNotifications: number;
+      totalPages: number;
+    };
   };
   return data;
 };

@@ -2,7 +2,7 @@
 import { Notification } from '@/lib/types';
 import { Coins } from 'lucide-react';
 import Link from 'next/link';
-import { MdOutlineCampaign } from 'react-icons/md';
+import { BiDonateHeart } from 'react-icons/bi';
 
 export default function MobileNotificationLink({
   item,
@@ -73,11 +73,10 @@ export default function MobileNotificationLink({
     >
       <>
         {item.notification_type === 'CAMPAIGN UPDATED' && (
-          <div className='ml-5'>
-            {MdOutlineCampaign({
-              size: 16,
-            })}
-          </div>
+          <img src='/images/pen.png' alt='create' className='ml-5 w-4' />
+        )}
+        {item.notification_type === 'COMMENT' && (
+          <img src='/images/comment.png' alt='create' className='ml-5 w-4' />
         )}
         {item.notification_type === 'CAMPAIGN CREATED' && (
           <img
@@ -86,11 +85,18 @@ export default function MobileNotificationLink({
             className='ml-5 w-4'
           />
         )}
+        {item.notification_type === 'CREATOR FEE UPDATED' && (
+          <img src='/images/gear.png' alt='create' className='ml-5 w-4' />
+        )}
         {item.notification_type === 'FUNDER' && (
-          <img src='/images/fund.png' alt='fund' className='ml-5 w-4' />
+          <div className='ml-5'>
+            <BiDonateHeart size={16} />
+          </div>
         )}
         {item.notification_type === 'FUNDED' && (
-          <img src='/images/fund.png' alt='fund' className='ml-5 w-4' />
+          <div className='ml-5'>
+            <Coins size={16} />
+          </div>
         )}
         {item.notification_type === 'TOKEN REWARDS' && (
           <div className='ml-5'>
@@ -98,11 +104,14 @@ export default function MobileNotificationLink({
           </div>
         )}
       </>
-      <div className='w-full space-y-1 py-3 pr-4'>
+      <div className='w-full space-y-1 py-5 pr-4'>
         <p className='w-full text-left text-[10px] text-gray-400'>
           {formatDateToHumanReadable(item?.created_at as Date)}
         </p>
-        <div className=''>
+        <div className='relative'>
+          {!item.viewed && (
+            <div className=' absolute -left-3 mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
+          )}
           <p className='text-xs'>{item.description}</p>
         </div>
       </div>
