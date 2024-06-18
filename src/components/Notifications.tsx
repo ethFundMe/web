@@ -236,7 +236,7 @@ const Notifications = () => {
                       )}
                     </>
                     <div className='w-full space-y-1 py-3 pr-4'>
-                      <p className='w-full pl-3 text-left text-[10px] text-gray-400'>
+                      <p className='w-full text-left text-[10px] text-gray-400'>
                         {formatDateToHumanReadable(item?.created_at as Date)}
                       </p>
                       <div className='relative'>
