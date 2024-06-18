@@ -105,6 +105,18 @@ export default function AboutPage() {
               </ul>
             </PGroup>
 
+            <PGroup id='creator-fee'>
+              <Heading>Creator Fee</Heading>
+
+              <p>
+                Creator fees are an integral part of EthFundMe, designed to
+                incentivize individuals like you to create impactful campaigns
+                that resonate with your audience. Creator fees provide a
+                sustainable revenue model for individuals who dedicate their
+                time and resources to promoting campaigns on our platform.
+              </p>
+            </PGroup>
+
             <PGroup>
               <Heading>Join Us</Heading>
 

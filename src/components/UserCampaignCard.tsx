@@ -20,8 +20,15 @@ export default function UserCampaignCard({
   return (
     <div
       className={cn(
-        'group group flex flex-col overflow-hidden rounded-md border border-slate-300',
-        (campaign.flagged || campaign.discontinued) && 'grayscale'
+        'group group flex flex-col overflow-hidden',
+        (campaign.flagged || campaign.discontinued) && 'grayscale',
+        `rounded-md border ${
+          campaign.flagged
+            ? 'border-red-500 hover:border-red-500'
+            : campaign.total_accrued >= campaign.goal
+            ? 'border-primary-default'
+            : 'border-primary-gray hover:border-primary-default'
+        }`
       )}
     >
       <Link
@@ -57,7 +64,7 @@ export default function UserCampaignCard({
           }}
         >
           {variant === 'user' && (
-            <Button asChild variant='outline'>
+            <Button asChild variant='outline' disabled={campaign.discontinued}>
               <Link
                 href={`/campaigns/${campaign.campaign_id}/edit`}
                 className='flex w-full flex-1 items-center justify-center gap-2'
@@ -68,9 +75,15 @@ export default function UserCampaignCard({
             </Button>
           )}
 
-          {variant === 'viewer' && <DonateBtn campaign={campaign} />}
+          {variant === 'viewer' && (
+            <DonateBtn
+              disabled={campaign.flagged || campaign.discontinued}
+              campaign={campaign}
+            />
+          )}
 
           <ShareLinkBtn
+            disabled={campaign.flagged || campaign.discontinued}
             campaign={campaign}
             onClick={(e) => e.stopPropagation()}
           />

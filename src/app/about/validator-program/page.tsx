@@ -1,4 +1,11 @@
 import { Heading, PGroup } from '@/components/PrivacyPageComponents';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Validator Program | EthFundMe',
+  description:
+    'Welcome to the EthFundMe Validator Incentive Program, an innovative system designed to engage our community in the essential task of platform monitoring and timely interaction. This high-level overview introduces the core concept of the program and outlines how you can participate and earn rewards through vigilant platform engagement',
+};
 
 export default function ValidatorProgramPage() {
   return (
