@@ -30,38 +30,32 @@ export default function ShareCampaignOptions({
         '\n\nThank you in advance for your generosity!\n\nBest regards, \n'
     )}`,
   };
+
+  const options = [
+    {
+      image: '/images/whatsapp-icon.webp',
+      cta: 'Share on Whatsapp',
+      link: shareLinks.whatsapp,
+    },
+    {
+      image: '/images/x-logo.webp',
+      cta: 'Post on X/Twitter',
+      link: shareLinks.twitter,
+    },
+    {
+      image: '/images/email-icon.webp',
+      cta: 'Email campaign',
+      link: shareLinks.email,
+    },
+  ];
   return (
     <div className='mt-4 grid grid-cols-3 gap-4'>
-      <OptionCard link={shareLinks.whatsapp}>
-        <Image
-          src='/images/whatsapp-icon.webp'
-          width={40}
-          height={40}
-          priority
-          alt='whatsapp'
-        />
-        <p className='text-center text-xs md:text-sm'>Share on Whatsapp</p>
-      </OptionCard>
-      <OptionCard link={shareLinks.email}>
-        <Image
-          src='/images/email-icon.webp'
-          width={40}
-          height={40}
-          priority
-          alt='email'
-        />
-        <p className='text-center text-xs md:text-sm'>Email campaign</p>
-      </OptionCard>
-      <OptionCard link={shareLinks.twitter}>
-        <Image
-          src='/images/x-logo.webp'
-          width={40}
-          height={40}
-          priority
-          alt='whatsapp'
-        />
-        <p className='text-center text-xs md:text-sm'>Post on X/Twitter</p>
-      </OptionCard>
+      {options.map(({ link, cta, image }) => (
+        <OptionCard key={cta} link={link}>
+          <Image src={image} width={40} height={40} priority alt='whatsapp' />
+          <p className='text-center text-xs md:text-sm'>{cta}</p>
+        </OptionCard>
+      ))}
     </div>
   );
 }

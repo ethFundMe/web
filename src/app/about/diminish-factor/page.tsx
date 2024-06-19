@@ -1,4 +1,11 @@
 import { Heading, PGroup } from '@/components/PrivacyPageComponents';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Diminish Factor | EthFundMe',
+  description:
+    'The Diminish Factor (DF) is a critical component of the EthFundMe platform, designed to dynamically adjust rewards and token distributions over time. EthFundMe is a decentralized crowdfunding platform built on blockchain technology, aiming to empower creators and funders alike. The DF mechanism ensures a fair and sustainable distribution of rewards to platform participants.',
+};
 
 export default function DiminishFactorPage() {
   return (
@@ -56,7 +63,7 @@ export default function DiminishFactorPage() {
           </li>
 
           <li>
-            <b>DF_NEXT_UPDATE:</b>
+            <b>DF_NEXT_UPDATE: </b>
             Timestamp indicating the next scheduled update for the diminish
             factor.
           </li>

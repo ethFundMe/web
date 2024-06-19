@@ -36,6 +36,8 @@ export const CampaignCard = ({
           `rounded-md border ${
             campaign.flagged
               ? 'border-red-500 hover:border-red-500'
+              : campaign.total_accrued >= campaign.goal
+              ? 'border-primary-default'
               : 'border-primary-gray hover:border-primary-default'
           }`
         )}
@@ -47,7 +49,7 @@ export const CampaignCard = ({
           )}
         >
           <ImageWithFallback
-            className='h-full w-full object-cover object-left transition-all duration-300 ease-in group-hover:scale-[1.03]'
+            className='h-full w-full object-cover object-center transition-all duration-300 ease-in group-hover:scale-[1.03]'
             src={campaign.banner_url || '/images/broken.jpg'}
             height={240}
             width={300}

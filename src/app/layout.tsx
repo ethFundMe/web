@@ -17,25 +17,29 @@ import './globals.css';
 
 dayjs.extend(advancedFormat);
 
+const meta = {
+  title: 'EthFundMe',
+  description:
+    'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+};
+
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },
   metadataBase: new URL(process.env.NEXT_PUBLIC_WEB_URL as string),
   title: {
-    default: 'EthFundMe',
-    template: '%s | EthFundMe',
+    default: meta.title,
+    template: `%s | ${meta.title}`,
   },
-  description:
-    'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+  description: meta.description,
   keywords:
     'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations, crypto crowdfunding',
   twitter: {
     title: {
-      default: 'EthFundMe',
-      template: '%s | EthFundMe',
+      default: meta.title,
+      template: `%s | ${meta.title}`,
     },
     card: 'summary_large_image',
-    description:
-      'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
+    description: meta.description,
     site: '@ethfundme',
     creator: '@ethfundme',
     images: '/images/seo-common.jpg',
@@ -44,12 +48,11 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://ethfund.me',
     title: {
-      default: 'EthFundMe',
-      template: '%s | EthFundMe',
+      default: meta.title,
+      template: `%s | ${meta.title}`,
     },
-    description:
-      'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
-    siteName: 'EthFundMe',
+    description: meta.description,
+    siteName: meta.title,
     images: '/images/seo-common.jpg',
   },
 };
