@@ -5,18 +5,36 @@ import { userStore } from '@/store';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import Typewriter from 'typewriter-effect';
 import { useAccount } from 'wagmi';
 import { Container } from './Container';
 import { Button } from './ui/button';
 
+const getRandomHeroText = (texts: string[]) => {
+  const randomIndex = Math.floor(Math.random() * texts.length);
+  return texts[randomIndex];
+};
+
 export const HomepageHeader = () => {
+  const heroTexts = [
+    'Empower communities and bring dreams to life using blockchain technology.',
+    'Make a difference with every contribution, powered by the transparency of blockchain',
+    'Join the movement and support groundbreaking projects with secure blockchain donations.',
+    'Transform lives and support innovative causes with blockchain-powered crowdfunding.',
+  ];
   const { user } = userStore();
   const { isConnected } = useAccount();
   const time = new Date().getHours();
   const [greeting, setGreeting] = useState('');
+  const [heroText, setHeroText] = useState('');
+
+  useEffect(() => {
+    // Set a random hero text on component mount
+    const randomText = getRandomHeroText(heroTexts);
+    setHeroText(randomText);
+  }, []);
   const getGreeting = (time: number) => {
     if (time >= 0 && time < 12) {
       return setGreeting('Good Morning,');
@@ -62,44 +80,44 @@ export const HomepageHeader = () => {
     getGreeting(time);
   }, [time]);
 
-  const images = useMemo(
-    () => [
-      '/videos/header-video.mp4',
-      '/images/header/h1.webp',
-      '/images/header/h2.webp',
-      '/images/header/h3.webp',
-      '/images/header/h4.webp',
-      '/images/header/h5.webp',
-    ],
-    []
-  );
+  // const images = useMemo(
+  //   () => [
+  //     '/videos/header-video.mp4',
+  //     '/images/header/h1.webp',
+  //     '/images/header/h2.webp',
+  //     '/images/header/h3.webp',
+  //     '/images/header/h4.webp',
+  //     '/images/header/h5.webp',
+  //   ],
+  //   []
+  // );
 
   // const currentHour = new Date();
-  const currentHour = new Date().getHours();
-  const imageIndex = currentHour % images.length;
-  const [currentImage, setCurrentImage] = useState(images[imageIndex]);
-  useEffect(() => {
-    setCurrentImage(images[imageIndex]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageIndex]);
+  // const currentHour = new Date().getHours();
+  // const imageIndex = currentHour % images.length;
+  // const [currentImage, setCurrentImage] = useState(images[imageIndex]);
+  // useEffect(() => {
+  //   setCurrentImage(images[imageIndex]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [imageIndex]);
 
   // Update image every hour
-  useEffect(() => {
-    const interval = setInterval(
-      () => {
-        const newHour = new Date().getHours();
-        setCurrentImage(images[newHour % images.length]);
-      },
-      1000 * 60 * 60
-    ); // Change image every hour (1000ms * 60s * 60min)
+  // useEffect(() => {
+  //   const interval = setInterval(
+  //     () => {
+  //       const newHour = new Date().getHours();
+  //       setCurrentImage(images[newHour % images.length]);
+  //     },
+  //     1000 * 60 * 60
+  //   ); // Change image every hour (1000ms * 60s * 60min)
 
-    return () => clearInterval(interval);
-  }, [images]);
+  //   return () => clearInterval(interval);
+  // }, [images]);
 
   return (
     <div className='relative overflow-hidden'>
-      <header className='relative overflow-hidden bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7),rgba(0,0,0,0.5))] bg-cover bg-bottom bg-no-repeat text-white'>
-        <div className='absolute top-0 -z-10 h-full w-full'>
+      <header className='relative bg-white text-[#042D42]'>
+        {/* <div className='absolute top-0 -z-10 h-full w-full'>
           {imageIndex === 0 ? (
             <video
               src='/videos/header-video.mp4'
@@ -117,7 +135,7 @@ export const HomepageHeader = () => {
               className='absolute h-full w-full bg-slate-900 object-cover'
             />
           )}
-        </div>
+        </div> */}
         <Container className='flex h-[calc(100dvh-4rem)] max-h-[910px]  items-center justify-center'>
           <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
             <div className='space-y-4 md:space-y-5'>
@@ -153,9 +171,8 @@ export const HomepageHeader = () => {
                 </motion.h1>
               )}
 
-              <p className='mx-auto max-w-xs text-center text-lg text-white/80 sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
-                Support projects and causes you care about with the power of
-                blockchain.
+              <p className='mx-auto max-w-xs text-center text-lg text-black sm:max-w-lg sm:text-xl md:max-w-3xl md:text-3xl'>
+                {heroText}
               </p>
             </div>
 
@@ -189,7 +206,7 @@ export const HomepageHeader = () => {
         </Container>
       </header>
 
-      <div className='absolute -bottom-0.5 z-10 h-16 w-full md:h-32'>
+      {/* <div className='absolute -bottom-0.5 z-10 h-16 w-full md:h-32'>
         <svg
           className='h-full w-full rotate-180'
           data-name='Layer 1'
@@ -202,7 +219,7 @@ export const HomepageHeader = () => {
             className='fill-white'
           ></path>
         </svg>
-      </div>
+      </div> */}
       {/* <div className="ocean absolute bottom-0 z-10">
         <div className="wave"></div>
         <svg className="wave" xmlns="http://www.w3.org/2000/svg" width="1600" height="198">

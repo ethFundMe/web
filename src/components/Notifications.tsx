@@ -1,5 +1,6 @@
 'use client';
 import { Notification } from '@/lib/types';
+import { getRelativeTime } from '@/lib/utils';
 import { userStore } from '@/store';
 import DOMPurify from 'dompurify';
 import { Bell, Coins, Inbox } from 'lucide-react';
@@ -43,32 +44,6 @@ const Notifications = () => {
     }
   }, [data]);
 
-  function formatDateToHumanReadable(dateString: Date): string {
-    const date = new Date(dateString);
-    const now = new Date();
-
-    const timeDifference = now.getTime() - date.getTime();
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    // const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
-
-    const formatTime = (date: Date): string => {
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const period = hours >= 12 ? 'pm' : 'am';
-      const formattedHours = hours % 12 || 12;
-      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
-      return `${formattedHours}:${formattedMinutes}${period}`;
-    };
-
-    if (daysDifference === 0) {
-      return `today, ${formatTime(date)}`;
-    } else if (daysDifference === 1) {
-      return `yesterday, ${formatTime(date)}`;
-    } else {
-      return `${daysDifference} days ago`;
-    }
-  }
   const viewNotification = async ({
     id,
     eth_address,
@@ -237,7 +212,7 @@ const Notifications = () => {
                     </>
                     <div className='w-full space-y-1 py-3 pr-4'>
                       <p className='w-full text-left text-[10px] text-gray-400'>
-                        {formatDateToHumanReadable(item?.created_at as Date)}
+                        {getRelativeTime(item?.created_at as Date)}
                       </p>
                       <div className='relative'>
                         {!item.viewed && (
