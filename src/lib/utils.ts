@@ -18,7 +18,7 @@ export function formatWalletAddress(
   const shortAddress =
     type === 'long'
       ? address.slice(0, 7) + '...' + address.slice(-5)
-      : address.slice(0, 9);
+      : address.slice(0, 8);
   return shortAddress;
 }
 
@@ -276,38 +276,37 @@ export const createUrl = (file: File) => {
 };
 
 export function getRelativeTime(date: Date): string {
-  const commentDate = dayjs(date);
+  const formattedtDate = dayjs(date);
 
   const currentDate = dayjs();
 
-  const diffInDays = currentDate.diff(commentDate, 'day');
-  const diffInMinutes = currentDate.diff(commentDate, 'minute');
+  const diffInDays = currentDate.diff(formattedtDate, 'day');
+  const diffInMinutes = currentDate.diff(formattedtDate, 'minute');
 
   if (diffInMinutes < 1) {
     return 'Just now';
   }
 
   if (diffInMinutes <= 5) {
-    return `${diffInMinutes} minutes ago`;
+    return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
   }
 
-  if (diffInDays === 0) {
-    return `Today, ${commentDate.format('h:mm a')}`;
+  // Using 'day' and 'hour' differences to determine today and yesterday
+  if (currentDate.isSame(formattedtDate, 'day')) {
+    return `Today, ${formattedtDate.format('h:mm a')}`;
   }
 
-  if (diffInDays === 1) {
-    return `Yesterday, ${commentDate.format('h:mm a')}`;
+  if (currentDate.subtract(1, 'day').isSame(formattedtDate, 'day')) {
+    return `Yesterday, ${formattedtDate.format('h:mm a')}`;
   }
 
   if (diffInDays <= 7) {
-    return `Last week, ${commentDate.format('h:mm a')}`;
+    return `${formattedtDate.format('dddd')}, ${formattedtDate.format(
+      'h:mm a'
+    )}`;
   }
 
-  // if (diffInDays <= 30) {
-  //   return `Last month, ${commentDate.format('h:mm a')}`;
-  // }
-
-  return `${commentDate.toDate().toLocaleDateString()} - ${commentDate.format(
-    'h:mm a'
-  )}`;
+  return `${formattedtDate
+    .toDate()
+    .toLocaleDateString()} - ${formattedtDate.format('h:mm a')}`;
 }

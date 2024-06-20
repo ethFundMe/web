@@ -96,7 +96,7 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <div className='mt-4 flex flex-wrap items-center gap-2'>
+        <div className='mt-4 flex items-center gap-2'>
           <DonateBtn
             text='Help now'
             size='lg'

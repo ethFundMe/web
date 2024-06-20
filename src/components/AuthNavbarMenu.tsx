@@ -26,9 +26,9 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           {children}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className='space-y-1.5 md:min-w-[200px]'>
+        <DropdownMenuContent className='space-y-1 md:min-w-[250px]'>
           <DropdownMenuItem
-            className='flex items-center gap-2'
+            className='flex items-center gap-2 py-3'
             onClick={() => router.push(`/dashboard/${address}`)}
           >
             <LiaUserCogSolid />
@@ -36,7 +36,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            className='flex items-center gap-2'
+            className='flex items-center gap-2 py-3'
             onClick={() => router.push(`/dashboard/${address}/update-profile`)}
           >
             <IoPencilOutline />
@@ -44,7 +44,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            className='flex items-center gap-2'
+            className='flex items-center gap-2 py-3'
             onClick={() => router.push(`/dashboard/${address}/earnings`)}
           >
             <FaEthereum />
@@ -53,7 +53,7 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
 
           {/* <DropdownMenuSeparator /> */}
           <DropdownMenuItem
-            className='flex items-center gap-2 text-red-500'
+            className='flex items-center gap-2 py-3 text-red-500'
             onClick={() => disconnect()}
           >
             <LuUnlink />
