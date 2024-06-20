@@ -140,8 +140,8 @@ export const HomepageHeader = () => {
           <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
             <div className='space-y-4 md:space-y-5'>
               {!user || !isConnected ? (
-                <h1 className='text-5xl font-medium leading-tight md:text-7xl'>
-                  Welcome to EthFundMe!
+                <h1 className='text-5xl font-medium leading-tight lg:text-9xl'>
+                  This is EthFundMe!
                 </h1>
               ) : (
                 <motion.h1
