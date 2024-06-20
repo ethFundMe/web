@@ -103,7 +103,7 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='flex justify-between gap-1 border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className='flex justify-between gap-1 border-b border-slate-200 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
                 <span className='flex items-center gap-1'>
                   <span>
