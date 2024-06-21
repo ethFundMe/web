@@ -118,7 +118,7 @@ export default function LiveDonations() {
                     </span>
                     <span className='hidden md:inline'>donated</span>{' '}
                     <span className='inline md:hidden'> — </span>{' '}
-                    <span className='text-xs'>{format(i.amount)}ETH</span>
+                    <span className='text-xs'>{format(i.amount)} ETH</span>
                   </span>
                 </span>
 
