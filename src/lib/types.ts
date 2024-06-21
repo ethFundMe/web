@@ -111,3 +111,17 @@ export type SocketResponse<T> = {
   data?: T;
   error?: Error;
 };
+
+export type FeaturedCampaign = {
+  creator_name: string;
+  campaign_description: string;
+  campaign_title: string;
+  campaign_id: number;
+  campaign_banner: string;
+  campaign_mediaLinks: string[];
+  campaign_tag: string;
+  campaign_goal: number;
+  total_accrued: number;
+  campaign_creator: `0x${string}`;
+  campaign_beneficiary: `0x${string}`;
+};

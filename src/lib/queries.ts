@@ -1,5 +1,5 @@
 import { Campaign, User, UserEarning } from '@/types';
-import { Notification } from './types';
+import { FeaturedCampaign, Notification } from './types';
 
 export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
@@ -78,8 +78,6 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
   const ethAddress = urlParams?.ethAddress;
   const tagId = urlParams?.tag;
 
-  // console.log({ tagId, page, ethAddress });
-
   let baseUrl = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/`;
 
   baseUrl = ethAddress
@@ -88,8 +86,6 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
     ? `${baseUrl}?tag=${tagId}&page=${page ?? 1}`
     : `${baseUrl}?page=${page ?? 1}`;
 
-  // console.log({ baseUrl });
-
   const res = await fetch(baseUrl, { cache: 'no-store' });
   const data = await res.json();
 
@@ -97,6 +93,15 @@ export async function getCampaigns(urlParams: CampaignUrlParams) {
   const totalCampaigns: number = data?.meta?.totalCampaigns ?? 0;
 
   return { campaigns, totalCampaigns };
+}
+
+export async function getFeaturedCampaigns() {
+  const baseUrl = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/featured`;
+
+  const res = await fetch(baseUrl, { cache: 'no-store' });
+  const campaigns: FeaturedCampaign[] = await res.json();
+
+  return campaigns[0] ? campaigns[0] : null;
 }
 
 export const getNotfications = async (eth_address: `0x${string}`) => {
@@ -125,6 +130,16 @@ export const getUser = async (userId: `0x${string}`) => {
   const user = data;
 
   return user?.error ? null : (user as User);
+};
+
+export const getCreatorOverview = async (userId: `0x${string}`) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/creator/overview/${userId}`,
+    { cache: 'no-store' }
+  );
+  const data = await res.json();
+
+  return data ? (data as { total: string; max: string; min: string }) : null;
 };
 
 export const getCampaign = async (id: number) => {

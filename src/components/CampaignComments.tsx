@@ -6,9 +6,11 @@ import { Comment, SocketResponse } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { BiDonateHeart } from 'react-icons/bi';
 import useRefs from 'react-use-refs';
 import { CommentCard } from './CommentCard';
 import { CommentForm } from './forms/CommentForm';
@@ -102,14 +104,37 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     });
   }, [comments, scrollContainerRef, scrollItemRef]);
 
+  const totalComments = comments?.length || 0;
+  const numOfDonations = comments && comments.filter((c) => !!c.amount).length;
+
   return (
     <aside className='mt-16 space-y-8'>
       <div className='chats flex flex-col space-y-4 pb-4'>
-        <h2
-          className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
-        >
-          Donations & Comments
-        </h2>
+        <div className='space-y-2'>
+          <h2
+            className={cn(TextSizeStyles.h5, 'font-light text-primary-default')}
+          >
+            Donations & Comments
+          </h2>
+
+          {comments && (
+            <div className='stats flex gap-4'>
+              <span className='flex items-center gap-1'>
+                <BiDonateHeart size={18} />
+                {numOfDonations}
+              </span>
+              <span className='flex items-center gap-1'>
+                <Image
+                  src='/images/comment.png'
+                  alt='...'
+                  height={17}
+                  width={17}
+                />
+                {totalComments}
+              </span>
+            </div>
+          )}
+        </div>
 
         <ScrollArea
           className={cn(
