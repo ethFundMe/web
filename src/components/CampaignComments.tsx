@@ -118,17 +118,17 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           </h2>
 
           {comments && (
-            <div className='stats flex gap-4'>
+            <div className='stats flex gap-4 text-sm'>
               <span className='flex items-center gap-1'>
-                <BiDonateHeart size={18} />
+                <BiDonateHeart size={14} />
                 {numOfDonations}
               </span>
               <span className='flex items-center gap-1'>
                 <Image
                   src='/images/comment.png'
                   alt='...'
-                  height={17}
-                  width={17}
+                  height={14}
+                  width={14}
                 />
                 {totalComments}
               </span>

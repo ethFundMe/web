@@ -56,7 +56,7 @@ export default function FeaturedCampaign({
             <span className='text-xs leading-[0] md:text-sm'>presents</span>
           </div>
           <p className='mb-1 text-xl font-bold sm:text-3xl lg:text-5xl'>
-            {campaign.creator_name}
+            {campaign.campaign_title}
           </p>
           <p className='line-clamp-2 max-w-lg text-xs md:text-sm'>
             {campaign.campaign_description}
