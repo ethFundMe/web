@@ -116,7 +116,6 @@ export default async function CampaignPage({
         _.campaign_id !== campaign.campaign_id && !_.flagged && !_.discontinued
     )
     .slice(0, 3);
-  console.log(campaignsToShow);
 
   const media_links = campaign.youtube_link
     ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
