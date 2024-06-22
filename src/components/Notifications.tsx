@@ -38,6 +38,13 @@ const Notifications = () => {
     meta: Meta;
   }>(`${apiBaseUrl}/api/notifications/${user?.ethAddress}`, fetcher);
 
+  const { data: unreadCount } = useSWR<{
+    total: number;
+  }>(
+    `${apiBaseUrl}/api/notifications/${user?.ethAddress}/count?viewed=false`,
+    fetcher
+  );
+
   useEffect(() => {
     if (data && data.notification) {
       setNotifications(data.notification);
@@ -94,15 +101,15 @@ const Notifications = () => {
     return (
       <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200'></div>
     );
-  const red = notifications.filter((item) => item.viewed === false).length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
-        {red !== 0 && (
+        {unreadCount?.total !== 0 && (
           <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
             {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
-            {red}
+            {unreadCount?.total}
           </p>
         )}
       </DropdownMenuTrigger>
@@ -119,17 +126,20 @@ const Notifications = () => {
                 <HiEllipsisVertical />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   {' '}
                   <button
                     onClick={() => {
+                      const allViewed = notifications.map((item) => ({
+                        ...item,
+                        viewed: true,
+                      }));
+                      setNotifications(allViewed);
                       viewAllNotification({
                         eth_address: user?.ethAddress as `0x${string}`,
                       });
-                      setNotifications([]);
                     }}
                     className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
-                    disabled={notifications.length === 0}
                   >
                     Mark all as read
                   </button>

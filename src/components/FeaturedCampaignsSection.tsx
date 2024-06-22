@@ -18,7 +18,7 @@ export const FeaturedCampaignsSection = async () => {
       </Container>
 
       <div className='relative h-screen max-h-[500px] min-h-[400px] sm:min-h-[600px] md:max-h-[700px]'>
-        <FeaturedCampaign campaign={featured} />
+        <FeaturedCampaign details={featured} />
       </div>
     </section>
   ) : null;
