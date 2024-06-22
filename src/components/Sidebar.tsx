@@ -61,7 +61,7 @@ export const Sidebar = () => {
                 }}
                 className='relative'
               />
-              {unreadCount.total > 0 && (
+              {unreadCount?.total > 0 && (
                 <p className='absolute left-6 top-1 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
                   {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
                   {unreadCount?.total}
