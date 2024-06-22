@@ -126,7 +126,7 @@ const Notifications = () => {
                 <HiEllipsisVertical />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem>
                   {' '}
                   <button
                     onClick={() => {
