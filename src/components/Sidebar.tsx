@@ -9,17 +9,29 @@ import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaRegBell } from 'react-icons/fa';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 import { AuthSidebarRoute } from './AuthSidebarRoute';
 import { NavLink } from './NavLink';
 import { SidebarUserCard } from './SidebarUserCard';
 import { Button } from './ui/button';
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
 export const Sidebar = () => {
   const { openConnectModal } = useConnectModal();
   const { isConnected, address } = useAccount();
   const { openAccountModal } = useAccountModal();
   const { user } = userStore();
+
+  const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
+  const { data: unreadCount } = useSWR<{
+    total: number;
+  }>(
+    `${apiBaseUrl}/api/notifications/${user?.ethAddress}/count?viewed=false`,
+    fetcher
+  );
+
   // const { closeModal } = useModalStore();
 
   return (
@@ -40,13 +52,22 @@ export const Sidebar = () => {
             <SidebarNavLink key={route.title} {...route} />
           ))}
           {isConnected && address && getCookie('efmToken') && (
-            <SidebarNavLink
-              {...{
-                title: 'Notifications',
-                link: `/notifications/${user?.ethAddress}`,
-                icon: FaRegBell({ size: 20 }),
-              }}
-            />
+            <div className='relative'>
+              <SidebarNavLink
+                {...{
+                  title: 'Notifications',
+                  link: `/notifications/${user?.ethAddress}`,
+                  icon: FaRegBell({ size: 20 }),
+                }}
+                className='relative'
+              />
+              {unreadCount.total > 0 && (
+                <p className='absolute left-6 top-1 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+                  {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
+                  {unreadCount?.total}
+                </p>
+              )}
+            </div>
           )}
         </ul>
 

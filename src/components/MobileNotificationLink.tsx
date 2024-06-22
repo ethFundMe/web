@@ -1,5 +1,6 @@
 'use client';
 import { Notification } from '@/lib/types';
+import DOMPurify from 'dompurify';
 import { Coins } from 'lucide-react';
 import Link from 'next/link';
 import { BiDonateHeart } from 'react-icons/bi';
@@ -112,7 +113,12 @@ export default function MobileNotificationLink({
           {!item.viewed && (
             <div className=' absolute -left-3 mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
           )}
-          <p className='text-xs'>{item.description}</p>
+          <p
+            className='text-xs'
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(item.description),
+            }}
+          />
         </div>
       </div>
     </Link>

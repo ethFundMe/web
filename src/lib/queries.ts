@@ -1,5 +1,5 @@
 import { Campaign, User, UserEarning } from '@/types';
-import { FeaturedCampaign, Notification } from './types';
+import { Notification } from './types';
 
 export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
@@ -99,7 +99,10 @@ export async function getFeaturedCampaigns() {
   const baseUrl = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaigns/featured`;
 
   const res = await fetch(baseUrl, { cache: 'no-store' });
-  const campaigns: FeaturedCampaign[] = await res.json();
+  const campaigns: {
+    creator: User;
+    campaign: Campaign;
+  }[] = await res.json();
 
   return campaigns[0] ? campaigns[0] : null;
 }
