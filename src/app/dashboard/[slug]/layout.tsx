@@ -15,7 +15,7 @@ export default async function DashboardLayout({
       <Navbar />
 
       <Container className='h-full'>
-        <div className='flex items-start'>
+        <div className='flex items-start pb-20'>
           <DashboardSidebar userAddress={slug as `0x${string}`} />
 
           {children}
