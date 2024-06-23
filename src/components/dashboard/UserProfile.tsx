@@ -86,6 +86,7 @@ export const UserProfile = ({
   };
 
   const loggedIn = isConnected && getCookie('efmToken');
+  const isOwner = loggedIn && user.ethAddress === address;
 
   return (
     <div className={cn('mb-20 w-full')}>
@@ -107,7 +108,7 @@ export const UserProfile = ({
                   : 'url(/user-banner.webp)',
               }}
             >
-              {loggedIn && user.ethAddress === address && (
+              {isOwner && (
                 <div className='-mt-10 flex w-fit gap-2 bg-white p-2 duration-200 ease-in-out group-hover:-mt-0'>
                   <Dialog>
                     <DialogTrigger>
@@ -278,7 +279,11 @@ export const UserProfile = ({
 
                 <Link
                   title='Creator Fee'
-                  href={`/dashboard/${user.ethAddress}/creator-fee`}
+                  href={
+                    isOwner
+                      ? `/dashboard/${user.ethAddress}/creator-fee`
+                      : '/about#creator-fee'
+                  }
                   className='h-fit rounded-lg bg-primary-default px-5 py-1 text-base font-semibold text-white'
                 >
                   {Number(user.creatorFee)}%

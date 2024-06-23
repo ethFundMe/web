@@ -1,13 +1,25 @@
+'use client';
 import { NAVBARROUTES, SOCIAL_LINKS } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Container } from '../Container';
 import { FooterLink } from '../FooterLink';
 import { Button, Input, Textarea } from '../inputs';
 
 export const Footer = () => {
+  const pathname = usePathname();
+
+  const onDashboardPage = pathname.includes('/dashboard');
+
   return (
-    <footer className='relative z-10 bg-primary-dark text-white'>
+    <footer
+      className={cn(
+        'relative z-10 bg-primary-dark text-white',
+        onDashboardPage && 'hidden md:block'
+      )}
+    >
       {/* <Image
         className='absolute bottom-0 left-1/2 z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
         src='/images/logo-outline.png'

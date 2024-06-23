@@ -102,9 +102,8 @@ export default async function CampaignPage({
   }
 
   const beneficiary = await getBeneficiary();
-  // console.log(campaign.metadata);
 
-  const campaignsData = await getCampaigns({});
+  const campaignsData = await getCampaigns({ tag: campaign.tag });
   const { campaigns } = campaignsData;
   if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
@@ -112,7 +111,10 @@ export default async function CampaignPage({
   if (!user) return;
 
   const campaignsToShow = campaigns
-    .filter((_) => _.campaign_id !== campaign.campaign_id)
+    .filter(
+      (_) =>
+        _.campaign_id !== campaign.campaign_id && !_.flagged && !_.discontinued
+    )
     .slice(0, 3);
 
   const media_links = campaign.youtube_link

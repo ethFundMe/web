@@ -26,6 +26,8 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
   } = useForm<{ comment: string }>();
 
   const onSubmit: SubmitHandler<{ comment: string }> = ({ comment }) => {
+    reset();
+
     if (!user || !address) {
       openConnectModal && openConnectModal();
       return;
@@ -42,8 +44,9 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
         data,
         (response: SocketResponse<{ id: number }>) => {
           if (response.data?.id) {
-            console.log(response);
-            reset();
+            if (process.env.NODE_ENV === 'development') {
+              console.log(response.data);
+            }
           }
         }
       );
@@ -52,9 +55,9 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
-      // Find the form element and submit it
       formRef.current?.requestSubmit();
       handleSubmit(onSubmit);
+      reset();
     }
   };
   return (

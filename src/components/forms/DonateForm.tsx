@@ -20,7 +20,6 @@ import {
   useWriteContract,
   type BaseError,
 } from 'wagmi';
-import { Input } from '../inputs';
 import { Button } from '../ui/button';
 import { DialogClose } from '../ui/dialog';
 import { Slider } from '../ui/slider';
@@ -238,7 +237,7 @@ export default function DonateForm({
       <>
         {!fiatMode ? (
           <div className='relative'>
-            <Input
+            <input
               type='number'
               step='any'
               min={0.0001}
@@ -251,10 +250,11 @@ export default function DonateForm({
                 },
               })}
               autoFocus
-              error={errors.amount?.message}
               defaultValue={amount}
+              className='h-full w-full rounded-md border border-primary-default px-4 py-3 outline-0 placeholder:text-neutral-700'
               placeholder='Enter an amount in ETH'
             />
+            {errors.amount?.message && <small>{errors.amount.message}</small>}
             <Slider
               onValueChange={(e) => {
                 setValue('amount', e[0] as number);

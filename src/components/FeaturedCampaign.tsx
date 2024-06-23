@@ -7,19 +7,20 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
-import { DonateBtn } from './DonateBtn';
 import { Button } from './ui/button';
 
 export default function FeaturedCampaign({
   // images = ['/images/family.jpg', '/images/pets.jpg', '/images/accident.webp'],
-  campaign,
-  user,
+  details,
 }: {
   images?: string[];
-  campaign: Campaign;
-  user: User;
+  details: {
+    creator: User;
+    campaign: Campaign;
+  };
 }) {
   const [index, setIndex] = useState(0);
+  const { creator, campaign } = details;
 
   const images = useMemo(
     () => [campaign.banner_url, ...campaign.media_links],
@@ -54,7 +55,7 @@ export default function FeaturedCampaign({
         <div className='relative z-20 mx-auto flex max-w-2xl flex-col items-center text-center text-white'>
           <div className='mb-3 text-slate-300'>
             <p className='line-clamp-1 w-full max-w-xs text-center font-semibold leading-[1] [word-break:break-all] sm:max-w-sm md:text-lg'>
-              {user.fullName}
+              {creator.fullName}
             </p>
             <span className='text-xs leading-[0] md:text-sm'>presents</span>
           </div>
@@ -96,13 +97,13 @@ export default function FeaturedCampaign({
           </div>
         </div>
 
-        <div className='mt-4 flex flex-wrap items-center gap-2'>
-          <DonateBtn
+        <div className='mt-4 flex items-center gap-2'>
+          {/* <DonateBtn
             text='Help now'
             size='lg'
             campaign={campaign}
             className='text-md'
-          />
+          /> */}
 
           <Button
             asChild

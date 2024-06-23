@@ -10,6 +10,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { FaEthereum } from 'react-icons/fa';
 import { Socket } from 'socket.io-client';
 import { formatEther } from 'viem';
@@ -102,17 +103,22 @@ export default function LiveDonations() {
                 target='_blank'
                 rel='noreferrer'
                 title='View transaction details'
-                className='flex flex-wrap justify-between gap-2 border-b border-slate-600 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                className='flex justify-between gap-1 border-b border-slate-200 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
               >
-                <span className='flex items-center gap-2'>
+                <span className='flex items-center gap-1'>
                   <span>
                     <FaEthereum size={20} />
                   </span>
                   <span>
-                    {formatWalletAddress(i.donor)}{' '}
+                    <span className='text-sm md:text-base'>
+                      {formatWalletAddress(
+                        i.donor,
+                        isMobile ? 'short' : 'long'
+                      )}{' '}
+                    </span>
                     <span className='hidden md:inline'>donated</span>{' '}
                     <span className='inline md:hidden'> — </span>{' '}
-                    {format(i.amount)}ETH
+                    <span className='text-xs'>{format(i.amount)} ETH</span>
                   </span>
                 </span>
 

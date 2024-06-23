@@ -29,7 +29,6 @@ export const DonateBtn = ({ className, campaign, text, size }: Props) => {
       <DialogTrigger
         onClick={(e) => e.stopPropagation()}
         className={combinedStyles}
-        disabled={campaign.total_accrued >= campaign.goal}
       >
         <>
           {text ?? 'Donate'}
