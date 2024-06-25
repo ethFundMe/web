@@ -12,7 +12,13 @@ type Props = React.ComponentProps<'button'> & {
   text?: string;
 } & ButtonProps;
 
-export const DonateBtn = ({ className, campaign, text, size }: Props) => {
+export const DonateBtn = ({
+  className,
+  campaign,
+  text,
+  size,
+  ...rest
+}: Props) => {
   const btnStyles = {
     base: 'flex items-center justify-center gap-2 transition-all duration-200 ease-in',
     size,
@@ -29,6 +35,7 @@ export const DonateBtn = ({ className, campaign, text, size }: Props) => {
       <DialogTrigger
         onClick={(e) => e.stopPropagation()}
         className={combinedStyles}
+        {...rest}
       >
         <>
           {text ?? 'Donate'}

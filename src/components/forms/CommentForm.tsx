@@ -11,7 +11,7 @@ import { useAccount } from 'wagmi';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
-export const CommentForm = ({ campaignId }: { campaignId: string }) => {
+export const CommentForm = ({ campaignId }: { campaignId: number }) => {
   const { user } = userStore();
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -35,7 +35,7 @@ export const CommentForm = ({ campaignId }: { campaignId: string }) => {
 
     const data = {
       userId: user?.id,
-      campaignUUID: campaignId,
+      campaignId,
       comment,
     };
     if (user && socket) {

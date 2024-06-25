@@ -97,12 +97,26 @@ export type Comment = {
   };
 };
 
-export type Donation = {
-  amount: number;
-  created_at: Date;
-  transaction_hash: string;
+export interface CommentsAndDonations {
+  id: number;
+  campaign_id: number;
+  comment: string | null;
+  amount: number | null;
+  created_at: Date | null;
+  transaction_hash: string | null;
+  user: {
+    fullName: string;
+    ethAddress: string;
+    profileUrl: string | null;
+  };
+}
+
+export interface Donation {
   donor: `0x${string}`;
-};
+  transaction_hash: string | null;
+  amount: number | null;
+  created_at: Date | null;
+}
 
 export type DonationResponse = SocketResponse<Donation[]>;
 

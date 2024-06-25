@@ -34,6 +34,8 @@ export const Sidebar = () => {
 
   // const { closeModal } = useModalStore();
 
+  console.log(user);
+
   return (
     <motion.div
       animate={{ right: ['-100%', '0%'] }}

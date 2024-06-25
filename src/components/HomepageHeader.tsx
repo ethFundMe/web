@@ -47,6 +47,7 @@ export const HomepageHeader = () => {
   };
 
   const splitName = (name: string) => {
+    if (!name) return '';
     const splittedName = name.split(' ');
     return splittedName[0];
   };
@@ -81,7 +82,7 @@ export const HomepageHeader = () => {
   return (
     <div className='relative overflow-hidden'>
       <header className='relative bg-white text-[#042D42]'>
-        {/* <div className='absolute left-0 top-0 z-0 h-full w-full bg-[linear-gradient(rgba(255,255,255,0)_75%,rgba(255,255,255,1)_99%),url(/images/grid.png)] bg-cover bg-center bg-no-repeat'></div> */}
+        <div className='absolute left-0 top-0 z-0 h-full w-full bg-[linear-gradient(rgba(255,255,255,0)_75%,rgba(255,255,255,1)_99%),url(/images/grid.png)] bg-cover bg-center bg-no-repeat'></div>
 
         <Container className='relative z-10 flex h-[calc(100dvh-4rem)] max-h-[910px] items-center justify-center'>
           <div className='flex flex-col gap-[30px] text-center md:gap-[40px]'>
