@@ -132,7 +132,7 @@ export const getUser = async (userId: `0x${string}`) => {
 
   const user = data;
 
-  return user?.error ? null : (user as User);
+  return user?.error ? null : (user[0] as User);
 };
 
 export const getCreatorOverview = async (userId: `0x${string}`) => {

@@ -74,7 +74,7 @@ export default function DonateForm({
   const [newCommentId, setNewCommentId] = useState<null | number>(null);
   const [isPushingComment, setIsPushingComment] = useState(false);
   const [usdInput, setUsdInput] = useState(0);
-  const { socket } = useSocket(campaign.id);
+  const { socket } = useSocket(campaign.campaign_id);
   const loggedIn = address || getCookie('efmToken');
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =

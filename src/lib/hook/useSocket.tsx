@@ -2,14 +2,14 @@ import { userStore } from '@/store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { socket as webSocket } from '../socketConfig';
-import { Comment, SocketResponse } from '../types';
+import { Comment, CommentsAndDonations, SocketResponse } from '../types';
 
-export const useSocket = (campaignUUID: string) => {
-  const [comments, setComments] = useState<Comment[]>([]);
+export const useSocket = (campaignId: number) => {
+  const [comments, setComments] = useState<CommentsAndDonations[]>([]);
   const { user } = userStore();
   const socketRef = useRef<Socket>(null);
 
-  const updateList = useCallback((newList: Comment[]) => {
+  const updateList = useCallback((newList: CommentsAndDonations[]) => {
     setComments(newList.reverse());
   }, []);
 
@@ -17,10 +17,12 @@ export const useSocket = (campaignUUID: string) => {
     let socket = socketRef.current;
 
     const joinData = {
-      campaignUUID,
+      campaignId: Number(campaignId),
       userID: user?.id,
       limit: 24,
     };
+
+    console.log({ ...joinData, campaignId });
 
     if (!socket) {
       socket = webSocket;
@@ -35,12 +37,12 @@ export const useSocket = (campaignUUID: string) => {
 
     function onJoin(
       response: SocketResponse<{
-        comments: Comment[];
-        totalComments: number;
+        commentsAndDonations: CommentsAndDonations[];
+        total: number;
       }>
     ) {
       if (response.status === 'OK' && response.data) {
-        setComments(response.data.comments.reverse());
+        setComments(response.data.commentsAndDonations.reverse());
       } else {
         console.error('Error fetching donations:', response.error);
       }
@@ -54,7 +56,7 @@ export const useSocket = (campaignUUID: string) => {
       const data = response.data;
       if (!data) return;
 
-      setComments((prev) => [data, ...prev.reverse()].reverse());
+      // setComments((prev) => [data, ...prev.reverse()].reverse());
     }
 
     function onError(res: unknown) {
@@ -73,7 +75,7 @@ export const useSocket = (campaignUUID: string) => {
       socket.off('error', onError);
       socket.disconnect();
     };
-  }, [user, campaignUUID]);
+  }, [user, campaignId]);
 
   return { socket: webSocket, comments, updateList };
 };

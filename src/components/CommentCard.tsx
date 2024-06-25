@@ -1,6 +1,6 @@
 'use client';
 
-import { Comment } from '@/lib/types';
+import { CommentsAndDonations } from '@/lib/types';
 import { cn, getRelativeTime } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -28,7 +28,7 @@ import {
 } from './ui/dropdown-menu';
 
 type Props = React.ComponentProps<'div'> & {
-  comment: Comment;
+  comment: CommentsAndDonations;
   handleDelete: () => void;
   isOwner: boolean;
 };
@@ -41,7 +41,6 @@ export const CommentCard = forwardRef<Ref, Props>(
       isOwner,
       handleDelete,
       comment: {
-        // id,
         comment,
         amount,
         user: { profileUrl, fullName, ethAddress },
@@ -130,7 +129,7 @@ export const CommentCard = forwardRef<Ref, Props>(
                   {fullName}
                 </Link>
                 <small className='text-[10px]'>
-                  {getRelativeTime(created_at)}
+                  {created_at ? getRelativeTime(created_at) : ''}
                 </small>
               </div>
             </div>
