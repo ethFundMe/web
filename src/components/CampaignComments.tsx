@@ -172,28 +172,6 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
                     variant={value === activeFilter ? 'default' : 'outline'}
                     key={key}
                   >
-                    {/* {value === FilterComments.C && (
-                      <Image
-                        className={cn(activeFilter === value && 'invert')}
-                        src='/images/comment.png'
-                        alt='...'
-                        height={14}
-                        width={14}
-                      />
-                    )}
-                    {value === FilterComments.D && <BiDonateHeart size={14} />}
-                    {value === FilterComments.DnC && (
-                      <span className='flex items-center gap-0.5'>
-                        <BiDonateHeart size={14} />+
-                        <Image
-                          className={cn(activeFilter === value && 'invert')}
-                          src='/images/comment.png'
-                          alt='...'
-                          height={14}
-                          width={14}
-                        />
-                      </span>
-                    )} */}
                     {value}
                   </Button>
                 ))}
@@ -213,18 +191,24 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           <div className='space-y-2'>
             {comments ? (
               comments.length > 0 ? (
-                <>
-                  {filteredList[activeFilter].map((comment) => (
-                    <CommentCard
-                      isOwner={user?.fullName === comment.user.fullName}
-                      handleDelete={() => deleteComment(comment)}
-                      key={`${comment.id}`}
-                      comment={comment}
-                    />
-                  ))}
+                filteredList[activeFilter].length > 0 ? (
+                  <>
+                    {filteredList[activeFilter].map((comment) => (
+                      <CommentCard
+                        isOwner={user?.fullName === comment.user.fullName}
+                        handleDelete={() => deleteComment(comment)}
+                        key={`${comment.id}`}
+                        comment={comment}
+                      />
+                    ))}
 
-                  <div ref={scrollItemRef} className='h-1 w-full'></div>
-                </>
+                    <div ref={scrollItemRef} className='h-1 w-full'></div>
+                  </>
+                ) : (
+                  <p className='text-primary-gray'>
+                    Be the first to leave a comment
+                  </p>
+                )
               ) : (
                 <p className='text-primary-gray'>
                   Be the first to leave a comment
