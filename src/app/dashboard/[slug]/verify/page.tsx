@@ -1,20 +1,18 @@
 import { Container } from '@/components/Container';
-import { VerificationStepIndicator } from '@/components/VerificationStepIndicator';
 import VerificationForm from '@/components/forms/VerificationForm';
-import { getCampaigns, getCreatorOverview, getUser } from '@/lib/queries';
+import { checkUserVerificationEligibility, getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 type Props = {
-  params: { slug: string };
+  params: { slug: `0x${string}` };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
   const id = params.slug;
 
-  const user = await getUser(id as `0x${string}`);
+  const user = await getUser(id);
   if (!user) notFound();
 
   return {
@@ -45,32 +43,9 @@ export default async function VerifyPage({
 }: {
   params: { slug: `0x${string}` };
 }) {
-  const user = await getUser(slug);
-  const creatorOverview = await getCreatorOverview(slug);
-  const campaignsData = await getCampaigns({ ethAddress: slug });
-  const { totalCampaigns } = campaignsData;
+  const vPoints = await checkUserVerificationEligibility(slug);
 
-  if (!user) return;
-
-  const verificationPoints = {
-    atLeastOne: totalCampaigns > 0,
-    personalCampaignsFunded: creatorOverview?.total
-      ? Number(creatorOverview.total) > 0.05
-      : false,
-    fundedCampaigns: false, //replace with proper data when bsaii updates the creator overview return data
-  };
-
-  const verify = () => {
-    if (verificationPoints.fundedCampaigns) return true;
-    if (
-      verificationPoints.atLeastOne &&
-      verificationPoints.personalCampaignsFunded
-    )
-      return true;
-    return false;
-  };
-
-  const isValid = verify();
+  console.log(vPoints);
 
   return (
     <div className='min-h-[calc(100dvh-269px)] w-full'>
@@ -85,11 +60,11 @@ export default async function VerifyPage({
 
           <div>
             {/* {String(isValid)} */}
-            <VerificationForm canVerify={isValid} />
+            <VerificationForm canVerify={true} />
           </div>
         </div>
 
-        <div className='mx-auto w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xs'>
+        {/* <div className='mx-auto w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xs'>
           <h2>To apply for verification, users must meet these criteria:</h2>
 
           <div className='ml-4 space-y-2'>
@@ -118,7 +93,7 @@ export default async function VerifyPage({
           <p>
             Users can apply for verification if only the third criteria is met.
           </p>
-        </div>
+        </div> */}
       </Container>
     </div>
   );
