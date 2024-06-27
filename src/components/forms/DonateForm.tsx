@@ -83,11 +83,12 @@ export default function DonateForm({
   const isLoadingTxn = isPending || isConfirmingTxn;
 
   const handleDeleteComment = useCallback(() => {
+    if (!user?.ethAddress) return;
     socket.emit(
       'delete:comment',
       {
-        userId: user?.id,
-        campaignUUID: campaign.id,
+        ethAddress: user.ethAddress,
+        campaignId: campaign.campaign_id,
         commentId: newCommentId,
       },
       (response: unknown) => {
@@ -96,7 +97,7 @@ export default function DonateForm({
         }
       }
     );
-  }, [user?.id, campaign.id, newCommentId, socket]);
+  }, [user?.ethAddress, campaign.campaign_id, newCommentId, socket]);
 
   const onSubmit: SubmitHandler<DonateFormValues> = (data) => {
     const { amount, campaignID, comment } = data;
@@ -128,8 +129,8 @@ export default function DonateForm({
     if (prettyComment && user) {
       setIsPushingComment(true);
       handlePushComment({
-        campaignID: campaign.id,
-        userID: user.id,
+        campaignId: campaign.campaign_id,
+        ethAddress: user.ethAddress,
         comment: prettyComment,
       })
         .then((response) => {
@@ -171,6 +172,7 @@ export default function DonateForm({
 
   useEffect(() => {
     if (isConfirmedTxn) {
+      console.log('firmed');
       toast.success('Campaign funded');
 
       closeBtnRef.current?.click();

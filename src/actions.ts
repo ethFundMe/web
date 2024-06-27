@@ -37,15 +37,15 @@ export async function urlPreview(url: string) {
 }
 
 export const handlePushComment = async ({
-  userID,
-  campaignID,
+  ethAddress,
+  campaignId,
   comment,
 }: {
-  userID: string;
-  campaignID: string;
+  ethAddress: `0x${string}`;
+  campaignId: number;
   comment: string;
 }) => {
-  const commentData = { campaignUUID: campaignID, comment, userId: userID };
+  const commentData = { campaignId, comment, ethAddress };
   try {
     const res = await fetch(`${process.env.ETH_FUND_ENDPOINT}/api/comment`, {
       method: 'POST',
