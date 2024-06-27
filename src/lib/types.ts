@@ -139,3 +139,24 @@ export type FeaturedCampaign = {
   campaign_creator: `0x${string}`;
   campaign_beneficiary: `0x${string}`;
 };
+
+export interface VerificationEligibiltySuccessResponse {
+  id: string;
+  user_id: string;
+  status: 'eligible';
+  created_campaign: boolean;
+  created_campaign_eligible: string;
+  created_campaign_not_eligible: string;
+  campaign_funded: boolean;
+  campaign_funded_eligible: string;
+  campaign_funded_not_eligible: string;
+  funded_campaigns: boolean;
+  funded_campaigns_eligible: string;
+  funded_campaigns_not_eligible: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface VerificationEligibiltyErrorResponse {
+  error: string;
+}

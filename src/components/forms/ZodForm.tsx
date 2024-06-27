@@ -465,7 +465,7 @@ export default function CreateCampaignForm() {
                             Visit your{' '}
                             <Link
                               className='italic text-primary-default'
-                              href={`/dashboard/${address}/update-profile`}
+                              href={`/dashboard/${address}/creator-fee`}
                             >
                               dashboard
                             </Link>{' '}

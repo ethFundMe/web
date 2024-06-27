@@ -34,7 +34,7 @@ export const CommentForm = ({ campaignId }: { campaignId: number }) => {
     }
 
     const data = {
-      userId: user?.id,
+      ethAddress: address,
       campaignId,
       comment,
     };
