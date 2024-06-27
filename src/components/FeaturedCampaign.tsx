@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
 import { formatEther } from 'viem';
+import { DonateBtn } from './DonateBtn';
 import { Button } from './ui/button';
 
 export default function FeaturedCampaign({
@@ -98,12 +99,12 @@ export default function FeaturedCampaign({
         </div>
 
         <div className='mt-4 flex items-center gap-2'>
-          {/* <DonateBtn
+          <DonateBtn
             text='Help now'
             size='lg'
             campaign={campaign}
             className='text-md'
-          /> */}
+          />
 
           <Button
             asChild

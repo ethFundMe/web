@@ -104,7 +104,12 @@ export default async function CampaignPage({
   const beneficiary = await getBeneficiary();
 
   const campaignsData = await getCampaigns({ tag: campaign.tag });
-  const { campaigns } = campaignsData;
+  const { campaigns: allCampaigns } = await getCampaigns({});
+
+  const { campaigns: c } = campaignsData;
+
+  const campaigns = [...c, ...allCampaigns];
+
   if (!campaign) return;
   const user = await getUser(campaign.creator as `0x${string}`);
 

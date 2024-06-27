@@ -7,17 +7,16 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 type Props = {
-  params: { slug: string };
+  params: { slug: `0x${string}` };
 };
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // read route params
   const id = params.slug;
 
-  const user = await getUser(id as `0x${string}`);
+  const user = await getUser(id);
 
   if (!user) notFound();
   const campaigns = await getCampaigns({
@@ -79,12 +78,12 @@ export async function generateMetadata(
 export default async function UserProfilePage({
   params: { slug },
 }: {
-  params: { slug: string };
+  params: { slug: `0x${string}` };
 }) {
   if (!REGEX_CODES.walletAddress.test(slug)) return notFound();
-  const user = await getUser(slug as `0x${string}`);
+  const user = await getUser(slug);
 
-  if (!user) return;
+  if (!user) return notFound();
 
   const { campaigns } = await getCampaigns({
     page: 1,

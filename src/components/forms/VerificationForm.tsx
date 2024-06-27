@@ -33,7 +33,11 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 
-export default function VerificationForm() {
+export default function VerificationForm({
+  canVerify,
+}: {
+  canVerify: boolean;
+}) {
   const [submitting, setSubmitting] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>('GH');
   const { push } = useRouter();
@@ -257,7 +261,7 @@ export default function VerificationForm() {
             )}
           />
           <Button
-            disabled={!form.watch('agree') || submitting}
+            disabled={!form.watch('agree') || submitting || !canVerify}
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
             {submitting ? 'Loading...' : 'Submit'}

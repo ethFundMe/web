@@ -47,6 +47,7 @@ export const HomepageHeader = () => {
   };
 
   const splitName = (name: string) => {
+    if (!name) return '';
     const splittedName = name.split(' ');
     return splittedName[0];
   };

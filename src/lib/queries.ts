@@ -132,7 +132,19 @@ export const getUser = async (userId: `0x${string}`) => {
 
   const user = data;
 
-  return user?.error ? null : (user as User);
+  return user?.error ? null : (user[0] as User);
+};
+
+export const checkUserVerificationEligibility = async (
+  ethAddress: `0x${string}`
+) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/verification/eligibility/${ethAddress}`,
+    { cache: 'no-store' }
+  );
+  const data = await res.json();
+
+  return data;
 };
 
 export const getCreatorOverview = async (userId: `0x${string}`) => {

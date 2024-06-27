@@ -2,7 +2,7 @@
 
 import { useSocket } from '@/lib/hook/useSocket';
 import { TextSizeStyles } from '@/lib/styles';
-import { Comment, SocketResponse } from '@/lib/types';
+import { CommentsAndDonations, SocketResponse } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
@@ -14,34 +14,62 @@ import { BiDonateHeart } from 'react-icons/bi';
 import useRefs from 'react-use-refs';
 import { CommentCard } from './CommentCard';
 import { CommentForm } from './forms/CommentForm';
+import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
+
+enum FilterComments {
+  DnC = 'All',
+  C = 'Comments',
+  D = 'Donations',
+}
 
 export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const { user } = userStore();
-
   const [scrollContainerRef, scrollItemRef] = useRefs<HTMLDivElement>(null);
-
   const { refresh } = useRouter();
   const {
     socket,
     comments: socketComments,
     updateList,
-  } = useSocket(campaign.id);
-  const [comments, setComments] = useState<Comment[] | null>(null);
+  } = useSocket(campaign.campaign_id);
+  const [comments, setComments] = useState<CommentsAndDonations[] | null>(null);
+  const [commentsToShow, setCommentsToShow] = useState<
+    CommentsAndDonations[] | null
+  >(null);
+  const [activeFilter, setActiveFilter] = useState<FilterComments>(
+    FilterComments.DnC
+  );
+
+  const filteredList: { [T in FilterComments]: CommentsAndDonations[] } = {
+    Comments:
+      comments?.filter((a) => a.comment && !a.amount) ||
+      ([] as CommentsAndDonations[]),
+    Donations:
+      comments?.filter((a) => a.amount && !a.comment) ||
+      ([] as CommentsAndDonations[]),
+    All: comments || ([] as CommentsAndDonations[]),
+  };
+
+  function handleFilter(type: FilterComments) {
+    const prepared = filteredList[type];
+    setActiveFilter(type);
+    setCommentsToShow(prepared);
+  }
 
   useEffect(() => {
     if (socket && socketComments) {
       setComments(socketComments);
+      setActiveFilter(FilterComments.DnC);
     }
   }, [socket, socketComments]);
 
-  function deleteComment(comment: Comment) {
+  function deleteComment(comment: CommentsAndDonations) {
     const isOwner = user?.fullName === comment.user.fullName;
 
     if (!isOwner) return;
     const data = {
       userId: user?.id,
-      campaignUUID: campaign.id,
+      campaignId: Number(campaign.id),
       commentId: comment.id,
     };
 
@@ -69,18 +97,18 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           socket.emit(
             'comment:join',
             {
-              campaignUUID: campaign.id,
+              campaignId: campaign.campaign_id,
               userID: user?.id,
               limit: 24,
             },
             function (
               response: SocketResponse<{
-                comments: Comment[];
-                totalComments: number;
+                commentsAndDonations: CommentsAndDonations[];
+                total: number;
               }>
             ) {
               if (response.status === 'OK' && response.data) {
-                updateList(response.data.comments);
+                updateList(response.data.commentsAndDonations);
               } else {
                 console.error('Error fetching donations:', response.error);
               }
@@ -118,20 +146,36 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           </h2>
 
           {comments && (
-            <div className='stats flex gap-4 text-sm'>
-              <span className='flex items-center gap-1'>
-                <BiDonateHeart size={14} />
-                {numOfDonations}
-              </span>
-              <span className='flex items-center gap-1'>
-                <Image
-                  src='/images/comment.png'
-                  alt='...'
-                  height={14}
-                  width={14}
-                />
-                {totalComments}
-              </span>
+            <div className='flex flex-wrap justify-between gap-2'>
+              <div className='stats flex gap-4 text-sm'>
+                <span className='flex items-center gap-1'>
+                  <BiDonateHeart size={14} />
+                  {numOfDonations}
+                </span>
+                <span className='flex items-center gap-1'>
+                  <Image
+                    src='/images/comment.png'
+                    alt='...'
+                    height={14}
+                    width={14}
+                  />
+                  {totalComments}
+                </span>
+              </div>
+
+              <div className='flex flex-wrap gap-1.5'>
+                {Object.entries(FilterComments).map(([key, value]) => (
+                  <Button
+                    title={value}
+                    size='sm'
+                    onClick={() => handleFilter(value)}
+                    variant={value === activeFilter ? 'default' : 'outline'}
+                    key={key}
+                  >
+                    {value}
+                  </Button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -139,26 +183,32 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
         <ScrollArea
           className={cn(
             'scrollarea scroll-smooth pr-4',
-            comments &&
-              (comments.length < 4 ? ' h-fit max-h-[500px]' : 'h-[500px]')
+            commentsToShow &&
+              (commentsToShow.length < 4 ? ' h-fit max-h-[500px]' : 'h-[500px]')
           )}
           ref={scrollContainerRef}
         >
           <div className='space-y-2'>
             {comments ? (
               comments.length > 0 ? (
-                <>
-                  {comments.map((comment) => (
-                    <CommentCard
-                      isOwner={user?.fullName === comment.user.fullName}
-                      handleDelete={() => deleteComment(comment)}
-                      key={`${comment.id}`}
-                      comment={comment}
-                    />
-                  ))}
+                filteredList[activeFilter].length > 0 ? (
+                  <>
+                    {filteredList[activeFilter].map((comment) => (
+                      <CommentCard
+                        isOwner={user?.fullName === comment.user.fullName}
+                        handleDelete={() => deleteComment(comment)}
+                        key={`${comment.id}`}
+                        comment={comment}
+                      />
+                    ))}
 
-                  <div ref={scrollItemRef} className='h-1 w-full'></div>
-                </>
+                    <div ref={scrollItemRef} className='h-1 w-full'></div>
+                  </>
+                ) : (
+                  <p className='text-primary-gray'>
+                    Be the first to leave a comment
+                  </p>
+                )
               ) : (
                 <p className='text-primary-gray'>
                   Be the first to leave a comment
@@ -190,7 +240,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
           </div>
         </ScrollArea>
 
-        <CommentForm campaignId={campaign.id} />
+        <CommentForm campaignId={campaign.campaign_id} />
       </div>
     </aside>
   );

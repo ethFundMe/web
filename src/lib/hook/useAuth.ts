@@ -1,16 +1,16 @@
 'use client';
 
 import useStore, { efmUserAddressStore, userStore } from '@/store';
-import { ErrorResponse, User } from '@/types';
+import { ErrorResponse } from '@/types';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAccountEffect, useConfig, useDisconnect } from 'wagmi';
 import { watchAccount } from 'wagmi/actions';
+import { getUser } from '../queries';
 
 const ethChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1);
-const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT ?? '';
 
 export const useAuth = () => {
   const config = useConfig();
@@ -44,14 +44,12 @@ export const useAuth = () => {
       }
 
       try {
-        const user_res = await fetch(`${efm_endpoint}/api/user/${address}`);
-        if (!user_res.ok) {
-          const err: { error: ErrorResponse } = await user_res.json();
-          throw err;
+        const user_res = await getUser(address);
+        if (!user_res) {
+          throw new Error('Failed to get user');
         }
 
-        const user: User = await user_res.json();
-        setUser(user);
+        setUser(user_res);
         setIsAuth(true);
         return;
       } catch (error) {

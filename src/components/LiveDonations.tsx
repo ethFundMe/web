@@ -118,12 +118,14 @@ export default function LiveDonations() {
                     </span>
                     <span className='hidden md:inline'>donated</span>{' '}
                     <span className='inline md:hidden'> — </span>{' '}
-                    <span className='text-xs'>{format(i.amount)} ETH</span>
+                    <span className='text-xs'>
+                      {i.amount ? `${format(i.amount)} ETH` : ''}
+                    </span>
                   </span>
                 </span>
 
                 {/* <small>{dayjs(i.created_at).format('HH:mm a')}</small> */}
-                <small>{getRelativeTime(i.created_at)}</small>
+                <small>{i.created_at && getRelativeTime(i.created_at)}</small>
               </Link>
             </motion.li>
           ))}

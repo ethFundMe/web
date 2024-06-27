@@ -76,7 +76,7 @@ export default async function EarningsPage({
             </p>
 
             <div className='flex flex-wrap items-center justify-between'>
-              <p className='my-4 text-3xl font-bold text-primary-dark'>
+              <p className='my-4 text-3xl font-bold text-primary-default'>
                 {totalEarnings && totalEarnings.total} FUNDME
               </p>
             </div>
@@ -95,29 +95,22 @@ export default async function EarningsPage({
           />
 
           <div>
-            <h2 className='text-lg font-bold text-primary-default'>
-              Earn More!
-            </h2>
-            <p className='max-w-screen-[500px]'>
-              Keep an eye here for the opportunity to influence reward
-              distribution by participating in updating our reward system.
-            </p>
+            <h2 className={cn(TextSizeStyles.h4)}>Validate to Earn More</h2>
 
             <Link
               target='_blank'
               href='/about/validator-program'
-              className='my-4 block text-primary-default'
+              className='my-2 block text-primary-default'
             >
-              📖 Learn more
+              📖 How it works
             </Link>
 
-            {/* <div className='flex flex-wrap items-center justify-between gap-4'> */}
-            <ValidatorCountdown />
+            <p className='max-w-screen-[500px] mb-4'>
+              Keep an eye here for the opportunity to influence reward
+              distribution by participating in updating our reward system.
+            </p>
 
-            {/* <button className='grid h-24 w-24 flex-shrink-0 place-content-center rounded-full bg-neutral-400 text-sm text-white hover:bg-neutral-400/80 sm:h-32 sm:w-32 sm:text-base'>
-                UPDATE
-              </button>
-            </div> */}
+            <ValidatorCountdown />
           </div>
         </div>
 
