@@ -1,25 +1,4 @@
 'use client';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,6 +8,27 @@ import toast from 'react-hot-toast';
 import { FaEllipsisV } from 'react-icons/fa';
 import { z } from 'zod';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/form';
 import {
   Select,
   SelectContent,
@@ -58,6 +58,39 @@ const ReportCampaignSchema = z.object({
   report_type: ReportType,
 });
 export type TCampaignReport = z.infer<typeof ReportCampaignSchema>;
+
+export default function ReportCampaignDialog({
+  campaign_id,
+}: {
+  campaign_id: number;
+}) {
+  const [openReportDialog, setOpenReportDialog] = useState(false);
+  return (
+    <>
+      <Dialog open={openReportDialog} onOpenChange={setOpenReportDialog}>
+        <DropdownMenu>
+          <DropdownMenuTrigger className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
+            <FaEllipsisV />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <DialogTrigger>Report Campaign</DialogTrigger>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-center'>Report Campaign</DialogTitle>
+            <ReportForm
+              campaign_id={campaign_id}
+              setOpenReportDialog={setOpenReportDialog}
+            />
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
 const ReportForm = ({
   campaign_id,
@@ -177,36 +210,3 @@ const ReportForm = ({
     </div>
   );
 };
-
-export default function ReportCampaignDialog({
-  campaign_id,
-}: {
-  campaign_id: number;
-}) {
-  const [openReportDialog, setOpenReportDialog] = useState(false);
-  return (
-    <>
-      <Dialog open={openReportDialog} onOpenChange={setOpenReportDialog}>
-        <DropdownMenu>
-          <DropdownMenuTrigger className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
-            <FaEllipsisV />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <DialogTrigger>Report Campaign</DialogTrigger>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-center'>Report Campaign</DialogTitle>
-            <ReportForm
-              campaign_id={campaign_id}
-              setOpenReportDialog={setOpenReportDialog}
-            />
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-}
