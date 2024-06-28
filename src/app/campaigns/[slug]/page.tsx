@@ -183,16 +183,19 @@ export default async function CampaignPage({
 
               <div className='flex flex-col-reverse justify-between gap-2 text-sm sm:flex-row sm:items-center sm:text-base md:gap-4'>
                 <div className='flex items-center gap-2'>
-                  <Link
-                    href={`/profile/${campaign.creator}`}
+                  <div
+                    // href={`/profile/${campaign.creator}`}
                     className={cn(
-                      'relative flex flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:gap-4',
+                      'relative flex flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 sm:gap-4 md:hover:bg-slate-200',
                       campaign.creator === campaign.beneficiary
                         ? 'w-full'
                         : 'flex-1 sm:flex-none'
                     )}
                   >
-                    <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
+                    <Link
+                      href={`/profile/${campaign.creator}`}
+                      className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'
+                    >
                       <ImageWithFallback
                         src={user.profileUrl ?? ''}
                         fallback='/images/user-pfp.png'
@@ -200,10 +203,10 @@ export default async function CampaignPage({
                         fill
                         alt='...'
                       />
-                    </div>
+                    </Link>
 
                     <div className='flex w-full items-center justify-between pr-2'>
-                      <div>
+                      <Link href={`/profile/${campaign.creator}`}>
                         <p className={TextSizeStyles.caption}>Organizer</p>
                         <p
                           title={
@@ -222,8 +225,8 @@ export default async function CampaignPage({
                               campaign.creator as `0x${string}`
                             )}
                         </p>
-                      </div>
-                      <div className='absolute md:hidden'>
+                      </Link>
+                      <div className='md:hidden'>
                         {user ? (
                           <ReportCampaignDialog
                             campaign_id={campaign.campaign_id}
@@ -233,7 +236,7 @@ export default async function CampaignPage({
                         )}
                       </div>
                     </div>
-                  </Link>
+                  </div>
 
                   {campaign.creator !== campaign.beneficiary &&
                     (beneficiary ? (
@@ -297,7 +300,7 @@ export default async function CampaignPage({
                   alt='calendar'
                   className='ml-3 h-9 w-9 md:h-12 md:w-12'
                 />
-                <div className='md:mt-1'>
+                <div className='-mt-0.5 md:mt-1'>
                   <p className={TextSizeStyles.caption}>Created on</p>
                   <p className='font-semibold'>
                     {dayjs(campaign.created_at).format('Do MMM, YYYY')}
