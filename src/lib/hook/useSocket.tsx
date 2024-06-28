@@ -2,10 +2,25 @@ import { userStore } from '@/store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { socket as webSocket } from '../socketConfig';
-import { Comment, CommentsAndDonations, SocketResponse } from '../types';
+import { CommentsAndDonations, SocketResponse } from '../types';
 
 export const useSocket = (campaignId: number) => {
   const [comments, setComments] = useState<CommentsAndDonations[]>([]);
+  const [metadata, setMetadata] = useState<{
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+    totalComments: number;
+    totalDonations: number;
+  }>({
+    limit: 50,
+    page: 1,
+    total: 0,
+    totalPages: 1,
+    totalComments: 0,
+    totalDonations: 0,
+  });
   const { user } = userStore();
   const socketRef = useRef<Socket>(null);
 
@@ -18,11 +33,8 @@ export const useSocket = (campaignId: number) => {
 
     const joinData = {
       campaignId: Number(campaignId),
-      userID: user?.id,
-      limit: 24,
+      limit: 50,
     };
-
-    console.log({ ...joinData, campaignId });
 
     if (!socket) {
       socket = webSocket;
@@ -38,33 +50,54 @@ export const useSocket = (campaignId: number) => {
     function onJoin(
       response: SocketResponse<{
         commentsAndDonations: CommentsAndDonations[];
-        total: number;
+        totalComments: number;
+        totalDonations: number;
+        metadata: {
+          limit: number;
+          page: number;
+          total: number;
+          totalPages: number;
+        };
       }>
     ) {
       if (response.status === 'OK' && response.data) {
         setComments(response.data.commentsAndDonations.reverse());
+        setMetadata({
+          ...response.data.metadata,
+          totalComments: response.data.totalComments,
+          totalDonations: response.data.totalDonations,
+        });
       } else {
-        console.error('Error fetching donations:', response.error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching donations:', response.error);
+        }
       }
     }
 
     function onConnect() {
-      console.log('Connected 🔥');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Connected 🔥');
+      }
     }
 
-    function onComment(response: SocketResponse<Comment>) {
+    function onComment(response: SocketResponse<CommentsAndDonations>) {
+      console.log('commented');
       const data = response.data;
       if (!data) return;
 
-      // setComments((prev) => [data, ...prev.reverse()].reverse());
+      setComments((prev) => [data, ...prev.reverse()].reverse());
     }
 
     function onError(res: unknown) {
-      console.log(res);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(res);
+      }
     }
 
     function onDisonnect() {
-      console.log('Disconnected ❌');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Disconnected ❌');
+      }
     }
 
     return () => {
@@ -77,5 +110,5 @@ export const useSocket = (campaignId: number) => {
     };
   }, [user, campaignId]);
 
-  return { socket: webSocket, comments, updateList };
+  return { socket: webSocket, comments, updateList, metadata };
 };

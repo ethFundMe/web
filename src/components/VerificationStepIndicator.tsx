@@ -13,7 +13,13 @@ export const VerificationStepIndicator = ({ status, children }: Props) => {
         status ? 'text-green-600' : 'text-slate-400'
       )}
     >
-      {status ? <FaCheckCircle fill='rgb(22 163 74)' /> : <FaRegCheckCircle />}
+      <span className='flex-shrink-0'>
+        {status ? (
+          <FaCheckCircle fill='rgb(22 163 74)' />
+        ) : (
+          <FaRegCheckCircle />
+        )}
+      </span>
 
       {children}
     </div>

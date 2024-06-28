@@ -1,4 +1,5 @@
 import { Container } from '@/components/Container';
+import { VerificationStepIndicator } from '@/components/VerificationStepIndicator';
 import VerificationForm from '@/components/forms/VerificationForm';
 import { checkUserVerificationEligibility, getUser } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
@@ -43,9 +44,10 @@ export default async function VerifyPage({
 }: {
   params: { slug: `0x${string}` };
 }) {
-  const vPoints = await checkUserVerificationEligibility(slug);
+  const user = await getUser(slug);
+  const vPoints = await checkUserVerificationEligibility(user?.id || '');
 
-  console.log(vPoints);
+  const isValid = !('error' in vPoints);
 
   return (
     <div className='min-h-[calc(100dvh-269px)] w-full'>
@@ -60,40 +62,46 @@ export default async function VerifyPage({
 
           <div>
             {/* {String(isValid)} */}
-            <VerificationForm canVerify={true} />
+            <VerificationForm canVerify={isValid} />
           </div>
         </div>
 
-        {/* <div className='mx-auto w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xs'>
-          <h2>To apply for verification, users must meet these criteria:</h2>
+        {isValid && (
+          <div className='mx-auto w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xs'>
+            <h2>To apply for verification, users must meet these criteria:</h2>
 
-          <div className='ml-4 space-y-2'>
-            <VerificationStepIndicator status={verificationPoints.atLeastOne}>
-              At least one active campaign
-            </VerificationStepIndicator>
+            <div className='ml-4 space-y-2'>
+              <VerificationStepIndicator status={vPoints.created_campaign}>
+                {vPoints.created_campaign
+                  ? vPoints.created_campaign_eligible
+                  : vPoints.created_campaign_not_eligible}
+              </VerificationStepIndicator>
 
-            <VerificationStepIndicator
-              status={verificationPoints.personalCampaignsFunded}
-            >
-              <div>
-                Campaigns funded at least 0.05 ETH.
-                <small className='block'>
-                  (Current amount: {creatorOverview?.total} ETH)
-                </small>
-              </div>
-            </VerificationStepIndicator>
+              <VerificationStepIndicator status={vPoints.campaign_funded}>
+                <div>
+                  Campaigns funded at least 0.05 ETH.
+                  {vPoints.campaign_funded
+                    ? vPoints.campaign_funded_eligible
+                    : vPoints.campaign_funded_not_eligible}
+                  <small className='block'>
+                    {/* (Current amount: {creatorOverview?.total} ETH) */}
+                  </small>
+                </div>
+              </VerificationStepIndicator>
 
-            <VerificationStepIndicator
-              status={verificationPoints.fundedCampaigns}
-            >
-              You have funded campaigns with at least 0.02 ETH
-            </VerificationStepIndicator>
+              <VerificationStepIndicator status={vPoints.funded_campaigns}>
+                {vPoints.funded_campaigns
+                  ? vPoints.funded_campaigns_eligible
+                  : vPoints.funded_campaigns_not_eligible}
+                You have funded campaigns with at least 0.02 ETH
+              </VerificationStepIndicator>
+            </div>
+            <p>
+              Users can apply for verification if only the third criteria is
+              met.
+            </p>
           </div>
-
-          <p>
-            Users can apply for verification if only the third criteria is met.
-          </p>
-        </div> */}
+        )}
       </Container>
     </div>
   );

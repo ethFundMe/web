@@ -1,5 +1,9 @@
 import { Campaign, User, UserEarning } from '@/types';
-import { Notification } from './types';
+import {
+  Notification,
+  VerificationEligibiltyErrorResponse,
+  VerificationEligibiltySuccessResponse,
+} from './types';
 
 export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
@@ -135,16 +139,15 @@ export const getUser = async (userId: `0x${string}`) => {
   return user?.error ? null : (user[0] as User);
 };
 
-export const checkUserVerificationEligibility = async (
-  ethAddress: `0x${string}`
-) => {
+export const checkUserVerificationEligibility = async (userId: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/verification/eligibility/${ethAddress}`,
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/verification/eligibility/${userId}`,
     { cache: 'no-store' }
   );
   const data = await res.json();
 
-  return data;
+  if (data.error) return data as VerificationEligibiltyErrorResponse;
+  return data as VerificationEligibiltySuccessResponse;
 };
 
 export const getCreatorOverview = async (userId: `0x${string}`) => {
