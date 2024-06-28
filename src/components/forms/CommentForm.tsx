@@ -34,9 +34,9 @@ export const CommentForm = ({ campaignId }: { campaignId: number }) => {
     }
 
     const data = {
-      userId: user?.id,
+      ethAddress: address,
       campaignId,
-      comment,
+      comment: comment.trim(),
     };
     if (user && socket) {
       socket?.emit(

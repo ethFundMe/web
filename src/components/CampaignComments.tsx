@@ -30,6 +30,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   const {
     socket,
     comments: socketComments,
+    metadata: { totalComments, totalDonations },
     updateList,
   } = useSocket(campaign.campaign_id);
   const [comments, setComments] = useState<CommentsAndDonations[] | null>(null);
@@ -68,8 +69,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
 
     if (!isOwner) return;
     const data = {
-      userId: user?.id,
-      campaignId: Number(campaign.id),
+      ethAddress: user.ethAddress,
+      campaignId: campaign.campaign_id,
       commentId: comment.id,
     };
 
@@ -91,14 +92,11 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
               toast.error(response.error);
             }
           }
-          if (process.env.NODE_ENV === 'development') {
-            console.log('delete response', response);
-          }
+
           socket.emit(
             'comment:join',
             {
               campaignId: campaign.campaign_id,
-              userID: user?.id,
               limit: 24,
             },
             function (
@@ -110,7 +108,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
               if (response.status === 'OK' && response.data) {
                 updateList(response.data.commentsAndDonations);
               } else {
-                console.error('Error fetching donations:', response.error);
+                if (process.env.NODE_ENV === 'development')
+                  console.error('Error fetching donations:', response.error);
               }
             }
           );
@@ -132,9 +131,6 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     });
   }, [comments, scrollContainerRef, scrollItemRef]);
 
-  const totalComments = comments?.length || 0;
-  const numOfDonations = comments && comments.filter((c) => !!c.amount).length;
-
   return (
     <aside className='mt-16 space-y-8'>
       <div className='chats flex flex-col space-y-4 pb-4'>
@@ -150,7 +146,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
               <div className='stats flex gap-4 text-sm'>
                 <span className='flex items-center gap-1'>
                   <BiDonateHeart size={14} />
-                  {numOfDonations}
+                  {totalDonations}
                 </span>
                 <span className='flex items-center gap-1'>
                   <Image
