@@ -4,6 +4,7 @@ import { Container } from '@/components/Container';
 import { DonateBtn } from '@/components/DonateBtn';
 import DonateXShareButtons from '@/components/DonateXShareButtons';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import ReportCampaignDialog from '@/components/ReportCampaignDialog';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
 import { getCampaign, getCampaigns, getUser } from '@/lib/queries';
 import { seoCampaign } from '@/lib/seoBannerUrl';
@@ -182,16 +183,19 @@ export default async function CampaignPage({
 
               <div className='flex flex-col-reverse justify-between gap-2 text-sm sm:flex-row sm:items-center sm:text-base md:gap-4'>
                 <div className='flex items-center gap-2'>
-                  <Link
-                    href={`/profile/${campaign.creator}`}
+                  <div
+                    // href={`/profile/${campaign.creator}`}
                     className={cn(
-                      'flex flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:gap-4',
+                      'relative flex flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 sm:gap-4 md:hover:bg-slate-200',
                       campaign.creator === campaign.beneficiary
                         ? 'w-full'
                         : 'flex-1 sm:flex-none'
                     )}
                   >
-                    <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
+                    <Link
+                      href={`/profile/${campaign.creator}`}
+                      className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'
+                    >
                       <ImageWithFallback
                         src={user.profileUrl ?? ''}
                         fallback='/images/user-pfp.png'
@@ -199,10 +203,10 @@ export default async function CampaignPage({
                         fill
                         alt='...'
                       />
-                    </div>
+                    </Link>
 
-                    <div className='pr-2'>
-                      <>
+                    <div className='flex w-full items-center justify-between pr-2'>
+                      <Link href={`/profile/${campaign.creator}`}>
                         <p className={TextSizeStyles.caption}>Organizer</p>
                         <p
                           title={
@@ -221,9 +225,18 @@ export default async function CampaignPage({
                               campaign.creator as `0x${string}`
                             )}
                         </p>
-                      </>
+                      </Link>
+                      <div className='md:hidden'>
+                        {user ? (
+                          <ReportCampaignDialog
+                            campaign_id={campaign.campaign_id}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     </div>
-                  </Link>
+                  </div>
 
                   {campaign.creator !== campaign.beneficiary &&
                     (beneficiary ? (
@@ -273,9 +286,22 @@ export default async function CampaignPage({
                       </div>
                     ))}
                 </div>
-
-                <div className='text-neutral-500'>
-                  <p className={TextSizeStyles.caption}>Organized On</p>
+                {user ? (
+                  <div className='hidden md:block'>
+                    <ReportCampaignDialog campaign_id={campaign.campaign_id} />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div className='my-6 flex gap-x-3 text-neutral-500 md:gap-x-4'>
+                <img
+                  src='/images/calendar.png'
+                  alt='calendar'
+                  className='ml-3 h-9 w-9 md:h-12 md:w-12'
+                />
+                <div className='-mt-0.5 md:mt-1'>
+                  <p className={TextSizeStyles.caption}>Created on</p>
                   <p className='font-semibold'>
                     {dayjs(campaign.created_at).format('Do MMM, YYYY')}
                   </p>

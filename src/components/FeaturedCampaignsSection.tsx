@@ -13,7 +13,7 @@ export const FeaturedCampaignsSection = async () => {
     <section className='flex flex-col'>
       <Container>
         <div className='py-5 text-center'>
-          <h2 className={cn(TextSizeStyles.h2)}>Most Recent</h2>
+          <h2 className={cn(TextSizeStyles.h2)}>Highlight</h2>
         </div>
       </Container>
 
