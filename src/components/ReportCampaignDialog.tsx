@@ -99,7 +99,7 @@ const ReportForm = ({
       );
       const reportRes = await res.json();
       console.log(reportRes);
-      if (res.status === 200) {
+      if (res.status === 201) {
         form.reset();
         setOpenReportDialog(false);
         return toast.success('Report sent successfully!');
