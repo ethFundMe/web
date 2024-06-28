@@ -227,13 +227,9 @@ export default async function CampaignPage({
                         </p>
                       </Link>
                       <div className='md:hidden'>
-                        {user ? (
-                          <ReportCampaignDialog
-                            campaign_id={campaign.campaign_id}
-                          />
-                        ) : (
-                          <></>
-                        )}
+                        <ReportCampaignDialog
+                          campaign_id={campaign.campaign_id}
+                        />
                       </div>
                     </div>
                   </div>
@@ -286,13 +282,9 @@ export default async function CampaignPage({
                       </div>
                     ))}
                 </div>
-                {user ? (
-                  <div className='hidden md:block'>
-                    <ReportCampaignDialog campaign_id={campaign.campaign_id} />
-                  </div>
-                ) : (
-                  <></>
-                )}
+                <div className='hidden md:block'>
+                  <ReportCampaignDialog campaign_id={campaign.campaign_id} />
+                </div>
               </div>
               <div className='my-6 flex gap-x-3 text-neutral-500 md:gap-x-4'>
                 <img
@@ -300,7 +292,7 @@ export default async function CampaignPage({
                   alt='calendar'
                   className='ml-3 h-9 w-9 md:h-12 md:w-12'
                 />
-                <div className='-mt-0.5 md:mt-1'>
+                <div className='-mt-1 md:mt-1'>
                   <p className={TextSizeStyles.caption}>Created on</p>
                   <p className='font-semibold'>
                     {dayjs(campaign.created_at).format('Do MMM, YYYY')}
