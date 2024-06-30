@@ -160,3 +160,26 @@ export interface VerificationEligibiltySuccessResponse {
 export interface VerificationEligibiltyErrorResponse {
   error: string;
 }
+
+export type VerificationSatusResponse = {
+  verifications: [
+    {
+      id: string;
+      user_id: string;
+      full_name: string;
+      email: string;
+      phone_number: string;
+      agree: boolean;
+      status: 'pending';
+      created_at: Date;
+      updated_at: Date;
+      user: User;
+    },
+  ];
+  meta: {
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
+};

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { CampaignCard } from '@/components/CampaignCard';
 import { CampaignComments } from '@/components/CampaignComments';
 import { Container } from '@/components/Container';

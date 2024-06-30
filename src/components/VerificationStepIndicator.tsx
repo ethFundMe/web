@@ -10,7 +10,7 @@ export const VerificationStepIndicator = ({ status, children }: Props) => {
     <div
       className={cn(
         'flex items-center gap-2',
-        status ? 'text-green-600' : 'text-slate-400'
+        status ? 'black' : 'text-slate-400'
       )}
     >
       <span className='flex-shrink-0'>

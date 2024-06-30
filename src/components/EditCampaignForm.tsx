@@ -330,7 +330,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
                               Visit your{' '}
                               <Link
                                 className='italic text-primary-default'
-                                href={`/dashboard/${address}/update-profile`}
+                                href={`/dashboard/${address}/creator-fee`}
                               >
                                 dashboard
                               </Link>{' '}

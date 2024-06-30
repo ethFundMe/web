@@ -3,6 +3,7 @@
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId } from '@/lib/constant';
 import { useCountdown } from '@/lib/hook/useCountdown';
+import { cn } from '@/lib/utils';
 import { useCallback, useEffect, useState } from 'react';
 import {
   WalletClient,
@@ -100,15 +101,13 @@ export const ValidatorCountdown = () => {
         ))}
       </div>
       <Button
-        className={`grid flex-shrink-0 place-content-center rounded-full ${
-          !expired
-            ? 'bg-neutral-400 hover:bg-neutral-400/80'
-            : 'bg-green-600 hover:bg-green-600/90'
-        } text-sm text-white disabled:cursor-not-allowed sm:h-32 sm:w-32 sm:text-base`}
+        className={cn(
+          'grid flex-shrink-0 place-content-center bg-primary-default text-sm text-white disabled:cursor-not-allowed'
+        )}
         onClick={diminish}
-        disabled={!expired}
+        disabled={expired}
       >
-        UPDATE
+        VALIDATE
       </Button>
     </div>
   );

@@ -19,8 +19,8 @@ import { ScrollArea } from './ui/scroll-area';
 
 enum FilterComments {
   DnC = 'All',
-  C = 'Comments',
   D = 'Donations',
+  C = 'Comments',
 }
 
 export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
