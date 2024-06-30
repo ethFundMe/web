@@ -14,6 +14,7 @@ import { Notification } from '@/lib/types';
 import { userStore } from '@/store';
 // import { getNotfications } from '@/lib/queries';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { Metadata } from 'next';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect } from 'react';
 import { HiEllipsisVertical } from 'react-icons/hi2';
@@ -28,6 +29,33 @@ interface TNotifictaions {
     totalPages: number;
   };
 }
+
+export const metadata: Metadata = {
+  // viewport: { width: 'device-width', initialScale: 1 },
+  title: 'Notifications | EthFundMe',
+  description:
+    'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
+  keywords:
+    'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+  twitter: {
+    title: 'Notifications | EthFundMe',
+    card: 'summary_large_image',
+    description:
+      'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
+    site: '@ethfundme',
+    creator: '@ethfundme',
+    images: '/images/seo-common.jpg',
+  },
+  openGraph: {
+    title: 'Notifications | EthFundMe',
+    type: 'website',
+    url: 'https://ethfund.me',
+    images: '/images/seo-common.jpg',
+    description:
+      'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
+    siteName: 'EthFundMe',
+  },
+};
 
 const NotificationsPage = ({
   params: { slug },
