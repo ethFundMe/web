@@ -60,7 +60,7 @@ export default async function CreatorFeePage({
       </div>
 
       {user?.creatorFee && (
-        <p>
+        <p className='text-primary-default'>
           Your current creator fee is{' '}
           <span className='font-semibold'>{Number(user.creatorFee)}%</span>
         </p>
