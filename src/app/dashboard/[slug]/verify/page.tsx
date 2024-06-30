@@ -47,7 +47,15 @@ export default async function VerifyPage({
   const user = await getUser(slug);
   const vPoints = await checkUserVerificationEligibility(user?.id || '');
 
-  const isValid = !('error' in vPoints);
+  // const isValid = !('error' in vPoints);
+  const checkValid = () => {
+    if (!vPoints || 'error' in vPoints) return false;
+
+    if (vPoints.funded_campaigns) return true;
+
+    return false;
+  };
+  const isValid = checkValid();
 
   return (
     <div className='min-h-[calc(100dvh-269px)] w-full'>
@@ -66,7 +74,7 @@ export default async function VerifyPage({
           </div>
         </div>
 
-        {isValid && (
+        {isValid && !('error' in vPoints) && (
           <div className='mx-auto w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xs'>
             <h2>To apply for verification, users must meet these criteria:</h2>
 
@@ -83,9 +91,11 @@ export default async function VerifyPage({
                   {vPoints.campaign_funded
                     ? vPoints.campaign_funded_eligible
                     : vPoints.campaign_funded_not_eligible}
+                  {/* 
                   <small className='block'>
-                    {/* (Current amount: {creatorOverview?.total} ETH) */}
+                    (Current amount: {creatorOverview?.total} ETH) 
                   </small>
+                    */}
                 </div>
               </VerificationStepIndicator>
 
@@ -93,7 +103,7 @@ export default async function VerifyPage({
                 {vPoints.funded_campaigns
                   ? vPoints.funded_campaigns_eligible
                   : vPoints.funded_campaigns_not_eligible}
-                You have funded campaigns with at least 0.02 ETH
+                {/* You have funded campaigns with at least 0.02 ETH */}
               </VerificationStepIndicator>
             </div>
             <p>
