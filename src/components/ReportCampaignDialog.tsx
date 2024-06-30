@@ -65,29 +65,35 @@ export default function ReportCampaignDialog({
   campaign_id: number;
 }) {
   const [openReportDialog, setOpenReportDialog] = useState(false);
+  const { user } = userStore();
+
   return (
     <>
-      <Dialog open={openReportDialog} onOpenChange={setOpenReportDialog}>
-        <DropdownMenu>
-          <DropdownMenuTrigger className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
-            <FaEllipsisV />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <DialogTrigger>Report Campaign</DialogTrigger>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-center'>Report Campaign</DialogTitle>
-            <ReportForm
-              campaign_id={campaign_id}
-              setOpenReportDialog={setOpenReportDialog}
-            />
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      {user ? (
+        <Dialog open={openReportDialog} onOpenChange={setOpenReportDialog}>
+          <DropdownMenu>
+            <DropdownMenuTrigger className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
+              <FaEllipsisV />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <DialogTrigger>Report Campaign</DialogTrigger>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className='text-center'>Report Campaign</DialogTitle>
+              <ReportForm
+                campaign_id={campaign_id}
+                setOpenReportDialog={setOpenReportDialog}
+              />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <></>
+      )}
     </>
   );
 }
