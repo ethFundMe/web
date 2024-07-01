@@ -356,7 +356,7 @@ export default function UpdateCampaignMediaForm({
         className='w-full border border-slate-300 p-3'
         onClick={handleUpdateMedia}
       >
-        {updating ? 'Updating...' : 'Save media'}
+        {updating ? 'Updating...' : 'Update Campaign'}
       </Button>
     </div>
   );
