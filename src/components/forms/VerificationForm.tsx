@@ -181,7 +181,7 @@ export default function VerificationForm({
                       <span>Phone number</span>
                       <AiOutlineExclamationCircle />
                     </PopoverTrigger>
-                    <PopoverContent>
+                    <PopoverContent className='w-fit px-3 py-2 text-sm'>
                       <p>Example: +233551234567</p>
                     </PopoverContent>
                   </Popover>
@@ -264,7 +264,15 @@ export default function VerificationForm({
             disabled={!form.watch('agree') || submitting || !canVerify}
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
-            {submitting ? 'Loading...' : 'Submit'}
+            {submitting ? (
+              <span className='flex items-center gap-2'>
+                <span>Submitting</span>
+
+                <div className='h-3.5 w-3.5 animate-spin rounded-full border border-t-0 border-white'></div>
+              </span>
+            ) : (
+              'Submit'
+            )}
           </Button>
         </form>
       </Form>

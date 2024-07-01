@@ -19,8 +19,8 @@ import { ScrollArea } from './ui/scroll-area';
 
 enum FilterComments {
   DnC = 'All',
-  C = 'Comments',
   D = 'Donations',
+  C = 'Comments',
 }
 
 export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
@@ -34,9 +34,9 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     updateList,
   } = useSocket(campaign.campaign_id);
   const [comments, setComments] = useState<CommentsAndDonations[] | null>(null);
-  const [commentsToShow, setCommentsToShow] = useState<
-    CommentsAndDonations[] | null
-  >(null);
+  // const [commentsToShow, setCommentsToShow] = useState<
+  //   CommentsAndDonations[] | null
+  // >(null);
   const [activeFilter, setActiveFilter] = useState<FilterComments>(
     FilterComments.DnC
   );
@@ -52,9 +52,7 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
   };
 
   function handleFilter(type: FilterComments) {
-    const prepared = filteredList[type];
     setActiveFilter(type);
-    setCommentsToShow(prepared);
   }
 
   useEffect(() => {
@@ -179,8 +177,9 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
         <ScrollArea
           className={cn(
             'scrollarea scroll-smooth pr-4',
-            commentsToShow &&
-              (commentsToShow.length < 4 ? ' h-fit max-h-[500px]' : 'h-[500px]')
+            filteredList[activeFilter].length < 4
+              ? 'h-full max-h-[500px]'
+              : 'h-[500px]'
           )}
           ref={scrollContainerRef}
         >

@@ -3,6 +3,7 @@ import {
   Notification,
   VerificationEligibiltyErrorResponse,
   VerificationEligibiltySuccessResponse,
+  VerificationSatusResponse,
 } from './types';
 
 export const updateUser = async (userDetails: {
@@ -148,6 +149,17 @@ export const checkUserVerificationEligibility = async (userId: string) => {
 
   if (data.error) return data as VerificationEligibiltyErrorResponse;
   return data as VerificationEligibiltySuccessResponse;
+};
+
+export const checkVerificationStatus = async (userId: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/verification?user_id=${userId}`,
+    { cache: 'no-store' }
+  );
+  const data = await res.json();
+
+  if (data.error) return null;
+  return data as VerificationSatusResponse;
 };
 
 export const getCreatorOverview = async (userId: `0x${string}`) => {
