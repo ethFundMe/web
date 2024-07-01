@@ -23,6 +23,7 @@ import { useAuth } from '../hook';
 const wcProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID ?? '';
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT ?? '';
 const mainnetRpcUrl = process.env.NEXT_PUBLIC_MAINNET_RPC_URL ?? '';
+const sepoliaRpcUrl = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL ?? '';
 
 const config = getDefaultConfig({
   appName: 'EthFundMe',
@@ -31,7 +32,7 @@ const config = getDefaultConfig({
   transports:
     ethChainId === 1
       ? { [mainnet.id]: http(mainnetRpcUrl) }
-      : { [sepolia.id]: http() },
+      : { [sepolia.id]: http(sepoliaRpcUrl) },
   ssr: true,
 });
 
