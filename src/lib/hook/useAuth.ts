@@ -51,7 +51,8 @@ export const useAuth = () => {
           throw err;
         }
 
-        const user: User = await user_res.json();
+        const users: User[] = await user_res.json();
+        const [user] = users;
         setUser(user);
         setIsAuth(true);
         return;
