@@ -6,6 +6,7 @@ import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types/db';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import Image from 'next/image';
 import Link from 'next/link';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -98,11 +99,20 @@ export const CampaignCard = ({
               <p
                 className={cn(
                   TextSizeStyles.caption,
-                  'line-clamp-1 w-full font-semibold [word-break:break-all]'
+                  'line-clamp-1 inline-flex w-full gap-1 font-semibold [word-break:break-all]'
                 )}
               >
                 {(user && user.fullName) ??
                   formatWalletAddress(campaign.creator as `0x${string}`)}
+
+                {user.isVerified && (
+                  <Image
+                    src='/images/verified.svg'
+                    width={15}
+                    height={15}
+                    alt='check'
+                  />
+                )}
               </p>
             </div>
           </Link>

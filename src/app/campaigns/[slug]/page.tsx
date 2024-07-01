@@ -14,6 +14,7 @@ import { cn, formatWalletAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { formatEther } from 'viem';
@@ -216,15 +217,21 @@ export default async function CampaignPage({
                               campaign.creator as `0x${string}`
                             )
                           }
-                          className={cn(
-                            'font-semibold',
-                            'line-clamp-1 w-full max-w-[250px] font-semibold [word-break:break-all] sm:line-clamp-2 sm:max-w-xs'
-                          )}
+                          className='sm:max-w-s line-clamp-1 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:line-clamp-2'
                         >
                           {user?.fullName ??
                             formatWalletAddress(
                               campaign.creator as `0x${string}`
                             )}
+
+                          {/* {user.isVerified && (
+                            <Image
+                              src='/images/verified.svg'
+                              width={15}
+                              height={15}
+                              alt='check'
+                            />
+                          )} */}
                         </p>
                       </Link>
                       <div className='md:hidden'>
@@ -256,14 +263,18 @@ export default async function CampaignPage({
                             <p className={TextSizeStyles.caption}>
                               Beneficiary
                             </p>
-                            <p
-                              className={cn(
-                                'font-semibold',
-                                'line-clamp-2 w-full max-w-[250px] font-semibold [word-break:break-all] sm:max-w-xs'
-                              )}
-                            >
+                            <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:max-w-xs'>
                               {beneficiary?.fullName ??
                                 formatWalletAddress(beneficiary.ethAddress)}
+
+                              {beneficiary.isVerified && (
+                                <Image
+                                  src='/images/verified.svg'
+                                  width={15}
+                                  height={15}
+                                  alt='check'
+                                />
+                              )}
                             </p>
                           </>
                         </div>
