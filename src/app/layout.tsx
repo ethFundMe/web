@@ -3,7 +3,6 @@ import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
-import ReactQueryProvider from '@/lib/QueryClientProvider';
 import { WagmiWrapper } from '@/lib/provider';
 import { Analytics } from '@vercel/analytics/react';
 import dayjs from 'dayjs';
@@ -78,9 +77,7 @@ export default async function RootLayout({
 
           <WagmiWrapper>
             <ModalProvider />
-            <ReactQueryProvider>
-              <main className='flex-1'>{children}</main>
-            </ReactQueryProvider>
+            <main className='flex-1'>{children}</main>
             <Footer />
           </WagmiWrapper>
           <Analytics />

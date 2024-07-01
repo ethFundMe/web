@@ -89,7 +89,7 @@ export const AccountForm = () => {
         const user = create_user.user;
         if (user.ethAddress) {
           setUser(user);
-          toast.success('Account created');
+          toast.success('Account created. Please Connect Wallet again');
           router.push('/');
         }
       }

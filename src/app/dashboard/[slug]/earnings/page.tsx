@@ -64,7 +64,7 @@ export default async function EarningsPage({
   const earnings = await fetchUserEarnings(slug);
 
   return (
-    <div className='mt-4 flex w-full p-4'>
+    <div className='my-4 flex w-full p-4'>
       <div className='flex w-full flex-col items-start gap-8 lg:flex-row'>
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
@@ -97,18 +97,18 @@ export default async function EarningsPage({
           <div>
             <h2 className={cn(TextSizeStyles.h4)}>Validate to Earn More</h2>
 
-            <Link
-              target='_blank'
-              href='/about/validator-program'
-              className='my-2 block text-primary-default'
-            >
-              📖 How it works
-            </Link>
-
-            <p className='max-w-screen-[500px] mb-4'>
+            <p className='max-w-screen-[500px] my-2'>
               Keep an eye here for the opportunity to influence reward
               distribution by participating in updating our reward system.
             </p>
+
+            <Link
+              target='_blank'
+              href='/about/validator-program'
+              className='mb-4 block text-primary-default'
+            >
+              📖 How it works
+            </Link>
 
             <ValidatorCountdown />
           </div>

@@ -83,7 +83,7 @@ export const ValidatorCountdown = () => {
   const Obj = { days, hours, minutes, seconds };
 
   return (
-    <div className='flex flex-wrap items-center justify-between gap-4'>
+    <div>
       <div className='flex gap-4'>
         {Object.entries(Obj)?.map(([key, value]) => (
           <div key={key}>
@@ -102,7 +102,7 @@ export const ValidatorCountdown = () => {
       </div>
       <Button
         className={cn(
-          'grid flex-shrink-0 place-content-center bg-primary-default text-sm text-white disabled:cursor-not-allowed'
+          'mt-4 grid w-full max-w-sm flex-shrink-0 place-content-center bg-primary-default text-sm text-white disabled:cursor-not-allowed'
         )}
         onClick={diminish}
         disabled={expired}
