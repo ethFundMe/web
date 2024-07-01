@@ -32,6 +32,8 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const { user } = userStore();
 
+  console.log(user);
+
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
   const { data, isLoading, error } = useSWR<{
     notification: Notification[];
@@ -106,7 +108,7 @@ const Notifications = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
-        {unreadCount?.total !== 0 && (
+        {(unreadCount?.total ?? 0) > 0 && (
           <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
             {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
             {unreadCount?.total}
@@ -121,41 +123,43 @@ const Notifications = () => {
         <>
           <div className='flex items-center justify-between border-b p-2 px-5'>
             <p>Notifications</p>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <HiEllipsisVertical />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  {' '}
-                  <button
-                    onClick={() => {
-                      const allViewed = notifications.map((item) => ({
-                        ...item,
-                        viewed: true,
-                      }));
-                      setNotifications(allViewed);
-                      viewAllNotification({
-                        eth_address: user?.ethAddress as `0x${string}`,
-                      });
-                    }}
-                    className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
-                  >
-                    Mark all as read
-                  </button>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  {' '}
-                  <Link
-                    href={`/notifications/${user?.ethAddress}`}
-                    className='rounded-md p-2 text-xs'
-                  >
-                    View all notifications
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {unreadCount?.total === 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <HiEllipsisVertical />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    {' '}
+                    <button
+                      onClick={() => {
+                        const allViewed = notifications.map((item) => ({
+                          ...item,
+                          viewed: true,
+                        }));
+                        setNotifications(allViewed);
+                        viewAllNotification({
+                          eth_address: user?.ethAddress as `0x${string}`,
+                        });
+                      }}
+                      className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
+                    >
+                      Mark all as read
+                    </button>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    {' '}
+                    <Link
+                      href={`/notifications/${user?.ethAddress}`}
+                      className='rounded-md p-2 text-xs'
+                    >
+                      View all notifications
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
           {notifications.length !== 0 ? (
             <>
