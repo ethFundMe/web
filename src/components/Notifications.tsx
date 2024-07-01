@@ -108,7 +108,7 @@ const Notifications = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
-        {unreadCount?.total > 0 && (
+        {(unreadCount?.total ?? 0) > 0 && (
           <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
             {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
             {unreadCount?.total}
