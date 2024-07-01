@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
-import { IoEllipsisVertical, IoTrash } from 'react-icons/io5';
+import { IoEllipsisHorizontalSharp, IoTrash } from 'react-icons/io5';
 import { formatEther } from 'viem';
 import ImageWithFallback from './ImageWithFallback';
 import { Button } from './ui/button';
@@ -94,8 +94,8 @@ export const CommentCard = forwardRef<Ref, Props>(
           donatedAmt ? 'animated-border  bg-slate-50' : ' border-slate-50'
         )}
       >
-        <div className='w-full pr-3'>
-          <div className='mb-2 flex flex-wrap items-start justify-between gap-2'>
+        <div className='w-full pr-2'>
+          <div className='mb-2 flex flex-wrap items-baseline justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <Link
                 href={`/profile/${ethAddress}`}
@@ -138,10 +138,10 @@ export const CommentCard = forwardRef<Ref, Props>(
               <Link
                 href='/'
                 target='_blank'
-                className='flex items-center gap-1 pr-2 text-xl font-bold text-primary-default'
+                className='flex items-center gap-1 self-baseline text-xl font-bold text-primary-default'
               >
-                <FaEthereum />
                 <span>{donatedAmt}</span>
+                <FaEthereum />
               </Link>
             )}
           </div>
@@ -165,12 +165,12 @@ export const CommentCard = forwardRef<Ref, Props>(
         {(transaction_hash || isOwner) && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className='absolute right-0 top-0 cursor-pointer p-2 focus:outline-none'
+              className='absolute right-2.5 top-0 cursor-pointer p-2 focus:outline-none'
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <IoEllipsisVertical />
+              <IoEllipsisHorizontalSharp />
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>

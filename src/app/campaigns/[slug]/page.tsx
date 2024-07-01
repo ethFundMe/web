@@ -234,11 +234,6 @@ export default async function CampaignPage({
                           )} */}
                         </p>
                       </Link>
-                      <div className='md:hidden'>
-                        <ReportCampaignDialog
-                          campaign_id={campaign.campaign_id}
-                        />
-                      </div>
                     </div>
                   </div>
 
@@ -294,25 +289,32 @@ export default async function CampaignPage({
                       </div>
                     ))}
                 </div>
-                <div className='hidden md:block'>
+                {/* <div className='hidden md:block'>
                   <ReportCampaignDialog campaign_id={campaign.campaign_id} />
-                </div>
-              </div>
-              <div className='my-6 flex gap-x-3 text-neutral-500 md:gap-x-4'>
-                <img
-                  src='/images/calendar.png'
-                  alt='calendar'
-                  className='ml-3 h-9 w-9 md:h-12 md:w-12'
-                />
-                <div className='-mt-1 md:mt-1'>
-                  <p className={TextSizeStyles.caption}>Created on</p>
-                  <p className='font-semibold'>
-                    {dayjs(campaign.created_at).format('Do MMM, YYYY')}
-                  </p>
+                </div> */}
+                <div className='my-6 flex gap-x-2 text-neutral-500 md:gap-x-4'>
+                  <div className='ml-2 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-gray-200 md:h-14 md:w-14'>
+                    <img
+                      src='/images/calendar.png'
+                      alt='calendar'
+                      className='h-6 w-6 md:h-8 md:w-8'
+                    />
+                  </div>
+                  <div className=' md:mt-1'>
+                    <p className={TextSizeStyles.caption}>Created on</p>
+                    <p className='font-semibold'>
+                      {dayjs(campaign.created_at).format('Do MMM, YYYY')}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className='space-y-4'>{campaign.description}</div>
-              <DonateXShareButtons campaign={campaign} />
+              <div className='grid grid-cols-12'>
+                <DonateXShareButtons campaign={campaign} />
+                <div className='col-start-12 col-end-13 justify-self-end'>
+                  <ReportCampaignDialog campaign_id={campaign.campaign_id} />
+                </div>
+              </div>
             </div>
           </div>
 

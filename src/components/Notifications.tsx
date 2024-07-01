@@ -229,7 +229,7 @@ const Notifications = () => {
                           <div className=' absolute -left-3 mt-1 h-2 w-2 rounded-full bg-[#0062a6] p-0'></div>
                         )}
                         <p
-                          className='text-xs'
+                          className='text-sm'
                           dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(item.description),
                           }}
