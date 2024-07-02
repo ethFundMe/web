@@ -136,7 +136,7 @@ export const CommentCard = forwardRef<Ref, Props>(
 
             {donatedAmt && (
               <Link
-                href='/'
+                href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
                 target='_blank'
                 className='flex items-center gap-1 self-baseline text-xl font-bold text-primary-default'
               >

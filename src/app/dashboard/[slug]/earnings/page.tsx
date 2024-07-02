@@ -77,22 +77,24 @@ export default async function EarningsPage({
 
             <div className='flex flex-wrap items-center justify-between'>
               <p className='my-4 text-3xl font-bold text-primary-default'>
-                {totalEarnings && totalEarnings.total} FUNDME
+                {(totalEarnings && totalEarnings.total) ?? 0} FUNDME
               </p>
             </div>
           </div>
 
           {/* Chart */}
-          <EarningsChart
-            earnings={earnings.map((i) => ({
-              amount: parseFloat(i.amount),
-              source:
-                i.rewardType === 'campaign_creation'
-                  ? 'Created campaign'
-                  : 'Funded campaign',
-              dateEarned: new Date(i.created_at),
-            }))}
-          />
+          {(earnings.length ?? 0) > 0 && (
+            <EarningsChart
+              earnings={earnings.map((i) => ({
+                amount: parseFloat(i.amount),
+                source:
+                  i.rewardType === 'campaign_creation'
+                    ? 'Created campaign'
+                    : 'Funded campaign',
+                dateEarned: new Date(i.created_at),
+              }))}
+            />
+          )}
 
           <div>
             <h2 className={cn(TextSizeStyles.h4)}>Validate to Earn More</h2>
@@ -116,10 +118,12 @@ export default async function EarningsPage({
 
         <aside className='top-24 w-full lg:sticky lg:max-w-72'>
           <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
-            <div className='mb-2 flex items-center gap-2 pr-3'>
-              <History size={30} className='stroke-1' />
-              <h2 className=' text-xl font-bold'>History</h2>
-            </div>
+            {earnings.length > 0 && (
+              <div className='mb-2 flex items-center gap-2 pr-3'>
+                <History size={30} className='stroke-1' />
+                <h2 className=' text-xl font-bold'>History</h2>
+              </div>
+            )}
 
             <ScrollArea
               className={cn('pr-3', earnings.length > 2 ? 'h-96' : 'h-fit')}

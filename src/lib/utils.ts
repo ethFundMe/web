@@ -308,5 +308,5 @@ export function getRelativeTime(date: Date): string {
 
   return `${formattedtDate
     .toDate()
-    .toLocaleDateString()} - ${formattedtDate.format('h:mm a')}`;
+    .toLocaleDateString()} • ${formattedtDate.format('h:mm a')}`;
 }

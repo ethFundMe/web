@@ -258,7 +258,7 @@ export default async function CampaignPage({
                             <p className={TextSizeStyles.caption}>
                               Beneficiary
                             </p>
-                            <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:max-w-xs'>
+                            <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 text-ellipsis font-semibold [word-break:break-all] sm:max-w-xs'>
                               {beneficiary?.fullName ??
                                 formatWalletAddress(beneficiary.ethAddress)}
 
@@ -309,7 +309,7 @@ export default async function CampaignPage({
                 </div>
               </div>
               <div className='space-y-4'>{campaign.description}</div>
-              <div className='grid grid-cols-12'>
+              <div className='flex gap-x-4'>
                 <DonateXShareButtons campaign={campaign} />
                 <div className='col-start-12 col-end-13 justify-self-end'>
                   <ReportCampaignDialog campaign_id={campaign.campaign_id} />

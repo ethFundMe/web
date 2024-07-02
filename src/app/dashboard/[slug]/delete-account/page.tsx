@@ -48,8 +48,12 @@ export default function DeleteAccountPage() {
         </h1>
 
         <div>
-          <p>This action is not reversible.</p>
-          <p>All your campaigns will be discontinued immediately.</p>
+          <p>
+            This action will erase all your data from our system without
+            impacting your on-chain campaign data. You will still be able to
+            receive donations for active campaigns, but managing and viewing
+            them on our platform will require creating a new account
+          </p>
         </div>
       </div>
 

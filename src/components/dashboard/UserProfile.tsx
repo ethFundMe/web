@@ -330,7 +330,9 @@ export const UserProfile = ({
               )}
             >
               <div className='space-y-6 lg:col-span-9'>
-                <h2 className='text-xl font-bold'>These are your campaigns</h2>
+                <h2 className='text-xl text-primary-default'>
+                  These are your campaigns
+                </h2>
                 {campaigns.length ? (
                   <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                     {campaigns.map((_) => (
