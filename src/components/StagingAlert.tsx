@@ -5,9 +5,8 @@ import { isMobile } from 'react-device-detect';
 
 const StagingAlert = () => {
   const pathname = usePathname();
-  // const isStaging =
-  //   process.env.NEXT_PUBLIC_WEB_URL === 'https://sepolia.ethfund.me';
-  const isStaging = process.env.NEXT_PUBLIC_WEB_URL === 'http://localhost:3000';
+  const isStaging =
+    process.env.NEXT_PUBLIC_WEB_URL === 'https://sepolia.ethfund.me';
   const isMobileDashboard = pathname.includes('/dashboard') && isMobile;
   return (
     <>
