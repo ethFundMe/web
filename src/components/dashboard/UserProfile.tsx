@@ -331,7 +331,7 @@ export const UserProfile = ({
             >
               <div className='space-y-6 lg:col-span-9'>
                 <h2 className='text-xl text-primary-default'>
-                  These are your campaigns
+                  These are {isOwner ? 'your' : `${user.fullName}'s`} campaigns
                 </h2>
                 {campaigns.length ? (
                   <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
