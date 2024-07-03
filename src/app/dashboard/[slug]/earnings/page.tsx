@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'Earnings',
     description: `${user.bio}`,
     keywords:
-      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+      'Ethereum alternative to GoFundMe, Blockchain-based GoFundMe competitor, Crypto fundraising vs GoFundMe, Decentralized GoFundMe alternative, Ethereum crowdfunding like GoFundMe, GoFundMe for Ethereum projects, Crypto version of GoFundMe, GoFundMe for blockchain campaigns, GoFundMe alternative for crypto donations, Ethereum-based GoFundMe alternative, Raise funds like GoFundMe with Ethereum, Blockchain fundraising similar to GoFundMe, GoFundMe alternative using Ethereum, Crypto crowdfunding similar to GoFundMe, Ethereum donation platform vs GoFundMe, Ethereum crowdfunding, Blockchain fundraising, Decentralized fundraising platform, Crypto donations, Ethereum charity platform, Blockchain-based donations, Ethereum fundraising campaigns, Crowdfunding with Ethereum, Secure fundraising on blockchain, Crypto fundraising platform, Ethereum campaign management, Transparent crowdfunding, Smart contract fundraising, Donate with Ethereum, Blockchain philanthropy, EthFundMe, EthFundMe platform, EthFundMe fundraising, EthFundMe campaigns, EthFundMe donations',
     openGraph: {
       type: 'website',
       title: 'Earnings',
@@ -77,22 +77,24 @@ export default async function EarningsPage({
 
             <div className='flex flex-wrap items-center justify-between'>
               <p className='my-4 text-3xl font-bold text-primary-default'>
-                {totalEarnings && totalEarnings.total} FUNDME
+                {(totalEarnings && totalEarnings.total) ?? 0} FUNDME
               </p>
             </div>
           </div>
 
           {/* Chart */}
-          <EarningsChart
-            earnings={earnings.map((i) => ({
-              amount: parseFloat(i.amount),
-              source:
-                i.rewardType === 'campaign_creation'
-                  ? 'Created campaign'
-                  : 'Funded campaign',
-              dateEarned: new Date(i.created_at),
-            }))}
-          />
+          {(earnings.length ?? 0) > 0 && (
+            <EarningsChart
+              earnings={earnings.map((i) => ({
+                amount: parseFloat(i.amount),
+                source:
+                  i.rewardType === 'campaign_creation'
+                    ? 'Created campaign'
+                    : 'Funded campaign',
+                dateEarned: new Date(i.created_at),
+              }))}
+            />
+          )}
 
           <div>
             <h2 className={cn(TextSizeStyles.h4)}>Validate to Earn More</h2>
@@ -116,10 +118,12 @@ export default async function EarningsPage({
 
         <aside className='top-24 w-full lg:sticky lg:max-w-72'>
           <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
-            <div className='mb-2 flex items-center gap-2 pr-3'>
-              <History size={30} className='stroke-1' />
-              <h2 className=' text-xl font-bold'>History</h2>
-            </div>
+            {earnings.length > 0 && (
+              <div className='mb-2 flex items-center gap-2 pr-3'>
+                <History size={30} className='stroke-1' />
+                <h2 className=' text-xl font-bold'>History</h2>
+              </div>
+            )}
 
             <ScrollArea
               className={cn('pr-3', earnings.length > 2 ? 'h-96' : 'h-fit')}

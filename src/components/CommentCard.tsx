@@ -95,7 +95,7 @@ export const CommentCard = forwardRef<Ref, Props>(
         )}
       >
         <div className='w-full pr-2'>
-          <div className='mb-2 flex flex-wrap items-baseline justify-between gap-2'>
+          <div className='flex flex-col justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <Link
                 href={`/profile/${ethAddress}`}
@@ -136,12 +136,12 @@ export const CommentCard = forwardRef<Ref, Props>(
 
             {donatedAmt && (
               <Link
-                href='/'
+                href={`https://sepolia.etherscan.io/tx/${transaction_hash}`}
                 target='_blank'
                 className='flex items-center gap-1 self-baseline text-xl font-bold text-primary-default'
               >
-                <span>{donatedAmt}</span>
                 <FaEthereum />
+                <span>{donatedAmt} ETH</span>
               </Link>
             )}
           </div>

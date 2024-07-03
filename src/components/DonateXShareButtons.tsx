@@ -22,12 +22,7 @@ const DonateXShareButtons = ({
     variant === 'in card' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
   );
   return (
-    <div
-      className={cn(
-        'cta col-span-10 col-start-1 grid gap-4 md:col-span-11',
-        variantStyles
-      )}
-    >
+    <div className={cn('cta grid flex-1 gap-4', variantStyles)}>
       {address && address === campaign.creator ? (
         <Button asChild>
           <Link

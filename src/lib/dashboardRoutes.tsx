@@ -30,13 +30,13 @@ export function getDashboardRoutes(address: `0x${string}`, verified: boolean) {
   const deleteAccount = {
     link: `/dashboard/${address}/delete-account`,
     title: 'Delete account',
-    icon: <IoTrashBin />,
+    icon: <IoTrashBin className='text-rose-500' />,
   };
 
   const verifyAccount = {
     link: `/dashboard/${address}/verify`,
     title: 'Get verified',
-    icon: <FaCheckCircle />,
+    icon: <FaCheckCircle className='text-primary-default' />,
   };
 
   return verified
