@@ -25,24 +25,11 @@ const Navbar = () => {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { user } = userStore();
-
-  const isStaging =
-    process.env.NEXT_PUBLIC_WEB_URL === 'https://sepolia.ethfund.me';
   return (
     <>
-      <motion.nav className={cn('sticky top-0 z-30 h-16 w-full text-black')}>
-        {isStaging && (
-          <div className='flex w-full justify-center bg-rose-200 py-1'>
-            <Link
-              href='https://ethfund.me'
-              target='_blank'
-              className='text-center text-xs text-rose-500 md:text-sm'
-            >
-              You are currently on the Sepolia testnet version. Click here to
-              switch to the Ethereum mainnet.
-            </Link>
-          </div>
-        )}
+      <motion.nav
+        className={cn('sticky top-0 z-30 h-16 w-full bg-white text-black')}
+      >
         <Container className='flex h-full items-center justify-between gap-4 bg-white py-1.5'>
           <Link href='/' className='h-4/5 sm:h-1/2 sm:w-auto'>
             <Image

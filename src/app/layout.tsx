@@ -1,6 +1,7 @@
 import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
+import StagingAlert from '@/components/StagingAlert';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
 import { WagmiWrapper } from '@/lib/provider';
@@ -79,6 +80,7 @@ export default async function RootLayout({
             <ModalProvider />
             <main className='flex-1'>{children}</main>
             <Footer />
+            <StagingAlert />
           </WagmiWrapper>
           <Analytics />
         </body>

@@ -184,52 +184,55 @@ const NotificationsPage = ({
           } w-full overflow-y-auto rounded-md border px-0 py-2 text-sm`}
         >
           <>
-            {data.pages[0].data.meta.totalNotifications <= 0 ? (
-              <div className='flex items-center justify-between border-b p-2 px-5'>
-                <p className='text-3xl'>
-                  Notifications{' '}
-                  {unreadCount.total !== 0 && (
-                    <span className='text-sm md:hidden'>
-                      ({unreadCount.total})
-                    </span>
-                  )}{' '}
-                </p>
-                <div className='md:hidden'>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <HiEllipsisVertical />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem>
-                        {' '}
-                        <button
-                          onClick={() => {
-                            viewAllNotification({
-                              eth_address: user?.ethAddress as `0x${string}`,
-                            });
-                            router.refresh();
-                          }}
-                          className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
-                        >
-                          Mark all as read
-                        </button>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <Button
-                  onClick={() => {
-                    viewAllNotification({
-                      eth_address: user?.ethAddress as `0x${string}`,
-                    });
-                    router.refresh();
-                  }}
-                  className='hidden md:flex'
-                >
-                  Mark all as read
-                </Button>
-              </div>
-            ) : (
+            <div className='flex items-center justify-between border-b p-2 px-5'>
+              <p className='text-3xl'>
+                Notifications{' '}
+                {unreadCount.total !== 0 && (
+                  <span className='text-sm md:hidden'>
+                    ({unreadCount.total})
+                  </span>
+                )}{' '}
+              </p>
+              {data.pages[0].data.meta.totalNotifications > 0 && (
+                <>
+                  <div className='md:hidden'>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <HiEllipsisVertical />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem>
+                          {' '}
+                          <button
+                            onClick={() => {
+                              viewAllNotification({
+                                eth_address: user?.ethAddress as `0x${string}`,
+                              });
+                              router.refresh();
+                            }}
+                            className='rounded-md p-2 text-xs disabled:cursor-not-allowed disabled:text-gray-400'
+                          >
+                            Mark all as read
+                          </button>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      viewAllNotification({
+                        eth_address: user?.ethAddress as `0x${string}`,
+                      });
+                      router.refresh();
+                    }}
+                    className='hidden md:flex'
+                  >
+                    Mark all as read
+                  </Button>
+                </>
+              )}
+            </div>
+            {data.pages[0].data.meta.totalNotifications <= 0 && (
               <div className='flex h-[60vh] w-full items-center justify-center'>
                 <div className='inset-center grid w-full place-items-center'>
                   <Inbox
