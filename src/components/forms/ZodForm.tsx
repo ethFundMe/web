@@ -374,7 +374,7 @@ export default function CreateCampaignForm() {
               <FormControl>
                 <Input
                   type='number'
-                  step={0.1}
+                  step={0.01}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -656,7 +656,6 @@ export default function CreateCampaignForm() {
           type='submit'
           onClick={() => {
             validateFormData();
-            console.log('Jii');
           }}
           disabled={
             submitStatus !== null || isPending || isConfirmingTxn || !address
