@@ -129,7 +129,7 @@ const Notifications = () => {
         <>
           <div className='flex items-center justify-between border-b p-2 px-5'>
             <p>Notifications</p>
-            {unreadCount?.total === 0 && (
+            {(unreadCount?.total as number) !== 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <HiEllipsisVertical />

@@ -1,6 +1,7 @@
 import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
+import StagingAlert from '@/components/StagingAlert';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
 import { WagmiWrapper } from '@/lib/provider';
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   },
   description: meta.description,
   keywords:
-    'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations, crypto crowdfunding',
+    'Ethereum alternative to GoFundMe, Blockchain-based GoFundMe competitor, Crypto fundraising vs GoFundMe, Decentralized GoFundMe alternative, Ethereum crowdfunding like GoFundMe, GoFundMe for Ethereum projects, Crypto version of GoFundMe, GoFundMe for blockchain campaigns, GoFundMe alternative for crypto donations, Ethereum-based GoFundMe alternative, Raise funds like GoFundMe with Ethereum, Blockchain fundraising similar to GoFundMe, GoFundMe alternative using Ethereum, Crypto crowdfunding similar to GoFundMe, Ethereum donation platform vs GoFundMe, Ethereum crowdfunding, Blockchain fundraising, Decentralized fundraising platform, Crypto donations, Ethereum charity platform, Blockchain-based donations, Ethereum fundraising campaigns, Crowdfunding with Ethereum, Secure fundraising on blockchain, Crypto fundraising platform, Ethereum campaign management, Transparent crowdfunding, Smart contract fundraising, Donate with Ethereum, Blockchain philanthropy, EthFundMe, EthFundMe platform, EthFundMe fundraising, EthFundMe campaigns, EthFundMe donations, crypto crowdfunding',
   twitter: {
     title: {
       default: meta.title,
@@ -79,6 +80,7 @@ export default async function RootLayout({
             <ModalProvider />
             <main className='flex-1'>{children}</main>
             <Footer />
+            <StagingAlert />
           </WagmiWrapper>
           <Analytics />
         </body>
