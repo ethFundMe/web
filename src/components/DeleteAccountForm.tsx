@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useRefs from 'react-use-refs';
+import { useDisconnect } from 'wagmi';
 import { Button } from './ui/button';
 import {
   Dialog,
@@ -32,6 +33,7 @@ export const DeleteAccountForm = () => {
   const { user } = userStore();
   const [triggerRef, closeRef] = useRefs<HTMLButtonElement>(null);
   const [deleting, setDeleting] = useState(false);
+  const { disconnect } = useDisconnect();
 
   const { push } = useRouter();
   const token = getCookie('efmToken') || '';
@@ -47,7 +49,11 @@ export const DeleteAccountForm = () => {
     try {
       const res = await resetUser(user.ethAddress, token);
       closeRef.current?.click();
-      toast.success(res.message);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(res);
+      }
+      toast.success('Your account has been deleted successfully');
+      disconnect();
       push('/');
     } catch (error) {
       if (error instanceof Error) {

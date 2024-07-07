@@ -10,7 +10,7 @@ export const AboutSection = () => {
     <section>
       <Container className='mx-auto max-w-3xl space-y-5 py-10 text-center lg:py-20'>
         <div className='pt-5'>
-          <h2 className={TextSizeStyles.h2}>What About Us?</h2>
+          <h2 className={TextSizeStyles.h2}>Want to Know More?</h2>
         </div>
 
         {/* <p className='text-center'>

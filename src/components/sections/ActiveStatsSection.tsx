@@ -51,7 +51,9 @@ export default async function ActiveStatsSection() {
                   <span className='text-xl font-bold md:text-3xl'>
                     <CountUp duration={3} end={stats.activeCampaigns} />
                   </span>
-                  <span className='block'>active campaigns</span>
+                  <span className='block'>
+                    active campaign{stats.activeCampaigns > 1 && 's'}
+                  </span>
                 </p>
               </div>
 

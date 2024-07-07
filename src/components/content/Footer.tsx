@@ -1,4 +1,5 @@
 'use client';
+
 import { NAVBARROUTES, SOCIAL_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -20,13 +21,6 @@ export const Footer = () => {
         onDashboardPage && 'hidden md:block'
       )}
     >
-      {/* <Image
-        className='absolute bottom-0 left-1/2 z-0 h-auto w-full -translate-x-1/2 object-cover opacity-20 grayscale sm:h-full'
-        src='/images/logo-outline.png'
-        width={1200}
-        height={1200}
-        alt='logo'
-      /> */}
       <div id='space'>
         <div className='stars'></div>
         <div className='stars'></div>
@@ -99,6 +93,10 @@ export const Footer = () => {
             <p>
               Copyright &copy; {new Date().getFullYear()} All rights reserved
             </p>
+
+            <Link href='/campaigns/0' className='block'>
+              Support EthFundMe 💜
+            </Link>
 
             <ul className='flex items-center gap-4'>
               {SOCIAL_LINKS.map(({ name, href, icon }) => (
