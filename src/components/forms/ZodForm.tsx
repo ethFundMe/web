@@ -656,7 +656,6 @@ export default function CreateCampaignForm() {
           type='submit'
           onClick={() => {
             validateFormData();
-            console.log('Jii');
           }}
           disabled={
             submitStatus !== null || isPending || isConfirmingTxn || !address

@@ -41,13 +41,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function DeleteAccountPage() {
   return (
-    <div className='my-4 flex w-full flex-col items-center gap-6 p-4 lg:gap-8'>
+    <div className='my-4 gap-6 p-4 lg:gap-8'>
       <div>
-        <h1 className={cn(TextSizeStyles.h4, 'text-center')}>
+        <h1 className={cn(TextSizeStyles.h4, 'mb-5')}>
           Delete your EthFundMe account?
         </h1>
 
-        <div>
+        <div className='mb-5 md:max-w-[600px]'>
           <p>
             This action will erase all your data from our system without
             impacting your on-chain campaign data. You will still be able to

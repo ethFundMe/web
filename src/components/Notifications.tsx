@@ -32,8 +32,6 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const { user } = userStore();
 
-  console.log(user);
-
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
   const { data, isLoading, error } = useSWR<{
     notification: Notification[];
@@ -71,7 +69,7 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
-      console.log(resData);
+      return resData;
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +80,6 @@ const Notifications = () => {
     eth_address: `0x${string}`;
   }) => {
     try {
-      console.log(eth_address);
       const res = await fetch(
         `${apiBaseUrl}/api/notifications/view/${eth_address}/all`,
         {
@@ -94,6 +91,7 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
+      return resData;
       console.log(resData);
     } catch (error) {
       console.error(error);
@@ -109,7 +107,11 @@ const Notifications = () => {
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
         {(unreadCount?.total ?? 0) > 0 && (
-          <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+          <p
+            className={`absolute -right-1 -top-1.5 flex h-4 ${
+              (unreadCount?.total ?? 0) > 9 ? 'w-5' : 'w-4'
+            } items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white`}
+          >
             {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
             {unreadCount?.total}
           </p>

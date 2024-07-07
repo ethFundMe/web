@@ -75,7 +75,7 @@ export default async function VerifyPage({
 
         <Container className='mb-6'>
           <div className='flex-1'>
-            <div className='mb-2 text-center lg:mb-4 lg:text-left'>
+            <div className='mb-2 text-center lg:my-4 lg:text-left'>
               <h1 className={TextSizeStyles.h4}>Apply For Verification</h1>
             </div>
 
