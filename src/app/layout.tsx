@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import ClientLoader from '@/components/ClientLoader';
 import { ClientToaster } from '@/components/ClientToaster';
 import ModalProvider from '@/components/ModalProvider';
@@ -9,6 +10,7 @@ import { Analytics } from '@vercel/analytics/react';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import type { Metadata, Viewport } from 'next';
+import Head from 'next/head';
 import React from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -18,7 +20,8 @@ import './globals.css';
 dayjs.extend(advancedFormat);
 
 const meta = {
-  title: 'EthFundMe',
+  title:
+    "EthFundMe | The World's #1 Decentralised Fundraising and Crowdfunding Platform",
   description:
     'Welcome to EthFundMe! The only platform that gives you the ultimate ethereum-powered crowdfunding experience. Join a community driven by innovation, transparency, and the limitless possibilities of decentralized support.',
 };
@@ -72,6 +75,9 @@ export default async function RootLayout({
     <>
       <html lang='en'>
         <body className='flex min-h-screen flex-col'>
+          <Head>
+            <meta name='theme-color' content='#0062a6' />
+          </Head>
           <ClientLoader showSpinner={false} height={4} color='#0062a6' />
           <ClientToaster />
           <Toaster />

@@ -75,7 +75,6 @@ const NotificationsPage = ({
     eth_address: `0x${string}`;
   }) => {
     try {
-      console.log(eth_address);
       const res = await fetch(
         `${apiBaseUrl}/api/notifications/view/${eth_address}/all`,
         {
@@ -87,7 +86,7 @@ const NotificationsPage = ({
         }
       );
       const resData = await res.json();
-      console.log(resData);
+      return resData;
     } catch (error) {
       console.error(error);
     }
@@ -185,11 +184,11 @@ const NotificationsPage = ({
         >
           <>
             <div className='flex items-center justify-between border-b p-2 px-5'>
-              <p className='text-3xl'>
+              <p className='text-xl'>
                 Notifications{' '}
-                {unreadCount.total !== 0 && (
+                {unreadCount?.total > 0 && (
                   <span className='text-sm md:hidden'>
-                    ({unreadCount.total})
+                    ({unreadCount?.total})
                   </span>
                 )}{' '}
               </p>
