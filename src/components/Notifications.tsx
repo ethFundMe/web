@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Notification } from '@/lib/types';
 import { getRelativeTime } from '@/lib/utils';
@@ -69,9 +70,14 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
-      return resData;
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(resData);
+      }
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(error);
+      }
     }
   };
   const viewAllNotification = async ({
@@ -91,10 +97,14 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
-      return resData;
-      console.log(resData);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(resData);
+      }
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(error);
+      }
     }
   };
   if (isLoading || error)
