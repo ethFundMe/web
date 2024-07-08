@@ -21,7 +21,7 @@ import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 type Props = {
-  params: { slug: string };
+  params: { id: string };
 };
 
 export async function generateMetadata(
@@ -29,9 +29,9 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const id = params.slug;
+  const id = params.id;
 
-  const campaign = await getCampaign(parseInt(id));
+  const campaign = await getCampaign(Number(id));
 
   if (!campaign) notFound();
 
