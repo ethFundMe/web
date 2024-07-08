@@ -117,89 +117,96 @@ export default async function EarningsPage({
         </div>
 
         <aside className='top-24 w-full lg:sticky lg:max-w-72'>
-          <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
-            {earnings.length > 0 && (
-              <>
-                <div className='mb-2 flex items-center gap-2 pr-3'>
-                  <History size={30} className='stroke-1' />
-                  <h2 className=' text-xl font-bold'>History</h2>
-                </div>
+          {(totalEarnings && totalEarnings.total) ?? 0 > 0 ? (
+            <div className='mt-4 h-fit rounded-lg border border-slate-300 p-3 pr-0 lg:min-h-[90%]'>
+              {earnings.length > 0 && (
+                <>
+                  <div className='mb-2 flex items-center gap-2 pr-3'>
+                    <History size={30} className='stroke-1' />
+                    <h2 className=' text-xl font-bold'>History</h2>
+                  </div>
 
-                <ScrollArea
-                  className={cn('pr-3', earnings.length > 2 ? 'h-96' : 'h-fit')}
-                >
-                  {earnings.length > 0 ? (
-                    <ul className='mt-4 space-y-4'>
-                      {earnings.map((earning, idx) => (
-                        <li key={idx}>
-                          <Link
-                            target='_blank'
-                            href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
-                            className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3 hover:bg-slate-300/40'
-                          >
-                            <div>
-                              <div className='space-y-1.5 lg:space-y-2.5'>
-                                <div>
-                                  <p className='text-lg font-medium'>
-                                    {earning.amount} FUNDME
-                                  </p>
+                  <ScrollArea
+                    className={cn(
+                      'pr-3',
+                      earnings.length > 2 ? 'h-96' : 'h-fit'
+                    )}
+                  >
+                    {earnings.length > 0 ? (
+                      <ul className='mt-4 space-y-4'>
+                        {earnings.map((earning, idx) => (
+                          <li key={idx}>
+                            <Link
+                              target='_blank'
+                              href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${earning.transaction_hash}`}
+                              className='flex items-start justify-between gap-2 rounded-md bg-slate-300/20 p-3 hover:bg-slate-300/40'
+                            >
+                              <div>
+                                <div className='space-y-1.5 lg:space-y-2.5'>
+                                  <div>
+                                    <p className='text-lg font-medium'>
+                                      {earning.amount} FUNDME
+                                    </p>
 
-                                  <p className='text-sm'>
-                                    {earning.rewardType ===
-                                      'campaign_creation' && (
-                                      <span className='flex items-center gap-1'>
-                                        <CiSquarePlus size={16} />
+                                    <p className='text-sm'>
+                                      {earning.rewardType ===
+                                        'campaign_creation' && (
+                                        <span className='flex items-center gap-1'>
+                                          <CiSquarePlus size={16} />
 
-                                        <span>Create campaign</span>
-                                      </span>
-                                    )}
-                                    {earning.rewardType === 'funding' && (
-                                      <span className='flex items-center gap-1'>
-                                        <Coins size={16} />
+                                          <span>Create campaign</span>
+                                        </span>
+                                      )}
+                                      {earning.rewardType === 'funding' && (
+                                        <span className='flex items-center gap-1'>
+                                          <Coins size={16} />
 
-                                        <span>Fund campaign</span>
-                                      </span>
-                                    )}
+                                          <span>Fund campaign</span>
+                                        </span>
+                                      )}
 
-                                    {earning.rewardType === 'validator' && (
-                                      <span className='flex items-center gap-1'>
-                                        <GiFairyWand size={16} />
+                                      {earning.rewardType === 'validator' && (
+                                        <span className='flex items-center gap-1'>
+                                          <GiFairyWand size={16} />
 
-                                        <span>Diminish</span>
-                                      </span>
-                                    )}
-                                  </p>
+                                          <span>Diminish</span>
+                                        </span>
+                                      )}
+                                    </p>
+                                  </div>
                                 </div>
+
+                                <small>
+                                  {dayjs(earning.created_at)
+                                    .subtract(2, 'minute')
+                                    .format('Do MMM, YYYY . HH : mm a')}
+                                </small>
                               </div>
 
-                              <small>
-                                {dayjs(earning.created_at)
-                                  .subtract(2, 'minute')
-                                  .format('Do MMM, YYYY . HH : mm a')}
-                              </small>
-                            </div>
-
-                            <Image
-                              className='mt-1'
-                              src='/images/etherscan.svg'
-                              width={16}
-                              height={16}
-                              alt='etherscan'
-                              priority
-                            />
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className='mt-4 rounded-md bg-white/20 p-2 text-white'>
-                      Keep creating and funding more campaigns to earn tokens
-                    </p>
-                  )}
-                </ScrollArea>
-              </>
-            )}
-          </div>
+                              <Image
+                                className='mt-1'
+                                src='/images/etherscan.svg'
+                                width={16}
+                                height={16}
+                                alt='etherscan'
+                                priority
+                              />
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className='mt-4 rounded-md bg-white/20 p-2 text-white'>
+                        Keep creating and funding more campaigns to earn tokens
+                      </p>
+                    )}
+                  </ScrollArea>
+                </>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </aside>
       </div>
     </div>
