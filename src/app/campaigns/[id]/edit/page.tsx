@@ -1,6 +1,5 @@
 import { Container } from '@/components/Container';
-import EditCampaignForm from '@/components/EditCampaignForm';
-import UpdateCampaignMediaForm from '@/components/UpdateCampaignMediaForm';
+import { EditCampaignForm } from '@/components/forms/EditCampaign';
 import { getCampaign } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
@@ -37,12 +36,12 @@ export const metadata: Metadata = {
 };
 
 export default async function EditCampaign({
-  params: { slug },
+  params: { id },
 }: {
-  params: { slug: number };
+  params: { id: string };
 }) {
-  if (!slug) notFound();
-  const campaign = await getCampaign(slug);
+  if (!id) notFound();
+  const campaign = await getCampaign(Number(id));
   if (!campaign) notFound();
 
   return (
@@ -71,14 +70,15 @@ export default async function EditCampaign({
             <h1 className={TextSizeStyles.h1}>Edit Campaign</h1>
           </div>
 
-          <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
+          {/* <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
             <div className='mx-auto lg:mx-0'>
               <UpdateCampaignMediaForm campaign={campaign} />
             </div>
             <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
               <EditCampaignForm campaign={campaign} />
             </div>
-          </div>
+          </div> */}
+          <EditCampaignForm campaign={campaign} />
         </Container>
       </div>
     </>
