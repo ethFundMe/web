@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'Verify',
     description: `${user.bio}`,
     keywords:
-      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+      'Ethereum alternative to GoFundMe, Blockchain-based GoFundMe competitor, Crypto fundraising vs GoFundMe, Decentralized GoFundMe alternative, Ethereum crowdfunding like GoFundMe, GoFundMe for Ethereum projects, Crypto version of GoFundMe, GoFundMe for blockchain campaigns, GoFundMe alternative for crypto donations, Ethereum-based GoFundMe alternative, Raise funds like GoFundMe with Ethereum, Blockchain fundraising similar to GoFundMe, GoFundMe alternative using Ethereum, Crypto crowdfunding similar to GoFundMe, Ethereum donation platform vs GoFundMe, Ethereum crowdfunding, Blockchain fundraising, Decentralized fundraising platform, Crypto donations, Ethereum charity platform, Blockchain-based donations, Ethereum fundraising campaigns, Crowdfunding with Ethereum, Secure fundraising on blockchain, Crypto fundraising platform, Ethereum campaign management, Transparent crowdfunding, Smart contract fundraising, Donate with Ethereum, Blockchain philanthropy, EthFundMe, EthFundMe platform, EthFundMe fundraising, EthFundMe campaigns, EthFundMe donations',
     openGraph: {
       type: 'website',
       title: 'Verify',
@@ -59,36 +59,47 @@ export default async function VerifyPage({
 
     if (vPoints.funded_campaigns) return true;
 
-    return false;
+    return true;
   };
   const isValid = checkValid();
-  const verificationStatus = vStatus?.verifications[0].status === 'pending';
+  // const verificationStatus = vStatus?.verifications[0]?.status === 'pending';
+  const verificationStatus = () => {
+    if (!vStatus || vStatus?.verifications?.length < 1) {
+      return false;
+    }
+
+    return vStatus?.verifications[0]?.status === 'pending';
+  };
 
   return (
     <>
       <div className='min-h-[calc(100dvh-269px)] w-full'>
-        {!verificationStatus && (
+        {verificationStatus() && (
           <div className='mb-4 flex flex-wrap items-center justify-center gap-2 bg-blue-500/10 py-2 text-center text-sm text-blue-500 lg:text-base'>
-            You have already applied for verification.
+            We will review your application.
           </div>
         )}
 
         <Container className='mb-6'>
           <div className='flex-1'>
-            <div className='mb-2 text-center lg:mb-4 lg:text-left'>
-              <h1 className={TextSizeStyles.h4}>Apply For Verification</h1>
+            <div className='mb-2 text-center lg:my-4 lg:text-left'>
+              <h1 className={TextSizeStyles.h4}>
+                {!verificationStatus()
+                  ? 'Apply For Verification'
+                  : 'You have already applied for verification.'}
+              </h1>
             </div>
 
             <div
               className={cn(
-                'flex flex-col items-center gap-4 lg:flex-row',
-                verificationStatus && 'lg:items-start'
+                'hidden flex-col items-center gap-4 lg:flex-row',
+                !verificationStatus() && 'flex lg:items-start'
               )}
             >
               {isValid && !('error' in vPoints) && (
                 <div className='w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-sm'>
                   <h2>
-                    To apply for verification, users must meet these criteria:
+                    You need to meet these criteria to apply for verification:
                   </h2>
 
                   <div className='ml-4 space-y-2'>
@@ -115,15 +126,20 @@ export default async function VerifyPage({
                     </VerificationStepIndicator>
                   </div>
                   <p>
-                    <b>Note:</b> Meeting the personal funding requirement (#3)
-                    alone is sufficient for verification. If this requirement is
-                    not met, both campaign creation (#1) and campaign funding
-                    (#2) requirements must be satisfied.
+                    <b>Note:</b>
+                    <br />
+                    Meeting the personal funding requirement (#3) alone is
+                    sufficient for verification.
+                    <br />
+                    If this requirement is not met, both campaign creation (#1)
+                    and campaign funding (#2) requirements must be satisfied.
                   </p>
                 </div>
               )}
 
-              {verificationStatus && <VerificationForm canVerify={isValid} />}
+              {!verificationStatus() && (
+                <VerificationForm canVerify={isValid} />
+              )}
             </div>
           </div>
         </Container>

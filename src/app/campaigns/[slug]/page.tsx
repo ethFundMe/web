@@ -45,7 +45,7 @@ export async function generateMetadata(
         title: `${campaign.title} | EthFundMe`,
         description: `${campaign.description}`,
         keywords:
-          'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+          'Ethereum alternative to GoFundMe, Blockchain-based GoFundMe competitor, Crypto fundraising vs GoFundMe, Decentralized GoFundMe alternative, Ethereum crowdfunding like GoFundMe, GoFundMe for Ethereum projects, Crypto version of GoFundMe, GoFundMe for blockchain campaigns, GoFundMe alternative for crypto donations, Ethereum-based GoFundMe alternative, Raise funds like GoFundMe with Ethereum, Blockchain fundraising similar to GoFundMe, GoFundMe alternative using Ethereum, Crypto crowdfunding similar to GoFundMe, Ethereum donation platform vs GoFundMe, Ethereum crowdfunding, Blockchain fundraising, Decentralized fundraising platform, Crypto donations, Ethereum charity platform, Blockchain-based donations, Ethereum fundraising campaigns, Crowdfunding with Ethereum, Secure fundraising on blockchain, Crypto fundraising platform, Ethereum campaign management, Transparent crowdfunding, Smart contract fundraising, Donate with Ethereum, Blockchain philanthropy, EthFundMe, EthFundMe platform, EthFundMe fundraising, EthFundMe campaigns, EthFundMe donations',
         openGraph: {
           type: 'website',
           title: `${campaign.title}`,
@@ -258,7 +258,7 @@ export default async function CampaignPage({
                             <p className={TextSizeStyles.caption}>
                               Beneficiary
                             </p>
-                            <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:max-w-xs'>
+                            <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 text-ellipsis font-semibold [word-break:break-all] sm:max-w-xs'>
                               {beneficiary?.fullName ??
                                 formatWalletAddress(beneficiary.ethAddress)}
 
@@ -309,7 +309,7 @@ export default async function CampaignPage({
                 </div>
               </div>
               <div className='space-y-4'>{campaign.description}</div>
-              <div className='grid grid-cols-12'>
+              <div className='flex gap-x-4'>
                 <DonateXShareButtons campaign={campaign} />
                 <div className='col-start-12 col-end-13 justify-self-end'>
                   <ReportCampaignDialog campaign_id={campaign.campaign_id} />

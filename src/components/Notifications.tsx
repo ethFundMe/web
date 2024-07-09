@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Notification } from '@/lib/types';
 import { getRelativeTime } from '@/lib/utils';
@@ -31,8 +32,6 @@ const Notifications = () => {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const { user } = userStore();
-
-  console.log(user);
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
   const { data, isLoading, error } = useSWR<{
@@ -71,9 +70,14 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
-      console.log(resData);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(resData);
+      }
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(error);
+      }
     }
   };
   const viewAllNotification = async ({
@@ -82,7 +86,6 @@ const Notifications = () => {
     eth_address: `0x${string}`;
   }) => {
     try {
-      console.log(eth_address);
       const res = await fetch(
         `${apiBaseUrl}/api/notifications/view/${eth_address}/all`,
         {
@@ -94,9 +97,14 @@ const Notifications = () => {
         }
       );
       const resData = await res.json();
-      console.log(resData);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(resData);
+      }
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(error);
+      }
     }
   };
   if (isLoading || error)
@@ -109,7 +117,11 @@ const Notifications = () => {
       <DropdownMenuTrigger className='relative focus:border-none focus:outline-none active:border-none active:outline-none'>
         <Bell />
         {(unreadCount?.total ?? 0) > 0 && (
-          <p className='absolute -right-1 -top-1.5 flex h-4 w-4 items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white'>
+          <p
+            className={`absolute -right-1 -top-1.5 flex h-4 ${
+              (unreadCount?.total ?? 0) > 9 ? 'w-5' : 'w-4'
+            } items-center justify-center  rounded-full bg-[#f62442] text-[10px] text-white`}
+          >
             {/* <span className="animate-ping absolute inline-flex h-full w-full rounded-full delay-300 duration-1000 bg-[#f62442] opacity-40"></span> */}
             {unreadCount?.total}
           </p>
@@ -123,7 +135,7 @@ const Notifications = () => {
         <>
           <div className='flex items-center justify-between border-b p-2 px-5'>
             <p>Notifications</p>
-            {unreadCount?.total === 0 && (
+            {(unreadCount?.total as number) !== 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <HiEllipsisVertical />

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'Delete Account',
     description: `${user.bio}`,
     keywords:
-      'Crypto fundraising, ethFundMe, Eth fundraising, Ethereum fundraising, Blockchain-powered crowdfunding, Decentralized support, Innovation and transparency, Empower your dreams, Community-driven fundraising, Limitless possibilities, Donate with crypto, Donate with eth, Donate with ethereum, Future of fundraising, Blockchain innovation, Cryptocurrency donations',
+      'Ethereum alternative to GoFundMe, Blockchain-based GoFundMe competitor, Crypto fundraising vs GoFundMe, Decentralized GoFundMe alternative, Ethereum crowdfunding like GoFundMe, GoFundMe for Ethereum projects, Crypto version of GoFundMe, GoFundMe for blockchain campaigns, GoFundMe alternative for crypto donations, Ethereum-based GoFundMe alternative, Raise funds like GoFundMe with Ethereum, Blockchain fundraising similar to GoFundMe, GoFundMe alternative using Ethereum, Crypto crowdfunding similar to GoFundMe, Ethereum donation platform vs GoFundMe, Ethereum crowdfunding, Blockchain fundraising, Decentralized fundraising platform, Crypto donations, Ethereum charity platform, Blockchain-based donations, Ethereum fundraising campaigns, Crowdfunding with Ethereum, Secure fundraising on blockchain, Crypto fundraising platform, Ethereum campaign management, Transparent crowdfunding, Smart contract fundraising, Donate with Ethereum, Blockchain philanthropy, EthFundMe, EthFundMe platform, EthFundMe fundraising, EthFundMe campaigns, EthFundMe donations',
     openGraph: {
       type: 'website',
       title: 'Delete Account',
@@ -41,15 +41,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function DeleteAccountPage() {
   return (
-    <div className='flex w-full flex-col items-center gap-6 p-4 lg:gap-8'>
+    <div className='my-4 gap-6 p-4 lg:gap-8'>
       <div>
-        <h1 className={cn(TextSizeStyles.h4, 'text-center')}>
+        <h1 className={cn(TextSizeStyles.h4, 'mb-5')}>
           Delete your EthFundMe account?
         </h1>
 
-        <div>
-          <p>This action is not reversible.</p>
-          <p>All your campaigns will be discontinued immediately.</p>
+        <div className='mb-5 md:max-w-[600px]'>
+          <p>
+            This action will erase all your data from our system without
+            impacting your on-chain campaign data. You will still be able to
+            receive donations for active campaigns, but managing and viewing
+            them on our platform will require creating a new account
+          </p>
         </div>
       </div>
 
