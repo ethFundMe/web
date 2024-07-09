@@ -172,7 +172,7 @@ export default function VerificationForm({
                         <AiOutlineExclamationCircle />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Example: +233551234567</p>
+                        <p>Example: +1941234567</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -182,7 +182,7 @@ export default function VerificationForm({
                       <AiOutlineExclamationCircle />
                     </PopoverTrigger>
                     <PopoverContent className='w-fit px-3 py-2 text-sm'>
-                      <p>Example: +233551234567</p>
+                      <p>Example: +194234567</p>
                     </PopoverContent>
                   </Popover>
                 </>
@@ -229,18 +229,7 @@ export default function VerificationForm({
             control={form.control}
             name='agree'
             render={({ field }) => (
-              <FormItem>
-                <div className='flex items-end gap-2'>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-
-                  <FormLabel>I agree</FormLabel>
-                </div>
-
+              <FormItem className='col-span-2'>
                 <FormDescription className='text-xs'>
                   I have read and agreed to the{' '}
                   <Link
@@ -257,6 +246,16 @@ export default function VerificationForm({
                     Privacy Policy
                   </Link>
                 </FormDescription>
+                <div className='flex items-center gap-x-2'>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+
+                  <FormLabel>I agree</FormLabel>
+                </div>
               </FormItem>
             )}
           />

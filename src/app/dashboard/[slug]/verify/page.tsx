@@ -62,12 +62,19 @@ export default async function VerifyPage({
     return false;
   };
   const isValid = checkValid();
-  const verificationStatus = vStatus?.verifications[0].status === 'pending';
+  // const verificationStatus = vStatus?.verifications[0]?.status === 'pending';
+  const verificationStatus = () => {
+    if (!vStatus || vStatus?.verifications?.length < 1) {
+      return false;
+    }
+
+    return vStatus?.verifications[0]?.status === 'pending';
+  };
 
   return (
     <>
       <div className='min-h-[calc(100dvh-269px)] w-full'>
-        {!verificationStatus && (
+        {verificationStatus() && (
           <div className='mb-4 flex flex-wrap items-center justify-center gap-2 bg-blue-500/10 py-2 text-center text-sm text-blue-500 lg:text-base'>
             You have already applied for verification.
           </div>
@@ -76,13 +83,17 @@ export default async function VerifyPage({
         <Container className='mb-6'>
           <div className='flex-1'>
             <div className='mb-2 text-center lg:my-4 lg:text-left'>
-              <h1 className={TextSizeStyles.h4}>Apply For Verification</h1>
+              <h1 className={TextSizeStyles.h4}>
+                {!verificationStatus()
+                  ? 'Apply For Verification'
+                  : 'You have already applied for verification.'}
+              </h1>
             </div>
 
             <div
               className={cn(
                 'flex flex-col items-center gap-4 lg:flex-row',
-                verificationStatus && 'lg:items-start'
+                verificationStatus() && 'lg:items-start'
               )}
             >
               {isValid && !('error' in vPoints) && (
@@ -123,7 +134,9 @@ export default async function VerifyPage({
                 </div>
               )}
 
-              {verificationStatus && <VerificationForm canVerify={isValid} />}
+              {!verificationStatus() && (
+                <VerificationForm canVerify={isValid} />
+              )}
             </div>
           </div>
         </Container>

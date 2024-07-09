@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   // viewport: { width: 'device-width', initialScale: 1 },
   themeColor: '#0062A6',
+
   title:
     "EthFundMe | The World's #1 Decentralised Fundraising and Crowdfunding Platform",
   description:
