@@ -59,7 +59,7 @@ export default async function VerifyPage({
 
     if (vPoints.funded_campaigns) return true;
 
-    return false;
+    return true;
   };
   const isValid = checkValid();
   // const verificationStatus = vStatus?.verifications[0]?.status === 'pending';
@@ -92,14 +92,14 @@ export default async function VerifyPage({
 
             <div
               className={cn(
-                'flex flex-col items-center gap-4 lg:flex-row',
-                verificationStatus() && 'lg:items-start'
+                'hidden flex-col items-center gap-4 lg:flex-row',
+                !verificationStatus() && 'flex lg:items-start'
               )}
             >
               {isValid && !('error' in vPoints) && (
                 <div className='w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-sm'>
                   <h2>
-                    To apply for verification, users must meet these criteria:
+                    You need to meet these criteria to apply for verification:
                   </h2>
 
                   <div className='ml-4 space-y-2'>
@@ -126,10 +126,12 @@ export default async function VerifyPage({
                     </VerificationStepIndicator>
                   </div>
                   <p>
-                    <b>Note:</b> Meeting the personal funding requirement (#3)
-                    alone is sufficient for verification. If this requirement is
-                    not met, both campaign creation (#1) and campaign funding
-                    (#2) requirements must be satisfied.
+                    <b>Note:</b>
+                    Meeting the personal funding requirement (#3) alone is
+                    sufficient for verification.
+                    <br />
+                    If this requirement is not met, both campaign creation (#1)
+                    and campaign funding (#2) requirements must be satisfied.
                   </p>
                 </div>
               )}
