@@ -76,7 +76,7 @@ export default async function VerifyPage({
       <div className='min-h-[calc(100dvh-269px)] w-full'>
         {verificationStatus() && (
           <div className='mb-4 flex flex-wrap items-center justify-center gap-2 bg-blue-500/10 py-2 text-center text-sm text-blue-500 lg:text-base'>
-            You have already applied for verification.
+            We will review your application.
           </div>
         )}
 
@@ -127,6 +127,7 @@ export default async function VerifyPage({
                   </div>
                   <p>
                     <b>Note:</b>
+                    <br />
                     Meeting the personal funding requirement (#3) alone is
                     sufficient for verification.
                     <br />

@@ -88,18 +88,19 @@ export const Footer = () => {
             </div>
           </div>
 
+          <div className='flex w-full justify-end'>
+            {process.env.NEXT_PUBLIC_WEB_URL === 'https://ethfundme.com' && (
+              <Link href='/campaigns/0' className='block'>
+                Support EthFundMe
+              </Link>
+            )}
+          </div>
           <div className='h-[1px] bg-neutral-400' />
 
           <div className='flex justify-between'>
             <p>
               Copyright &copy; {new Date().getFullYear()} All rights reserved
             </p>
-
-            {process.env.NODE_ENV === 'production' && (
-              <Link href='/campaigns/0' className='block'>
-                Support EthFundMe 💜
-              </Link>
-            )}
 
             <ul className='flex items-center gap-4'>
               {SOCIAL_LINKS.map(({ name, href, icon }) => (
