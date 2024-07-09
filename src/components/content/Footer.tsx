@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Particles from '../animations/DottedParticles';
 import { Container } from '../Container';
 import { FooterLink } from '../FooterLink';
 import { Button, Input, Textarea } from '../inputs';
@@ -17,16 +18,16 @@ export const Footer = () => {
   return (
     <footer
       className={cn(
-        'relative z-10 bg-primary-dark text-white',
+        'relative bg-primary-dark text-white',
         onDashboardPage && 'hidden md:block'
       )}
     >
-      <div id='space'>
+      {/* <div id='space'>
         <div className='stars'></div>
         <div className='stars'></div>
         <div className='stars'></div>
         <div className='stars'></div>
-      </div>
+      </div> */}
       <Container className='relative z-10 py-16 text-sm'>
         <div className='relative space-y-8'>
           <div className='flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between'>
@@ -94,9 +95,11 @@ export const Footer = () => {
               Copyright &copy; {new Date().getFullYear()} All rights reserved
             </p>
 
-            <Link href='/campaigns/0' className='block'>
-              Support EthFundMe 💜
-            </Link>
+            {process.env.NODE_ENV === 'production' && (
+              <Link href='/campaigns/0' className='block'>
+                Support EthFundMe 💜
+              </Link>
+            )}
 
             <ul className='flex items-center gap-4'>
               {SOCIAL_LINKS.map(({ name, href, icon }) => (
@@ -112,6 +115,13 @@ export const Footer = () => {
           <div className='flex flex-wrap justify-center gap-4 md:justify-start'></div>
         </div>
       </Container>
+      <Particles
+        className='absolute inset-0'
+        quantity={150}
+        ease={80}
+        color={'#f8f8f8'}
+        refresh
+      />
     </footer>
   );
 };
