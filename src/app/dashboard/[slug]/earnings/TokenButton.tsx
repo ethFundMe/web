@@ -19,7 +19,8 @@ export const TokenButton = () => {
         address: process.env.NEXT_PUBLIC_EFM_TOKEN ?? '',
         decimals: 18,
         symbol: 'FUNDME',
-        image: 'https://weth.com/icon.png',
+        image:
+          'https://res.cloudinary.com/efm/image/upload/v1720546616/Logo_White-Blue_goedli.png',
       },
     });
 
