@@ -27,6 +27,7 @@ import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
 import useRefs from 'react-use-refs';
 import { BaseError, formatEther, parseEther } from 'viem';
+import { mainnet } from 'viem/chains';
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -103,7 +104,10 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   });
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
-    useWaitForTransactionReceipt({ hash });
+    useWaitForTransactionReceipt({
+      chainId: process.env.NEXT_PUBLIC_CHAIN_ID || mainnet.id,
+      hash,
+    });
 
   const uploadBanner = async () => {
     if (!preparedBanner) return [];
@@ -193,15 +197,6 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         return toast.error('Something went wrong.');
       }
 
-      console.log(
-        newHash,
-        BigInt(campaign_id),
-        parseEther(goal.toString()),
-        form.watch('type') === 'personal'
-          ? campaign.creator
-          : (beneficiaryAddress as `0x${string}`)
-      );
-
       writeContract({
         abi: EthFundMe,
         address: ethFundMeContractAddress,
@@ -216,6 +211,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
             : (beneficiaryAddress as `0x${string}`),
         ],
       });
+      setUpdating(false);
     } catch (error) {
       setUpdating(false);
       console.error(error);
@@ -232,9 +228,9 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
 
   useEffect(() => {
     if (isConfirmedTxn) {
-      setUpdating(false);
       toast.success('Campaign updated');
-      return push(`/campaigns/${campaign.campaign_id}`);
+      push(`/campaigns/${campaign.campaign_id}`);
+      return;
     }
   }, [campaign.campaign_id, isConfirmedTxn, push]);
 
