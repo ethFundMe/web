@@ -21,7 +21,7 @@ import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 type Props = {
-  params: { slug: string };
+  params: { id: string };
 };
 
 export async function generateMetadata(
@@ -29,9 +29,9 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const id = params.slug;
+  const id = params.id;
 
-  const campaign = await getCampaign(parseInt(id));
+  const campaign = await getCampaign(Number(id));
 
   if (!campaign) notFound();
 
@@ -93,11 +93,11 @@ export async function generateMetadata(
 }
 
 export default async function CampaignPage({
-  params: { slug },
+  params: { id },
 }: {
-  params: { slug: string };
+  params: { id: string };
 }) {
-  const campaign = await getCampaign(parseInt(slug));
+  const campaign = await getCampaign(Number(id));
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);

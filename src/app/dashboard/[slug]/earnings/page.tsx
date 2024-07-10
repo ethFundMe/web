@@ -18,6 +18,7 @@ import { notFound } from 'next/navigation';
 import { CiSquarePlus } from 'react-icons/ci';
 import { GiFairyWand } from 'react-icons/gi';
 import { isAddress } from 'viem';
+import { TokenButton } from './TokenButton';
 
 dayjs.extend(advancedFormat);
 
@@ -69,6 +70,7 @@ export default async function EarningsPage({
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
             <h2 className={cn(TextSizeStyles.h4)}>All Earnings</h2>
+            <TokenButton />
             <p>
               Your FUNDME tokens are automatically sent to you after each
               activity. The amount shown below represents the total tokens you
