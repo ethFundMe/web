@@ -93,11 +93,11 @@ export async function generateMetadata(
 }
 
 export default async function CampaignPage({
-  params: { slug },
+  params: { id },
 }: {
-  params: { slug: string };
+  params: { id: string };
 }) {
-  const campaign = await getCampaign(parseInt(slug));
+  const campaign = await getCampaign(Number(id));
   async function getBeneficiary() {
     if (campaign.user.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);
