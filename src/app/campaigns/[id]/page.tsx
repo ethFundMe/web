@@ -99,7 +99,7 @@ export default async function CampaignPage({
 }) {
   const campaign = await getCampaign(Number(id));
   async function getBeneficiary() {
-    if (campaign.user.ethAddress === campaign.beneficiary) return null;
+    if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);
     return beneficiary;
   }
@@ -240,7 +240,7 @@ export default async function CampaignPage({
                   {campaign.creator !== campaign.beneficiary &&
                     (beneficiary ? (
                       <Link
-                        href={`/profile/${beneficiary.ethAddress}`}
+                        href={`/profile/${beneficiary?.ethAddress}`}
                         className='flex flex-1 flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:flex-none sm:gap-4'
                       >
                         <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
@@ -260,7 +260,7 @@ export default async function CampaignPage({
                             </p>
                             <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 text-ellipsis font-semibold [word-break:break-all] sm:max-w-xs'>
                               {beneficiary?.fullName ??
-                                formatWalletAddress(beneficiary.ethAddress)}
+                                formatWalletAddress(beneficiary?.ethAddress)}
 
                               {beneficiary.isVerified && (
                                 <Image
