@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_WEB_URL as string),
   title: {
     default: meta.title,
-    template: `%s | ${meta.title}`,
+    template: `%s | The World's #1 Decentralised Fundraising and Crowdfunding Platform`,
   },
   description: meta.description,
   keywords:
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     title: {
       default: meta.title,
-      template: `%s | ${meta.title}`,
+      template: `%s | The World's #1 Decentralised Fundraising and Crowdfunding Platform`,
     },
     card: 'summary_large_image',
     description: meta.description,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     url: 'https://ethfund.me',
     title: {
       default: meta.title,
-      template: `%s | ${meta.title}`,
+      template: `%s | The World's #1 Decentralised Fundraising and Crowdfunding Platform`,
     },
     description: meta.description,
     siteName: meta.title,

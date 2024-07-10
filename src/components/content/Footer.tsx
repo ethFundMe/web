@@ -63,6 +63,12 @@ export const Footer = () => {
                     title='Terms and Conditions'
                   />
                 </li>
+                {process.env.NEXT_PUBLIC_WEB_URL ===
+                  'https://ethfundme.com' && (
+                  <li>
+                    <FooterLink link='/campaigns/0' title='Support EthFundMe' />
+                  </li>
+                )}
               </ul>
             </div>
 
@@ -86,14 +92,6 @@ export const Footer = () => {
                 <Button wide>Send</Button>
               </form>
             </div>
-          </div>
-
-          <div className='flex w-full justify-end'>
-            {process.env.NEXT_PUBLIC_WEB_URL === 'https://ethfundme.com' && (
-              <Link href='/campaigns/0' className='block'>
-                Support EthFundMe
-              </Link>
-            )}
           </div>
           <div className='h-[1px] bg-neutral-400' />
 
