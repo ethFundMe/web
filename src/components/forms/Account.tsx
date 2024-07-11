@@ -14,6 +14,7 @@ import { Button, Input } from '../inputs';
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
 
 type TAccount = {
+  username: string;
   fullName: string;
   email: string;
 };
@@ -30,6 +31,7 @@ export const AccountForm = () => {
     defaultValues: {
       fullName: '',
       email: '',
+      username: '',
     },
   });
 
@@ -39,11 +41,12 @@ export const AccountForm = () => {
       router.refresh();
       return;
     }
-    const { email, fullName } = data;
+    const { email, fullName, username } = data;
     const new_user = {
       email,
       eth_address: address as `0x${string}`,
       full_name: fullName,
+      username,
     };
     try {
       setIsLoading(true);
@@ -59,6 +62,7 @@ export const AccountForm = () => {
           const res = await updateUser({
             ethAddress: new_user.eth_address,
             email,
+            username,
             fullName,
             token,
           });
@@ -112,15 +116,6 @@ export const AccountForm = () => {
     >
       <fieldset>
         <Input
-          id='full name'
-          type='text'
-          label='Full Name'
-          {...register('fullName', { required: 'Name is required', min: 1 })}
-          placeholder='Enter your full name'
-        />
-      </fieldset>
-      <fieldset>
-        <Input
           id='email'
           type='email'
           label='Email'
@@ -133,6 +128,27 @@ export const AccountForm = () => {
           })}
           required
           placeholder='Enter your email'
+        />
+      </fieldset>
+      <fieldset>
+        <Input
+          id='full name'
+          type='text'
+          label='Full Name'
+          {...register('fullName', { required: 'Name is required', min: 1 })}
+          placeholder='Enter your full name'
+        />
+      </fieldset>
+      <fieldset>
+        <Input
+          id='username'
+          type='text'
+          label='Username'
+          {...register('username', {
+            required: 'Username is required',
+          })}
+          required
+          placeholder='Enter your username'
         />
       </fieldset>
       <Button type='submit' disabled={isLoading} className='w-full'>

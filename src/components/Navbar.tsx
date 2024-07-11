@@ -71,7 +71,7 @@ const Navbar = () => {
                     />
                   </div>
                   <p className='font-semibold'>
-                    {formatWalletAddress(address)}
+                    {user?.username ?? formatWalletAddress(address)}
                   </p>
                   <ChevronDown size={10} />
                 </div>

@@ -10,6 +10,7 @@ export const updateUser = async (userDetails: {
   ethAddress: `0x${string}`;
   email: string;
   fullName: string;
+  username: string;
   bio?: string;
   bannerUrl?: string;
   profileUrl?: string;
@@ -20,6 +21,7 @@ export const updateUser = async (userDetails: {
     eth_address: userDetails.ethAddress,
     full_name: userDetails.fullName,
     bio: userDetails.bio,
+    username: userDetails.username,
     bannerUrl: userDetails.bannerUrl,
     profileUrl: userDetails.profileUrl,
   };
