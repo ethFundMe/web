@@ -27,7 +27,7 @@ export const AccountForm = () => {
   const router = useRouter();
   const token = getCookie('efmToken') || '';
 
-  const { handleSubmit, register } = useForm<TAccount>({
+  const { handleSubmit, register, formState } = useForm<TAccount>({
     defaultValues: {
       fullName: '',
       email: '',
@@ -35,6 +35,7 @@ export const AccountForm = () => {
     },
   });
 
+  const { isDirty } = formState;
   const onSubmit: SubmitHandler<TAccount> = async (data) => {
     if (!address) {
       toast.error('Wallet not connected');
@@ -54,6 +55,18 @@ export const AccountForm = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${address}`
       );
+      // const [emailCheckRes, usernameCheckRes] = await Promise.all([
+      //   fetch(`${efm_endpoint}/check/${new_user.email}`),
+      //   fetch(`${efm_endpoint}/check/${new_user.username}`)
+      // ]);
+
+      // if (!emailCheckRes.ok || !usernameCheckRes.ok) {
+      //   const emailErr = !emailCheckRes.ok ? await emailCheckRes.json() : null;
+      //   const usernameErr = !usernameCheckRes.ok ? await usernameCheckRes.json() : null;
+      //   if(emailErr) toast.error('email already exists');
+      //   if(usernameErr) toast.error('username already exists');
+      //   throw new Error(emailErr?.message || usernameErr?.message || 'username or email Availability check failed');
+      // }
 
       if (res.ok) {
         const user: User = await res.json();
@@ -151,7 +164,7 @@ export const AccountForm = () => {
           placeholder='Enter your username'
         />
       </fieldset>
-      <Button type='submit' disabled={isLoading} className='w-full'>
+      <Button type='submit' disabled={isLoading || !isDirty} className='w-full'>
         {isLoading ? 'Loading...' : 'Create account'}
       </Button>
     </form>
