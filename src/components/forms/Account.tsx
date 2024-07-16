@@ -55,17 +55,18 @@ export const AccountForm = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${address}`
       );
-      // const [emailCheckRes, usernameCheckRes] = await Promise.all([
-      //   fetch(`${efm_endpoint}/check/${new_user.email}`),
-      //   fetch(`${efm_endpoint}/check/${new_user.username}`)
-      // ]);
+      // const emailCheckRes = await fetch(`${efm_endpoint}/check/email/${new_user.email}`);
+      // if (!emailCheckRes.ok) {
+      //   const emailErr = await emailCheckRes.json();
+      //   toast.error('email already exists');
+      //   throw new Error(emailErr?.message || 'Email availability check failed');
+      // }
 
-      // if (!emailCheckRes.ok || !usernameCheckRes.ok) {
-      //   const emailErr = !emailCheckRes.ok ? await emailCheckRes.json() : null;
-      //   const usernameErr = !usernameCheckRes.ok ? await usernameCheckRes.json() : null;
-      //   if(emailErr) toast.error('email already exists');
-      //   if(usernameErr) toast.error('username already exists');
-      //   throw new Error(emailErr?.message || usernameErr?.message || 'username or email Availability check failed');
+      // const usernameCheckRes = await fetch(`${efm_endpoint}/check/username/${new_user.username}`);
+      // if (!usernameCheckRes.ok) {
+      //   const usernameErr = await usernameCheckRes.json();
+      //   toast.error('username already exists');
+      //   throw new Error(usernameErr?.message || 'Username availability check failed');
       // }
 
       if (res.ok) {
@@ -87,6 +88,19 @@ export const AccountForm = () => {
           router.push('/');
         }
       } else {
+        //       const usernameCheckRes = await fetch(`${efm_endpoint}/check/username/${new_user.username}`);
+        // if (!usernameCheckRes.ok) {
+        //   const usernameErr = await usernameCheckRes.json();
+        //   toast.error('username already exists');
+        //   throw new Error(usernameErr?.message || 'Username availability check failed');
+        // }
+        //       const emailCheckRes = await fetch(`${efm_endpoint}/check/email/${new_user.email}`);
+        //       if (!emailCheckRes.ok) {
+        //         const emailErr = await emailCheckRes.json();
+        //         toast.error('email already exists');
+        //         throw new Error(emailErr?.message || 'Email availability check failed');
+        //       }
+
         const create_user_res = await fetch(`${efm_endpoint}/api/user`, {
           method: 'POST',
           headers: {
@@ -103,9 +117,12 @@ export const AccountForm = () => {
           message: string;
           user: User;
         };
+        console.log(create_user_res);
         const user = create_user.user;
+        console.log(user);
         if (user.ethAddress) {
           setUser(user);
+          console.log(user);
           toast.success('Account created. Please Connect Wallet again');
           router.push('/');
         }
@@ -114,6 +131,7 @@ export const AccountForm = () => {
       setIsLoading(false);
       console.error(error);
       toast.error('We could not create your account');
+      toast.error((error as { error: string }).error);
       router.refresh();
     }
   };
