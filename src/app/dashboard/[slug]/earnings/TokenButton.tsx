@@ -33,7 +33,13 @@ export const TokenButton = () => {
 
   return (
     <>
-      <Button onClick={addEFMToken}>Add to wallet</Button>
+      <Button
+        onClick={addEFMToken}
+        variant='ghost'
+        className='text-primary-default'
+      >
+        Click here
+      </Button>
     </>
   );
 };

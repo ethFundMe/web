@@ -47,6 +47,7 @@ export const UserProfile = ({
       ethAddress: user.ethAddress,
       fullName: user.fullName,
       email: user.email,
+      username: user.username,
       profileUrl: profileUrl[0],
       token,
     })
@@ -70,6 +71,7 @@ export const UserProfile = ({
       ethAddress: user.ethAddress,
       fullName: user.fullName,
       email: user.email,
+      username: user.username,
       bannerUrl: bannerUrl[0],
       token,
     })
@@ -205,6 +207,7 @@ export const UserProfile = ({
                                           ethAddress: user.ethAddress,
                                           email: user.email,
                                           fullName: user.fullName,
+                                          username: user.username,
                                           profileUrl: undefined,
                                           token,
                                         })

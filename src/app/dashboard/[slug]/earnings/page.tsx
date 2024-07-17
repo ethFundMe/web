@@ -70,7 +70,6 @@ export default async function EarningsPage({
         <div className='flex-1 space-y-16 lg:space-y-20'>
           <div>
             <h2 className={cn(TextSizeStyles.h4)}>All Earnings</h2>
-            <TokenButton />
             <p>
               Your FUNDME tokens are automatically sent to you after each
               activity. The amount shown below represents the total tokens you
@@ -82,6 +81,16 @@ export default async function EarningsPage({
                 {(totalEarnings && totalEarnings.total) ?? 0} FUNDME
               </p>
             </div>
+            {Number(totalEarnings?.total) > 0 ? (
+              <p>
+                Can&apos;t see FUNDME tokens in your wallet?{' '}
+                <span>
+                  <TokenButton />
+                </span>
+              </p>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Chart */}

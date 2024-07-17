@@ -34,6 +34,10 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .string({ required_error: 'Full name is required' })
       .min(2)
       .max(250),
+    username: z
+      .string({ required_error: 'Username is required' })
+      .min(2)
+      .max(250),
     email: z
       .string()
       .regex(REGEX_CODES.email, { message: 'Enter a valid email' }),
@@ -53,27 +57,26 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     defaultValues: {
       fullName: user.fullName ?? '',
       bio: user.bio ?? '',
+      username: user.username ?? '',
       email: user.email ?? '',
     },
     mode: 'onChange',
   });
 
-  const editMade =
-    form.watch('fullName').trim() !== user.fullName ||
-    form.watch('email') !== user.email ||
-    !!form.watch('bio')?.trim() !== !!user.bio ||
-    form.watch('bio')?.trim() !== user.bio;
+  const { formState } = form;
+  const { isDirty } = formState;
 
   const router = useRouter();
 
   function updateUserProfile(values: z.infer<typeof formSchema>) {
     setFormStatus('Saving changes');
 
-    if (editMade) {
+    if (isDirty) {
       updateUser({
         bio: values.bio,
         email: values.email,
         ethAddress: user.ethAddress,
+        username: values.username,
         fullName: values.fullName,
         token: token || '',
       })
@@ -93,6 +96,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     }
   }
 
+  console.log(isDirty);
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateUserProfile(values);
   }
@@ -117,6 +121,20 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name='username'
+          render={({ field }) => (
+            <FormItem className='col-span-2'>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder='Enter your username' {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -125,7 +143,12 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             <FormItem>
               <FormLabel>Email address</FormLabel>
               <FormControl>
-                <Input type='email' placeholder='Enter your email' {...field} />
+                <Input
+                  type='email'
+                  placeholder='Enter your email'
+                  {...field}
+                  disabled={user?.email !== ''}
+                />
               </FormControl>
 
               <FormMessage />
@@ -152,7 +175,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         />
 
         <Button
-          disabled={!!formStatus || !editMade}
+          disabled={!!formStatus || !isDirty}
           className='block w-full disabled:cursor-not-allowed disabled:bg-opacity-50'
         >
           {formStatus ?? 'Save'}
