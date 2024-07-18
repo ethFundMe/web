@@ -59,7 +59,9 @@ export default async function VerifyPage({
 
     if (vPoints.funded_campaigns) return true;
 
-    return true;
+    if (vPoints.created_campaign && vPoints.campaign_funded) return true;
+
+    return false;
   };
   const isValid = checkValid();
   // const verificationStatus = vStatus?.verifications[0]?.status === 'pending';
@@ -96,7 +98,7 @@ export default async function VerifyPage({
                 !verificationStatus() && 'flex lg:items-start'
               )}
             >
-              {isValid && !('error' in vPoints) && (
+              {!isValid && !('error' in vPoints) && (
                 <div className='w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xl'>
                   <h2>
                     You need to meet these criteria to apply for verification:
@@ -125,14 +127,13 @@ export default async function VerifyPage({
                       </b>
                     </VerificationStepIndicator>
                   </div>
-                  <ul className='list-disc'>
-                    <b>Note:</b>
+                  <ul className='p list-disc '>
+                    <p>Note:</p>
                     <br />
                     <li>
                       Meeting the personal funding requirement (#3) alone is
                       sufficient for verification.
                     </li>
-                    <br />
                     <li>
                       If this requirement is not met, both campaign creation
                       (#1) and campaign funding (#2) requirements must be
