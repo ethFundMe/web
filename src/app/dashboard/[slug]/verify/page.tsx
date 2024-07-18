@@ -92,12 +92,12 @@ export default async function VerifyPage({
 
             <div
               className={cn(
-                'hidden flex-col items-center gap-4 lg:flex-row',
+                'hidden flex-col items-center gap-4',
                 !verificationStatus() && 'flex lg:items-start'
               )}
             >
               {isValid && !('error' in vPoints) && (
-                <div className='w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-sm'>
+                <div className='w-full max-w-xl space-y-2 text-sm lg:mt-3 lg:max-w-xl'>
                   <h2>
                     You need to meet these criteria to apply for verification:
                   </h2>
@@ -125,15 +125,20 @@ export default async function VerifyPage({
                       </b>
                     </VerificationStepIndicator>
                   </div>
-                  <p>
+                  <ul className='list-disc'>
                     <b>Note:</b>
                     <br />
-                    Meeting the personal funding requirement (#3) alone is
-                    sufficient for verification.
+                    <li>
+                      Meeting the personal funding requirement (#3) alone is
+                      sufficient for verification.
+                    </li>
                     <br />
-                    If this requirement is not met, both campaign creation (#1)
-                    and campaign funding (#2) requirements must be satisfied.
-                  </p>
+                    <li>
+                      If this requirement is not met, both campaign creation
+                      (#1) and campaign funding (#2) requirements must be
+                      satisfied.
+                    </li>
+                  </ul>
                 </div>
               )}
 

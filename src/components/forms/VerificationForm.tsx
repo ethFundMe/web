@@ -260,7 +260,7 @@ export default function VerificationForm({
             )}
           />
           <Button
-            disabled={!form.watch('agree') || submitting || !canVerify}
+            disabled={(!form.watch('agree') && !canVerify) || submitting}
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
             {submitting ? (
