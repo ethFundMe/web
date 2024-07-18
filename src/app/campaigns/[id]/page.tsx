@@ -210,21 +210,22 @@ export default async function CampaignPage({
                     <div className='flex w-full items-center justify-between pr-2'>
                       <Link href={`/profile/${campaign.creator}`}>
                         <p className={TextSizeStyles.caption}>Organizer</p>
-                        <p
-                          title={
-                            user?.fullName ??
-                            formatWalletAddress(
-                              campaign.creator as `0x${string}`
-                            )
-                          }
-                          className='sm:max-w-s line-clamp-1 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:line-clamp-2'
-                        >
-                          {user?.fullName ??
-                            formatWalletAddress(
-                              campaign.creator as `0x${string}`
-                            )}
+                        <div>
+                          <p
+                            title={
+                              user?.fullName ??
+                              formatWalletAddress(
+                                campaign.creator as `0x${string}`
+                              )
+                            }
+                            className='sm:max-w-s line-clamp-1 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:line-clamp-2'
+                          >
+                            {user?.fullName ??
+                              formatWalletAddress(
+                                campaign.creator as `0x${string}`
+                              )}
 
-                          {/* {user.isVerified && (
+                            {/* {user.isVerified && (
                             <Image
                               src='/images/verified.svg'
                               width={15}
@@ -232,7 +233,11 @@ export default async function CampaignPage({
                               alt='check'
                             />
                           )} */}
-                        </p>
+                          </p>
+                          <p className='text-sm text-gray-500'>
+                            {user.username}
+                          </p>
+                        </div>
                       </Link>
                     </div>
                   </div>

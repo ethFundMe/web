@@ -147,7 +147,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
                   type='email'
                   placeholder='Enter your email'
                   {...field}
-                  disabled={user?.email !== ''}
+                  disabled={!!user?.email}
                 />
               </FormControl>
 

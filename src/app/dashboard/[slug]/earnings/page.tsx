@@ -82,7 +82,7 @@ export default async function EarningsPage({
               </p>
             </div>
             {Number(totalEarnings?.total) > 0 ? (
-              <p>
+              <p className='text-gray-500'>
                 Can&apos;t see FUNDME tokens in your wallet?{' '}
                 <span>
                   <TokenButton />

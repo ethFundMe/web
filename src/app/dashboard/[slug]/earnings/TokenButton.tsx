@@ -35,8 +35,8 @@ export const TokenButton = () => {
     <>
       <Button
         onClick={addEFMToken}
-        variant='ghost'
-        className='text-primary-default'
+        variant='secondary'
+        className='text-primary-default hover:text-primary-default/80'
       >
         Click here
       </Button>

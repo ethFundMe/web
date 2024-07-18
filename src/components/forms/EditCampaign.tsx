@@ -35,7 +35,7 @@ import {
 } from 'wagmi';
 import { z } from 'zod';
 import { DiscontinueCampaignBtn } from '../DiscontinueCampaignBtn';
-import { Input } from '../inputs';
+// import { Input } from '../inputs';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
 import {
@@ -54,6 +54,7 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form';
+import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { ScrollArea } from '../ui/scroll-area';
 import {
