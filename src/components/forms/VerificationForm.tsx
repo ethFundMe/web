@@ -43,8 +43,6 @@ export default function VerificationForm({
   const { push } = useRouter();
   const { user } = userStore();
 
-  console.log(canVerify);
-
   useEffect(() => {
     if (user?.isVerified) {
       push(`/dashboard/${user.ethAddress}`);
@@ -88,13 +86,10 @@ export default function VerificationForm({
       email: user?.email || '',
     },
   });
-  console.log(form.watch('agree'));
-  console.log(submitting);
 
   const {
     formState: { dirtyFields },
   } = form;
-  console.log(dirtyFields);
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async ({
     fullname,
     agree,
