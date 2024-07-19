@@ -302,7 +302,7 @@ export const UserProfile = ({
                           ? user.fullName.slice(0, 25).concat('...')
                           : user.fullName}
                       </p>
-                      <p className='text-gray-500'>{user.username}</p>
+                      <p className='text-gray-500'>@{user.username}</p>
                     </div>
 
                     {user.isVerified && (

@@ -43,8 +43,6 @@ export default function VerificationForm({
   const { push } = useRouter();
   const { user } = userStore();
 
-  console.log(canVerify);
-
   useEffect(() => {
     if (user?.isVerified) {
       push(`/dashboard/${user.ethAddress}`);
@@ -88,9 +86,10 @@ export default function VerificationForm({
       email: user?.email || '',
     },
   });
-  console.log(form.watch('agree'));
-  console.log(submitting);
 
+  const {
+    formState: { dirtyFields },
+  } = form;
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async ({
     fullname,
     agree,
@@ -264,7 +263,10 @@ export default function VerificationForm({
             )}
           />
           <Button
-            disabled={(!form.watch('agree') && !canVerify) || submitting}
+            disabled={
+              !(form.watch('agree') && canVerify && dirtyFields.phoneNumber) ||
+              submitting
+            }
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
             {submitting ? (

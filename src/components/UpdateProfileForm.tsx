@@ -28,6 +28,8 @@ type FormStatus =
   | 'Uploading banner'
   | 'Saving changes';
 
+const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
+
 export default function UpdateProfileForm({ user }: { user: User }) {
   const formSchema = z.object({
     fullName: z
@@ -63,14 +65,30 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     mode: 'onChange',
   });
 
-  const { formState } = form;
-  const { isDirty } = formState;
+  const {
+    formState: { dirtyFields, isDirty },
+  } = form;
+  // const { isDirty } = formState;
 
   const router = useRouter();
 
-  function updateUserProfile(values: z.infer<typeof formSchema>) {
+  async function updateUserProfile(values: z.infer<typeof formSchema>) {
     setFormStatus('Saving changes');
 
+    if (dirtyFields.username) {
+      // check if username already exists
+      // if yes, display error message
+      // if no, proceed with updating the username
+      const usernameCheckRes = await fetch(
+        `${efm_endpoint}/api/check/username/${values.username}`
+      );
+
+      if (!usernameCheckRes.ok) {
+        setFormStatus(null);
+        form.reset();
+        return toast.error('username already exists');
+      }
+    }
     if (isDirty) {
       updateUser({
         bio: values.bio,
@@ -96,7 +114,6 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     }
   }
 
-  console.log(isDirty);
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateUserProfile(values);
   }
