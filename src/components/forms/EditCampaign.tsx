@@ -167,7 +167,9 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
     form.watch('beneficiaryAddress') !== campaign.beneficiary ||
     form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
     form.watch('banner') !== campaign.banner_url ||
-    form.watch('tag') !== campaign.tag;
+    form.watch('tag') !== campaign.tag ||
+    (preparedBanner && preparedBanner?.length !== 0) ||
+    (preparedOtherImages && preparedOtherImages.length !== 0);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
@@ -191,7 +193,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         tag: updatedTag,
       });
 
-      const newHash = updatedHash?.hash;
+      const newHash = updatedHash?.hash as `0x${string}`;
 
       if (!newHash) {
         return toast.error('Something went wrong.');

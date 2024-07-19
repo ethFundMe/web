@@ -26,6 +26,7 @@ import { isAddress, parseEther } from 'viem';
 import {
   useAccount,
   useWaitForTransactionReceipt,
+  useWatchContractEvent,
   useWriteContract,
   type BaseError,
 } from 'wagmi';
@@ -74,6 +75,7 @@ export default function CreateCampaignForm() {
   const [otherImgsPrepared, setOtherImgsPrepared] = useState<unknown[] | null>(
     null
   );
+  const [eventCampaignId, setEventCampaignId] = useState<number>();
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
@@ -223,12 +225,13 @@ export default function CreateCampaignForm() {
           })
             .then((res) => {
               if (!res?.hash) throw new Error();
+              const metadata_hash = res?.hash as `0x${string}`;
               writeContract({
                 abi: EthFundMe,
                 address: ethFundMeContractAddress,
                 functionName: 'addCampaign',
                 args: [
-                  res.hash,
+                  metadata_hash,
                   parseEther(String(goal)),
                   beneficiaryAddress as `0x${string}`,
                 ],
@@ -254,10 +257,16 @@ export default function CreateCampaignForm() {
       setSubmitStatus(null);
       form.reset();
       router.refresh();
-      router.push('/campaigns');
+      if (eventCampaignId) {
+        router.push(`/campaigns/${eventCampaignId}`);
+      } else if (address) {
+        router.push(`/dashboard/${address}`);
+      } else {
+        router.push('/campaigns');
+      }
       return;
     }
-  }, [isConfirmedTxn, router, form]);
+  }, [isConfirmedTxn, router, form, eventCampaignId, address]);
 
   useEffect(() => {
     if (isError || error) {
@@ -317,6 +326,18 @@ export default function CreateCampaignForm() {
       }
     }
   };
+
+  useWatchContractEvent({
+    abi: EthFundMe,
+    address: ethFundMeContractAddress,
+    eventName: 'CampaignCreated',
+    onLogs(logs) {
+      const campaignId = logs[0].args.campaign?.id.toString();
+      if (campaignId) {
+        setEventCampaignId(Number(campaignId));
+      }
+    },
+  });
 
   return (
     <Form {...form}>
@@ -656,7 +677,6 @@ export default function CreateCampaignForm() {
           type='submit'
           onClick={() => {
             validateFormData();
-            console.log('Jii');
           }}
           disabled={
             submitStatus !== null || isPending || isConfirmingTxn || !address

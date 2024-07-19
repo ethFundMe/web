@@ -69,15 +69,6 @@ export default async function EditCampaign({
           <div className='pb-3 text-center sm:py-5'>
             <h1 className={TextSizeStyles.h1}>Edit Campaign</h1>
           </div>
-
-          {/* <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
-            <div className='mx-auto lg:mx-0'>
-              <UpdateCampaignMediaForm campaign={campaign} />
-            </div>
-            <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
-              <EditCampaignForm campaign={campaign} />
-            </div>
-          </div> */}
           <EditCampaignForm campaign={campaign} />
         </Container>
       </div>
