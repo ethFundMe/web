@@ -82,15 +82,11 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       const usernameCheckRes = await fetch(
         `${efm_endpoint}/api/check/username/${values.username}`
       );
-      console.log(usernameCheckRes);
 
       if (!usernameCheckRes.ok) {
-        // const usernameErr = await usernameCheckRes.json();
         setFormStatus(null);
         form.reset();
         return toast.error('username already exists');
-
-        // throw new Error(usernameErr?.message || 'Username availability check failed');
       }
     }
     if (isDirty) {
