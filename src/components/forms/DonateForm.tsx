@@ -141,7 +141,7 @@ export default function DonateForm({
               abi: EthFundMe,
               address: ethFundMeContractAddress,
               functionName: 'fundCampaign',
-              args: [BigInt(campaignID), response],
+              args: [BigInt(campaignID), BigInt(response)],
               value: donationAmt,
               chainId: ethChainId,
             });
@@ -163,7 +163,7 @@ export default function DonateForm({
         abi: EthFundMe,
         address: ethFundMeContractAddress,
         functionName: 'fundCampaign',
-        args: [BigInt(campaignID), -1],
+        args: [BigInt(campaignID), BigInt(-1)],
         value: donationAmt,
         chainId: ethChainId,
       });

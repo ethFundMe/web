@@ -1,7 +1,5 @@
 'use client';
 
-import { EthFundMe } from '@/lib/abi';
-import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import React, { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Address, BaseError } from 'viem';
@@ -16,8 +14,6 @@ export const ClaimTokenBtn = ({
     data: hash,
     error: writingError,
     isError,
-    // isPending: isWriting,
-    writeContract,
   } = useWriteContract({
     mutation: {
       onSettled(data, error) {
@@ -30,13 +26,7 @@ export const ClaimTokenBtn = ({
     useWaitForTransactionReceipt({ hash });
 
   const handleClaim = () => {
-    writeContract({
-      abi: EthFundMe,
-      address: ethFundMeContractAddress,
-      functionName: 'claim',
-      // args: [],
-      chainId: ethChainId,
-    });
+    return toast.error('No claim smart contract function');
   };
 
   useEffect(() => {
