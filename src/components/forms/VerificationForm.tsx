@@ -91,6 +91,10 @@ export default function VerificationForm({
   console.log(form.watch('agree'));
   console.log(submitting);
 
+  const {
+    formState: { dirtyFields },
+  } = form;
+  console.log(dirtyFields);
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async ({
     fullname,
     agree,
@@ -264,7 +268,10 @@ export default function VerificationForm({
             )}
           />
           <Button
-            disabled={(!form.watch('agree') && !canVerify) || submitting}
+            disabled={
+              !(form.watch('agree') && canVerify && dirtyFields.phoneNumber) ||
+              submitting
+            }
             className='pointer-events-auto col-span-2 w-full cursor-pointer disabled:pointer-events-auto'
           >
             {submitting ? (
