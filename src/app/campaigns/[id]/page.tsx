@@ -234,9 +234,11 @@ export default async function CampaignPage({
                             />
                           )} */}
                           </p>
-                          <p className='text-sm text-gray-500'>
-                            @{user.username}
-                          </p>
+                          {user.username && (
+                            <p className='text-sm text-gray-500'>
+                              @{user.username}
+                            </p>
+                          )}
                         </div>
                       </Link>
                     </div>

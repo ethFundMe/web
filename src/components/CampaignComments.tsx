@@ -55,6 +55,8 @@ export const CampaignComments = ({ campaign }: { campaign: Campaign }) => {
     setActiveFilter(type);
   }
 
+  console.log(comments);
+
   useEffect(() => {
     if (socket && socketComments) {
       setComments(socketComments);
