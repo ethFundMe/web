@@ -177,6 +177,10 @@ export const AccountForm = () => {
           label='Username'
           {...register('username', {
             required: 'Username is required',
+            pattern: {
+              value: REGEX_CODES.username,
+              message: 'username must not contain any symbols except for (_)',
+            },
           })}
           required
           placeholder='Enter your username'

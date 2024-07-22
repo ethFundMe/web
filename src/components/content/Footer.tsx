@@ -65,18 +65,18 @@ export const Footer = () => {
                 </li>
                 {process.env.NEXT_PUBLIC_WEB_URL ===
                   'https://ethfundme.com' && (
-                  <li className='md:hidden'>
+                  <li className='md:hidde'>
                     <FooterLink link='/campaigns/0' title='Support EthFundMe' />
                   </li>
                 )}
               </ul>
+              {/* {process.env.NEXT_PUBLIC_WEB_URL !== 'https://ethfundme.com' && (
+                <li className='hidden md:inline-flex'>
+                  <FooterLink link='/campaigns/0' title='Support EthFundMe' />
+                </li>
+              )} */}
             </div>
 
-            {process.env.NEXT_PUBLIC_WEB_URL === 'https://ethfundme.com' && (
-              <div className='hidden w-full justify-end md:flex'>
-                <FooterLink link='/campaigns/0' title='Support EthFundMe' />
-              </div>
-            )}
             <div className='hidden space-y-4'>
               <h3 className='text-base font-semibold'>Send us an email</h3>
 
