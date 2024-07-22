@@ -47,6 +47,7 @@ export const UserProfile = ({
       ethAddress: user.ethAddress,
       fullName: user.fullName,
       email: user.email,
+      username: user.username,
       profileUrl: profileUrl[0],
       token,
     })
@@ -70,6 +71,7 @@ export const UserProfile = ({
       ethAddress: user.ethAddress,
       fullName: user.fullName,
       email: user.email,
+      username: user.username,
       bannerUrl: bannerUrl[0],
       token,
     })
@@ -205,6 +207,7 @@ export const UserProfile = ({
                                           ethAddress: user.ethAddress,
                                           email: user.email,
                                           fullName: user.fullName,
+                                          username: user.username,
                                           profileUrl: undefined,
                                           token,
                                         })
@@ -293,11 +296,14 @@ export const UserProfile = ({
               <div className='flex w-full justify-between'>
                 <div>
                   <div className='flex items-center gap-1'>
-                    <p className='text-lg font-bold md:text-2xl lg:text-3xl'>
-                      {user.fullName.length > 25 && isMobile
-                        ? user.fullName.slice(0, 25).concat('...')
-                        : user.fullName}
-                    </p>
+                    <div>
+                      <p className='text-lg font-bold leading-none md:text-2xl lg:text-3xl'>
+                        {user.fullName.length > 25 && isMobile
+                          ? user.fullName.slice(0, 25).concat('...')
+                          : user.fullName}
+                      </p>
+                      <p className='text-gray-500'>@{user.username}</p>
+                    </div>
 
                     {user.isVerified && (
                       <Image
@@ -310,7 +316,7 @@ export const UserProfile = ({
                     )}
                   </div>
 
-                  <p className='text-slate-500'>
+                  <p className='mt-2 text-slate-500'>
                     {formatWalletAddress(user.ethAddress)}
                   </p>
 

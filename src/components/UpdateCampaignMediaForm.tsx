@@ -104,9 +104,9 @@ export default function UpdateCampaignMediaForm({
               functionName: 'updateCampaign',
               chainId: ethChainId,
               args: [
-                res.hash,
+                res.hash as `0x${string}`,
                 BigInt(campaign.campaign_id),
-                campaign.goal,
+                BigInt(campaign.goal),
                 campaign.beneficiary,
               ],
             });

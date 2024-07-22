@@ -76,7 +76,7 @@ export const DiscontinueCampaignBtn = ({
       abi: EthFundMe,
       address: ethFundMeContractAddress,
       functionName: 'discontinueCampaign',
-      args: [campaign.campaign_id],
+      args: [BigInt(campaign.campaign_id)],
       chainId: ethChainId,
     });
   }

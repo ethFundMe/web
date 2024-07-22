@@ -43,7 +43,7 @@ export const CommentCard = forwardRef<Ref, Props>(
       comment: {
         comment,
         amount,
-        user: { profileUrl, fullName, ethAddress },
+        user: { profileUrl, fullName, ethAddress, username },
         created_at,
         transaction_hash,
       },
@@ -84,6 +84,8 @@ export const CommentCard = forwardRef<Ref, Props>(
 
       return () => window.removeEventListener('resize', () => handleExpand());
     }, [textRef]);
+
+    console.log(comment);
 
     return (
       <motion.div
@@ -126,7 +128,10 @@ export const CommentCard = forwardRef<Ref, Props>(
                   className='line-clamp-1 max-w-xs [word-break:break-all] hover:underline sm:max-w-sm'
                   href={`/profile/${ethAddress}`}
                 >
-                  {fullName}
+                  {fullName}{' '}
+                  {username && (
+                    <span className='text-xs text-gray-500'>@{username}</span>
+                  )}
                 </Link>
                 <small className='text-[10px]'>
                   {created_at ? getRelativeTime(created_at) : ''}

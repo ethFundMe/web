@@ -28,6 +28,7 @@ export interface User {
   id: string;
   ethAddress: `0x${string}`;
   fullName: string;
+  username: string;
   email: string;
   bio: string | null;
   role: 'beneficiary' | 'creator' | 'admin';

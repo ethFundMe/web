@@ -108,6 +108,7 @@ export interface CommentsAndDonations {
     fullName: string;
     ethAddress: string;
     profileUrl: string | null;
+    username: string | null;
   };
 }
 

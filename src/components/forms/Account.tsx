@@ -14,6 +14,7 @@ import { Button, Input } from '../inputs';
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
 
 type TAccount = {
+  username: string;
   fullName: string;
   email: string;
 };
@@ -26,24 +27,27 @@ export const AccountForm = () => {
   const router = useRouter();
   const token = getCookie('efmToken') || '';
 
-  const { handleSubmit, register } = useForm<TAccount>({
+  const { handleSubmit, register, formState } = useForm<TAccount>({
     defaultValues: {
       fullName: '',
       email: '',
+      username: '',
     },
   });
 
+  const { isDirty } = formState;
   const onSubmit: SubmitHandler<TAccount> = async (data) => {
     if (!address) {
       toast.error('Wallet not connected');
       router.refresh();
       return;
     }
-    const { email, fullName } = data;
+    const { email, fullName, username } = data;
     const new_user = {
       email,
       eth_address: address as `0x${string}`,
       full_name: fullName,
+      username,
     };
     try {
       setIsLoading(true);
@@ -51,6 +55,19 @@ export const AccountForm = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${address}`
       );
+      // const emailCheckRes = await fetch(`${efm_endpoint}/check/email/${new_user.email}`);
+      // if (!emailCheckRes.ok) {
+      //   const emailErr = await emailCheckRes.json();
+      //   toast.error('email already exists');
+      //   throw new Error(emailErr?.message || 'Email availability check failed');
+      // }
+
+      // const usernameCheckRes = await fetch(`${efm_endpoint}/check/username/${new_user.username}`);
+      // if (!usernameCheckRes.ok) {
+      //   const usernameErr = await usernameCheckRes.json();
+      //   toast.error('username already exists');
+      //   throw new Error(usernameErr?.message || 'Username availability check failed');
+      // }
 
       if (res.ok) {
         const user: User = await res.json();
@@ -59,6 +76,7 @@ export const AccountForm = () => {
           const res = await updateUser({
             ethAddress: new_user.eth_address,
             email,
+            username,
             fullName,
             token,
           });
@@ -70,6 +88,19 @@ export const AccountForm = () => {
           router.push('/');
         }
       } else {
+        //       const usernameCheckRes = await fetch(`${efm_endpoint}/check/username/${new_user.username}`);
+        // if (!usernameCheckRes.ok) {
+        //   const usernameErr = await usernameCheckRes.json();
+        //   toast.error('username already exists');
+        //   throw new Error(usernameErr?.message || 'Username availability check failed');
+        // }
+        //       const emailCheckRes = await fetch(`${efm_endpoint}/check/email/${new_user.email}`);
+        //       if (!emailCheckRes.ok) {
+        //         const emailErr = await emailCheckRes.json();
+        //         toast.error('email already exists');
+        //         throw new Error(emailErr?.message || 'Email availability check failed');
+        //       }
+
         const create_user_res = await fetch(`${efm_endpoint}/api/user`, {
           method: 'POST',
           headers: {
@@ -86,9 +117,12 @@ export const AccountForm = () => {
           message: string;
           user: User;
         };
+        console.log(create_user_res);
         const user = create_user.user;
+        console.log(user);
         if (user.ethAddress) {
           setUser(user);
+          console.log(user);
           toast.success('Account created. Please Connect Wallet again');
           router.push('/');
         }
@@ -97,6 +131,7 @@ export const AccountForm = () => {
       setIsLoading(false);
       console.error(error);
       toast.error('We could not create your account');
+      toast.error((error as { error: string }).error);
       router.refresh();
     }
   };
@@ -110,15 +145,6 @@ export const AccountForm = () => {
       onSubmit={handleSubmit(onSubmit, onError)}
       className='mx-auto my-6 max-w-lg space-y-3 px-4'
     >
-      <fieldset>
-        <Input
-          id='full name'
-          type='text'
-          label='Full Name'
-          {...register('fullName', { required: 'Name is required', min: 1 })}
-          placeholder='Enter your full name'
-        />
-      </fieldset>
       <fieldset>
         <Input
           id='email'
@@ -135,7 +161,28 @@ export const AccountForm = () => {
           placeholder='Enter your email'
         />
       </fieldset>
-      <Button type='submit' disabled={isLoading} className='w-full'>
+      <fieldset>
+        <Input
+          id='full name'
+          type='text'
+          label='Full Name'
+          {...register('fullName', { required: 'Name is required', min: 1 })}
+          placeholder='Enter your full name'
+        />
+      </fieldset>
+      <fieldset>
+        <Input
+          id='username'
+          type='text'
+          label='Username'
+          {...register('username', {
+            required: 'Username is required',
+          })}
+          required
+          placeholder='Enter your username'
+        />
+      </fieldset>
+      <Button type='submit' disabled={isLoading || !isDirty} className='w-full'>
         {isLoading ? 'Loading...' : 'Create account'}
       </Button>
     </form>

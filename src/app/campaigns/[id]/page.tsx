@@ -21,7 +21,7 @@ import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
 type Props = {
-  params: { slug: string };
+  params: { id: string };
 };
 
 export async function generateMetadata(
@@ -29,9 +29,9 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const id = params.slug;
+  const id = params.id;
 
-  const campaign = await getCampaign(parseInt(id));
+  const campaign = await getCampaign(Number(id));
 
   if (!campaign) notFound();
 
@@ -93,13 +93,13 @@ export async function generateMetadata(
 }
 
 export default async function CampaignPage({
-  params: { slug },
+  params: { id },
 }: {
-  params: { slug: string };
+  params: { id: string };
 }) {
-  const campaign = await getCampaign(parseInt(slug));
+  const campaign = await getCampaign(Number(id));
   async function getBeneficiary() {
-    if (campaign.user.ethAddress === campaign.beneficiary) return null;
+    if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);
     return beneficiary;
   }
@@ -210,21 +210,22 @@ export default async function CampaignPage({
                     <div className='flex w-full items-center justify-between pr-2'>
                       <Link href={`/profile/${campaign.creator}`}>
                         <p className={TextSizeStyles.caption}>Organizer</p>
-                        <p
-                          title={
-                            user?.fullName ??
-                            formatWalletAddress(
-                              campaign.creator as `0x${string}`
-                            )
-                          }
-                          className='sm:max-w-s line-clamp-1 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:line-clamp-2'
-                        >
-                          {user?.fullName ??
-                            formatWalletAddress(
-                              campaign.creator as `0x${string}`
-                            )}
+                        <div className='flex gap-x-2'>
+                          <p
+                            title={
+                              user?.fullName ??
+                              formatWalletAddress(
+                                campaign.creator as `0x${string}`
+                              )
+                            }
+                            className='sm:max-w-s line-clamp-1 flex w-full max-w-[250px] gap-1 font-semibold [word-break:break-all] sm:line-clamp-2'
+                          >
+                            {user?.fullName ??
+                              formatWalletAddress(
+                                campaign.creator as `0x${string}`
+                              )}
 
-                          {/* {user.isVerified && (
+                            {/* {user.isVerified && (
                             <Image
                               src='/images/verified.svg'
                               width={15}
@@ -232,7 +233,13 @@ export default async function CampaignPage({
                               alt='check'
                             />
                           )} */}
-                        </p>
+                          </p>
+                          {user.username && (
+                            <p className='text-sm text-gray-500'>
+                              @{user.username}
+                            </p>
+                          )}
+                        </div>
                       </Link>
                     </div>
                   </div>
@@ -240,7 +247,7 @@ export default async function CampaignPage({
                   {campaign.creator !== campaign.beneficiary &&
                     (beneficiary ? (
                       <Link
-                        href={`/profile/${beneficiary.ethAddress}`}
+                        href={`/profile/${beneficiary?.ethAddress}`}
                         className='flex flex-1 flex-shrink-0 cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-slate-200 sm:flex-none sm:gap-4'
                       >
                         <div className='relative h-[40px] w-[40px] flex-shrink-0 sm:h-[50px] sm:w-[50px]'>
@@ -260,7 +267,7 @@ export default async function CampaignPage({
                             </p>
                             <p className='line-clamp-2 flex w-full max-w-[250px] gap-1 text-ellipsis font-semibold [word-break:break-all] sm:max-w-xs'>
                               {beneficiary?.fullName ??
-                                formatWalletAddress(beneficiary.ethAddress)}
+                                formatWalletAddress(beneficiary?.ethAddress)}
 
                               {beneficiary.isVerified && (
                                 <Image

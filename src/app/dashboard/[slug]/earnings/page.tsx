@@ -18,6 +18,7 @@ import { notFound } from 'next/navigation';
 import { CiSquarePlus } from 'react-icons/ci';
 import { GiFairyWand } from 'react-icons/gi';
 import { isAddress } from 'viem';
+import { TokenButton } from './TokenButton';
 
 dayjs.extend(advancedFormat);
 
@@ -80,6 +81,16 @@ export default async function EarningsPage({
                 {(totalEarnings && totalEarnings.total) ?? 0} FUNDME
               </p>
             </div>
+            {Number(totalEarnings?.total) > 0 ? (
+              <p className='text-gray-500'>
+                Can&apos;t see FUNDME tokens in your wallet?{' '}
+                <span>
+                  <TokenButton />
+                </span>
+              </p>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Chart */}

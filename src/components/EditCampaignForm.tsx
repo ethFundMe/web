@@ -138,7 +138,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
           functionName: 'updateCampaign',
           chainId: ethChainId,
           args: [
-            res.hash,
+            res.hash as `0x${string}`,
             BigInt(campaign_id),
             parseEther(goal.toString()),
             form.watch('type') === 'personal'
