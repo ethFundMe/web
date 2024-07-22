@@ -1111,4 +1111,4 @@ export const EthFundMe = [
     stateMutability: 'view',
     type: 'function',
   },
-];
+] as const;
