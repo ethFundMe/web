@@ -38,8 +38,11 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .max(250),
     username: z
       .string({ required_error: 'Username is required' })
+      .regex(REGEX_CODES.username, {
+        message: 'Username can only contain letters, numbers, and underscores.',
+      })
       .min(2)
-      .max(250),
+      .max(16),
     email: z
       .string()
       .regex(REGEX_CODES.email, { message: 'Enter a valid email' }),

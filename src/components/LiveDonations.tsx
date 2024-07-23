@@ -87,47 +87,48 @@ export default function LiveDonations() {
         {donations.length < 1 && <LoadingIndicator />}
         <AnimatePresence initial={false}>
           {donations.map((i) => (
-            <motion.li
-              layout
-              animate={{ opacity: [0, 1] }}
-              exit={{
-                y: 20,
-                opacity: 0,
-                transition: { duration: 0.15 },
-              }}
-              transition={{ type: 'spring', damping: 14 }}
-              key={i.transaction_hash}
-            >
-              <Link
-                href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${i.transaction_hash}`}
-                target='_blank'
-                rel='noreferrer'
-                title='View transaction details'
-                className='flex justify-between gap-1 border-b border-slate-200 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+            <li key={i.transaction_hash}>
+              <motion.li
+                layout
+                animate={{ opacity: [0, 1] }}
+                exit={{
+                  y: 20,
+                  opacity: 0,
+                  transition: { duration: 0.15 },
+                }}
+                transition={{ type: 'spring', damping: 14 }}
               >
-                <span className='flex items-center gap-1'>
-                  <span>
-                    <FaEthereum size={20} />
-                  </span>
-                  <span>
-                    <span className='text-sm md:text-base'>
-                      {formatWalletAddress(
-                        i.donor,
-                        isMobile ? 'short' : 'long'
-                      )}{' '}
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_TNX_LINK}/${i.transaction_hash}`}
+                  target='_blank'
+                  rel='noreferrer'
+                  title='View transaction details'
+                  className='flex justify-between gap-1 border-b border-slate-200 py-1 text-sm transition-all duration-150 ease-in hover:opacity-60 md:text-base'
+                >
+                  <span className='flex items-center gap-1'>
+                    <span>
+                      <FaEthereum size={20} />
                     </span>
-                    <span className='hidden md:inline'>donated</span>{' '}
-                    <span className='inline md:hidden'> — </span>{' '}
-                    <span className='text-xs'>
-                      {i.amount ? `${format(i.amount)} ETH` : ''}
+                    <span>
+                      <span className='text-sm md:text-base'>
+                        {formatWalletAddress(
+                          i.donor,
+                          isMobile ? 'short' : 'long'
+                        )}{' '}
+                      </span>
+                      <span className='hidden md:inline'>donated</span>{' '}
+                      <span className='inline md:hidden'> — </span>{' '}
+                      <span className='text-xs'>
+                        {i.amount ? `${format(i.amount)} ETH` : ''}
+                      </span>
                     </span>
                   </span>
-                </span>
 
-                {/* <small>{dayjs(i.created_at).format('HH:mm a')}</small> */}
-                <small>{i.created_at && getRelativeTime(i.created_at)}</small>
-              </Link>
-            </motion.li>
+                  {/* <small>{dayjs(i.created_at).format('HH:mm a')}</small> */}
+                  <small>{i.created_at && getRelativeTime(i.created_at)}</small>
+                </Link>
+              </motion.li>
+            </li>
           ))}
         </AnimatePresence>
 

@@ -295,24 +295,25 @@ export const UserProfile = ({
 
               <div className='flex w-full justify-between'>
                 <div>
-                  <div className='flex items-center gap-1'>
-                    <div>
+                  <div>
+                    <div className='flex items-center gap-1'>
                       <p className='text-lg font-bold leading-none md:text-2xl lg:text-3xl'>
                         {user.fullName.length > 25 && isMobile
                           ? user.fullName.slice(0, 25).concat('...')
                           : user.fullName}
                       </p>
-                      <p className='text-gray-500'>@{user.username}</p>
+                      {user.isVerified && (
+                        <Image
+                          className='mt-0.5 h-auto w-5 md:w-6'
+                          src='/images/verified.svg'
+                          width={30}
+                          height={30}
+                          alt='...'
+                        />
+                      )}
                     </div>
-
-                    {user.isVerified && (
-                      <Image
-                        className='h-auto w-5 md:w-6'
-                        src='/images/verified.svg'
-                        width={30}
-                        height={30}
-                        alt='...'
-                      />
+                    {user?.username && (
+                      <p className='text-gray-500'>@{user.username}</p>
                     )}
                   </div>
 
