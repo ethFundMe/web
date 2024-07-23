@@ -234,7 +234,7 @@ export default async function CampaignPage({
                             />
                           )} */}
                           </p>
-                          {!user.isVerified && (
+                          {user.isVerified && (
                             <Image
                               className='mt-0.5 h-auto w-5'
                               src='/images/verified.svg'
