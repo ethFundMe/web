@@ -210,7 +210,7 @@ export default async function CampaignPage({
                     <div className='flex w-full items-center justify-between pr-2'>
                       <Link href={`/profile/${campaign.creator}`}>
                         <p className={TextSizeStyles.caption}>Organizer</p>
-                        <div className='flex gap-x-2'>
+                        <div className='flex items-center gap-x-1'>
                           <p
                             title={
                               user?.fullName ??
@@ -234,6 +234,15 @@ export default async function CampaignPage({
                             />
                           )} */}
                           </p>
+                          {!user.isVerified && (
+                            <Image
+                              className='mt-0.5 h-auto w-5'
+                              src='/images/verified.svg'
+                              width={30}
+                              height={30}
+                              alt='...'
+                            />
+                          )}
                           {user.username && (
                             <p className='text-sm text-gray-500'>
                               @{user.username}

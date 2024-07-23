@@ -179,8 +179,11 @@ export const AccountForm = () => {
             required: 'Username is required',
             pattern: {
               value: REGEX_CODES.username,
-              message: 'username must not contain any symbols except for (_)',
+              message:
+                'Username can only contain letters, numbers, and underscores.',
             },
+            minLength: 2,
+            maxLength: 16,
           })}
           required
           placeholder='Enter your username'

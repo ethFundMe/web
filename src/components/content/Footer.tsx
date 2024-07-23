@@ -66,7 +66,7 @@ export const Footer = () => {
                 {process.env.NEXT_PUBLIC_WEB_URL ===
                   'https://ethfundme.com' && (
                   <li className='md:hidde'>
-                    <FooterLink link='/campaigns/0' title='Support EthFundMe' />
+                    <FooterLink link='/campaigns/0' title='Support Us' />
                   </li>
                 )}
               </ul>
