@@ -57,7 +57,7 @@ const ReportCampaignSchema = z.object({
     .max(1200, { message: 'Must be 1200 or fewer characters long' }),
   report_type: ReportType,
 });
-export type TCampaignReport = z.infer<typeof ReportCampaignSchema>;
+type TCampaignReport = z.infer<typeof ReportCampaignSchema>;
 
 export default function ReportCampaignDialog({
   campaign_id,

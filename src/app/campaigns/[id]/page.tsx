@@ -58,7 +58,7 @@ export async function generateMetadata(
                 campaign.title,
                 campaign.description,
                 campaign.banner_url,
-                campaign.user.profileUrl,
+                campaign.user.profileUrl || '',
                 campaign.user.isVerified
               ),
             },
@@ -77,7 +77,7 @@ export async function generateMetadata(
                 campaign.title,
                 campaign.description,
                 campaign.banner_url,
-                campaign.user.profileUrl,
+                campaign.user.profileUrl || '',
                 user.isVerified
               ),
             },

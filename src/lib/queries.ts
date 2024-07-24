@@ -1,6 +1,5 @@
-import { Campaign, User, UserEarning } from '@/types';
+import { Campaign, Earning, User } from '@/types';
 import {
-  Notification,
   VerificationEligibiltyErrorResponse,
   VerificationEligibiltySuccessResponse,
   VerificationSatusResponse,
@@ -51,7 +50,7 @@ export const updateUser = async (userDetails: {
   return resData;
 };
 
-export type CampaignUrlParams = {
+type CampaignUrlParams = {
   [key: string]: string | number | undefined;
 };
 
@@ -63,18 +62,6 @@ export const fetchCampaignTags = async () => {
     const data: { tags?: { id: number; name: string }[] } = await res.json();
 
     return data?.tags ? data.tags : [];
-  } catch (e) {
-    return [];
-  }
-};
-export const fetchNotifications = async (user_address: string) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${user_address}`
-    );
-    const data: Notification = await res.json();
-
-    return data;
   } catch (e) {
     return [];
   }
@@ -114,22 +101,6 @@ export async function getFeaturedCampaigns() {
   return campaigns[0] ? campaigns[0] : null;
 }
 
-export const getNotfications = async (eth_address: `0x${string}`) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${eth_address}`
-  );
-  const data = (await res.json()) as {
-    notification: Notification[];
-    meta: {
-      limit: number;
-      page: number;
-      totalNotifications: number;
-      totalPages: number;
-    };
-  };
-  return data;
-};
-
 export const getUser = async (userId: `0x${string}`) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/user/${userId}`,
@@ -162,16 +133,6 @@ export const checkVerificationStatus = async (userId: string) => {
 
   if (data.error) return null;
   return data as VerificationSatusResponse;
-};
-
-export const getCreatorOverview = async (userId: `0x${string}`) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/creator/overview/${userId}`,
-    { cache: 'no-store' }
-  );
-  const data = await res.json();
-
-  return data ? (data as { total: string; max: string; min: string }) : null;
 };
 
 export const getCampaign = async (id: number) => {
@@ -233,7 +194,7 @@ export const fetchUserEarnings = async (ethAddress: `0x${string}`) => {
         },
       }
     );
-    const data: UserEarning[] | null = await res.json();
+    const data: Earning[] | null = await res.json();
 
     return data || [];
   } catch (e) {
