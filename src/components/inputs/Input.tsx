@@ -49,7 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(
+const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, label, id, error, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
 

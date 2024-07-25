@@ -22,7 +22,7 @@ import {
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export interface Meta {
+interface Meta {
   limit: number;
   page: number;
   totalNotifications: number;
