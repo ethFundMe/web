@@ -1,7 +1,9 @@
 import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
-import { getCampaigns, getUser } from '@/lib/queries';
+import { getUser } from '@/lib/queries';
+import { Campaign } from '@/types';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { isAddress } from 'viem';
 
@@ -39,6 +41,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+async function getUserCampaigns(address: string) {
+  const url = `${process.env.ETH_FUND_ENDPOINT}/api/campaign/user/${address}`;
+  const authToken = cookies().get('efmToken')?.value;
+
+  const res = await fetch(url, {
+    cache: 'no-store',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (res.status === 401) {
+    throw new Error('Unauthorized');
+  }
+
+  if (res.status === 404) {
+    return notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch user campaigns');
+  }
+
+  return (await res.json()) as {
+    campaigns: Array<Campaign>;
+    meta: {
+      page: number;
+      limit: number;
+      totalCampaigns: number;
+      totalPages: number;
+    };
+  };
+}
+
 export default async function UserProfilePage({
   params: { slug },
 }: {
@@ -52,10 +90,7 @@ export default async function UserProfilePage({
 
   if (!user) redirect('/account');
 
-  const { campaigns } = await getCampaigns({
-    page: 1,
-    ethAddress: user.ethAddress,
-  });
+  const { campaigns } = await getUserCampaigns(user.ethAddress);
 
   return <UserProfile user={user} campaigns={campaigns} />;
 }
