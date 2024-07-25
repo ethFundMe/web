@@ -254,7 +254,6 @@ export default function DonateForm({
               autoFocus
               defaultValue={amount}
               className='h-full w-full rounded-md border border-primary-default px-4 py-3 outline-0 placeholder:text-neutral-700'
-              placeholder='Enter an amount in ETH'
             />
             {errors.amount?.message && <small>{errors.amount.message}</small>}
             <Slider
