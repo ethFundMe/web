@@ -82,8 +82,11 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
   };
 
   const watchedAmount: number = form.watch('creatorFee') as number;
-  const creatorFeeEditMade =
-    form.watch('creatorFee') !== Number(user?.creatorFee);
+  const {
+    formState: { isDirty },
+  } = form;
+  // const creatorFeeEditMade =
+  //   form.watch('creatorFee') !== Number(user?.creatorFee);
 
   useEffect(() => {
     if (isConfirmedTxn) {
@@ -156,7 +159,7 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
         />
 
         <Button
-          disabled={!!formStatus || !creatorFeeEditMade || isConfirmingTxn}
+          disabled={!!formStatus || !isDirty || isConfirmingTxn}
           className='mt-4 w-full max-w-xs disabled:pointer-events-auto'
         >
           {formStatus || 'Save'}
