@@ -162,15 +162,19 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const editMade =
-    form.watch('title') !== campaign.title ||
-    form.watch('description') !== campaign.description ||
-    form.watch('beneficiaryAddress') !== campaign.beneficiary ||
-    form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.banner_url ||
-    form.watch('tag') !== campaign.tag ||
-    (preparedBanner && preparedBanner?.length !== 0) ||
-    (preparedOtherImages && preparedOtherImages.length !== 0);
+  const {
+    formState: { isDirty },
+  } = form;
+
+  // const editMade =
+  //   form.watch('title') !== campaign.title ||
+  //   form.watch('description') !== campaign.description ||
+  //   form.watch('beneficiaryAddress') !== campaign.beneficiary ||
+  //   form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
+  //   form.watch('banner') !== campaign.banner_url ||
+  //   form.watch('tag') !== campaign.tag ||
+  //   (preparedBanner && preparedBanner?.length !== 0) ||
+  //   (preparedOtherImages && preparedOtherImages.length !== 0);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
@@ -647,7 +651,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
                     size='default'
                     className='disabled:pointer-events-auto disabled:cursor-not-allowed'
                     disabled={
-                      !editMade || isPending || isConfirmedTxn || updating
+                      !isDirty || isPending || isConfirmedTxn || updating
                     }
                   >
                     {isPending || isConfirmingTxn || updating
@@ -669,7 +673,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
             type='submit'
             size='default'
             className='disabled:pointer-events-auto disabled:cursor-not-allowed md:w-96'
-            disabled={!editMade || isPending || isConfirmedTxn || updating}
+            disabled={!isDirty || isPending || isConfirmedTxn || updating}
           >
             {isPending || isConfirmingTxn || updating
               ? 'Loading...'
