@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import crypto, { BinaryLike } from 'crypto';
 import dayjs from 'dayjs';
-import { parse } from 'node-html-parser';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import { REGEX_CODES } from './constants';
@@ -20,22 +19,6 @@ export function formatWalletAddress(
       ? address.slice(0, 7) + '...' + address.slice(-5)
       : address.slice(0, 8);
   return shortAddress;
-}
-
-export async function fetchUrlData(url: string) {
-  const response = await fetch(url, { mode: 'no-cors' });
-  const data = await response.text();
-
-  const doc = parse(data);
-  const title = doc.querySelector('title')?.textContent ?? '';
-  const description =
-    doc.querySelector('meta[name="description"]')?.getAttribute('content') ??
-    '';
-  const image =
-    doc.querySelector('meta[property="og:image"]')?.getAttribute('content') ??
-    '';
-
-  return { image, title, description };
 }
 
 export async function uploadToCloudinary(files: FileList | string[]) {

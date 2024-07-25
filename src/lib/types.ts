@@ -7,12 +7,6 @@ export type NavbarRoute = {
   icon?: React.ReactNode;
 };
 
-export type DonationStep = {
-  title: string;
-  subtitle: string;
-  description: string;
-};
-
 export type Notification = {
   eth_address: string;
   description: string;
@@ -40,28 +34,6 @@ export type CampaignType = {
   ctaBtnText: string;
 };
 
-export type Campaign = {
-  id: string;
-  campaign_id: number;
-  beneficiary: `0x${string}`;
-  creator: `0x${string}`;
-  date_created: number;
-  description: string;
-  flagged: boolean;
-  goal: number;
-  discontinued: boolean;
-  banner_url: string;
-  media_links: Array<string>;
-  title: string;
-  total_accrued: number;
-  youtube_link: string | null;
-  uri: string;
-  created_at: Date;
-  updated_at: Date;
-  // fundings: Array<FundingsTable>
-  user: User;
-};
-
 export type SocialLink = {
   name: string;
   href: string;
@@ -81,21 +53,6 @@ export enum CampaignTags {
   'Science and Research' = 'Science and Research',
   'Others' = 'Others',
 }
-
-export type Comment = {
-  amount: number;
-  campaign_id: string;
-  comment: string;
-  created_at: Date;
-  transaction_hash: `0x${string}`;
-  id: number;
-  user: {
-    ethAddress: `0x${string}`;
-    fullName: string;
-    id: string;
-    profileUrl?: string;
-  };
-};
 
 export interface CommentsAndDonations {
   id: number;
@@ -125,20 +82,6 @@ export type SocketResponse<T> = {
   status: 'OK' | 'ERROR';
   data?: T;
   error?: Error;
-};
-
-export type FeaturedCampaign = {
-  creator_name: string;
-  campaign_description: string;
-  campaign_title: string;
-  campaign_id: number;
-  campaign_banner: string;
-  campaign_mediaLinks: string[];
-  campaign_tag: string;
-  campaign_goal: number;
-  total_accrued: number;
-  campaign_creator: `0x${string}`;
-  campaign_beneficiary: `0x${string}`;
 };
 
 export interface VerificationEligibiltySuccessResponse {

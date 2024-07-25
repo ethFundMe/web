@@ -7,13 +7,15 @@ import DonateXShareButtons from '@/components/DonateXShareButtons';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import ReportCampaignDialog from '@/components/ReportCampaignDialog';
 import { SwiperCarousel } from '@/components/SwiperCarousel';
-import { getCampaign, getCampaigns, getUser } from '@/lib/queries';
+import { getCampaigns, getUser } from '@/lib/queries';
 import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
+import { Campaign } from '@/types';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -24,6 +26,41 @@ type Props = {
   params: { id: string };
 };
 
+async function fetchCampaign(id: number) {
+  const url = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`;
+  const authToken = cookies().get('efmToken')?.value;
+
+  const options: RequestInit = {
+    cache: 'no-store',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  if (authToken) {
+    options.headers = {
+      ...options.headers,
+      Authorization: `Bearer ${authToken}`,
+    };
+  }
+
+  const res = await fetch(url, options);
+  if (res.status === 404) {
+    return notFound();
+  }
+
+  if (res.status === 401) {
+    throw new Error('Not Authorized');
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch campaign with ID');
+  }
+
+  return (await res.json()) as Campaign;
+}
+
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
@@ -31,7 +68,7 @@ export async function generateMetadata(
   // read route params
   const id = params.id;
 
-  const campaign = await getCampaign(Number(id));
+  const campaign = await fetchCampaign(Number(id));
 
   if (!campaign) notFound();
 
@@ -58,7 +95,7 @@ export async function generateMetadata(
                 campaign.title,
                 campaign.description,
                 campaign.banner_url,
-                campaign.user.profileUrl,
+                campaign.user.profileUrl || '',
                 campaign.user.isVerified
               ),
             },
@@ -77,7 +114,7 @@ export async function generateMetadata(
                 campaign.title,
                 campaign.description,
                 campaign.banner_url,
-                campaign.user.profileUrl,
+                campaign.user.profileUrl || '',
                 user.isVerified
               ),
             },
@@ -97,7 +134,7 @@ export default async function CampaignPage({
 }: {
   params: { id: string };
 }) {
-  const campaign = await getCampaign(Number(id));
+  const campaign = await fetchCampaign(Number(id));
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);

@@ -105,14 +105,6 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     formState: { isDirty },
   } = form;
 
-  // const editMade =
-  //   form.watch('title') !== campaign.title ||
-  //   form.watch('description') !== campaign.description ||
-  //   form.watch('beneficiaryAddress') !== campaign.beneficiary ||
-  //   form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-  //   form.watch('banner') !== campaign.banner_url ||
-  //   form.watch('tag') !== campaign.tag;
-
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { goal, beneficiaryAddress, tag, title, description } = data;
     const { campaign_id } = campaign;
