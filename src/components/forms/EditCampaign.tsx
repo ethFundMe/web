@@ -432,7 +432,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
           <Form {...form}>
             <form
-              className='grid w-full grid-cols-2 gap-5 p-3 pl-0 sm:max-w-2xl sm:gap-8 sm:p-5'
+              className='grid w-full grid-cols-2 gap-5 p-3 sm:max-w-2xl sm:gap-8 sm:p-5 md:pl-0'
               onSubmit={form.handleSubmit(onSubmit)}
             >
               <FormField
@@ -672,7 +672,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
           <Button
             type='submit'
             size='default'
-            className='disabled:pointer-events-auto disabled:cursor-not-allowed md:w-96'
+            className='w-[12.5rem] disabled:pointer-events-auto disabled:cursor-not-allowed md:w-96'
             disabled={!isDirty || isPending || isConfirmedTxn || updating}
           >
             {isPending || isConfirmingTxn || updating
