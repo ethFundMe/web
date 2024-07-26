@@ -10,7 +10,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiDonateHeart } from 'react-icons/bi';
 import { HiEllipsisVertical } from 'react-icons/hi2';
-import useSWR from 'swr';
+// import useSWR from 'swr';
+import { fetchNotifications, fetchUnreadCount } from '@/lib/queries';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -20,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+// const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 interface Meta {
   limit: number;
@@ -34,17 +36,35 @@ const Notifications = () => {
   const { user } = userStore();
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
-  const { data, isLoading, error } = useSWR<{
+  // const { data, isLoading, error } = useSWR<{
+  //   notification: Notification[];
+  //   meta: Meta;
+  // }>(`${apiBaseUrl}/api/notifications/${user?.ethAddress}`, fetcher);
+
+  // const { data: unreadCount } = useSWR<{
+  //   total: number;
+  // }>(
+  //   `${apiBaseUrl}/api/notifications/${user?.ethAddress}/count?viewed=false`,
+  //   fetcher
+  // );
+
+  // In your component
+  const { data, isLoading, error } = useQuery<{
     notification: Notification[];
     meta: Meta;
-  }>(`${apiBaseUrl}/api/notifications/${user?.ethAddress}`, fetcher);
+  }>({
+    queryKey: ['notifications', user?.ethAddress],
+    queryFn: () => fetchNotifications(user?.ethAddress ?? ''),
+    enabled: !!user?.ethAddress,
+  });
 
-  const { data: unreadCount } = useSWR<{
+  const { data: unreadCount } = useQuery<{
     total: number;
-  }>(
-    `${apiBaseUrl}/api/notifications/${user?.ethAddress}/count?viewed=false`,
-    fetcher
-  );
+  }>({
+    queryKey: ['unreadNotifications', user?.ethAddress],
+    queryFn: () => fetchUnreadCount(user?.ethAddress ?? ''),
+    enabled: !!user?.ethAddress,
+  });
 
   useEffect(() => {
     if (data && data.notification) {

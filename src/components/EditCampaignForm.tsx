@@ -10,6 +10,7 @@ import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -58,6 +59,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { address } = useAccount();
   const router = useRouter();
   const { user } = userStore();
+  const queryClient = useQueryClient();
 
   // useEffect(() => {
   //   const isWalletConnected = address;
@@ -141,6 +143,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               ? campaign.creator
               : (beneficiaryAddress as `0x${string}`),
           ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['notifications', 'unreadNotifications'],
         });
         setIsUploadingMetadata(false);
       })

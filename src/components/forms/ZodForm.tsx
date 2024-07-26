@@ -13,6 +13,7 @@ import {
 } from '@/lib/utils';
 import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -111,6 +112,8 @@ export default function CreateCampaignForm() {
       },
     },
   });
+
+  const queryClient = useQueryClient();
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
@@ -236,6 +239,9 @@ export default function CreateCampaignForm() {
                   beneficiaryAddress as `0x${string}`,
                 ],
                 chainId: ethChainId,
+              });
+              queryClient.invalidateQueries({
+                queryKey: ['notifications', 'unreadNotifications'],
               });
             })
             .catch(() => {
