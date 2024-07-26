@@ -240,9 +240,6 @@ export default function CreateCampaignForm() {
                 ],
                 chainId: ethChainId,
               });
-              queryClient.invalidateQueries({
-                queryKey: ['notifications', 'unreadNotifications'],
-              });
             })
             .catch(() => {
               toast.error('Failed to create campaign');
@@ -259,6 +256,9 @@ export default function CreateCampaignForm() {
 
   useEffect(() => {
     if (isConfirmedTxn) {
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();

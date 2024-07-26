@@ -81,9 +81,6 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = (data) => {
     setFormStatus('Saving...');
     handleWriteContract(data.creatorFee as number);
-    queryClient.invalidateQueries({
-      queryKey: ['notifications', 'unreadNotifications'],
-    });
   };
 
   const watchedAmount: number = form.watch('creatorFee') as number;
@@ -98,6 +95,9 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
       if (user) {
         setUser({ ...user, creatorFee: form.getValues('creatorFee') || 0 });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Profile updated');
       setFormStatus(null);
       router.refresh();

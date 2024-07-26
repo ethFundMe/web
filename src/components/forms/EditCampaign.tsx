@@ -36,6 +36,7 @@ import {
 import { z } from 'zod';
 import { DiscontinueCampaignBtn } from '../DiscontinueCampaignBtn';
 // import { Input } from '../inputs';
+import { useQueryClient } from '@tanstack/react-query';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
 import {
@@ -85,6 +86,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const { address } = useAccount();
   const { push } = useRouter();
   const { user } = userStore();
+  const queryClient = useQueryClient();
 
   const isPreview = (url: string) => {
     return /\b(blob)\b/.test(url);
@@ -166,16 +168,6 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
     formState: { isDirty },
   } = form;
 
-  // const editMade =
-  //   form.watch('title') !== campaign.title ||
-  //   form.watch('description') !== campaign.description ||
-  //   form.watch('beneficiaryAddress') !== campaign.beneficiary ||
-  //   form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-  //   form.watch('banner') !== campaign.banner_url ||
-  //   form.watch('tag') !== campaign.tag ||
-  //   (preparedBanner && preparedBanner?.length !== 0) ||
-  //   (preparedOtherImages && preparedOtherImages.length !== 0);
-
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
     try {
@@ -235,6 +227,9 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
 
   useEffect(() => {
     if (isConfirmedTxn) {
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Campaign updated');
       push(`/campaigns/${campaign.campaign_id}`);
       return;
