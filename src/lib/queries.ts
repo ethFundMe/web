@@ -169,6 +169,28 @@ export async function fetchActiveStats() {
   }
 }
 
+export const fetchNotifications = async (ethAddress: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${ethAddress}`
+    );
+    return response.json();
+  } catch (error) {
+    return null;
+  }
+};
+
+export const fetchUnreadCount = async (ethAddress: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/notifications/${ethAddress}/count?viewed=false`
+    );
+    return response.json();
+  } catch (error) {
+    return null;
+  }
+};
+
 export const fetchTotalUserEarnings = async (ethAddress: `0x${string}`) => {
   try {
     const res = await fetch(

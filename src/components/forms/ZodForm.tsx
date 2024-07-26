@@ -13,6 +13,7 @@ import {
 } from '@/lib/utils';
 import { userStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -111,6 +112,8 @@ export default function CreateCampaignForm() {
       },
     },
   });
+
+  const queryClient = useQueryClient();
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({ hash });
@@ -253,6 +256,9 @@ export default function CreateCampaignForm() {
 
   useEffect(() => {
     if (isConfirmedTxn) {
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Campaign created.');
       setSubmitStatus(null);
       form.reset();
