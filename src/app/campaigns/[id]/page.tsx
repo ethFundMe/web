@@ -345,7 +345,7 @@ export default async function CampaignPage({
                 {/* <div className='hidden md:block'>
                   <ReportCampaignDialog campaign_id={campaign.campaign_id} />
                 </div> */}
-                <div className='my-6 flex gap-x-2 text-neutral-500 md:my-0 md:gap-x-4'>
+                <div className='my-6 mb-3 flex items-center gap-x-2 text-neutral-500 md:my-0 md:gap-x-4'>
                   <div className='ml-2 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-gray-200 md:h-14 md:w-14'>
                     <img
                       src='/images/calendar.png'
@@ -353,7 +353,7 @@ export default async function CampaignPage({
                       className='h-6 w-6 md:h-8 md:w-8'
                     />
                   </div>
-                  <div className='mt-1'>
+                  <div className=''>
                     <p className={TextSizeStyles.caption}>Created on</p>
                     <p className='font-semibold'>
                       {dayjs(campaign.created_at).format('Do MMM, YYYY')}
