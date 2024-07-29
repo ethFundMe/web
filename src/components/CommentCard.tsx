@@ -85,8 +85,6 @@ export const CommentCard = forwardRef<Ref, Props>(
       return () => window.removeEventListener('resize', () => handleExpand());
     }, [textRef]);
 
-    console.log(comment);
-
     return (
       <motion.div
         ref={ref}

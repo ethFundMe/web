@@ -76,7 +76,7 @@ export const handleIPFSPush = async function ({
 }: {
   title: string;
   description: string;
-  youtubeLink: string | undefined;
+  youtubeLink: string | undefined | null;
   bannerUrl: string;
   mediaLinks: string[];
   tag: number;
@@ -144,31 +144,6 @@ export async function handleVerificationRequest({
   } catch (e) {
     if (e instanceof Error) {
       // console.log(e);
-      return { success: false, message: e.message };
-    }
-    return { success: false, message: e };
-  }
-}
-
-export async function deleteAccount(address: `0x${string}`) {
-  try {
-    // `${process.env.ETH_FUND_ENDPOINT}/api/user/0xee9718Df51B678653750B0Ae7AB57E9576E56D8b`
-    const res = await fetch(
-      `${process.env.ETH_FUND_ENDPOINT}/api/user/${address}`,
-      { method: 'DELETE' }
-    );
-
-    if (res.status === 204)
-      return { success: true, message: 'Account deleted' };
-
-    const data: { error?: { name: string; message: string } } =
-      await res.json();
-
-    if (data?.error) throw new Error(data.error.message);
-
-    // return {success: true, data}
-  } catch (e) {
-    if (e instanceof Error) {
       return { success: false, message: e.message };
     }
     return { success: false, message: e };

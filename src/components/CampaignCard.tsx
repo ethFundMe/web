@@ -3,7 +3,7 @@
 import { DonationObjectiveIndicator } from '@/app/campaigns/DonationObjectiveIndicator';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
-import { Campaign } from '@/types/db';
+import { Campaign } from '@/types';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import Image from 'next/image';

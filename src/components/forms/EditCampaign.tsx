@@ -36,6 +36,7 @@ import {
 import { z } from 'zod';
 import { DiscontinueCampaignBtn } from '../DiscontinueCampaignBtn';
 // import { Input } from '../inputs';
+import { useQueryClient } from '@tanstack/react-query';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
 import {
@@ -85,6 +86,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const { address } = useAccount();
   const { push } = useRouter();
   const { user } = userStore();
+  const queryClient = useQueryClient();
 
   const isPreview = (url: string) => {
     return /\b(blob)\b/.test(url);
@@ -162,20 +164,15 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const editMade =
-    form.watch('title') !== campaign.title ||
-    form.watch('description') !== campaign.description ||
-    form.watch('beneficiaryAddress') !== campaign.beneficiary ||
-    form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.banner_url ||
-    form.watch('tag') !== campaign.tag ||
-    (preparedBanner && preparedBanner?.length !== 0) ||
-    (preparedOtherImages && preparedOtherImages.length !== 0);
+  const {
+    formState: { isDirty },
+  } = form;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
     try {
-      const { goal, beneficiaryAddress, tag, title, description } = data;
+      const { goal, beneficiaryAddress, tag, title, description, ytLink } =
+        data;
       const { campaign_id } = campaign;
       const [bannerUrl] = await uploadBanner();
       const mediaLinks = await uploadOtherImages();
@@ -189,7 +186,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         title,
         description,
         bannerUrl: bannerUrl || campaign.banner_url,
-        youtubeLink: campaign.youtube_link || undefined,
+        youtubeLink: ytLink || campaign.youtube_link,
         mediaLinks: mediaLinks || campaign.media_links,
         tag: updatedTag,
       });
@@ -231,6 +228,9 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
 
   useEffect(() => {
     if (isConfirmedTxn) {
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Campaign updated');
       push(`/campaigns/${campaign.campaign_id}`);
       return;
@@ -252,411 +252,440 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   }, [error, isError]);
 
   return (
-    <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
-      <div className='mx-auto lg:mx-0'>
-        <div className='w-full sm:max-w-2xl'>
-          <div className='w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
-            <h2 className='text-xl'>Banner</h2>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='mb-8 rounded-md border border-neutral-300 py-8'
+      >
+        <div className='my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start'>
+          <div className='mx-auto border-neutral-300 md:border-r lg:mx-0'>
+            <div className='w-full sm:max-w-2xl'>
+              <div className='w-full space-y-5  p-3 sm:gap-8 sm:p-5'>
+                <h2 className='text-xl'>Banner</h2>
 
-            <Image
-              className='mx-auto h-[300px] w-auto object-contain'
-              width={400}
-              height={400}
-              src={bannerPreview}
-              alt='campaign-banner'
-            />
-            <div className='relative'>
-              <Input
-                type='file'
-                onChange={(e) => {
-                  if (!e.target.files) {
-                    setPreparedBanner(null);
-                    return;
-                  }
-                  setBannerPreview(createUrl(e.target.files[0]));
-                  setPreparedBanner(e.target.files);
-                }}
-                accept='image/*'
-              />
-
-              {isPreview(bannerPreview) && (
-                <div className='pointer-events-none absolute bottom-0 top-0 w-full rounded-md border border-slate-300 bg-white p-1'>
-                  <button
-                    className='pointer-events-auto flex h-full w-full items-center justify-center gap-2 bg-neutral-100'
-                    onClick={() => {
-                      setBannerPreview(campaign.banner_url);
-                      setPreparedBanner(null);
+                <Image
+                  className='mx-auto h-[300px] w-auto object-contain'
+                  width={400}
+                  height={400}
+                  src={bannerPreview}
+                  alt='campaign-banner'
+                />
+                <div className='relative'>
+                  <Input
+                    type='file'
+                    onChange={(e) => {
+                      if (!e.target.files) {
+                        setPreparedBanner(null);
+                        return;
+                      }
+                      setBannerPreview(createUrl(e.target.files[0]));
+                      setPreparedBanner(e.target.files);
                     }}
-                  >
-                    <Trash size={16} />
-                    Clear
-                  </button>
+                    accept='image/*'
+                  />
+
+                  {isPreview(bannerPreview) && (
+                    <div className='pointer-events-none absolute bottom-0 top-0 w-full rounded-md border border-slate-300 bg-white p-1'>
+                      <button
+                        className='pointer-events-auto flex h-full w-full items-center justify-center gap-2 bg-neutral-100'
+                        onClick={() => {
+                          setBannerPreview(campaign.banner_url);
+                          setPreparedBanner(null);
+                        }}
+                      >
+                        <Trash size={16} />
+                        Clear
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+
+              <div className='mx-auto my-4 w-full space-y-5  p-3 sm:gap-8 sm:p-5'>
+                <h2 className='text-xl'>Other Images</h2>
+
+                <p className='text-sm text-slate-400'>
+                  {6 - otherPreview.length} remaining
+                </p>
+                {otherPreview.length > 0 && (
+                  <>
+                    <ScrollArea className='max-h-40'>
+                      <div className='grid grid-cols-3 gap-2'>
+                        <AnimatePresence>
+                          {otherPreview.map((item, idx) => (
+                            <motion.div
+                              animate={{
+                                scale: ['0%', '100%'],
+                              }}
+                              transition={{ type: 'spring', damping: 20 }}
+                              exit={{ scale: 0 }}
+                              key={idx}
+                              className='relative'
+                            >
+                              <Image
+                                className='h-20 w-full object-cover'
+                                // src={createUrl(item as File)}
+                                src={item}
+                                width={300}
+                                height={300}
+                                alt='image-preview'
+                              />
+
+                              <Dialog>
+                                <DialogTrigger
+                                  ref={triggerRef}
+                                  title='Remove image'
+                                  className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
+                                >
+                                  <FaMinusCircle color='tomato' />
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      Sure to remove image?
+                                    </DialogTitle>
+                                  </DialogHeader>
+
+                                  <div className='grid grid-cols-2 gap-4'>
+                                    <Button
+                                      variant='destructive'
+                                      onClick={() => handlePreviewDelete(item)}
+                                    >
+                                      Delete
+                                    </Button>
+                                    <DialogClose ref={closeRef}>
+                                      Close
+                                    </DialogClose>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    </ScrollArea>
+                  </>
+                )}
+
+                <div className='relative'>
+                  <Input
+                    type='file'
+                    multiple
+                    max={6 - otherPreview.length}
+                    onChange={(e) => {
+                      const images: FileList | null = e.target.files;
+
+                      const getFiles = () => {
+                        if (images) {
+                          return [
+                            ...Array.from(images).map((_) => createUrl(_)),
+                          ].slice(0, 6 - otherPreview.length);
+                        } else {
+                          return [];
+                        }
+                      };
+
+                      const files = getFiles();
+
+                      setOtherPreview((prev) => {
+                        if (prev && prev.length > 6 && files && files.length) {
+                          toast('Cannot upload more than 6 images');
+                          return prev;
+                        }
+                        if (files && prev) return [...prev, ...files];
+                        if (files && !prev) return files;
+                        return prev;
+                      });
+
+                      setPreparedOtherImages(images);
+                    }}
+                    accept='image/*'
+                  />
+
+                  {otherPreview.some((_) => isPreview(_)) && (
+                    <div className='pointer-events-none absolute bottom-0 top-0 grid w-full grid-cols-2 gap-1 rounded-md border border-slate-300 bg-white p-1'>
+                      <button
+                        disabled={6 - otherPreview.length === 0}
+                        type='button'
+                        className='flex items-center justify-center gap-2 bg-neutral-100 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-50'
+                        onClick={(e) => {
+                          if (6 - otherPreview.length === 0) {
+                            e.stopPropagation();
+                          }
+                        }}
+                      >
+                        <ImagePlus size={16} /> Add image
+                      </button>
+
+                      <button
+                        type='button'
+                        className='pointer-events-auto flex w-full items-center justify-center gap-2 bg-neutral-100'
+                        onClick={() => setOtherPreview(campaign.media_links)}
+                      >
+                        <Trash size={16} />
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className='mx-auto my-4 w-full space-y-5 rounded-md border border-neutral-300 p-3 sm:gap-8 sm:p-5'>
-            <h2 className='text-xl'>Other Images</h2>
-
-            <p className='text-sm text-slate-400'>
-              {6 - otherPreview.length} remaining
-            </p>
-            {otherPreview.length > 0 && (
-              <>
-                <ScrollArea className='max-h-40'>
-                  <div className='grid grid-cols-3 gap-2'>
-                    <AnimatePresence>
-                      {otherPreview.map((item, idx) => (
-                        <motion.div
-                          animate={{
-                            scale: ['0%', '100%'],
-                          }}
-                          transition={{ type: 'spring', damping: 20 }}
-                          exit={{ scale: 0 }}
-                          key={idx}
-                          className='relative'
+          <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
+            <div>
+              <div className='grid w-full grid-cols-2 gap-5 p-3 sm:max-w-2xl sm:gap-8 sm:p-5 md:pl-0'>
+                <FormField
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className='col-span-2'>
+                      <FormLabel>Campaign title</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Enter campaign title' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name='title'
+                />
+                <FormField
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className=''>
+                      <FormLabel>Campaign type</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                         >
-                          <Image
-                            className='h-20 w-full object-cover'
-                            // src={createUrl(item as File)}
-                            src={item}
-                            width={300}
-                            height={300}
-                            alt='image-preview'
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder='Choose a campaign type'
+                              defaultValue={form.getValues('type')}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value='personal'>Personal</SelectItem>
+                            <SelectItem value='others'>For others</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name='type'
+                />
+                <FormField
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Goal (ETH)</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={goalReached()}
+                          type='number'
+                          step='any'
+                          defaultValue={field.value}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name='goal'
+                />
+                <FormField
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className='col-span-2'>
+                      <FormLabel>Campaign tag</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder='Choose a campaign tag' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tags.map((_, idx) => (
+                              <SelectItem key={idx} value={_.name}>
+                                {_.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name='tag'
+                />
+                {form.watch('type') === 'others' &&
+                  campaign.beneficiary !== campaign.creator && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Beneficiary address</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                        name='beneficiaryAddress'
+                      />
+
+                      <FormField
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger className='hidden items-center gap-2 pb-2 md:flex'>
+                                      <span>Creator fees (%)</span>
+                                      <AiOutlineExclamationCircle />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>
+                                        Visit your{' '}
+                                        <Link
+                                          className='italic text-primary-default'
+                                          href={`/dashboard/${address}/update-profile`}
+                                        >
+                                          dashboard
+                                        </Link>{' '}
+                                        if you wish to change your creator fee
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+
+                                <Popover>
+                                  <PopoverTrigger className='flex items-center gap-2 pb-2 md:hidden'>
+                                    <span>Creator fees (%)</span>
+                                    <AiOutlineExclamationCircle />
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <p>
+                                      Visit your{' '}
+                                      <Link
+                                        className='italic text-primary-default'
+                                        href={`/dashboard/${address}/creator-fee`}
+                                      >
+                                        dashboard
+                                      </Link>{' '}
+                                      if you wish to change your creator fee
+                                    </p>
+                                  </PopoverContent>
+                                </Popover>
+                              </>
+                            </FormLabel>
+
+                            <FormControl>
+                              <Input
+                                type='number'
+                                step={0.00001}
+                                disabled
+                                value={user?.creatorFee}
+                                // value={0.02}
+                                onChange={(e) =>
+                                  field.onChange(e.target.valueAsNumber)
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                        name='creatorFee'
+                      />
+                    </>
+                  )}
+                <FormField
+                  name='description'
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className='col-span-2'>
+                      <FormLabel>Campaign description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder='Enter campaign description'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className='col-span-2 space-y-4'>
+                  {!!REGEX_CODES.ytLink.test(
+                    form.watch('ytLink') as string
+                  ) && <LinkPreview url={form.watch('ytLink') as string} />}
+
+                  <FormField
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Link to Youtube video</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder='Paste youtube video link'
                           />
-
-                          <Dialog>
-                            <DialogTrigger
-                              ref={triggerRef}
-                              title='Remove image'
-                              className='absolute left-0 top-0 grid h-full w-full cursor-pointer place-content-center bg-black/50 opacity-0 transition-all duration-150 ease-in-out hover:opacity-100'
-                            >
-                              <FaMinusCircle color='tomato' />
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>Sure to remove image?</DialogTitle>
-                              </DialogHeader>
-
-                              <div className='grid grid-cols-2 gap-4'>
-                                <Button
-                                  variant='destructive'
-                                  onClick={() => handlePreviewDelete(item)}
-                                >
-                                  Delete
-                                </Button>
-                                <DialogClose ref={closeRef}>Close</DialogClose>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                </ScrollArea>
-              </>
-            )}
-
-            <div className='relative'>
-              <Input
-                type='file'
-                multiple
-                max={6 - otherPreview.length}
-                onChange={(e) => {
-                  const images: FileList | null = e.target.files;
-
-                  const getFiles = () => {
-                    if (images) {
-                      return [
-                        ...Array.from(images).map((_) => createUrl(_)),
-                      ].slice(0, 6 - otherPreview.length);
-                    } else {
-                      return [];
-                    }
-                  };
-
-                  const files = getFiles();
-
-                  setOtherPreview((prev) => {
-                    if (prev && prev.length > 6 && files && files.length) {
-                      toast('Cannot upload more than 6 images');
-                      return prev;
-                    }
-                    if (files && prev) return [...prev, ...files];
-                    if (files && !prev) return files;
-                    return prev;
-                  });
-
-                  setPreparedOtherImages(images);
-                }}
-                accept='image/*'
-              />
-
-              {otherPreview.some((_) => isPreview(_)) && (
-                <div className='pointer-events-none absolute bottom-0 top-0 grid w-full grid-cols-2 gap-1 rounded-md border border-slate-300 bg-white p-1'>
-                  <button
-                    disabled={6 - otherPreview.length === 0}
-                    className='flex items-center justify-center gap-2 bg-neutral-100 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-50'
-                    onClick={(e) => {
-                      if (6 - otherPreview.length === 0) {
-                        e.stopPropagation();
-                      }
-                    }}
-                  >
-                    <ImagePlus size={16} /> Add image
-                  </button>
-
-                  <button
-                    className='pointer-events-auto flex w-full items-center justify-center gap-2 bg-neutral-100'
-                    onClick={() => setOtherPreview(campaign.media_links)}
-                  >
-                    <Trash size={16} />
-                    Clear
-                  </button>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                    name='ytLink'
+                  />
                 </div>
-              )}
+
+                {/* <div className='flex flex-col gap-4 md:flex-row'>
+                <div className='w-full'>
+                  <Button
+                    type='submit'
+                    size='default'
+                    className='disabled:pointer-events-auto disabled:cursor-not-allowed'
+                    disabled={
+                      !isDirty || isPending || isConfirmedTxn || updating
+                    }
+                  >
+                    {isPending || isConfirmingTxn || updating
+                      ? 'Loading...'
+                      : 'Update campaign'}
+                  </Button>
+                </div>
+                <div className='w-full'>
+                  <DiscontinueCampaignBtn campaign={campaign} />
+                </div>
+              </div> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className='col-span-2 row-start-1 w-full lg:col-start-2'>
-        <Form {...form}>
-          <form
-            className='mx-auto grid w-full grid-cols-2 gap-5 rounded-md border border-neutral-300 p-3 sm:max-w-2xl sm:gap-8 sm:p-5'
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel>Campaign title</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Enter campaign title' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='title'
-            />
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className=''>
-                  <FormLabel>Campaign type</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder='Choose a campaign type'
-                          defaultValue={form.getValues('type')}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='personal'>Personal</SelectItem>
-                        <SelectItem value='others'>For others</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='type'
-            />
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Goal (ETH)</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={goalReached()}
-                      type='number'
-                      step='any'
-                      defaultValue={field.value}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='goal'
-            />
-            <FormField
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel>Campaign tag</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Choose a campaign tag' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {tags.map((_, idx) => (
-                          <SelectItem key={idx} value={_.name}>
-                            {_.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              name='tag'
-            />
-            {form.watch('type') === 'others' &&
-              campaign.beneficiary !== campaign.creator && (
-                <>
-                  <FormField
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Beneficiary address</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                    name='beneficiaryAddress'
-                  />
-
-                  <FormField
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger className='hidden items-center gap-2 pb-2 md:flex'>
-                                  <span>Creator fees (%)</span>
-                                  <AiOutlineExclamationCircle />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>
-                                    Visit your{' '}
-                                    <Link
-                                      className='italic text-primary-default'
-                                      href={`/dashboard/${address}/update-profile`}
-                                    >
-                                      dashboard
-                                    </Link>{' '}
-                                    if you wish to change your creator fee
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-
-                            <Popover>
-                              <PopoverTrigger className='flex items-center gap-2 pb-2 md:hidden'>
-                                <span>Creator fees (%)</span>
-                                <AiOutlineExclamationCircle />
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <p>
-                                  Visit your{' '}
-                                  <Link
-                                    className='italic text-primary-default'
-                                    href={`/dashboard/${address}/creator-fee`}
-                                  >
-                                    dashboard
-                                  </Link>{' '}
-                                  if you wish to change your creator fee
-                                </p>
-                              </PopoverContent>
-                            </Popover>
-                          </>
-                        </FormLabel>
-
-                        <FormControl>
-                          <Input
-                            type='number'
-                            step={0.00001}
-                            disabled
-                            value={user?.creatorFee}
-                            // value={0.02}
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                    name='creatorFee'
-                  />
-                </>
-              )}
-            <FormField
-              name='description'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel>Campaign description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder='Enter campaign description'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className='col-span-2 space-y-4'>
-              {!!REGEX_CODES.ytLink.test(form.watch('ytLink') as string) && (
-                <LinkPreview url={form.watch('ytLink') as string} />
-              )}
-
-              <FormField
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Link to Youtube video</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder='Paste youtube video link'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                name='ytLink'
-              />
-            </div>
-
-            <div className='flex flex-col gap-4 md:flex-row'>
-              <div className='w-full'>
-                <Button
-                  type='submit'
-                  size='default'
-                  className='disabled:pointer-events-auto disabled:cursor-not-allowed'
-                  disabled={
-                    !editMade || isPending || isConfirmedTxn || updating
-                  }
-                >
-                  {isPending || isConfirmingTxn || updating
-                    ? 'Loading...'
-                    : 'Update campaign'}
-                </Button>
-              </div>
-              <div className='w-full'>
-                <DiscontinueCampaignBtn campaign={campaign} />
-              </div>
-            </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+        <div className='flex flex-col gap-4 md:flex-row md:justify-start md:pl-4'>
+          <div className='flex justify-center px-4 md:justify-start md:px-0'>
+            <Button
+              type='submit'
+              size='default'
+              className='w-[12.5rem] disabled:pointer-events-auto disabled:cursor-not-allowed md:w-96'
+              disabled={!isDirty || isPending || isConfirmingTxn || updating}
+            >
+              {isPending || isConfirmingTxn || updating
+                ? 'Loading...'
+                : 'Update campaign'}
+            </Button>
+          </div>
+          <div className='flex justify-center px-4 md:justify-start md:px-0'>
+            <DiscontinueCampaignBtn campaign={campaign} />
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 };

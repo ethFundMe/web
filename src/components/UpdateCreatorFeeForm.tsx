@@ -16,6 +16,7 @@ import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { userStore } from '@/store';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -29,6 +30,7 @@ import {
 import { z } from 'zod';
 
 export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
+  const queryClient = useQueryClient();
   const { setUser } = userStore();
   const router = useRouter();
 
@@ -82,14 +84,20 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
   };
 
   const watchedAmount: number = form.watch('creatorFee') as number;
-  const creatorFeeEditMade =
-    form.watch('creatorFee') !== Number(user?.creatorFee);
+  const {
+    formState: { isDirty },
+  } = form;
+  // const creatorFeeEditMade =
+  //   form.watch('creatorFee') !== Number(user?.creatorFee);
 
   useEffect(() => {
     if (isConfirmedTxn) {
       if (user) {
         setUser({ ...user, creatorFee: form.getValues('creatorFee') || 0 });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unreadNotifications'],
+      });
       toast.success('Profile updated');
       setFormStatus(null);
       router.refresh();
@@ -156,7 +164,7 @@ export const UpdateCreatorFeeForm = ({ user }: { user: User }) => {
         />
 
         <Button
-          disabled={!!formStatus || !creatorFeeEditMade || isConfirmingTxn}
+          disabled={!!formStatus || !isDirty || isConfirmingTxn}
           className='mt-4 w-full max-w-xs disabled:pointer-events-auto'
         >
           {formStatus || 'Save'}

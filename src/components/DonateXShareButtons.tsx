@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Campaign } from '@/types/db';
+import { Campaign } from '@/types';
 import Link from 'next/link';
 import { FaPen } from 'react-icons/fa';
 import { useAccount } from 'wagmi';

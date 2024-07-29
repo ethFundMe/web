@@ -10,6 +10,7 @@ import { GET_EDIT_CAMPAIGN_FORM_SCHEMA } from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -58,6 +59,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
   const { address } = useAccount();
   const router = useRouter();
   const { user } = userStore();
+  const queryClient = useQueryClient();
 
   // useEffect(() => {
   //   const isWalletConnected = address;
@@ -101,13 +103,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
     resolver: zodResolver(formSchema),
   });
 
-  const editMade =
-    form.watch('title') !== campaign.title ||
-    form.watch('description') !== campaign.description ||
-    form.watch('beneficiaryAddress') !== campaign.beneficiary ||
-    form.watch('goal') !== parseFloat(formatEther(BigInt(campaign.goal))) ||
-    form.watch('banner') !== campaign.banner_url ||
-    form.watch('tag') !== campaign.tag;
+  const {
+    formState: { isDirty },
+  } = form;
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     const { goal, beneficiaryAddress, tag, title, description } = data;
@@ -145,6 +143,9 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
               ? campaign.creator
               : (beneficiaryAddress as `0x${string}`),
           ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['notifications', 'unreadNotifications'],
         });
         setIsUploadingMetadata(false);
       })
@@ -397,7 +398,7 @@ export default function EditCampaignForm({ campaign }: { campaign: Campaign }) {
             size='default'
             className='disabled:pointer-events-auto disabled:cursor-not-allowed'
             disabled={
-              !editMade || isConfirmingTxn || isPending || isUploadingMetadata
+              !isDirty || isConfirmingTxn || isPending || isUploadingMetadata
             }
           >
             {isPending || isConfirmingTxn || isUploadingMetadata

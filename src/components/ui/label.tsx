@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-export const labelVariants = cva(
+const labelVariants = cva(
   'text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 );
 

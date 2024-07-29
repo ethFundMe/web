@@ -57,9 +57,9 @@ export default async function VerifyPage({
   const checkValid = () => {
     if (!vPoints || 'error' in vPoints) return false;
 
-    if (vPoints.funded_campaigns) return true;
+    if (vPoints.campaign_funded) return true;
 
-    if (vPoints.created_campaign && vPoints.campaign_funded) return true;
+    if (vPoints.created_campaign && vPoints.funded_campaigns) return true;
 
     return false;
   };
@@ -111,16 +111,16 @@ export default async function VerifyPage({
                       <b>1. You have created at least one campaign</b>
                     </VerificationStepIndicator>
 
-                    <VerificationStepIndicator status={vPoints.campaign_funded}>
+                    <VerificationStepIndicator
+                      status={vPoints.funded_campaigns}
+                    >
                       <b>
                         2. Your created campaign(s) have received a total of at
                         least 0.05 ETH in funding.
                       </b>
                     </VerificationStepIndicator>
 
-                    <VerificationStepIndicator
-                      status={vPoints.funded_campaigns}
-                    >
+                    <VerificationStepIndicator status={vPoints.campaign_funded}>
                       <b>
                         3. You have funded personally funded at least 0.02 ETH
                         in total.

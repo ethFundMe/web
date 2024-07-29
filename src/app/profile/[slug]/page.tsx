@@ -3,6 +3,7 @@ import { UserProfile } from '@/components/dashboard/UserProfile';
 import { REGEX_CODES } from '@/lib/constants';
 import { getCampaigns, getUser } from '@/lib/queries';
 import { seoProfile } from '@/lib/seoBannerUrl';
+import { Campaign } from '@/types';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -75,6 +76,33 @@ export async function generateMetadata(
       };
 }
 
+async function getUserCampaigns(address: string) {
+  const url = `${process.env.ETH_FUND_ENDPOINT}/api/campaign/user/${address}`;
+
+  const res = await fetch(url, {
+    cache: 'no-store',
+    method: 'GET',
+  });
+
+  if (res.status === 404) {
+    return notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch user campaigns');
+  }
+
+  return (await res.json()) as {
+    campaigns: Array<Campaign>;
+    meta: {
+      page: number;
+      limit: number;
+      totalCampaigns: number;
+      totalPages: number;
+    };
+  };
+}
+
 export default async function UserProfilePage({
   params: { slug },
 }: {
@@ -85,10 +113,7 @@ export default async function UserProfilePage({
 
   if (!user) return notFound();
 
-  const { campaigns } = await getCampaigns({
-    page: 1,
-    ethAddress: user.ethAddress,
-  });
+  const { campaigns } = await getUserCampaigns(user.ethAddress);
 
   return (
     <div className='flex min-h-[calc(100dvh-269px)] flex-col'>
