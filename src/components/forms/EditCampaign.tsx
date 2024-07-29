@@ -171,7 +171,8 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
     try {
-      const { goal, beneficiaryAddress, tag, title, description } = data;
+      const { goal, beneficiaryAddress, tag, title, description, ytLink } =
+        data;
       const { campaign_id } = campaign;
       const [bannerUrl] = await uploadBanner();
       const mediaLinks = await uploadOtherImages();
@@ -185,7 +186,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         title,
         description,
         bannerUrl: bannerUrl || campaign.banner_url,
-        youtubeLink: campaign.youtube_link || undefined,
+        youtubeLink: ytLink || undefined,
         mediaLinks: mediaLinks || campaign.media_links,
         tag: updatedTag,
       });
