@@ -667,8 +667,8 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
             </div>
           </div>
         </div>
-        <div className='flex flex-col gap-4 md:flex-row md:justify-center'>
-          <div className='mx-auto flex w-full justify-center px-4 md:justify-end md:px-0'>
+        <div className='flex flex-col gap-4 md:flex-row md:justify-start md:pl-4'>
+          <div className='flex justify-center px-4 md:justify-start md:px-0'>
             <Button
               type='submit'
               size='default'
@@ -680,7 +680,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
                 : 'Update campaign'}
             </Button>
           </div>
-          <div className='flex w-full justify-center px-4 md:justify-start md:px-0'>
+          <div className='flex justify-center px-4 md:justify-start md:px-0'>
             <DiscontinueCampaignBtn campaign={campaign} />
           </div>
         </div>

@@ -337,9 +337,25 @@ export const UserProfile = ({
               )}
             >
               <div className='space-y-6 lg:col-span-9'>
-                <h2 className='text-xl text-primary-default'>
-                  These are {isOwner ? 'your' : `${user.fullName}'s`} campaigns
-                </h2>
+                {campaigns.length ? (
+                  <h2 className='text-xl text-primary-default'>
+                    These are {isOwner ? 'your' : `${user.fullName}'s`}{' '}
+                    campaigns
+                  </h2>
+                ) : (
+                  <p className={'text-xl text-gray-400'}>
+                    No campaigns started yet.{' '}
+                    <span>
+                      <Link
+                        className='text-primary-default hover:underline'
+                        href='/campaigns/create'
+                      >
+                        Click here
+                      </Link>
+                    </span>{' '}
+                    to create one
+                  </p>
+                )}
                 {campaigns.length ? (
                   <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                     {campaigns.map((_) => (
@@ -355,11 +371,7 @@ export const UserProfile = ({
                     ))}
                   </div>
                 ) : (
-                  <div className='grid min-h-[10rem]  w-full place-content-center'>
-                    <p className={'mb-4 text-center text-xl text-gray-400'}>
-                      No campaigns started yet
-                    </p>
-                  </div>
+                  <></>
                 )}
               </div>
               <div
