@@ -186,7 +186,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         title,
         description,
         bannerUrl: bannerUrl || campaign.banner_url,
-        youtubeLink: ytLink || undefined,
+        youtubeLink: ytLink || campaign.youtube_link,
         mediaLinks: mediaLinks || campaign.media_links,
         tag: updatedTag,
       });
