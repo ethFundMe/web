@@ -251,6 +251,7 @@ export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
       .string()
       .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
       .optional(),
+    video_file: z.any(),
   });
 }
 
