@@ -1,6 +1,7 @@
 'use client';
 
 import { handleIPFSPush } from '@/actions';
+import { livepeer } from '@/app/campaigns/create/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES, TagsWithIds } from '@/lib/constants';
@@ -23,6 +24,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
+import * as tus from 'tus-js-client';
 import { isAddress, parseEther } from 'viem';
 import {
   useAccount,
@@ -77,6 +79,7 @@ export default function CreateCampaignForm() {
     null
   );
   const [eventCampaignId, setEventCampaignId] = useState<number>();
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const getCampaignType = () => {
     const _ = searchParams.get('campaign-type');
@@ -137,11 +140,45 @@ export default function CreateCampaignForm() {
       beneficiaryAddress,
       tag,
       ytLink,
+      video_file,
     } = data;
     setSubmitStatus('Creating campaign');
 
     if (!isAddress(String(beneficiaryAddress))) {
       return toast.error(`Address not valid ${beneficiaryAddress}`);
+    }
+
+    let livepeerId: string;
+
+    const files = video_file as FileList;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const videoFileName = file.name;
+
+      const {
+        tusEndpoint,
+        asset: { playbackId },
+      } = await livepeer(videoFileName);
+      livepeerId = playbackId;
+
+      const videoUpload = new tus.Upload(file, {
+        endpoint: tusEndpoint,
+        retryDelays: [0, 3000, 5000, 10000, 20000],
+
+        onError: function (error) {
+          console.log('Failed to upload video because: ' + error);
+          return toast.error('Failed to upload video file.');
+        },
+        onProgress: function (bytesUploaded, bytesTotal) {
+          const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+          console.log(bytesUploaded, bytesTotal, percentage + '%');
+        },
+        onSuccess: function () {
+          console.log('Download %s from %s', videoUpload.file, videoUpload.url);
+        },
+      });
+
+      videoUpload.start();
     }
 
     async function uploadBanner() {
@@ -225,6 +262,7 @@ export default function CreateCampaignForm() {
             bannerUrl: uploaded[0],
             mediaLinks: uploaded.filter((_, id) => id !== 0),
             tag: preparedTag,
+            livepeerId,
           })
             .then((res) => {
               if (!res?.hash) throw new Error();
@@ -676,6 +714,46 @@ export default function CreateCampaignForm() {
               </FormItem>
             )}
             name='ytLink'
+          />
+
+          <div className='text-xs text-slate-500 dark:text-slate-400'>OR</div>
+
+          <FormField
+            name='video_file'
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Upload video (Livepeer)</FormLabel>
+
+                {videoPreview && (
+                  <div>
+                    <video width='320' height='240' controls src={videoPreview}>
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
+
+                <FormControl>
+                  <Input
+                    type='file'
+                    accept='video/*'
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        const file = files[0];
+                        if (file && file.type.slice(0, 5) === 'video') {
+                          setVideoPreview(URL.createObjectURL(file));
+                        }
+                      } else {
+                        setVideoPreview(null);
+                      }
+                      field.onChange(e.target.files);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
 
