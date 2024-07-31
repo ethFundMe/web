@@ -6,6 +6,8 @@ import { getSrc, LivepeerPlaybackInfo } from '@livepeer/react/external';
 import {
   Container,
   Controls,
+  ErrorIndicator,
+  LoadingIndicator,
   PlayingIndicator,
   PlayPauseTrigger,
   Root,
@@ -69,17 +71,43 @@ export const SwiperCarousel = ({
 function LivepeerPlayer({ info }: { info: LivepeerPlaybackInfo | undefined }) {
   const src = getSrc(info);
   return (
-    <Root src={src}>
+    <Root src={src} autoPlay>
       <Container className='h-full w-full overflow-hidden bg-gray-950'>
         <Video title='Live stream' className='h-full w-full' />
-
+        <LoadingIndicator
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+          }}
+        >
+          Loading...
+        </LoadingIndicator>
+        <ErrorIndicator
+          matcher='all'
+          style={{
+            position: 'absolute',
+            inset: 0,
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+          }}
+        >
+          An error occurred.
+        </ErrorIndicator>
         <Controls className='flex items-center justify-center'>
           <PlayPauseTrigger className='h-10 w-10 flex-shrink-0 hover:scale-105'>
             <PlayingIndicator asChild matcher={false}>
-              <PlayIcon className='h-full w-full' />
+              <PlayIcon className='h-full w-full text-white' />
             </PlayingIndicator>
             <PlayingIndicator asChild>
-              <PauseIcon className='h-full w-full' />
+              <PauseIcon className='h-full w-full text-white' />
             </PlayingIndicator>
           </PlayPauseTrigger>
         </Controls>
