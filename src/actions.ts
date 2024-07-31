@@ -77,7 +77,7 @@ export const handleIPFSPush = async function ({
 }: {
   title: string;
   description: string;
-  youtubeLink: string | undefined;
+  youtubeLink: string | undefined | null;
   bannerUrl: string;
   mediaLinks: string[];
   tag: number;
