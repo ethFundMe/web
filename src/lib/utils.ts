@@ -257,6 +257,32 @@ export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
 };
+export function isFaceBookProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?(facebook\.com|fb\.com)\/([a-zA-Z0-9_]{1,15})\/?/i;
+  return regex.test(text);
+}
+export function isTwitterProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?(twitter\.com|x\.com)\/([a-zA-Z0-9_]{1,15})\/?/i;
+  return regex.test(text);
+}
+
+export function isInstagramProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?instagram\.com\/([a-zA-Z0-9_]{1,30})\/?/i;
+  return regex.test(text);
+}
+
+export function isDiscordProfileLink(text: string): boolean {
+  const regex = /^(https?:\/\/)?(?:www\.)?discord\.gg\/([a-zA-Z0-9]{1,30})\/?/i;
+  return regex.test(text);
+}
+
+export function isTelegramProfileLink(text: string): boolean {
+  const regex = /^(https?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]{1,64})\/?/i;
+  return regex.test(text);
+}
 
 export function getRelativeTime(date: Date): string {
   const formattedtDate = dayjs(date);
