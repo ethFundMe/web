@@ -29,9 +29,11 @@ import {
 export const UserProfile = ({
   user,
   campaigns,
+  beneficiaryCampaigns,
 }: {
   user: User;
   campaigns: Campaign[];
+  beneficiaryCampaigns: Campaign[];
 }) => {
   const { address, isConnected } = useAccount();
   const router = useRouter();
@@ -89,6 +91,8 @@ export const UserProfile = ({
 
   const loggedIn = isConnected && getCookie('efmToken');
   const isOwner = loggedIn && user.ethAddress === address;
+
+  console.log(beneficiaryCampaigns);
 
   return (
     <div className={cn('mb-20 w-full')}>
@@ -359,6 +363,32 @@ export const UserProfile = ({
                 {campaigns.length ? (
                   <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                     {campaigns.map((_) => (
+                      <UserCampaignCard
+                        campaign={_}
+                        variant={
+                          user.ethAddress && user.ethAddress === address
+                            ? 'user'
+                            : 'viewer'
+                        }
+                        key={_.id}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div>
+                {beneficiaryCampaigns?.length && (
+                  <h2 className='mb-6 mt-12 text-xl text-primary-default'>
+                    {!isOwner
+                      ? 'Benefeciary Campaigns'
+                      : 'You are the beneficiary of these campaigns.'}
+                  </h2>
+                )}
+                {beneficiaryCampaigns?.length ? (
+                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                    {beneficiaryCampaigns?.map((_) => (
                       <UserCampaignCard
                         campaign={_}
                         variant={

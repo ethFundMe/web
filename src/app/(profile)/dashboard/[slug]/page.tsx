@@ -41,6 +41,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+async function getUserBeneficiaryCampaigns(address: string) {
+  const url = `${process.env.ETH_FUND_ENDPOINT}/api/campaign/user/${address}?role=beneficiary`;
+  const authToken = cookies().get('efmToken')?.value;
+
+  const res = await fetch(url, {
+    cache: 'no-store',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (res.status === 401) {
+    throw new Error('Unauthorized');
+  }
+
+  if (res.status === 404) {
+    console.log('--------------error choke for here!!-----------------');
+    return notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch user campaigns');
+  }
+
+  return (await res.json()) as {
+    campaigns: Array<Campaign>;
+    meta: {
+      page: number;
+      limit: number;
+      totalCampaigns: number;
+      totalPages: number;
+    };
+  };
+}
+
 async function getUserCampaigns(address: string) {
   const url = `${process.env.ETH_FUND_ENDPOINT}/api/campaign/user/${address}`;
   const authToken = cookies().get('efmToken')?.value;
@@ -91,6 +128,14 @@ export default async function UserProfilePage({
   if (!user) redirect('/account');
 
   const { campaigns } = await getUserCampaigns(user.ethAddress);
+  const { campaigns: beneficiary_campaigns } =
+    await getUserBeneficiaryCampaigns(user.ethAddress);
 
-  return <UserProfile user={user} campaigns={campaigns} />;
+  return (
+    <UserProfile
+      user={user}
+      campaigns={campaigns}
+      beneficiaryCampaigns={beneficiary_campaigns}
+    />
+  );
 }
