@@ -59,7 +59,6 @@ async function getUserBeneficiaryCampaigns(address: string) {
   }
 
   if (res.status === 404) {
-    console.log('--------------error choke for here!!-----------------');
     return notFound();
   }
 

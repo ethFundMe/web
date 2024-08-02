@@ -92,8 +92,6 @@ export const UserProfile = ({
   const loggedIn = isConnected && getCookie('efmToken');
   const isOwner = loggedIn && user.ethAddress === address;
 
-  console.log(beneficiaryCampaigns);
-
   return (
     <div className={cn('mb-20 w-full')}>
       {user.isBanned ? (

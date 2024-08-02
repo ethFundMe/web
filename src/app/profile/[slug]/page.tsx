@@ -5,11 +5,48 @@ import { getCampaigns, getUser } from '@/lib/queries';
 import { seoProfile } from '@/lib/seoBannerUrl';
 import { Campaign } from '@/types';
 import { Metadata, ResolvingMetadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 type Props = {
   params: { slug: `0x${string}` };
 };
+
+async function getUserBeneficiaryCampaigns(address: string) {
+  const url = `${process.env.ETH_FUND_ENDPOINT}/api/campaign/user/${address}?role=beneficiary`;
+  const authToken = cookies().get('efmToken')?.value;
+
+  const res = await fetch(url, {
+    cache: 'no-store',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (res.status === 401) {
+    throw new Error('Unauthorized');
+  }
+
+  if (res.status === 404) {
+    return notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch user campaigns');
+  }
+
+  return (await res.json()) as {
+    campaigns: Array<Campaign>;
+    meta: {
+      page: number;
+      limit: number;
+      totalCampaigns: number;
+      totalPages: number;
+    };
+  };
+}
 
 export async function generateMetadata(
   { params }: Props,
@@ -115,12 +152,19 @@ export default async function UserProfilePage({
 
   const { campaigns } = await getUserCampaigns(user.ethAddress);
 
+  const { campaigns: beneficiary_campaigns } =
+    await getUserBeneficiaryCampaigns(user.ethAddress);
+
   return (
     <div className='flex min-h-[calc(100dvh-269px)] flex-col'>
       <Navbar />
 
       <div className='flex-1'>
-        <UserProfile user={user} campaigns={campaigns} />
+        <UserProfile
+          user={user}
+          campaigns={campaigns}
+          beneficiaryCampaigns={beneficiary_campaigns}
+        />
       </div>
     </div>
   );
