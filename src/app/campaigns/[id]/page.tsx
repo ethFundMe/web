@@ -12,6 +12,7 @@ import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types';
+import { LivepeerPlaybackInfo } from '@livepeer/react/external';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -59,6 +60,26 @@ async function fetchCampaign(id: number) {
   }
 
   return (await res.json()) as Campaign;
+}
+
+async function getPlaybackInfo(playbackId: string | null) {
+  if (!playbackId) return;
+
+  const url = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/livepeer/source`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ playbackId }),
+  });
+
+  if (!res.ok) return;
+
+  const info = (await res.json()) as {
+    playbackInfo: LivepeerPlaybackInfo;
+  };
+  return info.playbackInfo;
 }
 
 export async function generateMetadata(
@@ -155,6 +176,8 @@ export default async function CampaignPage({
 
   if (!user) return;
 
+  const playbackInfo = await getPlaybackInfo(campaign.livepeer_id);
+
   const campaignsToShow = campaigns
     .filter(
       (_) =>
@@ -162,9 +185,30 @@ export default async function CampaignPage({
     )
     .slice(0, 3);
 
-  const media_links = campaign.youtube_link
-    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
-    : [campaign.banner_url, ...campaign.media_links];
+  function getMediaLinks({
+    banner_url,
+    media_links,
+    livepeer_id,
+    youtube_link,
+  }: {
+    banner_url: string;
+    media_links: string[];
+    livepeer_id: string | null;
+    youtube_link: string | null;
+  }): string[] {
+    const baseLinks = [banner_url, ...media_links];
+    const additionalLinks = [livepeer_id, youtube_link].filter(
+      (link): link is string => typeof link === 'string'
+    );
+
+    return [...baseLinks, ...additionalLinks];
+  }
+  const media_links = getMediaLinks({
+    banner_url: campaign.banner_url,
+    media_links: campaign.media_links,
+    livepeer_id: campaign.livepeer_id,
+    youtube_link: campaign.youtube_link,
+  });
   return (
     <>
       {(campaign.flagged || campaign.discontinued) && (
@@ -202,7 +246,7 @@ export default async function CampaignPage({
               </small>
             </div>
 
-            <SwiperCarousel images={media_links} />
+            <SwiperCarousel images={media_links} playbackInfo={playbackInfo} />
 
             <div className='space-y-7 pb-5'>
               <div className='flex flex-col gap-4 sm:flex-row'>

@@ -17,6 +17,7 @@ export interface Campaign {
   description: string;
   banner_url: string;
   youtube_link: string | null;
+  livepeer_id: string | null;
   media_links: Array<string>;
   tag: string;
   created_at: Date;

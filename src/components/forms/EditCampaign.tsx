@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
 import useRefs from 'react-use-refs';
+import * as tus from 'tus-js-client';
 import { BaseError, formatEther, parseEther } from 'viem';
 import { mainnet } from 'viem/chains';
 import {
@@ -36,6 +37,7 @@ import {
 import { z } from 'zod';
 import { DiscontinueCampaignBtn } from '../DiscontinueCampaignBtn';
 // import { Input } from '../inputs';
+import { livepeer } from '@/app/campaigns/create/actions';
 import { useQueryClient } from '@tanstack/react-query';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
@@ -81,6 +83,8 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
   const [preparedOtherImages, setPreparedOtherImages] =
     useState<FileList | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
+
   const [closeRef, triggerRef] = useRefs<HTMLButtonElement>(null);
 
   const { address } = useAccount();
@@ -171,8 +175,15 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
     try {
-      const { goal, beneficiaryAddress, tag, title, description, ytLink } =
-        data;
+      const {
+        goal,
+        beneficiaryAddress,
+        tag,
+        title,
+        description,
+        ytLink,
+        video_file,
+      } = data;
       const { campaign_id } = campaign;
       const [bannerUrl] = await uploadBanner();
       const mediaLinks = await uploadOtherImages();
@@ -182,6 +193,43 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         return toast.error('Tag not found.');
       }
 
+      let livepeerId: string | undefined = undefined;
+
+      const files = video_file as FileList;
+      if (files && files.length > 0) {
+        const file = files[0];
+        const videoFileName = file.name;
+
+        const {
+          tusEndpoint,
+          asset: { playbackId },
+        } = await livepeer(videoFileName);
+        livepeerId = playbackId;
+
+        const videoUpload = new tus.Upload(file, {
+          endpoint: tusEndpoint,
+          retryDelays: [0, 3000, 5000, 10000, 20000],
+
+          onError: function (error) {
+            console.log('Failed to upload video because: ' + error);
+            return toast.error('Failed to upload video file.');
+          },
+          onProgress: function (bytesUploaded, bytesTotal) {
+            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+            console.log(bytesUploaded, bytesTotal, percentage + '%');
+          },
+          onSuccess: function () {
+            console.log(
+              'Download %s from %s',
+              videoUpload.file,
+              videoUpload.url
+            );
+          },
+        });
+
+        videoUpload.start();
+      }
+
       const updatedHash = await handleIPFSPush({
         title,
         description,
@@ -189,6 +237,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         youtubeLink: ytLink || campaign.youtube_link,
         mediaLinks: mediaLinks || campaign.media_links,
         tag: updatedTag,
+        livepeerId,
       });
 
       const newHash = updatedHash?.hash as `0x${string}`;
@@ -642,6 +691,53 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
                       </FormItem>
                     )}
                     name='ytLink'
+                  />
+
+                  <div className='text-xs text-slate-500 dark:text-slate-400'>
+                    OR
+                  </div>
+
+                  <FormField
+                    name='video_file'
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Upload video (Livepeer)</FormLabel>
+
+                        {videoPreview && (
+                          <div>
+                            <video
+                              width='320'
+                              height='240'
+                              controls
+                              src={videoPreview}
+                            >
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        )}
+
+                        <FormControl>
+                          <Input
+                            type='file'
+                            accept='video/*'
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files && files.length > 0) {
+                                const file = files[0];
+                                if (file && file.type.slice(0, 5) === 'video') {
+                                  setVideoPreview(URL.createObjectURL(file));
+                                }
+                              } else {
+                                setVideoPreview(null);
+                              }
+                              field.onChange(e.target.files);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
 

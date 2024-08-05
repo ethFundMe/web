@@ -1,6 +1,18 @@
 'use client';
 
 import { REGEX_CODES } from '@/lib/constants';
+import { PauseIcon, PlayIcon } from '@livepeer/react/assets';
+import { getSrc, LivepeerPlaybackInfo } from '@livepeer/react/external';
+import {
+  Container,
+  Controls,
+  ErrorIndicator,
+  LoadingIndicator,
+  PlayingIndicator,
+  PlayPauseTrigger,
+  Root,
+  Video,
+} from '@livepeer/react/player';
 import YouTubePlayer from 'react-player/youtube';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -9,7 +21,13 @@ import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ImageWithFallback from './ImageWithFallback';
 
-export const SwiperCarousel = ({ images }: { images: string[] }) => {
+export const SwiperCarousel = ({
+  images,
+  playbackInfo,
+}: {
+  images: string[];
+  playbackInfo: LivepeerPlaybackInfo | undefined;
+}) => {
   // const AnimImage = motion(Image);
 
   return (
@@ -32,6 +50,8 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
               <>
                 <YouTubePlayer url={mediaLink} width='100%' height='100%' />
               </>
+            ) : REGEX_CODES.livepeerId.test(mediaLink) ? (
+              <LivepeerPlayer info={playbackInfo} />
             ) : (
               <ImageWithFallback
                 className='h-full flex-shrink-0 object-contain'
@@ -47,3 +67,51 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
     </div>
   );
 };
+
+function LivepeerPlayer({ info }: { info: LivepeerPlaybackInfo | undefined }) {
+  const src = getSrc(info);
+  return (
+    <Root src={src} autoPlay>
+      <Container className='h-full w-full overflow-hidden bg-gray-950'>
+        <Video title='Live stream' className='h-full w-full' />
+        <LoadingIndicator
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+          }}
+        >
+          Loading...
+        </LoadingIndicator>
+        <ErrorIndicator
+          matcher='all'
+          style={{
+            position: 'absolute',
+            inset: 0,
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+          }}
+        >
+          An error occurred.
+        </ErrorIndicator>
+        <Controls className='flex items-center justify-center'>
+          <PlayPauseTrigger className='h-10 w-10 flex-shrink-0 hover:scale-105'>
+            <PlayingIndicator asChild matcher={false}>
+              <PlayIcon className='h-full w-full text-white' />
+            </PlayingIndicator>
+            <PlayingIndicator asChild>
+              <PauseIcon className='h-full w-full text-white' />
+            </PlayingIndicator>
+          </PlayPauseTrigger>
+        </Controls>
+      </Container>
+    </Root>
+  );
+}
