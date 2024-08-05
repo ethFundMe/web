@@ -50,6 +50,7 @@ export const UserProfile = ({
       username: user.username,
       profileUrl: profileUrl[0],
       token,
+      social_links: user.social_links || [],
     })
       .then(() => {
         toast.success('Profile picture updated');
@@ -74,6 +75,7 @@ export const UserProfile = ({
       username: user.username,
       bannerUrl: bannerUrl[0],
       token,
+      social_links: user.social_links || [],
     })
       .then(() => {
         toast.success('Banner updated');
@@ -210,6 +212,7 @@ export const UserProfile = ({
                                           username: user.username,
                                           profileUrl: undefined,
                                           token,
+                                          social_links: user.social_links || [],
                                         })
                                           .then((res) => {
                                             setUser(res);
