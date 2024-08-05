@@ -79,6 +79,7 @@ export const AccountForm = () => {
             username,
             fullName,
             token,
+            social_links: user.social_links || [],
           });
 
           if (!res) throw new Error();
