@@ -82,8 +82,10 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       .min(2)
       .max(16),
     socialLinks: z
-      .string({ description: 'Social media link' })
-      .url('Invalid media link URL')
+      .string({
+        description: 'Social media link',
+        required_error: 'link is required',
+      })
       .array()
       .optional(),
     email: z
@@ -107,6 +109,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       bio: user.bio ?? '',
       username: user.username ?? '',
       email: user.email ?? '',
+      socialLinks: user.social_links ?? [''],
     },
     mode: 'onChange',
   });
@@ -144,6 +147,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         username: values.username,
         fullName: values.fullName,
         token: token || '',
+        social_links: values.socialLinks || [],
       })
         .then((data) => {
           // Reset form and navigate to the dashboard
@@ -155,7 +159,10 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           router.push(`/dashboard/${data.ethAddress}`);
         })
         .catch((error) => {
-          console.log(`Failed to update profile, ${error}`);
+          if (process.env.NODE_ENV !== 'development') {
+            console.log(`Failed to update profile: ${error}`);
+          }
+          console.log('Failed to update profile');
           setFormStatus(null);
           toast.error('Failed to update profile');
         });
@@ -279,7 +286,10 @@ const SocialLinksManager = ({
   const [links, setLinks] = useState(value || ['']);
 
   const addLink = () => {
-    if (links.length < max) {
+    if (links.every((link) => link.trim() === '')) {
+      return toast.error('url field is empty');
+    }
+    if (links.length < max && links.every((link) => link.trim() !== '')) {
       setLinks([...links, '']);
       onChange([...links, '']);
     }
