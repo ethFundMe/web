@@ -4,20 +4,47 @@ import { REGEX_CODES } from '@/lib/constants';
 import { updateUser } from '@/lib/queries';
 import { efmUserAddressStore, userStore } from '@/store';
 import { User } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Button, Input } from '../inputs';
+import { z } from 'zod';
+import { Button } from '../inputs';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import { Input } from '../ui/input';
 
 const efm_endpoint = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT;
+const AccountSchema = z.object({
+  fullName: z
+    .string({
+      required_error: 'Full name is required',
+    })
+    .min(2)
+    .max(25),
+  email: z.string({ required_error: 'email is required' }).email(),
+  username: z
+    .string({ required_error: 'Username is required' })
+    .regex(REGEX_CODES.username, {
+      message: 'Username can only contain letters, numbers, and underscores.',
+    })
+    .min(2)
+    .max(16),
+});
 
-type TAccount = {
-  username: string;
-  fullName: string;
-  email: string;
-};
+// type TAccount = {
+//   username: string;
+//   fullName: string;
+//   email: string;
+// };
 
 export const AccountForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,16 +54,21 @@ export const AccountForm = () => {
   const router = useRouter();
   const token = getCookie('efmToken') || '';
 
-  const { handleSubmit, register, formState } = useForm<TAccount>({
+  const form = useForm<z.infer<typeof AccountSchema>>({
+    resolver: zodResolver(AccountSchema),
     defaultValues: {
       fullName: '',
       email: '',
       username: '',
     },
+    mode: 'onChange',
   });
+  const { handleSubmit, formState } = form;
 
   const { isDirty } = formState;
-  const onSubmit: SubmitHandler<TAccount> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof AccountSchema>> = async (
+    data
+  ) => {
     if (!address) {
       toast.error('Wallet not connected');
       router.refresh();
@@ -136,62 +168,112 @@ export const AccountForm = () => {
     }
   };
 
-  const onError: SubmitErrorHandler<TAccount> = (errors) => {
+  const onError: SubmitErrorHandler<z.infer<typeof AccountSchema>> = (
+    errors
+  ) => {
     console.error(errors);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit, onError)}
-      className='mx-auto my-6 max-w-lg space-y-3 px-4'
-    >
-      <fieldset>
-        <Input
-          id='email'
-          type='email'
-          label='Email'
-          {...register('email', {
-            required: 'Email is required',
-            pattern: {
-              value: REGEX_CODES.email,
-              message: 'Invalid email address',
-            },
-          })}
-          required
-          placeholder='Enter your email'
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className='mx-auto my-6 max-w-lg space-y-3 px-4'
+      >
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem className='space-y-1'>
+              <FormLabel className='font-bold'>Email address</FormLabel>
+              <FormControl>
+                <Input placeholder='Enter your email' {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </fieldset>
-      <fieldset>
-        <Input
-          id='full name'
-          type='text'
-          label='Full Name'
-          {...register('fullName', { required: 'Name is required', min: 1 })}
-          placeholder='Enter your full name'
+        {/* <fieldset>
+          <Input
+            id='email'
+            type='email'
+            label='Email'
+            {...register('email', {
+              required: 'Email is required',
+              pattern: {
+                value: REGEX_CODES.email,
+                message: 'Invalid email address',
+              },
+            })}
+            required
+            placeholder='Enter your email'
+          />
+        </fieldset> */}
+        <FormField
+          control={form.control}
+          name='fullName'
+          render={({ field }) => (
+            <FormItem className='space-y-1'>
+              <FormLabel className='font-bold'>Name</FormLabel>
+              <FormControl>
+                <Input placeholder='Enter your name' {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </fieldset>
-      <fieldset>
-        <Input
-          id='username'
-          type='text'
-          label='Username'
-          {...register('username', {
-            required: 'Username is required',
-            pattern: {
-              value: REGEX_CODES.username,
-              message:
-                'Username can only contain letters, numbers, and underscores.',
-            },
-            minLength: 2,
-            maxLength: 16,
-          })}
-          required
-          placeholder='Enter your username'
+        <FormField
+          control={form.control}
+          name='username'
+          render={({ field }) => (
+            <FormItem className='space-y-1'>
+              <FormLabel className='font-bold'>Username</FormLabel>
+              <FormControl>
+                <Input placeholder='Enter your username' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </fieldset>
-      <Button type='submit' disabled={isLoading || !isDirty} className='w-full'>
-        {isLoading ? 'Loading...' : 'Create account'}
-      </Button>
-    </form>
+
+        {/* <fieldset>
+          <Input
+            id='full name'
+            type='text'
+            label='Full Name'
+            {...register('fullName', { required: 'Name is required', min: 1 })}
+            placeholder='Enter your full name'
+          />
+        </fieldset>
+        <fieldset>
+          <Input
+            id='username'
+            type='text'
+            label='Username'
+            {...register('username', {
+              required: 'Username is required',
+              pattern: {
+                value: REGEX_CODES.username,
+                message:
+                  'Username can only contain letters, numbers, and underscores.',
+              },
+              minLength: 2,
+              maxLength: 16,
+            })}
+            required
+            placeholder='Enter your username'
+          />
+        </fieldset> */}
+        <Button
+          type='submit'
+          disabled={isLoading || !isDirty}
+          className='w-full disabled:cursor-not-allowed disabled:bg-opacity-50'
+        >
+          {isLoading ? 'Loading...' : 'Create account'}
+        </Button>
+      </form>
+    </Form>
   );
 };
