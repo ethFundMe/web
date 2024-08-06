@@ -20,6 +20,7 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { FaEye } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
 
@@ -156,6 +157,7 @@ export default async function CampaignPage({
   params: { id: string };
 }) {
   const campaign = await fetchCampaign(Number(id));
+  console.log(campaign);
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);
@@ -241,9 +243,15 @@ export default async function CampaignPage({
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
                 {campaign.title}
               </h2>
-              <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
-                {campaign.tag}
-              </small>
+              <div className='flex gap-x-3'>
+                <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                  {campaign.tag}
+                </small>
+                <div className='flex w-fit items-center gap-x-1.5 rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                  <FaEye />
+                  <span className='text-xs'>{campaign.viewCount}</span>
+                </div>
+              </div>
             </div>
 
             <SwiperCarousel images={media_links} playbackInfo={playbackInfo} />
