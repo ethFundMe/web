@@ -157,7 +157,6 @@ export default async function CampaignPage({
   params: { id: string };
 }) {
   const campaign = await fetchCampaign(Number(id));
-  console.log(campaign);
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
     const beneficiary = await getUser(campaign.beneficiary as `0x${string}`);
