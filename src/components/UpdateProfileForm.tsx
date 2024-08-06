@@ -33,7 +33,7 @@ import { BsTwitterX } from 'react-icons/bs';
 import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { Textarea } from './ui/textarea';
 
-type TSocialMediaPlatform = {
+export type TSocialMediaPlatform = {
   platform: string;
   icon: ReactNode;
 };
