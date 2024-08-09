@@ -5,7 +5,7 @@ import { NAVBARROUTES } from '@/lib/constants';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { userStore } from '@/store';
 import { useModalStore } from '@/store/modal';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -23,7 +23,7 @@ import { Button } from './ui/button';
 const Navbar = () => {
   const { openModal, setModalOptions } = useModalStore();
   const { address, isConnected } = useAccount();
-  const { openConnectModal } = useConnectModal();
+  const { open } = useWeb3Modal();
   const { user } = userStore();
   return (
     <>
@@ -77,7 +77,7 @@ const Navbar = () => {
                 </div>
               </AuthNavbarMenu>
             ) : (
-              <Button onClick={openConnectModal} type='button'>
+              <Button onClick={() => open()} type='button'>
                 Connect Wallet
               </Button>
             )}
