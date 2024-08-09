@@ -1,7 +1,8 @@
 'use client';
 
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useRouter } from 'next/navigation';
-import { FaEthereum } from 'react-icons/fa';
+import { FaEthereum, FaWallet } from 'react-icons/fa';
 import { IoPencilOutline } from 'react-icons/io5';
 import { LiaUserCogSolid } from 'react-icons/lia';
 import { LuUnlink } from 'react-icons/lu';
@@ -16,6 +17,7 @@ import {
 export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
+  const { open } = useWeb3Modal();
 
   const router = useRouter();
 
@@ -49,6 +51,14 @@ export const AuthNavbarMenu = ({ children }: { children: React.ReactNode }) => {
           >
             <FaEthereum />
             Earnings
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className='flex items-center gap-2 py-3'
+            onClick={() => open()}
+          >
+            <FaWallet />
+            Wallet
           </DropdownMenuItem>
 
           {/* <DropdownMenuSeparator /> */}

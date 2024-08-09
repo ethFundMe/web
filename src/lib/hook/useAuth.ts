@@ -2,6 +2,7 @@
 
 import useStore, { efmUserAddressStore, userStore } from '@/store';
 import { ErrorResponse, User } from '@/types';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ export const useAuth = () => {
   const { resetAddress, setAddress } = efmUserAddressStore();
   const efmToken = getCookie('efmToken');
   const { disconnect } = useDisconnect();
+  const { close: closeWeb3Modal } = useWeb3Modal();
 
   const [isAuth, setIsAuth] = useState(false);
 
@@ -57,6 +59,7 @@ export const useAuth = () => {
         setIsAuth(true);
         return;
       } catch (error) {
+        closeWeb3Modal();
         console.error(error);
         const err = error as unknown as { error: ErrorResponse };
 

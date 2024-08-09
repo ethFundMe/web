@@ -5,7 +5,7 @@ import ModalProvider from '@/components/ModalProvider';
 import StagingAlert from '@/components/StagingAlert';
 import { Footer } from '@/components/content';
 import { Toaster } from '@/components/ui/sonner';
-import { WagmiWrapper } from '@/lib/provider';
+import AppKitProvider from '@/lib/provider/appkit';
 import { Analytics } from '@vercel/analytics/react';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -82,12 +82,12 @@ export default async function RootLayout({
           <ClientToaster />
           <Toaster />
 
-          <WagmiWrapper>
+          <AppKitProvider>
             <ModalProvider />
             <main className='flex-1'>{children}</main>
             <Footer />
             <StagingAlert />
-          </WagmiWrapper>
+          </AppKitProvider>
           <Analytics />
         </body>
       </html>
