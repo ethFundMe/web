@@ -26,6 +26,7 @@ export interface User {
   isBanned: boolean;
   isVerified: boolean;
   creatorFee: number;
+  social_links: string[] | undefined | [];
   profileUrl: string | null;
   bannerUrl: string | null;
   createdAt: Date;

@@ -14,6 +14,7 @@ export const updateUser = async (userDetails: {
   bannerUrl?: string;
   profileUrl?: string;
   token: string;
+  social_links: string[];
 }) => {
   const userData = {
     email: userDetails.email,
@@ -23,6 +24,7 @@ export const updateUser = async (userDetails: {
     username: userDetails.username,
     bannerUrl: userDetails.bannerUrl,
     profileUrl: userDetails.profileUrl,
+    social_links: userDetails.social_links,
   };
 
   const res = await fetch(

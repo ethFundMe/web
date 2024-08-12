@@ -15,6 +15,7 @@ export interface Campaign {
   md_hash: string;
   title: string;
   description: string;
+  viewCount: number;
   banner_url: string;
   youtube_link: string | null;
   livepeer_id: string | null;

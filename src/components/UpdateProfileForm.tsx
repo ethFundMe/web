@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -16,12 +17,49 @@ import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 import { Button } from './inputs';
+// import { Button as Btn } from './ui/button';
+import {
+  isFaceBookProfileLink,
+  isInstagramProfileLink,
+  isTwitterProfileLink,
+} from '@/lib/utils';
+import { TrashIcon } from 'lucide-react';
+import { BsTwitterX } from 'react-icons/bs';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { Textarea } from './ui/textarea';
+
+export type TSocialMediaPlatform = {
+  platform: string;
+  icon: ReactNode;
+};
+const findSocialMediaPlatform = (url: string): TSocialMediaPlatform => {
+  if (isTwitterProfileLink(url)) {
+    return {
+      platform: 'Twitter',
+      icon: <BsTwitterX className='absolute right-3 top-2.5' />,
+    };
+  } else if (isInstagramProfileLink(url)) {
+    return {
+      platform: 'Instagram',
+      icon: <FaInstagram className='absolute right-3 top-2.5' />,
+    };
+  } else if (isFaceBookProfileLink(url)) {
+    return {
+      platform: 'Facebook',
+      icon: <FaFacebook className='absolute right-3 top-2.5' />,
+    };
+  } else {
+    return {
+      platform: 'Link',
+      icon: <></>,
+    };
+  }
+};
 
 type FormStatus =
   | 'Uploading profile picture'
@@ -43,6 +81,13 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       })
       .min(2)
       .max(16),
+    socialLinks: z
+      .string({
+        description: 'Social media link',
+        required_error: 'link is required',
+      })
+      .array()
+      .optional(),
     email: z
       .string()
       .regex(REGEX_CODES.email, { message: 'Enter a valid email' }),
@@ -64,6 +109,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
       bio: user.bio ?? '',
       username: user.username ?? '',
       email: user.email ?? '',
+      socialLinks: user.social_links ?? [''],
     },
     mode: 'onChange',
   });
@@ -73,6 +119,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
   } = form;
   // const { isDirty } = formState;
 
+  console.log(form.watch());
   const router = useRouter();
 
   async function updateUserProfile(values: z.infer<typeof formSchema>) {
@@ -100,17 +147,22 @@ export default function UpdateProfileForm({ user }: { user: User }) {
         username: values.username,
         fullName: values.fullName,
         token: token || '',
+        social_links: values.socialLinks || [],
       })
         .then((data) => {
           // Reset form and navigate to the dashboard
           setFormStatus(null);
           setUser(data);
+          console.log(values.socialLinks);
           form.reset();
           toast.success('Profile updated');
           router.push(`/dashboard/${data.ethAddress}`);
         })
         .catch((error) => {
-          console.log(`Failed to update profile, ${error}`);
+          if (process.env.NODE_ENV !== 'development') {
+            console.log(`Failed to update profile: ${error}`);
+          }
+          console.log('Failed to update profile');
           setFormStatus(null);
           toast.error('Failed to update profile');
         });
@@ -175,7 +227,24 @@ export default function UpdateProfileForm({ user }: { user: User }) {
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name='socialLinks'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Social Links</FormLabel>
+              <FormControl>
+                {/* Social links input components will go here */}
+                <SocialLinksManager
+                  value={field.value}
+                  onChange={field.onChange}
+                  max={4}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='bio'
@@ -204,3 +273,80 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     </Form>
   );
 }
+
+const SocialLinksManager = ({
+  value,
+  onChange,
+  max,
+}: {
+  value: string[] | undefined;
+  onChange: (...event: any[]) => void;
+  max: number;
+}) => {
+  const [links, setLinks] = useState(value || ['']);
+
+  const addLink = () => {
+    if (links.every((link) => link.trim() === '')) {
+      return toast.error('url field is empty');
+    }
+    if (links.length < max && links.every((link) => link.trim() !== '')) {
+      setLinks([...links, '']);
+      onChange([...links, '']);
+    }
+  };
+
+  const updateLink = (index: number, newValue: string) => {
+    const updatedLinks = [...links];
+    updatedLinks[index] = newValue;
+    setLinks(updatedLinks);
+    onChange(updatedLinks);
+  };
+  const deleteLink = (index: number) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks);
+    onChange(updatedLinks);
+  };
+
+  return (
+    <div>
+      {links.map((link, index) => {
+        const { icon } = findSocialMediaPlatform(link);
+        return (
+          <div key={index} className='mb-1 flex gap-2'>
+            <div className='relative w-full'>
+              <Input
+                type='url'
+                placeholder='Enter social link'
+                value={link}
+                className='w-full'
+                onChange={(e) => updateLink(index, e.target.value)}
+              />
+              {icon}
+            </div>
+            <div className='flex gap-1'>
+              {links.length > 1 && (
+                <button
+                  onClick={() => deleteLink(index)}
+                  type='button'
+                  // variant="ghost"
+                  // size=""
+                >
+                  <TrashIcon className='text-rose-500' />
+                </button>
+              )}
+              {links.length < max && links.length - 1 === index && (
+                <button
+                  className='h-full w-10 rounded-md bg-primary-default text-white '
+                  onClick={addLink}
+                  type='button'
+                >
+                  +
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
