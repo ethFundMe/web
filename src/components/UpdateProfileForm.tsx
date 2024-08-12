@@ -73,7 +73,7 @@ export default function UpdateProfileForm({ user }: { user: User }) {
     fullName: z
       .string({ required_error: 'Full name is required' })
       .min(2)
-      .max(250),
+      .max(25),
     username: z
       .string({ required_error: 'Username is required' })
       .regex(REGEX_CODES.username, {
@@ -184,9 +184,9 @@ export default function UpdateProfileForm({ user }: { user: User }) {
           name='fullName'
           render={({ field }) => (
             <FormItem className='col-span-2'>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder='Enter your fullName' {...field} />
+                <Input placeholder='Enter your name' {...field} />
               </FormControl>
 
               <FormMessage />
