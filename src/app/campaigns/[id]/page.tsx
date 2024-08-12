@@ -13,6 +13,7 @@ import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types';
 import { LivepeerPlaybackInfo } from '@livepeer/react/external';
+import { Redis } from '@upstash/redis';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -23,10 +24,17 @@ import { notFound } from 'next/navigation';
 import { FaEye } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
+import { ReportView } from './campaignViewsReport';
+// import { ReportView } from '@/app/campaigns/[id]/campaignViewsReport';
+// import CampaignViewsCounter from '@/components/CampaignViewsCounter';
+
+export const revalidate = 60;
 
 type Props = {
   params: { id: string };
 };
+
+const redis = Redis.fromEnv();
 
 async function fetchCampaign(id: number) {
   const url = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`;
@@ -155,6 +163,8 @@ export default async function CampaignPage({
 }: {
   params: { id: string };
 }) {
+  const views =
+    (await redis.get<number>(['pageviews', 'projects', id].join(':'))) ?? 0;
   const campaign = await fetchCampaign(Number(id));
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
@@ -211,6 +221,7 @@ export default async function CampaignPage({
   });
   return (
     <>
+      <ReportView slug={id} />
       {(campaign.flagged || campaign.discontinued) && (
         <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
           {campaign.discontinued ? (
@@ -241,13 +252,13 @@ export default async function CampaignPage({
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
                 {campaign.title}
               </h2>
-              <div className='flex gap-x-3'>
+              <div className='flex justify-between'>
                 <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
                   {campaign.tag}
                 </small>
-                <div className='flex w-fit items-center gap-x-1.5 rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                <div className='flex w-fit items-center gap-x-1.5 px-1.5 py-0.5 text-slate-500'>
                   <FaEye />
-                  <span className='text-xs'>{campaign.viewCount}</span>
+                  <span className='text-xs'>{views}</span>
                 </div>
               </div>
             </div>
