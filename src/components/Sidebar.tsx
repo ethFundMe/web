@@ -4,13 +4,13 @@ import { NAVBARROUTES } from '@/lib/constants';
 import { NavbarRoute } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useModalStore, userStore } from '@/store';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { getCookie } from 'cookies-next';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaRegBell } from 'react-icons/fa';
 import useSWR from 'swr';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { AuthSidebarRoute } from './AuthSidebarRoute';
 import { NavLink } from './NavLink';
 import { SidebarUserCard } from './SidebarUserCard';
@@ -19,9 +19,9 @@ import { Button } from './ui/button';
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const Sidebar = () => {
-  const { open } = useWeb3Modal();
+  const { openConnectModal } = useConnectModal();
   const { isConnected, address } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { openAccountModal } = useAccountModal();
   const { user } = userStore();
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT || '';
@@ -74,7 +74,7 @@ export const Sidebar = () => {
         {isConnected && address && getCookie('efmToken') ? (
           <Button
             className='rounded-lg bg-red-900 text-lg font-bold text-white hover:bg-red-900/90'
-            onClick={() => disconnect()}
+            onClick={openAccountModal}
             size='lg'
           >
             Disconnect
@@ -83,7 +83,7 @@ export const Sidebar = () => {
           <Button
             size='lg'
             className='rounded-lg bg-primary-dark text-lg font-bold hover:bg-primary-dark/90'
-            onClick={() => open()}
+            onClick={openConnectModal}
           >
             Connect Wallet
           </Button>
