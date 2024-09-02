@@ -13,7 +13,7 @@ const ethChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1);
 
 export const useAuth = () => {
   const config = useConfig();
-  const { push, refresh } = useRouter();
+  const { push } = useRouter();
   const userEthAddress = useStore(userStore, (state) => state.user?.ethAddress);
   const { setUser, resetUser } = userStore();
   const { resetAddress, setAddress } = efmUserAddressStore();
@@ -55,7 +55,6 @@ export const useAuth = () => {
         const [user] = users;
         setUser(user);
         setIsAuth(true);
-        refresh();
         return;
       } catch (error) {
         console.error(error);
