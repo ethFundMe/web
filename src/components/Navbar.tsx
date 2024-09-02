@@ -56,9 +56,7 @@ const Navbar = () => {
               </li>
             ))}
 
-            {isConnected && address && getCookie('efmToken') && (
-              <Notifications />
-            )}
+            {isConnected && <Notifications />}
             {isConnected && address && getCookie('efmToken') ? (
               <AuthNavbarMenu>
                 <div className='flex cursor-pointer items-center gap-x-3'>
