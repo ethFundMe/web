@@ -1,15 +1,14 @@
 import { Container } from '@/components/Container';
 import { EditCampaignForm } from '@/components/forms/EditCampaign';
-import { getCampaign } from '@/lib/queries';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+import { Campaign } from '@/types';
 import { Flag } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  // viewport: { width: 'device-width', initialScale: 1 },
   title: 'Edit Campaign | EthFundMe',
   description:
     'Empower your ideas with EthFundMe by creating a campaign that can change the world. Our user-friendly platform helps you connect with supporters to turn your vision into action. Begin your journey to impact with just a few clicks!',
@@ -40,9 +39,15 @@ export default async function EditCampaign({
 }: {
   params: { id: string };
 }) {
-  if (!id) notFound();
-  const campaign = await getCampaign(Number(id));
-  if (!campaign) notFound();
+  if (!id) return notFound();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`,
+    { cache: 'no-store' }
+  );
+  const campaign: Campaign = await res.json();
+
+  if (!campaign) return notFound();
 
   return (
     <>

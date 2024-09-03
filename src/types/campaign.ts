@@ -18,7 +18,6 @@ export interface Campaign {
   viewCount: number;
   banner_url: string;
   youtube_link: string | null;
-  livepeer_id: string | null;
   media_links: Array<string>;
   tag: string;
   created_at: Date;

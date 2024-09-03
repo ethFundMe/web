@@ -46,6 +46,7 @@ export async function uploadToCloudinary(files: FileList | string[]) {
     const data = await res.json();
 
     if (data?.error) {
+      console.error(data.error);
       throw new Error('Failed to upload file');
     }
 
@@ -187,7 +188,6 @@ export function GET_CREATE_CAMPAIGN_FORM_SCHEMA(
       .string()
       .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
       .optional(),
-    video_file: z.any(),
   });
 }
 
@@ -273,16 +273,6 @@ export function isTwitterProfileLink(text: string): boolean {
 export function isInstagramProfileLink(text: string): boolean {
   const regex =
     /^(https?:\/\/)?(?:www\.)?instagram\.com\/([a-zA-Z0-9_]{1,30})\/?/i;
-  return regex.test(text);
-}
-
-export function isDiscordProfileLink(text: string): boolean {
-  const regex = /^(https?:\/\/)?(?:www\.)?discord\.gg\/([a-zA-Z0-9]{1,30})\/?/i;
-  return regex.test(text);
-}
-
-export function isTelegramProfileLink(text: string): boolean {
-  const regex = /^(https?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]{1,64})\/?/i;
   return regex.test(text);
 }
 

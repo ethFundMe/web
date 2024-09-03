@@ -73,7 +73,6 @@ export const handleIPFSPush = async function ({
   mediaLinks,
   description,
   tag,
-  livepeerId,
 }: {
   title: string;
   description: string;
@@ -81,7 +80,6 @@ export const handleIPFSPush = async function ({
   bannerUrl: string;
   mediaLinks: string[];
   tag: number;
-  livepeerId: string | undefined;
 }) {
   try {
     const res = await fetch(
@@ -100,7 +98,6 @@ export const handleIPFSPush = async function ({
           bannerUrl,
           mediaLinks,
           tag,
-          livepeerId,
         }),
       }
     );
@@ -111,6 +108,7 @@ export const handleIPFSPush = async function ({
 
     return data;
   } catch (e) {
+    console.error(e);
     return null;
   }
 };

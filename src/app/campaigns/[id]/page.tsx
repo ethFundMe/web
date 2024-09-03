@@ -12,7 +12,6 @@ import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types';
-import { LivepeerPlaybackInfo } from '@livepeer/react/external';
 import { Redis } from '@upstash/redis';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
@@ -69,26 +68,6 @@ async function fetchCampaign(id: number) {
   }
 
   return (await res.json()) as Campaign;
-}
-
-async function getPlaybackInfo(playbackId: string | null) {
-  if (!playbackId) return;
-
-  const url = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/livepeer/source`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ playbackId }),
-  });
-
-  if (!res.ok) return;
-
-  const info = (await res.json()) as {
-    playbackInfo: LivepeerPlaybackInfo;
-  };
-  return info.playbackInfo;
 }
 
 export async function generateMetadata(
@@ -187,8 +166,6 @@ export default async function CampaignPage({
 
   if (!user) return;
 
-  const playbackInfo = await getPlaybackInfo(campaign.livepeer_id);
-
   const campaignsToShow = campaigns
     .filter(
       (_) =>
@@ -199,16 +176,14 @@ export default async function CampaignPage({
   function getMediaLinks({
     banner_url,
     media_links,
-    livepeer_id,
     youtube_link,
   }: {
     banner_url: string;
     media_links: string[];
-    livepeer_id: string | null;
     youtube_link: string | null;
   }): string[] {
     const baseLinks = [banner_url, ...media_links];
-    const additionalLinks = [livepeer_id, youtube_link].filter(
+    const additionalLinks = [youtube_link].filter(
       (link): link is string => typeof link === 'string'
     );
 
@@ -217,7 +192,6 @@ export default async function CampaignPage({
   const media_links = getMediaLinks({
     banner_url: campaign.banner_url,
     media_links: campaign.media_links,
-    livepeer_id: campaign.livepeer_id,
     youtube_link: campaign.youtube_link,
   });
   return (
@@ -264,7 +238,7 @@ export default async function CampaignPage({
               </div>
             </div>
 
-            <SwiperCarousel images={media_links} playbackInfo={playbackInfo} />
+            <SwiperCarousel images={media_links} />
 
             <div className='space-y-7 pb-5'>
               <div className='flex flex-col gap-4 sm:flex-row'>
@@ -273,7 +247,6 @@ export default async function CampaignPage({
                   currentAmount={campaign.total_accrued}
                 />
                 <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
-                  {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
                   <DonateBtn
                     text='Donate Now'
                     className='w-full whitespace-nowrap sm:mt-1'

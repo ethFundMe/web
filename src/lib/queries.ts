@@ -137,18 +137,6 @@ export const checkVerificationStatus = async (userId: string) => {
   return data as VerificationSatusResponse;
 };
 
-export const getCampaign = async (id: number) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`,
-    { cache: 'no-store' }
-  );
-  const data = await res.json();
-
-  const campaign: Campaign = data;
-
-  return campaign ?? null;
-};
-
 export async function fetchActiveStats() {
   try {
     const res = await fetch(
