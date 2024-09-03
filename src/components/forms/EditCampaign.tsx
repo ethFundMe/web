@@ -1,6 +1,5 @@
 'use client';
 
-import { handleIPFSPush } from '@/actions';
 import { EthFundMe } from '@/lib/abi';
 import { ethChainId, ethFundMeContractAddress } from '@/lib/constant';
 import { REGEX_CODES } from '@/lib/constants';
@@ -15,6 +14,7 @@ import {
 import { userStore } from '@/store';
 import { Campaign } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ImagePlus, Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -26,9 +26,7 @@ import toast from 'react-hot-toast';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaMinusCircle } from 'react-icons/fa';
 import useRefs from 'react-use-refs';
-import * as tus from 'tus-js-client';
 import { BaseError, formatEther, parseEther } from 'viem';
-import { mainnet } from 'viem/chains';
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -36,9 +34,6 @@ import {
 } from 'wagmi';
 import { z } from 'zod';
 import { DiscontinueCampaignBtn } from '../DiscontinueCampaignBtn';
-// import { Input } from '../inputs';
-import { livepeer } from '@/app/campaigns/create/actions';
-import { useQueryClient } from '@tanstack/react-query';
 import { LinkPreview } from '../LinkPreview';
 import { Button } from '../ui/button';
 import {
@@ -83,7 +78,6 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
   const [preparedBanner, setPreparedBanner] = useState<FileList | null>(null);
   const [preparedOtherImages, setPreparedOtherImages] =
     useState<FileList | null>(null);
-  const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const [closeRef, triggerRef] = useRefs<HTMLButtonElement>(null);
 
@@ -96,13 +90,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
     return /\b(blob)\b/.test(url);
   };
 
-  const {
-    data: hash,
-    error,
-    isError,
-    isPending,
-    writeContract,
-  } = useWriteContract({
+  const { data, error, isError, isPending, writeContract } = useWriteContract({
     mutation: {
       onSettled(data, error) {
         console.log('Settled updateCampaign', { data, error });
@@ -112,24 +100,8 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
 
   const { isLoading: isConfirmingTxn, isSuccess: isConfirmedTxn } =
     useWaitForTransactionReceipt({
-      chainId: process.env.NEXT_PUBLIC_CHAIN_ID || mainnet.id,
-      hash,
+      hash: data,
     });
-
-  const uploadBanner = async () => {
-    if (!preparedBanner) return [];
-    await deleteFromCloudinary(campaign.banner_url);
-    const bannerUploadUrl = await uploadToCloudinary(preparedBanner);
-
-    return bannerUploadUrl;
-  };
-
-  const uploadOtherImages = async () => {
-    if (!preparedOtherImages) return [];
-    const otherImagesUrl = await uploadToCloudinary(preparedOtherImages);
-
-    return otherImagesUrl;
-  };
 
   const goalReached = () => {
     if (campaign.total_accrued >= campaign.goal) {
@@ -162,89 +134,76 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
       title: campaign.title,
       goal: parseFloat(formatEther(BigInt(campaign.goal))),
       tag: campaign.tag as CampaignTags,
-      ytLink: campaign.youtube_link ?? undefined,
+      ytLink: campaign.youtube_link || undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   });
 
-  const {
-    formState: { isDirty },
-  } = form;
-
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     setUpdating(true);
     try {
-      const {
-        goal,
-        beneficiaryAddress,
-        tag,
-        title,
-        description,
-        ytLink,
-        video_file,
-      } = data;
+      const { goal, beneficiaryAddress, tag, title, description, ytLink } =
+        data;
       const { campaign_id } = campaign;
-      const [bannerUrl] = await uploadBanner();
-      const mediaLinks = await uploadOtherImages();
+
+      let bannerUrl: string = campaign.banner_url;
+      if (preparedBanner && preparedBanner.length > 0) {
+        const [uploadedBannerUrl] = await uploadToCloudinary(preparedBanner);
+        if (uploadedBannerUrl) {
+          bannerUrl = uploadedBannerUrl;
+          await deleteFromCloudinary(campaign.banner_url);
+        }
+      }
+
+      let mediaLinks: Array<string> = campaign.media_links;
+      if (preparedOtherImages && preparedOtherImages.length > 0) {
+        const uploadedMediaLinks =
+          await uploadToCloudinary(preparedOtherImages);
+        if (uploadedMediaLinks.length === 0) {
+          setUpdating(false);
+          return toast.error('Failed to upload other images.');
+        }
+
+        mediaLinks = uploadedMediaLinks;
+
+        for (const link of campaign.media_links) {
+          await deleteFromCloudinary(link);
+        }
+      }
 
       const updatedTag = tags.find((item) => item.name === tag)?.id;
       if (typeof updatedTag === 'undefined') {
+        setUpdating(false);
         return toast.error('Tag not found.');
       }
 
-      let livepeerId: string | undefined = undefined;
-
-      const files = video_file as FileList;
-      if (files && files.length > 0) {
-        const file = files[0];
-        const videoFileName = file.name;
-
-        const {
-          tusEndpoint,
-          asset: { playbackId },
-        } = await livepeer(videoFileName);
-        livepeerId = playbackId;
-
-        const videoUpload = new tus.Upload(file, {
-          endpoint: tusEndpoint,
-          retryDelays: [0, 3000, 5000, 10000, 20000],
-
-          onError: function (error) {
-            console.log('Failed to upload video because: ' + error);
-            return toast.error('Failed to upload video file.');
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT as string
+        }/api/campaign/metadata`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
-          onProgress: function (bytesUploaded, bytesTotal) {
-            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-            console.log(bytesUploaded, bytesTotal, percentage + '%');
-          },
-          onSuccess: function () {
-            console.log(
-              'Download %s from %s',
-              videoUpload.file,
-              videoUpload.url
-            );
-          },
-        });
-
-        videoUpload.start();
-      }
-
-      const updatedHash = await handleIPFSPush({
-        title,
-        description,
-        bannerUrl: bannerUrl || campaign.banner_url,
-        youtubeLink: ytLink || campaign.youtube_link,
-        mediaLinks: mediaLinks || campaign.media_links,
-        tag: updatedTag,
-        livepeerId,
-      });
-
-      const newHash = updatedHash?.hash as `0x${string}`;
-
-      if (!newHash) {
+          method: 'POST',
+          body: JSON.stringify({
+            title,
+            description,
+            youtubeLink: ytLink,
+            bannerUrl: bannerUrl || campaign.banner_url,
+            mediaLinks:
+              mediaLinks.length > 0 ? mediaLinks : campaign.media_links,
+            tag: updatedTag,
+          }),
+        }
+      );
+      const hash_data = (await res.json()) as { hash: `0x${string}` };
+      if (!hash_data.hash) {
+        setUpdating(false);
         return toast.error('Something went wrong.');
       }
+      const { hash } = hash_data;
 
       writeContract({
         abi: EthFundMe,
@@ -252,7 +211,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
         functionName: 'updateCampaign',
         chainId: ethChainId,
         args: [
-          newHash,
+          hash,
           BigInt(campaign_id),
           parseEther(goal.toString()),
           form.watch('type') === 'personal'
@@ -284,7 +243,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
       push(`/campaigns/${campaign.campaign_id}`);
       return;
     }
-  }, [campaign.campaign_id, isConfirmedTxn, push]);
+  }, [campaign.campaign_id, isConfirmedTxn, push, queryClient]);
 
   useEffect(() => {
     if (isError && error) {
@@ -692,74 +651,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
                     )}
                     name='ytLink'
                   />
-
-                  <div className='text-xs text-slate-500 dark:text-slate-400'>
-                    OR
-                  </div>
-
-                  <FormField
-                    name='video_file'
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Upload video (Livepeer)</FormLabel>
-
-                        {videoPreview && (
-                          <div>
-                            <video
-                              width='320'
-                              height='240'
-                              controls
-                              src={videoPreview}
-                            >
-                              Your browser does not support the video tag.
-                            </video>
-                          </div>
-                        )}
-
-                        <FormControl>
-                          <Input
-                            type='file'
-                            accept='video/*'
-                            onChange={(e) => {
-                              const files = e.target.files;
-                              if (files && files.length > 0) {
-                                const file = files[0];
-                                if (file && file.type.slice(0, 5) === 'video') {
-                                  setVideoPreview(URL.createObjectURL(file));
-                                }
-                              } else {
-                                setVideoPreview(null);
-                              }
-                              field.onChange(e.target.files);
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
-
-                {/* <div className='flex flex-col gap-4 md:flex-row'>
-                <div className='w-full'>
-                  <Button
-                    type='submit'
-                    size='default'
-                    className='disabled:pointer-events-auto disabled:cursor-not-allowed'
-                    disabled={
-                      !isDirty || isPending || isConfirmedTxn || updating
-                    }
-                  >
-                    {isPending || isConfirmingTxn || updating
-                      ? 'Loading...'
-                      : 'Update campaign'}
-                  </Button>
-                </div>
-                <div className='w-full'>
-                  <DiscontinueCampaignBtn campaign={campaign} />
-                </div>
-              </div> */}
               </div>
             </div>
           </div>
@@ -770,7 +662,7 @@ export const EditCampaignForm = ({ campaign }: { campaign: Campaign }) => {
               type='submit'
               size='default'
               className='w-[12.5rem] disabled:pointer-events-auto disabled:cursor-not-allowed md:w-96'
-              disabled={!isDirty || isPending || isConfirmingTxn || updating}
+              disabled={isPending || isConfirmingTxn || updating}
             >
               {isPending || isConfirmingTxn || updating
                 ? 'Loading...'

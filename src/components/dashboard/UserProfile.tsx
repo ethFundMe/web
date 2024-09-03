@@ -45,8 +45,6 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 
-export type IconProps = React.HTMLAttributes<SVGElement>;
-
 export const UserProfile = ({
   user,
   campaigns,
