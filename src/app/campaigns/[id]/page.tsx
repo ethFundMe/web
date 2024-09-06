@@ -12,6 +12,7 @@ import { seoCampaign } from '@/lib/seoBannerUrl';
 import { TextSizeStyles } from '@/lib/styles';
 import { cn, formatWalletAddress } from '@/lib/utils';
 import { Campaign } from '@/types';
+import { Redis } from '@upstash/redis';
 import dayjs from 'dayjs';
 import { Flag } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -19,12 +20,20 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { FaEye } from 'react-icons/fa';
 import { formatEther } from 'viem';
 import { DonationObjectiveIndicator } from '../DonationObjectiveIndicator';
+import { ReportView } from './campaignViewsReport';
+// import { ReportView } from '@/app/campaigns/[id]/campaignViewsReport';
+// import CampaignViewsCounter from '@/components/CampaignViewsCounter';
+
+export const revalidate = 60;
 
 type Props = {
   params: { id: string };
 };
+
+const redis = Redis.fromEnv();
 
 async function fetchCampaign(id: number) {
   const url = `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`;
@@ -134,6 +143,8 @@ export default async function CampaignPage({
 }: {
   params: { id: string };
 }) {
+  const views =
+    (await redis.get<number>(['pageviews', 'projects', id].join(':'))) ?? 0;
   const campaign = await fetchCampaign(Number(id));
   async function getBeneficiary() {
     if (campaign.user?.ethAddress === campaign.beneficiary) return null;
@@ -162,11 +173,30 @@ export default async function CampaignPage({
     )
     .slice(0, 3);
 
-  const media_links = campaign.youtube_link
-    ? [campaign.banner_url, ...campaign.media_links, campaign.youtube_link]
-    : [campaign.banner_url, ...campaign.media_links];
+  function getMediaLinks({
+    banner_url,
+    media_links,
+    youtube_link,
+  }: {
+    banner_url: string;
+    media_links: string[];
+    youtube_link: string | null;
+  }): string[] {
+    const baseLinks = [banner_url, ...media_links];
+    const additionalLinks = [youtube_link].filter(
+      (link): link is string => typeof link === 'string'
+    );
+
+    return [...baseLinks, ...additionalLinks];
+  }
+  const media_links = getMediaLinks({
+    banner_url: campaign.banner_url,
+    media_links: campaign.media_links,
+    youtube_link: campaign.youtube_link,
+  });
   return (
     <>
+      <ReportView slug={id} />
       {(campaign.flagged || campaign.discontinued) && (
         <div className='flex flex-wrap items-center justify-center gap-2 bg-red-500/10 py-2 text-center text-sm text-red-500 lg:text-base'>
           {campaign.discontinued ? (
@@ -197,9 +227,15 @@ export default async function CampaignPage({
               <h2 className={cn(TextSizeStyles.h4, 'leading-tight')}>
                 {campaign.title}
               </h2>
-              <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
-                {campaign.tag}
-              </small>
+              <div className='flex justify-between'>
+                <small className='w-fit rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-slate-500'>
+                  {campaign.tag}
+                </small>
+                <div className='flex w-fit items-center gap-x-1.5 px-1.5 py-0.5 text-slate-500'>
+                  <FaEye />
+                  <span className='text-xs'>{views}</span>
+                </div>
+              </div>
             </div>
 
             <SwiperCarousel images={media_links} />
@@ -211,7 +247,6 @@ export default async function CampaignPage({
                   currentAmount={campaign.total_accrued}
                 />
                 <div className='w-full sm:w-72 sm:pt-4 lg:w-80'>
-                  {/* <button className='w-full flex-shrink-0 rounded-md bg-primary-default px-4 py-2 text-white hover:bg-opacity-90 md:px-5 md:py-3'> */}
                   <DonateBtn
                     text='Donate Now'
                     className='w-full whitespace-nowrap sm:mt-1'

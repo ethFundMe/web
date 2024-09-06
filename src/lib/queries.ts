@@ -14,6 +14,7 @@ export const updateUser = async (userDetails: {
   bannerUrl?: string;
   profileUrl?: string;
   token: string;
+  social_links: string[];
 }) => {
   const userData = {
     email: userDetails.email,
@@ -23,6 +24,7 @@ export const updateUser = async (userDetails: {
     username: userDetails.username,
     bannerUrl: userDetails.bannerUrl,
     profileUrl: userDetails.profileUrl,
+    social_links: userDetails.social_links,
   };
 
   const res = await fetch(
@@ -133,18 +135,6 @@ export const checkVerificationStatus = async (userId: string) => {
 
   if (data.error) return null;
   return data as VerificationSatusResponse;
-};
-
-export const getCampaign = async (id: number) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ETH_FUND_ENDPOINT}/api/campaign/${id}`,
-    { cache: 'no-store' }
-  );
-  const data = await res.json();
-
-  const campaign: Campaign = data;
-
-  return campaign ?? null;
 };
 
 export async function fetchActiveStats() {

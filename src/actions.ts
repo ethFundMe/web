@@ -108,6 +108,7 @@ export const handleIPFSPush = async function ({
 
     return data;
   } catch (e) {
+    console.error(e);
     return null;
   }
 };

@@ -46,6 +46,7 @@ export async function uploadToCloudinary(files: FileList | string[]) {
     const data = await res.json();
 
     if (data?.error) {
+      console.error(data.error);
       throw new Error('Failed to upload file');
     }
 
@@ -250,6 +251,7 @@ export function GET_EDIT_CAMPAIGN_FORM_SCHEMA(
       .string()
       .regex(REGEX_CODES.ytLink, { message: 'Enter a valid youtube link' })
       .optional(),
+    video_file: z.any(),
   });
 }
 
@@ -257,6 +259,22 @@ export const createUrl = (file: File) => {
   const newURL = URL.createObjectURL(file);
   return newURL;
 };
+export function isFaceBookProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?(facebook\.com|fb\.com)\/([a-zA-Z0-9_]{1,15})\/?/i;
+  return regex.test(text);
+}
+export function isTwitterProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?(twitter\.com|x\.com)\/([a-zA-Z0-9_]{1,15})\/?/i;
+  return regex.test(text);
+}
+
+export function isInstagramProfileLink(text: string): boolean {
+  const regex =
+    /^(https?:\/\/)?(?:www\.)?instagram\.com\/([a-zA-Z0-9_]{1,30})\/?/i;
+  return regex.test(text);
+}
 
 export function getRelativeTime(date: Date): string {
   const formattedtDate = dayjs(date);

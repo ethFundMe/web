@@ -1,7 +1,14 @@
 'use client';
 
 import { updateUser } from '@/lib/queries';
-import { cn, deleteFromCloudinary, formatWalletAddress } from '@/lib/utils';
+import {
+  cn,
+  deleteFromCloudinary,
+  formatWalletAddress,
+  isFaceBookProfileLink,
+  isInstagramProfileLink,
+  isTwitterProfileLink,
+} from '@/lib/utils';
 import { userStore } from '@/store';
 import { Campaign, User } from '@/types';
 import { getCookie } from 'cookies-next';
@@ -12,19 +19,31 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import toast from 'react-hot-toast';
+import { BsTwitterX } from 'react-icons/bs';
+import { FaFacebook, FaInstagram, FaLink } from 'react-icons/fa';
 import useRefs from 'react-use-refs';
 import { useAccount } from 'wagmi';
 import { Container } from '../Container';
 import DnDUpload from '../DnDUpload';
 import EarningsCard from '../EarningsCard';
 import ImageWithFallback from '../ImageWithFallback';
+import { TSocialMediaPlatform } from '../UpdateProfileForm';
 import UserCampaignCard from '../UserCampaignCard';
+import { Dock, DockIcon } from '../magicui/dock';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
 } from '../ui/dialog';
+// import { Separator } from '@radix-ui/react-dropdown-menu';
+import { buttonVariants } from '../ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 export const UserProfile = ({
   user,
@@ -50,6 +69,7 @@ export const UserProfile = ({
       username: user.username,
       profileUrl: profileUrl[0],
       token,
+      social_links: user.social_links || [],
     })
       .then(() => {
         toast.success('Profile picture updated');
@@ -74,6 +94,7 @@ export const UserProfile = ({
       username: user.username,
       bannerUrl: bannerUrl[0],
       token,
+      social_links: user.social_links || [],
     })
       .then(() => {
         toast.success('Banner updated');
@@ -89,6 +110,29 @@ export const UserProfile = ({
 
   const loggedIn = isConnected && getCookie('efmToken');
   const isOwner = loggedIn && user.ethAddress === address;
+  const findSocialMediaPlatform = (url: string): TSocialMediaPlatform => {
+    if (isTwitterProfileLink(url)) {
+      return {
+        platform: 'Twitter',
+        icon: <BsTwitterX className='' />,
+      };
+    } else if (isInstagramProfileLink(url)) {
+      return {
+        platform: 'Instagram',
+        icon: <FaInstagram className='' />,
+      };
+    } else if (isFaceBookProfileLink(url)) {
+      return {
+        platform: 'Facebook',
+        icon: <FaFacebook className='' />,
+      };
+    } else {
+      return {
+        platform: 'Link',
+        icon: <FaLink className='' />,
+      };
+    }
+  };
 
   return (
     <div className={cn('mb-20 w-full')}>
@@ -210,6 +254,7 @@ export const UserProfile = ({
                                           username: user.username,
                                           profileUrl: undefined,
                                           token,
+                                          social_links: user.social_links || [],
                                         })
                                           .then((res) => {
                                             setUser(res);
@@ -279,18 +324,51 @@ export const UserProfile = ({
                     </Dialog>
                   )}
                 </div>
-
-                <Link
-                  title='Creator Fee'
-                  href={
-                    isOwner
-                      ? `/dashboard/${user.ethAddress}/creator-fee`
-                      : '/about#creator-fee'
-                  }
-                  className='h-fit rounded-lg bg-primary-default px-5 py-1 text-base font-semibold text-white'
-                >
-                  {Number(user.creatorFee)}%
-                </Link>
+                <div className='flex flex-col items-center gap-x-8 md:flex-row'>
+                  {user?.social_links && (
+                    <TooltipProvider>
+                      <Dock direction='middle'>
+                        {/* <Separator className="h-full" /> */}
+                        {user?.social_links.map((link, index) => (
+                          <DockIcon key={index}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link
+                                  href={link}
+                                  className={cn(
+                                    buttonVariants({
+                                      variant: 'ghost',
+                                      size: 'icon',
+                                    }),
+                                    'size-8 rounded-full'
+                                  )}
+                                  rel='noopener noreferrer'
+                                  target='_blank'
+                                >
+                                  {findSocialMediaPlatform(link).icon}
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{findSocialMediaPlatform(link).platform}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </DockIcon>
+                        ))}
+                      </Dock>
+                    </TooltipProvider>
+                  )}
+                  <Link
+                    title='Creator Fee'
+                    href={
+                      isOwner
+                        ? `/dashboard/${user.ethAddress}/creator-fee`
+                        : '/about#creator-fee'
+                    }
+                    className='h-fit rounded-lg bg-primary-default px-5 py-1 text-base font-semibold text-white'
+                  >
+                    {Number(user.creatorFee)}%
+                  </Link>
+                </div>
               </div>
 
               <div className='flex w-full justify-between'>

@@ -10,8 +10,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import ImageWithFallback from './ImageWithFallback';
 
 export const SwiperCarousel = ({ images }: { images: string[] }) => {
-  // const AnimImage = motion(Image);
-
   return (
     <div className='container h-80 overflow-hidden rounded-lg bg-[#f6f8fc] sm:h-96 lg:h-[450px]'>
       <Swiper
@@ -23,8 +21,6 @@ export const SwiperCarousel = ({ images }: { images: string[] }) => {
         navigation={images.length <= 1 ? false : true}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        // onSwiper={(swiper) => console.log(swiper)}
-        // onSlideChange={() => console.log('slide change')}
       >
         {images.map((mediaLink) => (
           <SwiperSlide key={mediaLink}>

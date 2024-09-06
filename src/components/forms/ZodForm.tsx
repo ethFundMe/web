@@ -272,7 +272,7 @@ export default function CreateCampaignForm() {
       }
       return;
     }
-  }, [isConfirmedTxn, router, form, eventCampaignId, address]);
+  }, [isConfirmedTxn, router, form, eventCampaignId, address, queryClient]);
 
   useEffect(() => {
     if (isError || error) {
